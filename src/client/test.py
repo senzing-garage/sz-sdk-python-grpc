@@ -8,14 +8,15 @@ import sys
 def doTests(clinet):
     def my_callback(entity):
         print(entity)
+        print(type(entity))
 
-#    print('get_entity_list_by_size_with_callback')
-#    response = client.get_entity_list_by_size_with_callback(2, my_callback)
-#    print(response)
+    print('get_entity_list_by_size_with_callback')
+    response = client.get_entity_list_by_size_with_callback(2, my_callback)
+    print(response)
 
-#    print('get_entity_list_by_size')
-#    response = client.get_entity_list_by_size_return_list(2)
-#    print(response)
+    print('get_entity_list_by_size_return_list')
+    response = client.get_entity_list_by_size_return_list(2)
+    print(response)
 
     print('GetEntityDetails')
     response = client.get_entity_details(1,False)

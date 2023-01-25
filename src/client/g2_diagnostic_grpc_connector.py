@@ -3,7 +3,7 @@ import sys
 import json
 import warnings
 
-sys.path.insert(0, '/home/gadair/servegrpc/protobuf/g2diagnostic')
+sys.path.insert(0, '/home/gadair/g2-sdk-proto/example_generated_source_code/python/g2diagnostic')
 
 import g2diagnostic_pb2_grpc
 import g2diagnostic_pb2
@@ -132,29 +132,15 @@ class G2DiagnosticGRPCConnector:
 
     def get_entity_list_by_size_return_list(self, entitySize):
         result_set = []
-        handle = self.get_entity_list_by_size_request(entitySize=entitySize)
-
-        while True:
-            queried_entity = self.fetch_next_entity_by_size(handle=handle)
-            print(queried_entity)
-            if not queried_entity:
-                break
-            result_set.append(queried_entity)
-
-        self.close_entity_list_by_size(handle=handle)
+        for entity in self.stub.StreamEntityListBySize(g2diagnostic_pb2.StreamEntityListBySizeRequest(entitySize=entitySize)):
+            if entity.result:
+                result_set.extend(json.loads(entity.result))
         return result_set
 
     def get_entity_list_by_size_with_callback(self, entitySize, callback):
-        result_set = []
-        handle = self.get_entity_list_by_size_request(entitySize=entitySize)
-
-        while True:
-            queried_entity = self.fetch_next_entity_by_size(handle=handle)
-            if not queried_entity:
-                break
-            callback(queried_entity)
-
-        self.close_entity_list_by_size(handle=handle)
+        for entity in self.stub.StreamEntityListBySize(g2diagnostic_pb2.StreamEntityListBySizeRequest(entitySize=entitySize)):
+            if entity.result:
+                callback(json.loads(entity.result))
 
     # stats methods
     def get_entity_size_breakdown(self, minimumEntitySize, includeInternalFeatures=False, returnAsString=False):
