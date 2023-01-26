@@ -1,50 +1,48 @@
-import grpc
 import sys
 import json
 import warnings
 
 try:
-    from senzing import G2Exception, G2Diagnostic
+    from senzing import G2Diagnostic
 except ModuleNotFoundError:
-    print('Cannot import Senzing python libraries.  please verify your PYTHONPATH includes the path to senzing python libs')
-    print('Environment can be setup by sourcing "setupEnv" from your senzing project directory')
+    warnings.warn('Cannot import Senzing python libraries.')
+    warnings.warn('Please verify your PYTHONPATH includes the path to senzing python libs')
+    warnings.warn('Environment can be setup by sourcing "setupEnv" '\
+                  'from your senzing project directory')
     sys.exit(-1)
 
 
 class G2DiagnosticDirectConnector:
     def __init__(self):
         self.g2_handle = None
-        self.json_config = None
-
 
     # startup/shutdown methods
-
     #GGANOTE: depricate when server configs itself
-    def init(self, url, moduleName, iniParams, verboseLogging=False):
-        if isinstance(iniParams,dict):
-            iniParams = json.dumps(iniParams)
-        return_code = self.g2_handle.init(moduleName, self.json_config, verboseLogging)
-
+    def init(self, url, module_name, ini_params, verbose_logging=False):
+        if isinstance(ini_params, str):
+            ini_params = json.loads(ini_params)
+        self.g2_handle = G2Diagnostic()
+        return self.g2_handle.init(module_name, ini_params, verbose_logging)
 
     def init_with_url(self, url):
         warnings.warn('init_with_url is not valid for direct connections')
 
-    def init_direct_from_environment(self, moduleName, verboseLogging=False):
+    def init_direct_from_environment(self, module_name, verbose_logging=False):
         import senzing_module_config
-        self.json_config = senzing_module_config.getJsonConfig()
+        json_config = senzing_module_config.get_json_config()
         self.g2_handle = G2Diagnostic()
-        return_code = self.g2_handle.init(moduleName, self.json_config, verboseLogging)
+        return self.g2_handle.init(module_name, json_config, verbose_logging)
 
-    def init_direct_with_config_id(self, configId):
+    def init_direct_with_config_id(self, config_id):
         warnings.warn('init_direct_with_config_id does nothing for gRPC connections')
-        return
 
-    def reinit(self, configId):
-        configId = bytes(configId, 'utf-8')
-        self.g2_handle.reinit(configId)
+    def reinit(self, config_id):
+        config_id = bytes(config_id, 'utf-8')
+        self.g2_handle.reinit(config_id)
 
     def destroy(self):
         self.g2_handle.destroy()
+        self.g2_handle = None
 
     # get sys into methods
     def get_physical_cores(self):
@@ -59,79 +57,95 @@ class G2DiagnosticDirectConnector:
     def get_total_system_memory(self):
         return self.g2_handle.getTotalSystemMemory()
 
-    def check_db_perf(self, secondsToRun, returnAsString=False):
-        secondsToRun = int(secondsToRun)
+    def check_db_perf(self, seconds_to_run, return_as_string=False):
+        seconds_to_run = int(seconds_to_run)
         response = bytearray()
-        self.g2_handle.checkDBPerf(secondsToRun, response=response)
+        self.g2_handle.checkDBPerf(seconds_to_run, response=response)
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_db_info(self, returnAsString=False):
+    def get_db_info(self, return_as_string=False):
         response = bytearray()
         self.g2_handle.getDBInfo(response=response)
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
     # data query methods
-    def get_entity_details(self, entityID, includeInternalFeatures=False, returnAsString=False):
-        entityID = int(entityID)
-        includeInternalFeatures = int(includeInternalFeatures)
+    def get_entity_details(self,
+                           entity_id,
+                           include_internal_features=False,
+                           return_as_string=False):
+        entity_id = int(entity_id)
+        include_internal_features = int(include_internal_features)
+
         response = bytearray()
-        self.g2_handle.getEntityDetails(entityID=entityID, includeInternalFeatures=includeInternalFeatures, response=response)
+        self.g2_handle.getEntityDetails(
+            entityID=entity_id,
+            includeInternalFeatures=include_internal_features,
+            response=response
+            )
 
         #convert from bytebuffer to string
         response = response.decode()
 
         #maybe convert to dict
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_relationship_details(self, relationshipID, includeInternalFeatures=False, returnAsString=False):
-        relationshipID = int(relationshipID)
-        includeInternalFeatures = int(includeInternalFeatures)
+    def get_relationship_details(self,
+                                 relationship_id,
+                                 include_internal_features=False,
+                                 return_as_string=False):
+        relationship_id = int(relationship_id)
+        include_internal_features = int(include_internal_features)
+
         response = bytearray()
-        self.g2_handle.getRelationshipDetails(relationshipID=relationshipID, includeInternalFeatures=includeInternalFeatures, response=response)
+        self.g2_handle.getRelationshipDetails(
+            relationshipID=relationship_id,
+            includeInternalFeatures=include_internal_features,
+            response=response
+            )
 
         #convert from bytebuffer to string
         response = response.decode()
 
         #maybe convert to dict
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_entity_resume(self, entityID, returnAsString=False):
-        entityID = int(entityID)
+    def get_entity_resume(self, entity_id, return_as_string=False):
+        entity_id = int(entity_id)
         response = bytearray()
-        self.g2_handle.getEntityResume(entityID=entityID, response=response)
+        self.g2_handle.getEntityResume(entityID=entity_id, response=response)
 
         #convert from bytebuffer to string
         response = response.decode()
 
         #maybe convert to dict
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_feature(self, libFeatID, returnAsString=False):
-        libFeatID = int(libFeatID)
+    def get_feature(self, lib_feat_id, return_as_string=False):
+        lib_feat_id = int(lib_feat_id)
         response = bytearray()
-        self.g2_handle.getFeature(libFeatID=libFeatID, response=response)
+        self.g2_handle.getFeature(libFeatID=lib_feat_id, response=response)
 
         #convert from bytebuffer to string
         response = response.decode()
 
         #maybe convert to dict
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def find_entities_by_feature_ids(self, features, returnAsString=False):
+    def find_entities_by_feature_ids(self, features, return_as_string=False):
         response = bytearray()
         self.g2_handle.findEntitiesByFeatureIDs(features=features, response=response)
 
@@ -139,16 +153,14 @@ class G2DiagnosticDirectConnector:
         response = response.decode()
 
         #maybe convert to dict
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_entity_list_by_size_request(self, entitySize):
-        entitySize = int(entitySize)
+    def get_entity_list_by_size_request(self, entity_size):
+        entity_size = int(entity_size)
         response = bytearray()
-        handle = self.g2_handle.getEntityListBySize(entitySize=entitySize, response=response)
-        print(response)
-
+        handle = self.g2_handle.getEntityListBySize(entitySize=entity_size, response=response)
         return handle
 
     def fetch_next_entity_by_size(self, handle):
@@ -161,9 +173,9 @@ class G2DiagnosticDirectConnector:
     def close_entity_list_by_size(self, handle):
         return self.g2_handle.closeEntityListBySize(sizedEntityHandle=handle)
 
-    def get_entity_list_by_size_return_list(self, entitySize):
+    def get_entity_list_by_size_return_list(self, entity_size):
         result_set = []
-        handle = self.get_entity_list_by_size_request(entitySize=entitySize)
+        handle = self.get_entity_list_by_size_request(entity_size=entity_size)
 
         while True:
             queried_entity = self.fetch_next_entity_by_size(handle=handle)
@@ -175,55 +187,71 @@ class G2DiagnosticDirectConnector:
         self.close_entity_list_by_size(handle=handle)
         return result_set
 
-    def get_entity_list_by_size_with_callback(self, entitySize, callback):
-        handle = self.get_entity_list_by_size_request(entitySize=entitySize)
+    def get_entity_list_by_size_with_callback(self, entity_size, callback, return_as_string=False):
+        handle = self.get_entity_list_by_size_request(entity_size=entity_size)
 
         while True:
             queried_entity = self.fetch_next_entity_by_size(handle=handle)
             if not queried_entity:
                 break
-            callback(queried_entity)
+            if return_as_string:
+                callback(queried_entity)
+            else:
+                callback(json.loads(queried_entity))
 
         self.close_entity_list_by_size(handle=handle)
 
     # stats methods
-    def get_entity_size_breakdown(self, minimumEntitySize, includeInternalFeatures=False, returnAsString=False):
+    def get_entity_size_breakdown(self,
+                                  minimum_entity_size,
+                                  include_internal_features=False,
+                                  return_as_string=False):
         response = bytearray()
-        self.g2_handle.getEntitySizeBreakdown(minimumEntitySize=minimumEntitySize, includeInternalFeatures=includeInternalFeatures, response=response)
+        self.g2_handle.getEntitySizeBreakdown(
+            minimumEntitySize=minimum_entity_size,
+            includeInternalFeatures=include_internal_features,
+            response=response
+            )
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_data_source_counts(self, returnAsString=False):
+    def get_data_source_counts(self, return_as_string=False):
         response = bytearray()
         self.g2_handle.getDataSourceCounts(response=response)
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_mapping_statistics(self, includeInternalFeatures=False, returnAsString=False):
+    def get_mapping_statistics(self, include_internal_features=False, return_as_string=False):
         response = bytearray()
-        self.g2_handle.getMappingStatistics(includeInternalFeatures=includeInternalFeatures, response=response)
+        self.g2_handle.getMappingStatistics(
+            includeInternalFeatures=include_internal_features,
+            response=response
+            )
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_resolution_statistics(self, returnAsString=False):
+    def get_resolution_statistics(self, return_as_string=False):
         response = bytearray()
         self.g2_handle.getResolutionStatistics(response=response)
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
 
-    def get_generic_features(self, featureType, maximumEstimatedCount, returnAsString=False):
+    def get_generic_features(self, feature_type, maximum_estimated_count, return_as_string=False):
         response = bytearray()
-        self.g2_handle.getGenericFeatures(featureType=featureType, maximumEstimatedCount=maximumEstimatedCount, response=response)
+        self.g2_handle.getGenericFeatures(
+            featureType=feature_type,
+            maximumEstimatedCount=maximum_estimated_count,
+            response=response
+            )
         response = response.decode()
-        if not returnAsString:
+        if not return_as_string:
             response = json.loads(response)
         return response
-
