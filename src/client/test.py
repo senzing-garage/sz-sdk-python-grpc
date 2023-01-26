@@ -1,11 +1,7 @@
-import g2_diagnostic_grpc_connector
 import g2_diagnostic_client
 
-import sys
 
-
-
-def doTests(clinet):
+def do_tests(client):
     def my_callback(entity):
         print(entity)
         print(type(entity))
@@ -19,15 +15,15 @@ def doTests(clinet):
     print(response)
 
     print('GetEntityDetails')
-    response = client.get_entity_details(1,False)
+    response = client.get_entity_details(1, False)
     print(response)
-    response = client.get_entity_details(1,True)
+    response = client.get_entity_details(1, True)
     print(response)
 
     print('GetRelationshipDetails')
-    response = client.get_relationship_details(59,False)
+    response = client.get_relationship_details(59, False)
     print(response)
-    response = client.get_relationship_details(59,True)
+    response = client.get_relationship_details(59, True)
     print(response)
 
     print('GetEntityResumeRequest')
@@ -44,9 +40,9 @@ def doTests(clinet):
 #    print(response)
 
     print('GetEntitySizeBreakdown')
-    response = client.get_enity_size_breakdown(minimumEntitySize=2, includeInternalFeatures=False)
+    response = client.get_enity_size_breakdown(minimum_entity_size=2, include_internal_features=False)
     print(response)
-    response = client.get_enity_size_breakdown(minimumEntitySize=2, includeInternalFeatures=True)
+    response = client.get_enity_size_breakdown(minimum_entity_size=2, include_internal_features=True)
     print(response)
 
     print('GetDataSourceCounts')
@@ -62,7 +58,7 @@ def doTests(clinet):
     print(response)
 
     print('GetGenericFeatures')
-    response = client.get_generic_features('NAME',1000000)
+    response = client.get_generic_features('NAME', 1000000)
     print(response)
 
     print('GetDBInfo')
@@ -97,25 +93,28 @@ def doTests(clinet):
 
 
 if __name__ == "__main__":
-    iniParams = { "PIPELINE"  :
+    INI_PARAMS = {"PIPELINE"  :
                   {
-                    "CONFIGPATH":"/home/gadair/senzing/etc",
-                    "RESOURCEPATH":"/opt/senzing/g2/resources",
-                    "SUPPORTPATH":"/opt/senzing/data/3.0.0"
+                      "CONFIGPATH":"/home/gadair/senzing/etc",
+                      "RESOURCEPATH":"/opt/senzing/g2/resources",
+                      "SUPPORTPATH":"/opt/senzing/data/3.0.0"
                   },
                   "SQL":
                   {
                       "CONNECTION":"sqlite3://na:na@/home/gadair/senzing/var/sqlite/G2C.db"
                   }
-                }
+                 }
 
-    client = g2_diagnostic_client.G2DiagnosticClient()
+    CLIENT = g2_diagnostic_client.G2DiagnosticClient()
     print('init')
-    url = 'localhost:8258'
-    #response = client.init_grpc_connection_with_url(url)
+    URL = 'localhost:8258'
+    #RESPONSE = client.init_grpc_connection_with_url(url)
 
-    #response = client.init_direct_from_environment('grpc_test')
-    response = client.legacy_init_grpc_connector(url, 'grpc_test', iniParams)
-    print(response)
+    #run grpc
+    RESPONSE = CLIENT.legacy_init_grpc_connector(url=URL, module_name='grpc_test', ini_params=INI_PARAMS)
+    print(RESPONSE)
+    do_tests(CLIENT)
 
-    doTests(client)
+    #run direct
+    RESPONSE = CLIENT.init_direct_from_environment(module_name='grpc_test')
+    do_tests(CLIENT)
