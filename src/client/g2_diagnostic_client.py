@@ -7,12 +7,6 @@ class G2DiagnosticClient:
         self.connector = None
 
     #internal methods
-    def legacy_init_grpc_connector(self, url, module_name, ini_params):
-        import g2_diagnostic_grpc_connector
-        self.type = 'GRPC'
-        self.connector = g2_diagnostic_grpc_connector.G2DiagnosticGRPCConnector()
-        return self.connector.init(url, module_name, ini_params)
-
     def __init_grpc_connector(self):
         import g2_diagnostic_grpc_connector
         self.type = 'GRPC'

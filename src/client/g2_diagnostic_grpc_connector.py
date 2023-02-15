@@ -15,19 +15,6 @@ class G2DiagnosticGRPCConnector:
         self.stub = None
 
     # startup/shutdown methods
-
-    # GGANOTE: depricate when server configs itself
-    def init(self, url, module_name, ini_params, verbose_logging=False):
-        self.channel = grpc.insecure_channel(url)
-        self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
-
-        if isinstance(ini_params, dict):
-            ini_params = json.dumps(ini_params)
-
-        req = g2diagnostic_pb2.InitRequest(
-            moduleName=module_name, iniParams=ini_params, verboseLogging=verbose_logging)
-        return self.stub.Init(req)
-
     def init_with_url(self, url):
         self.channel = grpc.insecure_channel(url)
         self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
@@ -40,8 +27,8 @@ class G2DiagnosticGRPCConnector:
         warnings.warn('reinit does nothing for gRPC connections')
 
     def destroy(self):
-        return self.stub.Destroy(g2diagnostic_pb2.DestroyRequest())
-#        warnings.warn("destroy does nothing for gRPC connections ")
+        #return self.stub.Destroy(g2diagnostic_pb2.DestroyRequest())
+        warnings.warn("destroy does nothing for gRPC connections ")
 
     # get sys into methods
     def get_physical_cores(self):

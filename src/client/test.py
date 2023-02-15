@@ -111,7 +111,8 @@ if __name__ == "__main__":
     #RESPONSE = client.init_grpc_connection_with_url(url)
 
     #run grpc
-    RESPONSE = CLIENT.legacy_init_grpc_connector(url=URL, module_name='grpc_test', ini_params=INI_PARAMS)
+    RESPONSE = CLIENT.init_grpc_connection_with_url(url=URL)
+    #RESPONSE = CLIENT.legacy_init_grpc_connector(url=URL, module_name='grpc_test', ini_params=INI_PARAMS)
     print(RESPONSE)
     do_tests(CLIENT)
 
