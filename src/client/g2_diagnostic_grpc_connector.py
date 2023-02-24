@@ -13,10 +13,15 @@ class G2DiagnosticGRPCConnector:
     def __init__(self):
         self.channel = None
         self.stub = None
+        self.url = None
 
     # startup/shutdown methods
+    def init(self, url, module_name, ini_params, verbose_logging=False):
+        warnings.warn('init does nothing for gRPC connections, use init_grpc_connection_with_url')
+
     def init_with_url(self, url):
-        self.channel = grpc.insecure_channel(url)
+        self.url = url
+        self.channel = grpc.insecure_channel(self.url)
         self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
         # add a ping here or something to ensure it connected
 
@@ -128,7 +133,7 @@ class G2DiagnosticGRPCConnector:
         result = self.stub.GetEntityListBySize(request)
         return result.result
 
-    def fetch_next_entity_by_size(self, handle):
+    def fetch_next_entity_by_size(self, handle, returnAsString):
         request = g2diagnostic_pb2.FetchNextEntityBySizeRequest(entityListBySizeHandle=handle)
         result = self.stub.FetchNextEntityBySize(request)
         if not result.result:
@@ -155,6 +160,16 @@ class G2DiagnosticGRPCConnector:
                     callback(entity.result)
                 else:
                     callback(json.loads(entity.result))
+
+    def get_entity_list_by_size_iteritems(self, entity_size, return_as_string=False):
+        request = g2diagnostic_pb2.StreamEntityListBySizeRequest(entitySize=entity_size)
+        for entity in self.stub.StreamEntityListBySize(request):
+            if entity.result:
+                if return_as_string:
+                    yield entity.result
+                else:
+                    yield json.loads(entity.result)
+
 
     # stats methods
     def get_entity_size_breakdown(self,

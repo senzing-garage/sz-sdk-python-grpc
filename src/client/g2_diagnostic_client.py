@@ -128,8 +128,11 @@ class G2DiagnosticClient:
         entity_size = int(entity_size)
         return self.connector.get_entity_list_by_size_request(entity_size=entity_size)
 
-    def fetch_next_entity_by_size(self, handle):
-        return self.connector.fetch_next_entity_by_size(handle)
+    def fetch_next_entity_by_size(self, handle, return_as_string=False):
+        result = self.connector.fetch_next_entity_by_size(handle)
+        if return_as_string:
+            return result
+        return json.loads(result)
 
     def close_entity_list_by_size(self, handle):
         return self.connector.close_entity_list_by_size(handle)
@@ -137,11 +140,16 @@ class G2DiagnosticClient:
     def get_entity_list_by_size_return_list(self, entity_size):
         return self.connector.get_entity_list_by_size_return_list(entity_size)
 
-    def get_entity_list_by_size_with_callback(self, entity_size, callback):
+    def get_entity_list_by_size_with_callback(self, entity_size, callback, return_as_string=False):
         return self.connector.get_entity_list_by_size_with_callback(
             entity_size=entity_size,
-            callback=callback
+            callback=callback,
+            return_as_string=return_as_string
             )
+
+    def get_entity_list_by_size_iteritems(self, entity_size, return_as_string=False):
+        return self.connector.get_entity_list_by_size_iteritems(entity_size, return_as_string=return_as_string)
+
 
     #stats methods
     def get_enity_size_breakdown(self,

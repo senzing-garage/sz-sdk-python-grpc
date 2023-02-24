@@ -14,6 +14,11 @@ def do_tests(client):
     response = client.get_entity_list_by_size_return_list(2)
     print(response)
 
+    print('get_entity_list_by_size_iteritems')
+    for item in client.get_entity_list_by_size_iteritems(2):
+        print(item)
+    print('done get_entity_list_by_size_iteritems')
+
     print('GetEntityDetails')
     response = client.get_entity_details(1, False)
     print(response)
@@ -112,7 +117,6 @@ if __name__ == "__main__":
 
     #run grpc
     RESPONSE = CLIENT.init_grpc_connection_with_url(url=URL)
-    #RESPONSE = CLIENT.legacy_init_grpc_connector(url=URL, module_name='grpc_test', ini_params=INI_PARAMS)
     print(RESPONSE)
     do_tests(CLIENT)
 

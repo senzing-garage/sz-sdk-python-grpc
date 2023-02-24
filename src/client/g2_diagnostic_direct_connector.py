@@ -17,7 +17,6 @@ class G2DiagnosticDirectConnector:
         self.g2_handle = None
 
     # startup/shutdown methods
-    #GGANOTE: depricate when server configs itself
     def init(self, url, module_name, ini_params, verbose_logging=False):
         if isinstance(ini_params, str):
             ini_params = json.loads(ini_params)
@@ -34,7 +33,7 @@ class G2DiagnosticDirectConnector:
         return self.g2_handle.init(module_name, json_config, verbose_logging)
 
     def init_direct_with_config_id(self, config_id):
-        warnings.warn('init_direct_with_config_id does nothing for gRPC connections')
+        pass
 
     def reinit(self, config_id):
         config_id = bytes(config_id, 'utf-8')
@@ -200,6 +199,21 @@ class G2DiagnosticDirectConnector:
                 callback(json.loads(queried_entity))
 
         self.close_entity_list_by_size(handle=handle)
+
+    def get_entity_list_by_size_iteritems(self, entity_size, return_as_string=False):
+        handle = self.get_entity_list_by_size_request(entity_size=entity_size)
+
+        while True:
+            queried_entity = self.fetch_next_entity_by_size(handle=handle)
+            if not queried_entity:
+                break
+            if return_as_string:
+                yield queried_entity
+            else:
+                yield json.loads(queried_entity)
+
+        self.close_entity_list_by_size(handle=handle)
+
 
     # stats methods
     def get_entity_size_breakdown(self,
