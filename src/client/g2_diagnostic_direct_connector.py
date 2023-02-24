@@ -17,11 +17,11 @@ class G2DiagnosticDirectConnector:
         self.g2_handle = None
 
     # startup/shutdown methods
-    def init(self, url, module_name, ini_params, verbose_logging=False):
+    def init_direct(self, module_name, ini_params, verbose_logging):
         if isinstance(ini_params, str):
             ini_params = json.loads(ini_params)
         self.g2_handle = G2Diagnostic()
-        return self.g2_handle.init(module_name, ini_params, verbose_logging)
+        return self.g2_handle.init_direct(module_name, ini_params, verbose_logging)
 
     def init_with_url(self, url):
         warnings.warn('init_with_url is not valid for direct connections')

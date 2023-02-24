@@ -16,7 +16,7 @@ class G2DiagnosticGRPCConnector:
         self.url = None
 
     # startup/shutdown methods
-    def init(self, url, module_name, ini_params, verbose_logging=False):
+    def init_direct(self, module_name, ini_params, verbose_logging=False):
         warnings.warn('init does nothing for gRPC connections, use init_grpc_connection_with_url')
 
     def init_with_url(self, url):
