@@ -133,7 +133,7 @@ class G2DiagnosticGRPCConnector:
         result = self.stub.GetEntityListBySize(request)
         return result.result
 
-    def fetch_next_entity_by_size(self, handle, returnAsString):
+    def fetch_next_entity_by_size(self, handle):
         request = g2diagnostic_pb2.FetchNextEntityBySizeRequest(entityListBySizeHandle=handle)
         result = self.stub.FetchNextEntityBySize(request)
         if not result.result:
