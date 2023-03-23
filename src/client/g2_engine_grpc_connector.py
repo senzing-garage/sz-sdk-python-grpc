@@ -18,7 +18,7 @@ class G2EngineGRPCConnector:
         self.url = None
 
     # startup/shutdown methods
-    def init(self, url, module_name, ini_params, verbose_logging=False):
+    def init_direct(self, module_name, senzing_config_json, config_id, verbose_logging):
         warnings.warn('init does nothing for gRPC connections, use init_grpc_connection_with_url')
 
     def init_with_url(self, url):
@@ -27,15 +27,16 @@ class G2EngineGRPCConnector:
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
         # add a ping here or something to ensure it connected
 
-    def init_direct_with_config_id(self, config_id):
-        warnings.warn('init_direct_with_config_id does nothing for gRPC connections')
+    def init_direct_from_environment(self, module_name, config_id, verbose_logging):
+        warnings.warn('init_direct_from_environemnt does nothing for gRPC connections')
 
     def reinit(self, config_id):
         warnings.warn('reinit does nothing for gRPC connections')
 
     def destroy(self):
-        #return self.stub.Destroy(g2diagnostic_pb2.DestroyRequest())
-        warnings.warn("destroy does nothing for gRPC connections ")
+        self.channel = None
+        self.stub = None
+        self.url = None
 
     def prime_engine(self):
         self.stub.PrimeEngine(g2engine_pb2.PrimeEngineRequest())

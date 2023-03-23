@@ -23,28 +23,24 @@ class G2EngineClient:
         self.__init_grpc_connector()
         self.connector.init_with_url(url)
 
-    def init_direct(self, module_name, ini_params, verbose_logging=False):
+    def init_direct(self, module_name, senzing_config_json, config_id=None, verbose_logging=False):
         self.__init_direct_connector()
         if isinstance(ini_params, dict):
             ini_params = json.dumps(ini_params)
 
         return self.connector.init_direct(
             module_name=module_name,
-            iniParams=ini_params,
-            verboseLogging=verbose_logging
-            )
+            senzing_config_json=senzing_config_json,
+            config_id=config_id,
+            verbose_logging=verbose_logging)
 
-    def init_direct_from_environment(self, module_name, verbose_logging=False):
+    def init_direct_from_environment(self, module_name, config_id=None, verbose_logging=False):
         self.__init_direct_connector()
         return self.connector.init_direct_from_environment(
             module_name=module_name,
+            config_id=config_id,
             verbose_logging=verbose_logging
             )
-
-    def init_with_config_id(self, config_id):
-        self.__init_direct_connector()
-        config_id = int(config_id)
-        return self.connector.init_direct_with_config_id(config_id=config_id)
 
     def reinit(self, config_id):
         config_id = int(config_id)
@@ -104,11 +100,6 @@ class G2EngineClient:
             data_as_json = json.dumps(data_as_json)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
-# flags currently does nothing for this call            
-#        if flags is None:
-#            flags = G2Flags()
-#        if not isinstance(flags, (G2Flags, int)):
-#            raise(F'Invalid flags parameter type {type(flags)} in call to add_record_with_info.  Must be G2Flags or int')
         return self.connector.add_record_with_info(
             datasource_code=datasource_code, 
             record_id=record_id, 
@@ -118,8 +109,8 @@ class G2EngineClient:
             return_as_string=return_as_string)
 
     def add_record_with_returned_record_id(self, 
-                                           datasource_code, 
-                                           data_as_json, 
+                                           datasource_code,
+                                           data_as_json,
                                            load_id=None):
         datasource_code = str(datasource_code)
         if load_id:
@@ -127,14 +118,14 @@ class G2EngineClient:
         if isinstance(data_as_json, dict):
             data_as_json = json.dumps(data_as_json)
         return self.connector.add_record_with_returned_record_id(
-            datasource_code=datasource_code, 
-            data_as_json=data_as_json, 
+            datasource_code=datasource_code,
+            data_as_json=data_as_json,
             load_id=load_id)
 
-    def add_record_with_info_with_returned_record_id(self, 
-                                                     datasource_code, 
-                                                     data_as_json, 
-                                                     load_id=None, 
+    def add_record_with_info_with_returned_record_id(self,
+                                                     datasource_code,
+                                                     data_as_json,
+                                                     load_id=None,
                                                      flags=G2EntityFlags(),
                                                      #is this the right flag?
                                                      return_as_string=False):
@@ -146,8 +137,8 @@ class G2EngineClient:
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
         return self.connector.add_record_with_info_with_returned_record_id(
-            datasource_code=datasource_code, 
-            data_as_json=data_as_json, 
+            datasource_code=datasource_code,
+            data_as_json=data_as_json,
             load_id=load_id,
             flags=flags,
             return_as_string=return_as_string)

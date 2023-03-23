@@ -22,28 +22,25 @@ class G2DiagnosticClient:
         self.__init_grpc_connector()
         self.connector.init_with_url(url)
 
-    def init_direct(self, module_name, ini_params, verbose_logging=False):
+    def init_direct(self, module_name, ini_params, config_id=None, verbose_logging=False):
         self.__init_direct_connector()
         if isinstance(ini_params, dict):
             ini_params = json.dumps(ini_params)
 
-        return self.connector.init(
+        return self.connector.init_direct(
             module_name=module_name,
-            iniParams=ini_params,
-            verboseLogging=verbose_logging
-            )
-
-    def init_direct_from_environment(self, module_name, verbose_logging=False):
-        self.__init_direct_connector()
-        return self.connector.init_direct_from_environment(
-            module_name=module_name,
+            ini_params=ini_params,
+            config_id=config_id,
             verbose_logging=verbose_logging
             )
 
-    def init_with_config_id(self, config_id):
+    def init_direct_from_environment(self, module_name, config_id=None, verbose_logging=False):
         self.__init_direct_connector()
-        config_id = int(config_id)
-        return self.connector.init_direct_with_config_id(config_id=config_id)
+        return self.connector.init_direct_from_environment(
+            module_name=module_name,
+            config_id=config_id,
+            verbose_logging=verbose_logging
+            )
 
     def reinit(self, config_id):
         config_id = int(config_id)

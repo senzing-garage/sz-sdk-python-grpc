@@ -17,20 +17,39 @@ class G2EngineDirectConnector:
         self.g2_handle = None
 
     # startup/shutdown methods
-    def init(self, url, module_name, ini_params, verbose_logging=False):
+    def init(self, module_name, senzing_config_json, config_id, verbose_logging):
         if isinstance(ini_params, str):
             ini_params = json.loads(ini_params)
         self.g2_handle = G2Engine()
-        return self.g2_handle.init(module_name, ini_params, verbose_logging)
+        if not config_id:
+            return self.g2_handle.init(
+                module_name, 
+                senzing_config_json, 
+                verbose_logging)
+        return self.g2_handle.initWithConfigID(
+            engine_name=module_name,
+            senzing_config_json=senzing_config_json,
+            config_id=config_id,
+            verbose_logging=verbose_logging)
 
     def init_with_url(self, url):
         warnings.warn('init_with_url is not valid for direct connections')
 
-    def init_direct_from_environment(self, module_name, verbose_logging=False):
+    def init_direct(self, module_name, senzing_config_json, config_id, verbose_logging):
+        return self.init(
+            module_name=module_name,
+            senzing_config_json=senzing_config_json,
+            config_id=config_id, 
+            verbose_logging=verbose_logging)
+
+    def init_direct_from_environment(self, module_name, config_id, verbose_logging):
         import senzing_module_config
         json_config = senzing_module_config.get_json_config()
-        self.g2_handle = G2Engine()
-        return self.g2_handle.init(module_name, json_config, verbose_logging)
+        return self.init(
+            module_name=module_name, 
+            senzing_config_json=json_config,
+            config_id=config_id, 
+            verbose_logging=verbose_logging)
 
     def init_direct_with_config_id(self, config_id):
         pass

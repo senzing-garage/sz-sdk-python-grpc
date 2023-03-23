@@ -17,23 +17,26 @@ class G2DiagnosticDirectConnector:
         self.g2_handle = None
 
     # startup/shutdown methods
-    def init_direct(self, module_name, ini_params, verbose_logging):
+    def init_direct(self, module_name, ini_params, config_id, verbose_logging):
         if isinstance(ini_params, str):
             ini_params = json.loads(ini_params)
         self.g2_handle = G2Diagnostic()
-        return self.g2_handle.init_direct(module_name, ini_params, verbose_logging)
+        if not config_id:
+            return self.g2_handle.init(module_name, ini_params, verbose_logging)
+        else:
+            return self.g2_handle.initWithConfigID(module_name, ini_params, config_id, verbose_logging)
 
     def init_with_url(self, url):
         warnings.warn('init_with_url is not valid for direct connections')
 
-    def init_direct_from_environment(self, module_name, verbose_logging=False):
+    def init_direct_from_environment(self, module_name, config_id, verbose_logging):
         import senzing_module_config
         json_config = senzing_module_config.get_json_config()
         self.g2_handle = G2Diagnostic()
-        return self.g2_handle.init(module_name, json_config, verbose_logging)
-
-    def init_direct_with_config_id(self, config_id):
-        pass
+        if not config_id:
+            return self.g2_handle.init(module_name, json_config, verbose_logging)
+        else:
+            return self.g2_handle.initWithConfigID(module_name, json_config, config_id, verbose_logging)
 
     def reinit(self, config_id):
         config_id = bytes(config_id, 'utf-8')

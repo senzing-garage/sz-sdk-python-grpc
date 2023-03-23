@@ -25,6 +25,9 @@ class G2DiagnosticGRPCConnector:
         self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
         # add a ping here or something to ensure it connected
 
+    def init_direct_from_environment(self, module_name, verbose_logging=False):
+        warnings.warn('init_direct_from_environemnt does nothing for gRPC connections')
+
     def init_direct_with_config_id(self, config_id):
         warnings.warn('init_direct_with_config_id does nothing for gRPC connections')
 

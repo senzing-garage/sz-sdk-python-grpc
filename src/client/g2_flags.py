@@ -1,3 +1,6 @@
+import sys
+import warnings
+
 try:
     from senzing import G2EngineFlags
 except ModuleNotFoundError:
@@ -34,7 +37,7 @@ class G2Flags:
         self.flags |= G2EngineFlags.G2_ENTITY_INCLUDE_ALL_RELATIONS
 
     # Flags for outputting entity feature data.
-    def set_entity_include_all_relations(self):
+    def set_entity_include_all_features(self):
         self.flags |= G2EngineFlags.G2_ENTITY_INCLUDE_ALL_FEATURES
 
     def set_entity_include_representative_features(self):
