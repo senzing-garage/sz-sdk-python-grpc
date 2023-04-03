@@ -89,8 +89,8 @@ class G2EngineClient:
                              record_id, 
                              data_as_json, 
                              load_id=None, 
-                             flags=G2EntityFlags(),
-                             #is this the right flag?
+                             flags=None,
+                             #flags not currently used
                              return_as_string=False):
         datasource_code = str(datasource_code)
         record_id = str(record_id)
@@ -100,6 +100,8 @@ class G2EngineClient:
             data_as_json = json.dumps(data_as_json)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         return self.connector.add_record_with_info(
             datasource_code=datasource_code, 
             record_id=record_id, 
@@ -126,8 +128,8 @@ class G2EngineClient:
                                                      datasource_code,
                                                      data_as_json,
                                                      load_id=None,
-                                                     flags=G2EntityFlags(),
-                                                     #is this the right flag?
+                                                     flags=None,
+                                                     #flags not currently used
                                                      return_as_string=False):
         datasource_code = str(datasource_code)
         if load_id:
@@ -136,6 +138,8 @@ class G2EngineClient:
             data_as_json = json.dumps(data_as_json)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if not flags:
+            flags = 0
         return self.connector.add_record_with_info_with_returned_record_id(
             datasource_code=datasource_code,
             data_as_json=data_as_json,
@@ -165,8 +169,8 @@ class G2EngineClient:
                                  record_id, 
                                  data_as_json, 
                                  load_id=None, 
-                                 flags=G2EntityFlags(),
-                                 #is this the right flag?
+                                 flags=None,
+                                 #flags not currently used
                                  return_as_string=False):
         datasource_code = str(datasource_code)
         record_id = str(record_id)
@@ -176,11 +180,6 @@ class G2EngineClient:
             data_as_json = json.dumps(data_as_json)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
-# flags currently does nothing for this call            
-#        if flags is None:
-#            flags = G2Flags()
-#        if not isinstance(flags, (G2Flags, int)):
-#            raise(F'Invalid flags parameter type {type(flags)} in call to add_record_with_info.  Must be G2Flags or int')
         return self.connector.add_record_with_info(
             datasource_code=datasource_code, 
             record_id=record_id, 
@@ -376,6 +375,8 @@ class G2EngineClient:
             search_attributes = json.dumps(search_attributes)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         search_results = self.connector.search_by_attributes(
             search_attributes, 
             flags)
@@ -656,8 +657,19 @@ class G2EngineClient:
             return why_result
         return json.loads(why_result)
 
+    def why_entity_by_entity_id(self,
+                                entity_id,
+                                flags=G2WhyEntityFlags()):
+        if isinstance(flags, G2Flags):
+            flags=flags.get_flags()
+        entity_id = int(entity_id)
+        why_result = self.connector.why_entity_by_entity_id(
+            entity_id=entity_id,
+            flags=flags
+        )
+
     def how_entity_by_entity_id(self, 
-                                entity_id, 
+                                entity_id,
                                 flags=G2HowEntityFlags(), 
                                 return_as_string=False):
         if isinstance(flags, G2Flags):
@@ -670,6 +682,7 @@ class G2EngineClient:
             return how_result
         return json.loads(how_result)
 
+    #export
     def export_csv_entity_report_with_callback(self, 
                                                columns, 
                                                callback, 
@@ -714,5 +727,6 @@ class G2EngineClient:
             flags=flags,
             return_as_string=return_as_string)
 
+    #purge
     def purge_repository(self):
         self.connector.purge_repository()
