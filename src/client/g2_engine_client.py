@@ -1,3 +1,5 @@
+from typing import Union, Tuple
+from datetime import datetime
 import json
 from g2_flags import *
 
@@ -7,34 +9,41 @@ class G2EngineClient:
         self.connector = None
 
     #internal methods
-    def __init_grpc_connector(self):
+    def __init_grpc_connector(self) -> None:
         import g2_engine_grpc_connector
         self.type = 'GRPC'
         self.connector = g2_engine_grpc_connector.G2EngineGRPCConnector()
 
 
-    def __init_direct_connector(self):
+    def __init_direct_connector(self) -> None:
         import g2_engine_direct_connector
         self.type = 'DIRECT'
         self.connector = g2_engine_direct_connector.G2EngineDirectConnector()
 
     #startup/shutdown methods
-    def init_grpc_connection_with_url(self, url):
+    def init_grpc_connection_with_url(self, url: str) -> None:
         self.__init_grpc_connector()
         self.connector.init_with_url(url)
 
-    def init_direct(self, module_name, senzing_config_json, config_id=None, verbose_logging=False):
+    def init_direct(self,
+                    module_name: str,
+                    senzing_config_json: Union[str,dict], 
+                    config_id: int=None,
+                    verbose_logging: bool=False) -> None:
         self.__init_direct_connector()
         if isinstance(ini_params, dict):
             ini_params = json.dumps(ini_params)
 
-        return self.connector.init_direct(
+        self.connector.init_direct(
             module_name=module_name,
             senzing_config_json=senzing_config_json,
             config_id=config_id,
             verbose_logging=verbose_logging)
 
-    def init_direct_from_environment(self, module_name, config_id=None, verbose_logging=False):
+    def init_direct_from_environment(self,
+                                     module_name: str,
+                                     config_id: int=None,
+                                     verbose_logging: bool=False) -> None:
         self.__init_direct_connector()
         return self.connector.init_direct_from_environment(
             module_name=module_name,
@@ -42,37 +51,36 @@ class G2EngineClient:
             verbose_logging=verbose_logging
             )
 
-    def reinit(self, config_id):
+    def reinit(self, config_id: int) -> None:
         config_id = int(config_id)
-        return self.connector.reinit(config_id=config_id)
+        self.connector.reinit(config_id=config_id)
 
-    def destroy(self):
-        retval = self.connector.destroy()
+    def destroy(self) -> None:
+        self.connector.destroy()
         self.type = None
         self.connector = None
-        return retval
 
-    def prime_engine(self):
+    def prime_engine(self) -> None:
         self.connector.prime_engine()
 
-    def get_active_config_id(self):
+    def get_active_config_id(self) -> int:
         return self.connector.get_active_config_id()
 
-    def export_config(self):
+    def export_config(self) -> dict:
         return self.connector.export_config()
 
-    def export_config_and_config_id(self):
+    def export_config_and_config_id(self) -> Tuple[dict,int]:
         return self.connector.export_config_and_config_id()
 
-    def get_repository_last_modified_time(self):
+    def get_repository_last_modified_time(self) -> datetime:
         return self.connector.get_repository_last_modified_time()
 
     #Add records
-    def add_record(self, 
-                   datasource_code, 
-                   record_id, 
-                   data_as_json, 
-                   load_id=None):
+    def add_record(self,
+                   datasource_code: str,
+                   record_id: str,
+                   data_as_json: Union[str, dict],
+                   load_id: str=None) -> None:
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         if load_id:
@@ -84,14 +92,118 @@ class G2EngineClient:
                                   data_as_json=data_as_json, 
                                   load_id=load_id)
 
-    def add_record_with_info(self, 
-                             datasource_code, 
-                             record_id, 
-                             data_as_json, 
-                             load_id=None, 
-                             flags=None,
-                             #flags not currently used
-                             return_as_string=False):
+    def add_record_with_info_as_str(self,
+                                    datasource_code: str,
+                                    record_id: str,
+                                    data_as_json: Union[str, dict],
+                                    load_id: str=None,
+                                    flags: Union[G2Flags, int]=None) -> str:
+                                    #flags not currently used
+        datasource_code = str(datasource_code)
+        record_id = str(record_id)
+        if load_id:
+            load_id = str(load_id)
+        if isinstance(data_as_json, dict):
+            data_as_json = json.dumps(data_as_json)
+        if isinstance(flags, G2Flags):
+            flags=flags.get_flags()
+        if flags is None:
+            flags = 0
+        return self.connector.add_record_with_info(
+            datasource_code=datasource_code,
+            record_id=record_id,
+            data_as_json=data_as_json,
+            load_id=load_id,
+            flags=flags)
+
+    def add_record_with_info(self,
+                             datasource_code: str,
+                             record_id: str,
+                             data_as_json: Union[str, dict],
+                             load_id: str=None,
+                             flags: Union[G2Flags, int]=None) -> dict:
+        return json.loads(self.add_record_with_info_as_str(
+            datasource_code=datasource_code,
+            record_id=record_id,
+            data_as_json=data_as_json,
+            load_id=load_id,
+            flags=flags
+        ))
+
+
+    def add_record_with_returned_record_id(self,
+                                           datasource_code: str,
+                                           data_as_json: Union[str,dict],
+                                           load_id: str=None) -> str:
+        datasource_code = str(datasource_code)
+        if load_id:
+            load_id = str(load_id)
+        if isinstance(data_as_json, dict):
+            data_as_json = json.dumps(data_as_json)
+        return self.connector.add_record_with_returned_record_id(
+            datasource_code=datasource_code,
+            data_as_json=data_as_json,
+            load_id=load_id)
+
+    def add_record_with_info_with_returned_record_id_as_str(self,
+                                                            datasource_code: str,
+                                                            data_as_json: Union[str,dict],
+                                                            load_id: str=None,
+                                                            #flags not currently used
+                                                            flags: Union[G2Flags,int]=None)\
+                                                            -> Tuple[str, str]:
+        datasource_code = str(datasource_code)
+        if load_id:
+            load_id = str(load_id)
+        if isinstance(data_as_json, dict):
+            data_as_json = json.dumps(data_as_json)
+        if isinstance(flags, G2Flags):
+            flags=flags.get_flags()
+        if not flags:
+            flags = 0
+        return self.connector.add_record_with_info_with_returned_record_id(
+            datasource_code=datasource_code,
+            data_as_json=data_as_json,
+            load_id=load_id,
+            flags=flags)
+
+    def add_record_with_info_with_returned_record_id(self,
+                                                     datasource_code: str,
+                                                     data_as_json: Union[str,dict],
+                                                     load_id: str=None,
+                                                     flags: Union[G2Flags,int]=None)\
+                                                     -> Tuple[dict, str]:
+        retval = self.add_record_with_info_with_returned_record_id_as_str(
+            datasource_code=datasource_code,
+            data_as_json=data_as_json,
+            load_id=load_id,
+            flags=flags)
+        return (json.loads(retval[0]), retval[1])
+
+    #replace records
+    def replace_record(self,
+                       datasource_code: str,
+                       record_id: str,
+                       data_as_json: Union[str,dict],
+                       load_id: bool=None):
+        datasource_code = str(datasource_code)
+        record_id = str(record_id)
+        if load_id:
+            load_id = str(load_id)
+        if isinstance(data_as_json, dict):
+            data_as_json = json.dumps(data_as_json)
+        self.connector.replace_record(datasource_code=datasource_code,
+                                      record_id=record_id,
+                                      data_as_json=data_as_json,
+                                      load_id=load_id)
+
+    def replace_record_with_info_as_str(self,
+                                        datasource_code,
+                                        record_id,
+                                        data_as_json,
+                                        load_id=None,
+                                        flags=None) -> str:
+                                        #flags not currently used
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         if load_id:
@@ -107,215 +219,202 @@ class G2EngineClient:
             record_id=record_id, 
             data_as_json=data_as_json, 
             load_id=load_id,
-            flags=flags,
-            return_as_string=return_as_string)
+            flags=flags)
 
-    def add_record_with_returned_record_id(self, 
-                                           datasource_code,
-                                           data_as_json,
-                                           load_id=None):
-        datasource_code = str(datasource_code)
-        if load_id:
-            load_id = str(load_id)
-        if isinstance(data_as_json, dict):
-            data_as_json = json.dumps(data_as_json)
-        return self.connector.add_record_with_returned_record_id(
-            datasource_code=datasource_code,
-            data_as_json=data_as_json,
-            load_id=load_id)
-
-    def add_record_with_info_with_returned_record_id(self,
-                                                     datasource_code,
-                                                     data_as_json,
-                                                     load_id=None,
-                                                     flags=None,
-                                                     #flags not currently used
-                                                     return_as_string=False):
-        datasource_code = str(datasource_code)
-        if load_id:
-            load_id = str(load_id)
-        if isinstance(data_as_json, dict):
-            data_as_json = json.dumps(data_as_json)
-        if isinstance(flags, G2Flags):
-            flags=flags.get_flags()
-        if not flags:
-            flags = 0
-        return self.connector.add_record_with_info_with_returned_record_id(
-            datasource_code=datasource_code,
-            data_as_json=data_as_json,
-            load_id=load_id,
-            flags=flags,
-            return_as_string=return_as_string)
-
-    #replace records
-    def replace_record(self, 
-                       datasource_code, 
-                       record_id, 
-                       data_as_json, 
-                       load_id=None):
-        datasource_code = str(datasource_code)
-        record_id = str(record_id)
-        if load_id:
-            load_id = str(load_id)
-        if isinstance(data_as_json, dict):
-            data_as_json = json.dumps(data_as_json)
-        self.connector.replace_record(datasource_code=datasource_code, 
-                                      record_id=record_id, 
-                                      data_as_json=data_as_json, 
-                                      load_id=load_id)
-
-    def replace_record_with_info(self, 
-                                 datasource_code, 
-                                 record_id, 
-                                 data_as_json, 
-                                 load_id=None, 
-                                 flags=None,
+    def replace_record_with_info(self,
+                                 datasource_code,
+                                 record_id,
+                                 data_as_json,
+                                 load_id=None,
+                                 flags=None):
                                  #flags not currently used
-                                 return_as_string=False):
-        datasource_code = str(datasource_code)
-        record_id = str(record_id)
-        if load_id:
-            load_id = str(load_id)
-        if isinstance(data_as_json, dict):
-            data_as_json = json.dumps(data_as_json)
-        if isinstance(flags, G2Flags):
-            flags=flags.get_flags()
-        return self.connector.add_record_with_info(
-            datasource_code=datasource_code, 
-            record_id=record_id, 
-            data_as_json=data_as_json, 
+        retval = self.replace_record_with_info_as_str(
+            datasource_code=datasource_code,
+            record_id=record_id,
+            data_as_json=data_as_json,
             load_id=load_id,
-            flags=flags,
-            return_as_string=return_as_string)
+            flags=flags)
+        return json.loads(retval)
 
     #reevaluation
-    def reevaluate_record(self, 
-                          datasource_code, 
-                          record_id, 
-                          flags=G2EntityFlags()):
+    def reevaluate_record(self,
+                          datasource_code: str,
+                          record_id: str,
+                          flags: G2Flags=G2EntityFlags()):
                           #is this the right flag?
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         self.connector.reevaluate_record(
-            datasource_code=datasource_code, 
-            record_id=record_id, 
+            datasource_code=datasource_code,
+            record_id=record_id,
             flags=flags)
 
-    def reevaluate_record_with_info(self, 
-                                    datasource_code, 
-                                    record_id, 
-                                    flags=G2EntityFlags(),
-                                    #is this the right flag?
-                                    return_as_string=False):
+    def reevaluate_record_with_info_as_str(self,
+                                           datasource_code: str,
+                                           record_id: str,
+                                           flags: G2Flags=G2EntityFlags()) -> str:
+                                           #is this the right flag?
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         result = self.connector.reevaluate_record_with_info(datasource_code=datasource_code, record_id=record_id, flags=flags)
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
-    def reevaluate_entity(self, entity_id, flags=None):
-        entity_id = int(entity_id)
-        self.connector.reevaluate_entity(entity_id=entity_id, flags=flags)
-
-    def reevaluate_entity_with_info(self, 
-                                    entity_id, 
-                                    flags=G2EntityFlags(),
+    def reevaluate_record_with_info(self,
+                                    datasource_code: str,
+                                    record_id: str,
+                                    flags: G2Flags=G2EntityFlags()) -> dict:
                                     #is this the right flag?
-                                    return_as_string=False):
+        retval = self.reevaluate_record_with_info_as_str(
+            datasource_code=datasource_code,
+            record_id=record_id,
+            flags=flags)
+        return json.loads(retval)
+
+    def reevaluate_entity(self, entity_id: int, flags: G2Flags=None):
         entity_id = int(entity_id)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
+        self.connector.reevaluate_entity(entity_id=entity_id, flags=flags)
+
+    def reevaluate_entity_with_info_as_str(self,
+                                           entity_id: int,
+                                           flags: G2Flags=G2EntityFlags())\
+                                           -> str:
+                                           #is this the right flag?
+        entity_id = int(entity_id)
+        if isinstance(flags, G2Flags):
+            flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         result = self.connector.reevaluate_entity_with_info(
             entity_id=entity_id, 
             flags=flags)
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
+    def reevaluate_entity_with_info(self,
+                                    entity_id: int,
+                                    flags: G2Flags=G2EntityFlags()):
+        retval = self.reevaluate_entity_with_info_as_str(
+            entity_id=entity_id,
+            flags=flags)
+        return json.loads(retval)
 
     #redo processing
-    def count_redo_records(self):
+    def count_redo_records(self) -> int:
         return self.connector.count_redo_records()
 
-    def get_redo_record(self, return_as_string=False):
+    def get_redo_record_as_str(self) -> str:
         result = self.connector.get_redo_record()
         #if there is no redo record, return None
         if len(result) == 0:
             return None
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
-    def process(self, redo_record):
+    def get_redo_record(self) -> dict:
+        retval = self.get_redo_record_as_str()
+        if not retval:
+            return None
+        return json.loads(self.get_redo_record_as_str())
+
+
+    def process(self, redo_record: Union[str,dict]) -> None:
         if isinstance(redo_record, dict):
             redo_record = json.dumps(redo_record)
         self.connector.process(redo_record=redo_record)
 
-    def process_with_info(self, 
-                          redo_record, 
-                          flags=G2EntityFlags(),
-                          #is this the right default?
-                          return_as_string=False):
+    def process_with_info_as_str(self,
+                                 redo_record: Union[str,dict],
+                                 flags: G2Flags=G2EntityFlags()) -> str:
+                                 #is this the right default?
         if isinstance(redo_record, dict):
             redo_record = json.dumps(redo_record)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
+        if flags is None:
+            flags = 0
         response = self.connector.process_with_info(redo_record, flags)
-        if return_as_string:
-            return response
-        return json.loads(response)
+        return response
+
+    def process_with_info(self,
+                          redo_record: Union[str,dict],
+                          flags: G2Flags=G2EntityFlags()) -> dict:
+        retval = self.process_with_info_as_str(
+            redo_record=redo_record,
+            flags=flags)
+        return json.loads(retval)
 
 
-    def process_redo_record(self):
+    def process_redo_record_as_str(self) -> str:
         response = self.connector.process_redo_record()
         return response
 
-    def process_redo_record_with_info(self, 
-                                      flags=G2EntityFlags(),
-                                      #is this the right default?
-                                      return_as_string=False):
+    def process_redo_record(self) -> dict:
+        return json.loads(self.process_redo_record_as_str())
+
+    def process_redo_record_with_info_as_str(self, 
+                                             flags: G2Flags=G2EntityFlags()) -> Tuple[str,str]:
+                                             #is this the right default?
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
         (response, info) = self.connector.process_redo_record_with_info(flags)
-        if not return_as_string:
-            info = json.loads(info)
         return (response, info)
 
+    def process_redo_record_with_info(self,
+                                      flags: G2Flags=G2EntityFlags()) -> Tuple[dict,dict]:
+        retval = self.process_redo_record_with_info_as_str(flags=flags)
+        return (json.loads(retval[0]), json.loads(retval[1]))
+
+
     #delete records
-    def delete_record(self, datasource_code, record_id, load_id):
+    def delete_record(self, datasource_code: str, record_id: str, load_id: str) -> None:
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         load_id = str(load_id)
         self.connector.delete_record(
-            datasource_code=datasource_code, 
-            record_id=record_id, 
+            datasource_code=datasource_code,
+            record_id=record_id,
             load_id=load_id)
 
-    def delete_record_with_info(self, 
-                                datasource_code, 
-                                record_id, 
-                                load_id=None, 
-                                flags=G2RecordFlags(),
-                                #is this the right default?
-                                return_as_string=False):
+    def delete_record_with_info_as_str(self,
+                                       datasource_code: str,
+                                       record_id: str,
+                                       load_id: str=None,
+                                       flags: G2Flags=G2RecordFlags())\
+                                       -> str:
+                                       #is this the right default?
         datasource_code = str(datasource_code)
         record_id = str(record_id)
         load_id = str(load_id)
         if isinstance(flags, G2Flags):
             flags=flags.get_flags()
         response_info = self.connector.delete_record_with_info(
-            datasource_code=datasource_code, 
-            record_id=record_id, 
-            load_id=load_id, 
+            datasource_code=datasource_code,
+            record_id=record_id,
+            load_id=load_id,
             flags=flags)
-        if return_as_string:
-            return response_info
-        return json.loads(response_info)
+        return response_info
+
+    def delete_record_with_info(self,
+                                datasource_code: str,
+                                record_id: str,
+                                load_id: str=None,
+                                flags: G2Flags=G2RecordFlags())\
+                                -> dict:
+        retval = self.delete_record_with_info_as_str(datasource_code=datasource_code,
+                                                     record_id=record_id,
+                                                     load_id=load_id,
+                                                     flags=flags)
+        return json.loads(retval)
 
     #get entity and records
     def get_record(self, 

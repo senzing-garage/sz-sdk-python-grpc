@@ -25,6 +25,7 @@ class TestEngineAPI(unittest.TestCase):
     def smoketest(self, client):
         #first let's make sure the db is empty
         client.purge_repository()
+        client.prime_engine()
 
         #should return a valid datetime
         print('\n')
@@ -69,7 +70,6 @@ class TestEngineAPI(unittest.TestCase):
             data_as_json=example_record,
             load_id=load_id)
         #response should be a sha-1 hash
-        print(info)
         self.assertIsInstance(info, dict)
         self.assertIsInstance(record_id, str)
         self.assertEqual(len(record_id), 40)

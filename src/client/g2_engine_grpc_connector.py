@@ -5,10 +5,9 @@ import json
 from datetime import datetime
 
 from g2_flags import G2Flags
+from typing import Union, Tuple
 
-sys.path.insert(0, '/home/gadair/g2-sdk-proto/example_generated_source_code/python/g2engine')
-import g2engine_pb2
-import g2engine_pb2_grpc
+from senzing_grpc_protobuf import g2engine_pb2, g2engine_pb2_grpc
 
 
 class G2EngineGRPCConnector:
@@ -18,44 +17,51 @@ class G2EngineGRPCConnector:
         self.url = None
 
     # startup/shutdown methods
-    def init_direct(self, module_name, senzing_config_json, config_id, verbose_logging):
+    def init_direct(self, 
+                    module_name: str, 
+                    senzing_config_json: Union[str,dict], 
+                    config_id: int, 
+                    verbose_logging: bool) -> None:
         warnings.warn('init does nothing for gRPC connections, use init_grpc_connection_with_url')
 
-    def init_with_url(self, url):
+    def init_with_url(self, url: str) -> None:
         self.url = url
         self.channel = grpc.insecure_channel(self.url)
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
         # add a ping here or something to ensure it connected
 
-    def init_direct_from_environment(self, module_name, config_id, verbose_logging):
+    def init_direct_from_environment(self, 
+                                     module_name: str, 
+                                     config_id: int, 
+                                     verbose_logging: bool) -> None:
         warnings.warn('init_direct_from_environemnt does nothing for gRPC connections')
 
-    def reinit(self, config_id):
+    def reinit(self, config_id: int) -> None:
         warnings.warn('reinit does nothing for gRPC connections')
 
-    def destroy(self):
+    def destroy(self) -> None:
         self.channel = None
         self.stub = None
         self.url = None
 
-    def prime_engine(self):
+    def prime_engine(self) -> None:
         self.stub.PrimeEngine(g2engine_pb2.PrimeEngineRequest())
 
-    def get_active_config_id(self):
+    def get_active_config_id(self) -> None:
         return self.stub.GetActiveConfigID(g2engine_pb2.GetActiveConfigIDRequest()).result
 
-    def export_config(self):
+    def export_config(self) -> dict:
         response = self.stub.ExportConfig(g2engine_pb2.ExportConfigRequest())
         config = json.loads(response.result)
         return config
 
-    def export_config_and_config_id(self):
+    def export_config_and_config_id(self) -> Tuple[dict,int]:
         response = self.stub.ExportConfigAndConfigID(g2engine_pb2.ExportConfigAndConfigIDRequest())
         config = json.loads(response.config)
         config_id = response.configID
         return (config,config_id)
 
-    def get_repository_last_modified_time(self):
+    def get_repository_last_modified_time(self) -> datetime:
         request = g2engine_pb2.GetRepositoryLastModifiedTimeRequest()
         last_modified_unixtime = self.stub.GetRepositoryLastModifiedTime(request).result
         last_modified_unixtime /= 1000
@@ -63,14 +69,23 @@ class G2EngineGRPCConnector:
         return last_modified_datetime
 
     #Adding Records
-    def add_record(self, datasource_code, record_id, data_as_json, load_id):
+    def add_record(self,
+                   datasource_code: str,
+                   record_id: str,
+                   data_as_json: Union[str,dict],
+                   load_id: str) -> None:
         request = g2engine_pb2.AddRecordRequest(dataSourceCode=datasource_code, 
                                                 recordID=record_id,
                                                 jsonData=data_as_json,
                                                 loadID=load_id)
         self.stub.AddRecord(request)
 
-    def add_record_with_info(self, datasource_code, record_id, data_as_json, load_id, flags, return_as_string):
+    def add_record_with_info(self,
+                             datasource_code: str,
+                             record_id: str,
+                             data_as_json: str,
+                             load_id: str,
+                             flags: int) -> str:
         request = g2engine_pb2.AddRecordWithInfoRequest(
             dataSourceCode=datasource_code,
             recordID=record_id,
@@ -78,11 +93,12 @@ class G2EngineGRPCConnector:
             loadID=load_id,
             flags=flags)
         result = self.stub.AddRecordWithInfo(request).result
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
-    def add_record_with_returned_record_id(self, datasource_code, data_as_json, load_id=None):
+    def add_record_with_returned_record_id(self,
+                                           datasource_code: str,
+                                           data_as_json: str,
+                                           load_id=None) -> str:
         request = g2engine_pb2.AddRecordWithReturnedRecordIDRequest(
             dataSourceCode=datasource_code,
             jsonData=data_as_json,
@@ -90,23 +106,25 @@ class G2EngineGRPCConnector:
         result = self.stub.AddRecordWithReturnedRecordID(request).result
         return result
 
-    def add_record_with_info_with_returned_record_id(self, 
-                                                     datasource_code, 
-                                                     data_as_json, 
-                                                     load_id, 
-                                                     flags, 
-                                                     return_as_string):
+    def add_record_with_info_with_returned_record_id(self,
+                                                     datasource_code: str,
+                                                     data_as_json: str,
+                                                     load_id: str,
+                                                     flags: int) -> Tuple[str,str]:
         request = g2engine_pb2.AddRecordWithInfoWithReturnedRecordIDRequest(
             dataSourceCode=datasource_code,
             jsonData=data_as_json,
             loadID=load_id,
             flags=flags)
         response = self.stub.AddRecordWithInfoWithReturnedRecordID(request)
-        if return_as_string:
-            return (response.withInfo, response.recordID)
-        return (json.loads(response.withInfo), response.recordID)
+        return (response.withInfo, response.recordID)
 
-    def replace_record(self, datasource_code, record_id, data_as_json, load_id):
+    #replace
+    def replace_record(self,
+                       datasource_code: str,
+                       record_id: str,
+                       data_as_json: str,
+                       load_id: str) -> None:
         request = g2engine_pb2.ReplaceRecordRequest(dataSourceCode=datasource_code, 
                                                 recordID=record_id,
                                                 jsonData=data_as_json,
@@ -114,11 +132,12 @@ class G2EngineGRPCConnector:
         self.stub.ReplaceRecord(request)
 
 
-    def replace_record_with_info(self, datasource_code, record_id, data_as_json, load_id, flags, return_as_string):
-        if isinstance(flags, G2Flags):
-            flags = flags.get_flags()
-        if flags is None:
-            flags = 0
+    def replace_record_with_info(self,
+                                 datasource_code: str,
+                                 record_id: str,
+                                 data_as_json: str,
+                                 load_id: str,
+                                 flags: int) -> str:
         request = g2engine_pb2.ReplaceRecordWithInfoRequest(
             dataSourceCode=datasource_code,
             recordID=record_id,
@@ -126,61 +145,65 @@ class G2EngineGRPCConnector:
             loadID=load_id,
             flags=flags)
         result = self.stub.ReplaceRecordWithInfo(request).result
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
-    def reevaluate_record(self, datasource_code, record_id, flags=None):
+    #reevaluation
+    def reevaluate_record(self,
+                          datasource_code: str,
+                          record_id: str,
+                          flags: bool) -> None:
         request = g2engine_pb2.ReevaluateRecordRequest(dataSourceCode=datasource_code, recordID=record_id)
         self.stub.ReevaluateRecord(request)
 
-    def reevaluate_record_with_info(self, datasource_code, record_id, flags=None):
+    def reevaluate_record_with_info(self,
+                                    datasource_code: str,
+                                    record_id: str,
+                                    flags: bool) -> str:
         request = g2engine_pb2.ReevaluateRecordWithInfoRequest(dataSourceCode=datasource_code, recordID=record_id, flags=flags)
         result = self.stub.ReevaluateRecordWithInfo(request).result
         return result
 
-    def reevaluate_entity(self, entity_id, flags=None):
+    def reevaluate_entity(self, entity_id: int, flags: int) -> None:
         request = g2engine_pb2.ReevaluateEntityRequest(entityID=entity_id, flags=flags)
         self.stub.ReevaluateEntity(request)
 
-    def reevaluate_entity_with_info(self, entity_id, flags=None, return_as_string=False):
+    def reevaluate_entity_with_info(self, entity_id: int, flags: int) -> str:
         request = g2engine_pb2.ReevaluateEntityRequestWithInfo(entityID=entity_id, flags=flags)
         result = self.stub.ReevaluateEntityWithInfo(request).result
-        if return_as_string:
-            return result
-        return json.loads(result)
+        return result
 
-    def count_redo_records(self):
+    #redo processing
+    def count_redo_records(self) -> int:
         request = g2engine_pb2.CountRedoRecordsRequest()
         return self.stub.CountRedoRecords(request)
 
-    def get_redo_record(self):
+    def get_redo_record(self) -> str:
         request = g2engine_pb2.GetRedoRecordRequest()
         return self.stub.GetRedoRecord(request).result
 
-    def process(self, redo_record):
+    def process(self, redo_record: str) -> None:
         request = g2engine_pb2.ProcessRequest(redo_record)
         self.stub.Process(request)
 
-    def process_with_info(self, redo_record, flags):
+    def process_with_info(self, redo_record: str, flags: int) -> str:
         request = g2engine_pb2.ProcessWithInfoRequest(redo_record, flags.get_flags())
         return self.stub.ProcessWithInfo(request).result
 
-    def process_redo_record(self):
+    def process_redo_record(self) -> str:
         request = g2engine_pb2.ProcessRedoRecordRequest()
         return self.stub.ProcessRedoRecord(request).result
 
-    def process_redo_record_with_info(self, flags=None):
+    def process_redo_record_with_info(self, flags: int) -> Tuple[str,str]:
         request = g2engine_pb2.ProcessRedoRecordWithInfoRequest(flags=flags)
         response = self.stub.ProcessRedoRecordWithInfo(request)
         return (response.result, response.info)
 
     #delete records
-    def delete_record(self, datasource_code, record_id, load_id):
+    def delete_record(self, datasource_code, record_id, load_id) -> None:
         request = g2engine_pb2.DeleteRecordRequest(dataSourceCode=datasource_code, recordID=record_id, loadID=load_id)
         self.stub.DeleteRecord(request)
 
-    def delete_record_with_info(self, datasource_code, record_id, load_id, flags):
+    def delete_record_with_info(self, datasource_code, record_id, load_id, flags) -> str:
         request = g2engine_pb2.DeleteRecordWithInfoRequest(dataSourceCode=datasource_code, recordID=record_id, loadID=load_id, flags=flags)
         response = self.stub.DeleteRecordWithInfo(request)
         return response.result

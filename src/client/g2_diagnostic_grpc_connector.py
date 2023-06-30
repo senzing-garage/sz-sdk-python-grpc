@@ -4,7 +4,6 @@ import warnings
 
 import grpc
 
-sys.path.insert(0, '/home/gadair/g2-sdk-proto/example_generated_source_code/python/g2diagnostic')
 import g2diagnostic_pb2
 import g2diagnostic_pb2_grpc
 

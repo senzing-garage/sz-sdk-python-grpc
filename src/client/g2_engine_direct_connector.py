@@ -2,6 +2,7 @@ import sys
 import warnings
 import json
 from datetime import datetime
+from typing import Union, Tuple
 
 try:
     from senzing import G2Engine
@@ -18,64 +19,76 @@ class G2EngineDirectConnector:
         self.g2_handle = None
 
     # startup/shutdown methods
-    def init(self, module_name, senzing_config_json, config_id, verbose_logging):
+    def init(self,
+             module_name: str,
+             senzing_config_json: Union[str,dict],
+             config_id: int,
+             verbose_logging: bool) -> None:
         if isinstance(senzing_config_json, dict):
             senzing_config_json = json.dumps(senzing_config_json)
         self.g2_handle = G2Engine()
         if not config_id:
-            return self.g2_handle.init(
+            self.g2_handle.init(
                 engine_name_=module_name,
                 ini_params_=senzing_config_json,
                 debug_=verbose_logging)
-        return self.g2_handle.initWithConfigID(
-            engine_name_=module_name,
-            ini_params_=senzing_config_json,
-            initConfigID_=config_id,
-            debug_=verbose_logging)
+        else:
+            self.g2_handle.initWithConfigID(
+                engine_name_=module_name,
+                ini_params_=senzing_config_json,
+                initConfigID_=config_id,
+                debug_=verbose_logging)
 
-    def init_with_url(self, url):
+    def init_with_url(self, url: str) -> None:
         warnings.warn('init_with_url is not valid for direct connections')
 
-    def init_direct(self, module_name, senzing_config_json, config_id, verbose_logging):
-        return self.init(
+    def init_direct(self,
+                    module_name: str,
+                    senzing_config_json: Union[str,dict],
+                    config_id: int,
+                    verbose_logging: bool) -> None:
+        self.init(
             module_name=module_name,
             senzing_config_json=senzing_config_json,
             config_id=config_id,
             verbose_logging=verbose_logging)
 
-    def init_direct_from_environment(self, module_name, config_id, verbose_logging):
+    def init_direct_from_environment(self,
+                                     module_name: str,
+                                     config_id: int,
+                                     verbose_logging: bool) -> None:
         import senzing_module_config
         json_config = senzing_module_config.get_json_config()
-        return self.init(
+        self.init(
             module_name=module_name,
             senzing_config_json=json_config,
             config_id=config_id,
             verbose_logging=verbose_logging)
 
-    def reinit(self, config_id):
+    def reinit(self, config_id: int) -> None:
         config_id = bytes(config_id, 'utf-8')
         self.g2_handle.reinit(config_id)
 
-    def destroy(self):
+    def destroy(self) -> None:
         self.g2_handle.destroy()
         self.g2_handle = None
 
-    def prime_engine(self):
-        self.g2_handle.prime_engine()
+    def prime_engine(self) -> None:
+        self.g2_handle.primeEngine()
 
-    def get_active_config_id(self):
+    def get_active_config_id(self) -> int:
         response = bytearray()
         self.g2_handle.getActiveConfigID(response)
         return int(response.decode())
 
-    def export_config(self):
+    def export_config(self) -> dict:
         config = bytearray()
         config_id = bytearray()
         self.g2_handle.exportConfig(config, config_id)
         config = json.loads(config.decode())
         return config
 
-    def export_config_and_config_id(self):
+    def export_config_and_config_id(self) -> Tuple[dict,int]:
         config = bytearray()
         config_id = bytearray()
         self.g2_handle.exportConfig(config, config_id)
@@ -84,7 +97,7 @@ class G2EngineDirectConnector:
         return (config, config_id)
 
 
-    def get_repository_last_modified_time(self):
+    def get_repository_last_modified_time(self) -> datetime:
         last_modified_time_bytearray = bytearray()
         self.g2_handle.getRepositoryLastModifiedTime(last_modified_time_bytearray)
         last_modified_unixtime = int(last_modified_time_bytearray.decode())
@@ -93,7 +106,11 @@ class G2EngineDirectConnector:
         return last_modified_datetime
 
     #Adding Records
-    def add_record(self, datasource_code, record_id, data_as_json, load_id):
+    def add_record(self,
+                   datasource_code: str,
+                   record_id: str,
+                   data_as_json: str,
+                   load_id: str) -> None:
         self.g2_handle.addRecord(
             dataSourceCode=datasource_code,
             recordId=record_id,
@@ -101,7 +118,12 @@ class G2EngineDirectConnector:
             load_id=load_id
         )
 
-    def add_record_with_info(self, datasource_code, record_id, data_as_json, load_id, flags, return_as_string):
+    def add_record_with_info(self, 
+                             datasource_code: str, 
+                             record_id: str, 
+                             data_as_json: str, 
+                             load_id: str, 
+                             flags: int) -> str:
         info_bytearray = bytearray()
         self.g2_handle.addRecordWithInfo(
             dataSourceCode=datasource_code,
@@ -112,15 +134,16 @@ class G2EngineDirectConnector:
             flags=flags
         )
         info = info_bytearray.decode()
-        if return_as_string:
-            return info
-        return json.loads(info)
+        return info
 
-    def add_record_with_returned_record_id(self, datasource_code, data_as_json, load_id=None):
+    def add_record_with_returned_record_id(self,
+                                           datasource_code: str,
+                                           data_as_json: str,
+                                           load_id: bool) -> str:
         record_id = bytearray()
         self.g2_handle.addRecordWithReturnedRecordID(
             dataSourceCode=datasource_code,
-            recordId=record_id,
+            recordID=record_id,
             jsonData=data_as_json,
             load_id=load_id
         )
@@ -128,24 +151,30 @@ class G2EngineDirectConnector:
         return record_id
 
 
-    def add_record_with_info_with_returned_record_id(self, datasource_code, data_as_json, load_id, flags, return_as_string):
+    def add_record_with_info_with_returned_record_id(self,
+                                                     datasource_code: str,
+                                                     data_as_json: str,
+                                                     load_id: str,
+                                                     flags: int) -> str:
         info = bytearray()
         record_id = bytearray()
         self.g2_handle.addRecordWithInfoWithReturnedRecordID(
             dataSourceCode=datasource_code,
             jsonData=data_as_json,
-            recordId=record_id,
+            recordID=record_id,
             info=info,
             load_id=load_id
         )
         record_id = record_id.decode()
         info = info.decode()
-        if not return_as_string:
-            info = json.loads(info)
         return (info, record_id)
 
     #replace records
-    def replace_record(self, datasource_code, record_id, data_as_json, load_id):
+    def replace_record(self,
+                       datasource_code: str,
+                       record_id: str,
+                       data_as_json: str,
+                       load_id: str) -> None:
         self.g2_handle.replaceRecord(
             dataSourceCode=datasource_code,
             recordId=record_id,
@@ -153,7 +182,12 @@ class G2EngineDirectConnector:
             load_id=load_id
         )
 
-    def replace_record_with_info(self, datasource_code, record_id, data_as_json, load_id, flags, return_as_string):
+    def replace_record_with_info(self,
+                                 datasource_code: str,
+                                 record_id: str,
+                                 data_as_json: str,
+                                 load_id: str,
+                                 flags: int) -> str:
         info = bytearray()
         self.g2_handle.addRecordWithInfo(
             dataSourceCode=datasource_code,
@@ -164,19 +198,23 @@ class G2EngineDirectConnector:
             flags=flags
         )
         info = info.decode()
-        if return_as_string:
-            return info
-        return json.loads(info)
+        return info
 
-    #reeval and redo records
-    def reevaluate_record(self, datasource_code, record_id, flags):
+    #reeval
+    def reevaluate_record(self,
+                          datasource_code: str,
+                          record_id: str,
+                          flags: int) -> None:
         self.g2_handle.reevaluateRecord(
             dataSourceCode=datasource_code,
             recordId=record_id,
             flags=flags
             )
-        
-    def reevaluate_record_with_info(self, datasource_code, record_id, flags):
+
+    def reevaluate_record_with_info(self,
+                                    datasource_code: str,
+                                    record_id: str,
+                                    flags: int) -> str:
         info = bytearray()
         self.g2_handle.reevaluateRecordWithInfo(
             dataSourceCode=datasource_code,
@@ -187,13 +225,13 @@ class G2EngineDirectConnector:
         info = info.decode()
         return info
 
-    def reevaluate_entity(self, entity_id, flags):
+    def reevaluate_entity(self, entity_id: int, flags: int) -> None:
         self.g2_handle.reevaluateEntity(
             entityID=entity_id,
             flags=flags
         )
 
-    def reevaluate_entity_with_info(self, entity_id, flags):
+    def reevaluate_entity_with_info(self, entity_id: int, flags: int) -> str:
         info = bytearray()
         self.g2_handle.reevaluateEntityWithInfo(
             entityID=entity_id,
@@ -203,7 +241,8 @@ class G2EngineDirectConnector:
         info = info.decode()
         return info
 
-    def count_redo_records(self):
+    #redo
+    def count_redo_records(self) -> int:
         return self.g2_handle.countRedoRecords()
 
     def get_redo_record(self):
@@ -570,7 +609,7 @@ class G2EngineDirectConnector:
             else:
                 #return list or dict?
                 yield row
-        self.closeExport(exportHandle=handle)
+        self.g2_handle.closeExport(exportHandle=handle)
 
     def export_json_entity_report_with_callback(self,
                                                 flags,
@@ -598,7 +637,7 @@ class G2EngineDirectConnector:
                 yield row
             else:
                 yield json.loads(row)
-        self.closeExport(exportHandle=handle)
+        self.g2_handle.closeExport(exportHandle=handle)
 
     #purge
     def purge_repository(self):
