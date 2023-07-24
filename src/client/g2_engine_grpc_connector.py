@@ -3,14 +3,14 @@ import warnings
 import grpc
 import json
 from datetime import datetime
-
-from g2_flags import G2Flags
-from typing import Union, Tuple
+from typing import Union, Tuple, Callable, Iterable
 
 from senzing_grpc_protobuf import g2engine_pb2, g2engine_pb2_grpc
 
+from g2_flags import G2Flags
+from g2_engine_connector_base import G2EngineConnectorBase
 
-class G2EngineGRPCConnector:
+class G2EngineGRPCConnector(G2EngineConnectorBase):
     def __init__(self):
         self.channel = None
         self.stub = None
@@ -151,8 +151,8 @@ class G2EngineGRPCConnector:
     def reevaluate_record(self,
                           datasource_code: str,
                           record_id: str,
-                          flags: bool) -> None:
-        request = g2engine_pb2.ReevaluateRecordRequest(dataSourceCode=datasource_code, recordID=record_id)
+                          flags: int) -> None:
+        request = g2engine_pb2.ReevaluateRecordRequest(dataSourceCode=datasource_code, recordID=record_id, flags=flags)
         self.stub.ReevaluateRecord(request)
 
     def reevaluate_record_with_info(self,
@@ -199,27 +199,27 @@ class G2EngineGRPCConnector:
         return (response.result, response.info)
 
     #delete records
-    def delete_record(self, datasource_code, record_id, load_id) -> None:
+    def delete_record(self, datasource_code: str, record_id: str, load_id: str) -> None:
         request = g2engine_pb2.DeleteRecordRequest(dataSourceCode=datasource_code, recordID=record_id, loadID=load_id)
         self.stub.DeleteRecord(request)
 
-    def delete_record_with_info(self, datasource_code, record_id, load_id, flags) -> str:
+    def delete_record_with_info(self, datasource_code: str, record_id: str, load_id: str, flags) -> str:
         request = g2engine_pb2.DeleteRecordWithInfoRequest(dataSourceCode=datasource_code, recordID=record_id, loadID=load_id, flags=flags)
         response = self.stub.DeleteRecordWithInfo(request)
         return response.result
 
     #get records and entities
-    def get_record(self, datasource_code, record_id, flags):
+    def get_record(self, datasource_code: str, record_id: str, flags: int) ->str:
         request = g2engine_pb2.GetRecordRequest(dataSourceCode=datasource_code, recordID=record_id, flags=flags)
         response = self.stub.GetRecord(request)
         return response.result
 
-    def get_entity_by_record_id(self, datasource_code, record_id, flags):
+    def get_entity_by_record_id(self, datasource_code: str, record_id: str, flags: int) ->str:
         request = g2engine_pb2.GetEntityByRecordID_V2Request(dataSourceCode=datasource_code, recordID=record_id, flags=flags)
         response = self.stub.GetEntityByRecordID_V2(request)
         return response.result
 
-    def get_entity_by_entity_id(self, entity_id, flags):
+    def get_entity_by_entity_id(self, entity_id: int, flags: int) ->str:
         request = g2engine_pb2.GetEntityByEntityID_V2Request(
             entity_id=entity_id, 
             flags=flags)
@@ -227,19 +227,19 @@ class G2EngineGRPCConnector:
         return response.result
 
     #search for entities
-    def search_by_attributes(self, search_attributes, flags):
+    def search_by_attributes(self, search_attributes: str, flags: int) -> str:
         request = g2engine_pb2.SearchByAttributes_V2Request(
-            search_attributes, 
+            search_attributes,
             flags)
         response = self.stub.SearchByAttributes_V2(request)
         return response.result
 
     #find paths
-    def find_path_by_entity_id(self, 
-                               start_entity_id, 
-                               end_entity_id, 
-                               max_degree, 
-                               flags):
+    def find_path_by_entity_id(self,
+                               start_entity_id: int,
+                               end_entity_id: int,
+                               max_degree: int,
+                               flags: int) -> str:
         request = g2engine_pb2.FindPathByEntityID_V2Request(
             entityID1=start_entity_id,
             entityID2=end_entity_id,
@@ -248,13 +248,13 @@ class G2EngineGRPCConnector:
         response = self.stub.FindPathByEntityID_V2(request)
         return response.result
 
-    def find_path_by_record_id(self, 
-                               start_datasource_code, 
-                               start_record_id, 
-                               end_datasource_code, 
-                               end_record_id, 
-                               max_degree, 
-                               flags):
+    def find_path_by_record_id(self,
+                               start_datasource_code: str,
+                               start_record_id: str,
+                               end_datasource_code: str,
+                               end_record_id: str,
+                               max_degree: int,
+                               flags: int) -> str:
         request = g2engine_pb2.FindPathByRecordID_V2Request(
             dataSourceCode1=start_datasource_code,
             recordID1=start_record_id,
@@ -266,11 +266,11 @@ class G2EngineGRPCConnector:
         return response.result
 
     def find_path_excluding_by_entity_id(self,
-                                         start_entity_id,
-                                         end_entity_id,
-                                         max_degree,
-                                         excluded_entities,
-                                         flags):
+                                         start_entity_id: int,
+                                         end_entity_id: int,
+                                         max_degree: int,
+                                         excluded_entities: str,
+                                         flags: int) -> str:
         request = g2engine_pb2.FindPathExcludingByEntityID_V2Request(
             entityID1=start_entity_id,
             entityID2=end_entity_id,
@@ -280,32 +280,32 @@ class G2EngineGRPCConnector:
         response = self.stub.FindPathExcludingByEntityID_V2(request)
         return response.result
 
-    def find_path_excluding_by_record_id(self, 
-                                         start_datasource_code,
-                                         start_record_id,
-                                         end_datasource_code,
-                                         end_record_id,
-                                         max_degree,
-                                         excluded_entities,
-                                         flags):
+    def find_path_excluding_by_record_id(self,
+                                         start_datasource_code: str,
+                                         start_record_id: str,
+                                         end_datasource_code: str,
+                                         end_record_id: str,
+                                         max_degree: int,
+                                         excluded_entities: str,
+                                         flags: int) -> str:
         request = g2engine_pb2.FindPathExcludingByRecordID_V2Request(
             dataSourceCode1=start_datasource_code,
             recordID1=start_record_id,
             dataSourceCode2=end_datasource_code,
             recordID2=end_record_id,
             maxDegree=max_degree,
-            excludedEntity=excluded_entities, 
+            excludedEntity=excluded_entities,
             flags=flags)
         response = self.stub.FindPathExcludingByRecordID_V2(request)
         return response.result
 
     def find_path_including_source_by_entity_id(self,
-                                                start_entity_id,
-                                                end_entity_id,
-                                                max_degree,
-                                                excluded_entities,
-                                                required_datasources,
-                                                flags):
+                                                start_entity_id: int,
+                                                end_entity_id: int,
+                                                max_degree: int,
+                                                excluded_entities: str,
+                                                required_datasources: str,
+                                                flags) -> str:
         request = g2engine_pb2.FindPathIncludingSourceByEntityID_V2Request(
             entityID1=start_entity_id,
             entityID2=end_entity_id,
@@ -317,14 +317,14 @@ class G2EngineGRPCConnector:
         return response.result
 
     def find_path_including_source_by_record_id(self,
-                                                start_datasource_code,
-                                                start_record_id,
-                                                end_datasource_code,
-                                                end_record_id,
-                                                max_degree,
-                                                excluded_entities,
-                                                required_datasources,
-                                                flags):
+                                                start_datasource_code: str,
+                                                start_record_id: str,
+                                                end_datasource_code: str,
+                                                end_record_id: str,
+                                                max_degree: int,
+                                                excluded_entities: str,
+                                                required_datasources: str,
+                                                flags: int) ->str:
         request = g2engine_pb2.FindPathIncludingSourceByEntityID_V2Request(
             dataSourceCode1=start_datasource_code,
             recordID1=start_record_id,
@@ -337,12 +337,13 @@ class G2EngineGRPCConnector:
         response = self.stub.FindPathIncludingSourceByEntityID(request)
         return response.result
 
+    #find networks
     def find_network_by_entity_id(self,
-                                  entity_list,
-                                  max_degree,
-                                  buildout_degree,
-                                  max_entities,
-                                  flags):
+                                  entity_list: str,
+                                  max_degree: int,
+                                  buildout_degree: int,
+                                  max_entities: int,
+                                  flags: int):
         request = g2engine_pb2.FindNetworkByEntityID_V2Request(
             entityList=entity_list,
             maxDegree = max_degree,
@@ -353,11 +354,11 @@ class G2EngineGRPCConnector:
         return response.result
 
     def find_network_by_record_id(self,
-                                  record_list,
-                                  max_degree,
-                                  buildout_degree,
-                                  max_entities,
-                                  flags):
+                                  record_list: str,
+                                  max_degree: int,
+                                  buildout_degree: int,
+                                  max_entities: int,
+                                  flags: int):
         request = g2engine_pb2.FindNetworkByRecordID_V2Request(
             recordList=record_list,
             maxDegree=max_degree,
@@ -368,7 +369,10 @@ class G2EngineGRPCConnector:
         return response.result
 
     #why
-    def why_entities(self, entity_id_1, entity_id_2, flags):
+    def why_entities(self,
+                     entity_id_1: int,
+                     entity_id_2: int,
+                     flags: int) -> str:
         request = g2engine_pb2.WhyEntities_V2Request(
             entityID1=entity_id_1,
             entityID2=entity_id_2,
@@ -377,11 +381,11 @@ class G2EngineGRPCConnector:
         return response.result
 
     def why_records(self,
-                    datasource_code_1,
-                    record_id_1,
-                    datasource_code_2,
-                    record_id_2,
-                    flags):
+                    datasource_code_1: str,
+                    record_id_1: str,
+                    datasource_code_2: str,
+                    record_id_2: str,
+                    flags: int) -> str:
         request = g2engine_pb2.WhyRecords_V2Request(
             dataSourceCode1=datasource_code_1,
             recordID1=record_id_1,
@@ -393,9 +397,9 @@ class G2EngineGRPCConnector:
         return response.result
 
     def why_entity_by_record_id(self,
-                                datasource_code_1,
-                                record_id_1,
-                                flags):
+                                datasource_code_1: str,
+                                record_id_1: str,
+                                flags: int) -> str:
         request = g2engine_pb2.WhyEntityByRecordID_V2Request(
             dataSourceCode=datasource_code_1,
             recordID=record_id_1,
@@ -404,7 +408,7 @@ class G2EngineGRPCConnector:
         response = self.stub.WhyEntityByRecordID_V2(request)
         return response.result
 
-    def why_entity_by_entity_id(self, entity_id, flags):
+    def why_entity_by_entity_id(self, entity_id: int, flags: int) -> str:
         request = g2engine_pb2.WhyEntityByEntityID_V2Request(
             entityID=entity_id,
             flags=flags
@@ -412,7 +416,7 @@ class G2EngineGRPCConnector:
         response = self.stub.WhyEntityByEntityID_V2(request)
         return response.result
 
-    def how_entity_by_entity_id(self, entity_id, flags):
+    def how_entity_by_entity_id(self, entity_id: int, flags: int) -> str:
         request = g2engine_pb2.HowEntityByEntityID_V2Request(
             entityID=entity_id, 
             flags=flags
@@ -422,10 +426,10 @@ class G2EngineGRPCConnector:
 
     #export
     def export_csv_entity_report_with_callback(self,
-                                               columns,
-                                               flags,
-                                               callback,
-                                               return_as_string):
+                                               columns: str,
+                                               flags: int,
+                                               callback: Callable[[Union[str,dict]], None],
+                                               return_as_string: bool) -> None:
         for item in self.export_csv_entity_report_iteritems(
             columns=columns,
             flags=flags,
@@ -434,9 +438,10 @@ class G2EngineGRPCConnector:
             callback(item)
 
     def export_csv_entity_report_iteritems(self,
-                                           columns,
-                                           flags,
-                                           return_as_string):
+                                           columns: str,
+                                           flags: int,
+                                           return_as_string: bool)\
+                                           -> Iterable[Union[str,dict]]:
         request = g2engine_pb2.StreamExportCSVEntityReportRequest(
             csvColumnList=columns,
             flags=flags
@@ -450,13 +455,16 @@ class G2EngineGRPCConnector:
                     yield item.result
 
     def export_json_entity_report_with_callback(self,
-                                                flags,
-                                                callback,
-                                                return_as_string):
+                                                flags: int,
+                                                callback: Callable[[Union[str,dict]], None],
+                                                return_as_string: bool) -> None:
         for item in self.export_json_entity_report_iteritems(flags=flags, return_as_string=return_as_string):
             callback(item)
 
-    def export_json_entity_report_iteritems(self, flags, return_as_string):
+    def export_json_entity_report_iteritems(self,
+                                            flags: int,
+                                            return_as_string: bool)\
+                                            -> Iterable[Union[str,dict]]:
         request = g2engine_pb2.StreamExportJSONEntityReportRequest(flags=flags)
         for item in self.stub.StreamExportJSONEntityReport(request):
             if item.result:
@@ -465,7 +473,8 @@ class G2EngineGRPCConnector:
                 else:
                     yield json.loads(item.result)
 
-    def purge_repository(self):
+    #purge
+    def purge_repository(self) -> None:
         request = g2engine_pb2.PurgeRepositoryRequest()
         self.stub.PurgeRepository(request)
 

@@ -2,7 +2,9 @@ import sys
 import warnings
 import json
 from datetime import datetime
-from typing import Union, Tuple
+from typing import Union, Tuple, Callable, Iterable
+
+from g2_engine_connector_base import G2EngineConnectorBase
 
 try:
     from senzing import G2Engine
@@ -14,7 +16,7 @@ except ModuleNotFoundError:
     sys.exit(-1)
 
 
-class G2EngineDirectConnector:
+class G2EngineDirectConnector(G2EngineConnectorBase):
     def __init__(self):
         self.g2_handle = None
 
@@ -245,16 +247,16 @@ class G2EngineDirectConnector:
     def count_redo_records(self) -> int:
         return self.g2_handle.countRedoRecords()
 
-    def get_redo_record(self):
+    def get_redo_record(self) -> str:
         record = bytearray()
         self.g2_handle.getRedoRecord(record)
         record = record.decode()
         return record
 
-    def process(self, redo_record):
+    def process(self, redo_record: str) -> None:
         self.g2_handle.process(redo_record)
 
-    def process_with_info(self, redo_record, flags):
+    def process_with_info(self, redo_record: str, flags: int) -> str:
         info = bytearray()
         self.g2_handle.processWithInfo(
             input_umf_=redo_record,
@@ -265,8 +267,7 @@ class G2EngineDirectConnector:
         info = json.loads(info)
         return info
 
-
-    def process_redo_record(self):
+    def process_redo_record(self) -> str:
         response = bytearray()
         self.g2_handle.processRedoRecord(
             response=response
@@ -274,11 +275,12 @@ class G2EngineDirectConnector:
         response = response.decode()
         return response
 
-    def process_redo_record_with_info(self, flags=None):
+    def process_redo_record_with_info(self, flags: int) -> Tuple[str,str]:
         response = bytearray()
         info = bytearray()
         self.g2_handle.processRedoRecordWithInfo(
             response=response,
+            flags=flags,
             info=info
         )
         response = response.decode()
@@ -287,14 +289,14 @@ class G2EngineDirectConnector:
         return (response, info)
 
     #delete records 
-    def delete_record(self, datasource_code, record_id, load_id):
+    def delete_record(self, datasource_code: str, record_id: str, load_id: str) -> None:
         self.g2_handle.deleteRecord(
             dataSourceCode=datasource_code,
             recordId=record_id,
             load_id=load_id
         )
 
-    def delete_record_with_info(self, datasource_code, record_id, load_id, flags):
+    def delete_record_with_info(self, datasource_code: str, record_id: str, load_id: str, flags) -> str:
         info = bytearray()
         self.g2_handle.deleteRecordWithInfo(
             dataSourceCode=datasource_code,
@@ -307,7 +309,7 @@ class G2EngineDirectConnector:
         return info
 
     #get records and entities
-    def get_record(self, datasource_code, record_id, flags):
+    def get_record(self, datasource_code: str, record_id: str, flags: int) ->str:
         record_info = bytearray()
         self.g2_handle.getRecord(
             dsrcCode=datasource_code,
@@ -319,7 +321,7 @@ class G2EngineDirectConnector:
         record_info = json.loads(record_info)
         return record_info
 
-    def get_entity_by_record_id(self, datasource_code, record_id, flags):
+    def get_entity_by_record_id(self, datasource_code: str, record_id: str, flags: int) ->str:
         entity_info = bytearray()
         self.g2_handle.getEntityByRecordID(
             dsrcCode=datasource_code,
@@ -331,7 +333,7 @@ class G2EngineDirectConnector:
         entity_info = json.loads(entity_info)
         return entity_info
 
-    def get_entity_by_entity_id(self, entity_id, flags):
+    def get_entity_by_entity_id(self, entity_id: int, flags: int) ->str:
         entity_info = bytearray()
         self.g2_handle.getEntityByEntityID(
             entityID=entity_id,
@@ -343,7 +345,7 @@ class G2EngineDirectConnector:
         return entity_info
 
     #search for entities
-    def search_by_attributes(self, search_attributes, flags):
+    def search_by_attributes(self, search_attributes: str, flags: int) -> str:
         response = bytearray()
         self.g2_handle.searchByAttributes(
             jsonData=search_attributes,
@@ -354,11 +356,11 @@ class G2EngineDirectConnector:
         return response
 
     #find paths
-    def find_path_by_entity_id(self, 
-                               start_entity_id, 
-                               end_entity_id, 
-                               max_degree, 
-                               flags):
+    def find_path_by_entity_id(self,
+                               start_entity_id: int,
+                               end_entity_id: int,
+                               max_degree: int,
+                               flags: int) -> str:
         response = bytearray()
         self.g2_handle.findPathByEntityID(
             startEntityID=start_entity_id,
@@ -370,13 +372,13 @@ class G2EngineDirectConnector:
         response = response.decode()
         return response
 
-    def find_path_by_record_id(self, 
-                               start_datasource_code, 
-                               start_record_id, 
-                               end_datasource_code, 
-                               end_record_id, 
-                               max_degree, 
-                               flags):
+    def find_path_by_record_id(self,
+                               start_datasource_code: str,
+                               start_record_id: str,
+                               end_datasource_code: str,
+                               end_record_id: str,
+                               max_degree: int,
+                               flags: int) -> str:
         response = bytearray()
         self.g2_handle.findPathByRecordID(
             startDsrcCode=start_datasource_code,
@@ -391,11 +393,11 @@ class G2EngineDirectConnector:
         return response
 
     def find_path_excluding_by_entity_id(self,
-                                         start_entity_id,
-                                         end_entity_id,
-                                         max_degree,
-                                         excluded_entities,
-                                         flags):
+                                         start_entity_id: int,
+                                         end_entity_id: int,
+                                         max_degree: int,
+                                         excluded_entities: str,
+                                         flags: int) -> str:
         response = bytearray()
         self.g2_handle.findPathExcludingByEntityID(
             startEntityID=start_entity_id,
@@ -408,14 +410,14 @@ class G2EngineDirectConnector:
         response = response.decode()
         return response
 
-    def find_path_excluding_by_record_id(self, 
-                                         start_datasource_code,
-                                         start_record_id,
-                                         end_datasource_code,
-                                         end_record_id,
-                                         max_degree,
-                                         excluded_entities,
-                                         flags):
+    def find_path_excluding_by_record_id(self,
+                                         start_datasource_code: str,
+                                         start_record_id: str,
+                                         end_datasource_code: str,
+                                         end_record_id: str,
+                                         max_degree: int,
+                                         excluded_entities: str,
+                                         flags: int) -> str:
         response = bytearray()
         self.g2_handle.findPathExcludingByRecordID(
             startDsrcCode=start_datasource_code,
@@ -431,12 +433,12 @@ class G2EngineDirectConnector:
         return response
 
     def find_path_including_source_by_entity_id(self,
-                                                start_entity_id,
-                                                end_entity_id,
-                                                max_degree,
-                                                excluded_entities,
-                                                required_datasources,
-                                                flags):
+                                                start_entity_id: int,
+                                                end_entity_id: int,
+                                                max_degree: int,
+                                                excluded_entities: str,
+                                                required_datasources: str,
+                                                flags) -> str:
         response = bytearray()
         self.g2_handle.findPathIncludingSourceByEntityID(
             startEntityID=start_entity_id,
@@ -451,14 +453,14 @@ class G2EngineDirectConnector:
         return response
 
     def find_path_including_source_by_record_id(self,
-                                                start_datasource_code,
-                                                start_record_id,
-                                                end_datasource_code,
-                                                end_record_id,
-                                                max_degree,
-                                                excluded_entities,
-                                                required_datasources,
-                                                flags):
+                                                start_datasource_code: str,
+                                                start_record_id: str,
+                                                end_datasource_code: str,
+                                                end_record_id: str,
+                                                max_degree: int,
+                                                excluded_entities: str,
+                                                required_datasources: str,
+                                                flags: int) ->str:
         response = bytearray()
         self.g2_handle.findPathIncludingSourceByEntityID(
             startDsrcCode=start_datasource_code,
@@ -467,18 +469,20 @@ class G2EngineDirectConnector:
             endRecordId=end_record_id,
             maxDegree=max_degree,
             excludedEntities=excluded_entities,
+            requiredDsrcs=required_datasources,
             response=response,
             flags=flags
         )
         response = response.decode()
         return response
 
+    #find networks
     def find_network_by_entity_id(self,
-                                  entity_list,
-                                  max_degree,
-                                  buildout_degree,
-                                  max_entities,
-                                  flags):
+                                  entity_list: str,
+                                  max_degree: int,
+                                  buildout_degree: int,
+                                  max_entities: int,
+                                  flags: int):
         response = bytearray()
         self.g2_handle.findNetworkByEntityID(
             entityList=entity_list,
@@ -492,11 +496,11 @@ class G2EngineDirectConnector:
         return response
 
     def find_network_by_record_id(self,
-                                  record_list,
-                                  max_degree,
-                                  buildout_degree,
-                                  max_entities,
-                                  flags):
+                                  record_list: str,
+                                  max_degree: int,
+                                  buildout_degree: int,
+                                  max_entities: int,
+                                  flags: int):
         response = bytearray()
         self.g2_handle.findNetworkByRecordID(
             recordList=record_list,
@@ -510,7 +514,10 @@ class G2EngineDirectConnector:
         return response
 
     #why
-    def why_entities(self, entity_id_1, entity_id_2, flags):
+    def why_entities(self,
+                     entity_id_1: int,
+                     entity_id_2: int,
+                     flags: int) -> str:
         response = bytearray()
         self.g2_handle.whyEntities(
             entityID1=entity_id_1,
@@ -522,11 +529,11 @@ class G2EngineDirectConnector:
         return response
 
     def why_records(self,
-                    datasource_code_1,
-                    record_id_1,
-                    datasource_code_2,
-                    record_id_2,
-                    flags):
+                    datasource_code_1: str,
+                    record_id_1: str,
+                    datasource_code_2: str,
+                    record_id_2: str,
+                    flags: int) -> str:
         response = bytearray()
         self.g2_handle.whyRecords(
             dataSourceCode1=datasource_code_1,
@@ -540,9 +547,9 @@ class G2EngineDirectConnector:
         return response
 
     def why_entity_by_record_id(self,
-                                datasource_code_1,
-                                record_id_1,
-                                flags):
+                                datasource_code_1: str,
+                                record_id_1: str,
+                                flags: int) -> str:
         response = bytearray()
         self.g2_handle.whyEntityByRecordID(
             dataSourceCode=datasource_code_1,
@@ -553,7 +560,7 @@ class G2EngineDirectConnector:
         response = response.decode()
         return response
 
-    def why_entity_by_entity_id(self, entity_id, flags):
+    def why_entity_by_entity_id(self, entity_id: int, flags: int) -> str:
         response = bytearray()
         self.g2_handle.whyEntityByEntityID(
             entityID=entity_id,
@@ -563,7 +570,7 @@ class G2EngineDirectConnector:
         response = response.decode()
         return response
 
-    def how_entity_by_entity_id(self, entity_id, flags):
+    def how_entity_by_entity_id(self, entity_id: int, flags: int) -> str:
         response = bytearray()
         self.g2_handle.howEntityByEntityID(
             entityID=entity_id,
@@ -575,10 +582,10 @@ class G2EngineDirectConnector:
 
     #export
     def export_csv_entity_report_with_callback(self,
-                                               columns,
-                                               flags,
-                                               callback,
-                                               return_as_string):
+                                               columns: str,
+                                               flags: int,
+                                               callback: Callable[[Union[str,dict]], None],
+                                               return_as_string: bool) -> None:
         for row in self.export_csv_entity_report_iteritems(
             columns=columns,
             flags=flags,
@@ -587,9 +594,10 @@ class G2EngineDirectConnector:
             callback(row)
 
     def export_csv_entity_report_iteritems(self,
-                                           columns,
-                                           flags,
-                                           return_as_string):
+                                           columns: str,
+                                           flags: int,
+                                           return_as_string: bool)\
+                                           -> Iterable[Union[str,dict]]:
         handle = self.g2_handle.exportCSVEntityReport(
             headersForCSV=columns,
             flags=flags
@@ -612,16 +620,19 @@ class G2EngineDirectConnector:
         self.g2_handle.closeExport(exportHandle=handle)
 
     def export_json_entity_report_with_callback(self,
-                                                flags,
-                                                callback,
-                                                return_as_string):
+                                                flags: int,
+                                                callback: Callable[[Union[str,dict]], None],
+                                                return_as_string: bool) -> None:
         for row in self.export_json_entity_report_iteritems(
             flags=flags,
             return_as_string=return_as_string
         ):
             callback(row)
 
-    def export_json_entity_report_iteritems(self, flags, return_as_string):
+    def export_json_entity_report_iteritems(self,
+                                            flags: int,
+                                            return_as_string: bool)\
+                                            -> Iterable[Union[str,dict]]:
         handle = self.g2_handle.exportJSONEntityReport(flags=flags)
 
         while True:
@@ -640,6 +651,6 @@ class G2EngineDirectConnector:
         self.g2_handle.closeExport(exportHandle=handle)
 
     #purge
-    def purge_repository(self):
+    def purge_repository(self) -> None:
         self.g2_handle.purgeRepository()
 

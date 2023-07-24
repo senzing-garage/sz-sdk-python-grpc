@@ -13,7 +13,7 @@ class TestEngineAPI(unittest.TestCase):
 
     def test_smoketest_grpc(self):
         client = g2_engine_client.G2EngineClient()
-        url = 'localhost:8258'
+        url = 'localhost:8260'
         client.init_grpc_connection_with_url(url=url)
         self.smoketest(client)
 
