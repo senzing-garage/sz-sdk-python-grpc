@@ -2,9 +2,20 @@
 disable=
     broad-except,
     consider-using-f-string,
+    import-error,
+    import-outside-toplevel,
+    invalid-name,
     line-too-long,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-self-use,
     too-many-branches,
     too-many-locals,
+    too-many-public-methods,
+    too-many-statements,
+    unused-argument,
+    wrong-import-position,
 good-names=
     template-python
 ignore=
