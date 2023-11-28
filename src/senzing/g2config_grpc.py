@@ -10,11 +10,13 @@ from typing import Any, Dict, Union
 
 import grpc
 
-import pb2_grpc.g2config_pb2 as g2config_pb2
-import pb2_grpc.g2config_pb2_grpc as g2config_pb2_grpc
-
-from .g2config_abstract import G2ConfigAbstract
 from .g2helpers import as_str
+from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
+from .tmp.g2config_abstract import G2ConfigAbstract
+
+# import pb2_grpc.g2config_pb2 as g2config_pb2
+# import pb2_grpc.g2config_pb2_grpc as g2config_pb2_grpc
+
 
 # Metadata
 
@@ -51,7 +53,9 @@ class G2ConfigGrpc(G2ConfigAbstract):
         """
 
         self.channel = grpc.insecure_channel(grpc_url)
-        self.stub = g2config_pb2_grpc.G2ConfigStub(self.channel)
+        self.stub = g2config_pb2_grpc.G2ConfigStub(
+            self.channel
+        )  # mypy: disallow-untyped-calls
         self.url = grpc_url
 
     # -------------------------------------------------------------------------
@@ -69,7 +73,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
             configHandle=config_handle, inputJson=as_str(input_json)
         )
         result = self.stub.AddDataSource(request)
-        return result.result
+        return str(result.result)
 
     def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
         request = g2config_pb2.CloseRequest(configHandle=config_handle)
@@ -78,7 +82,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
     def create(self, *args: Any, **kwargs: Any) -> int:
         request = g2config_pb2.CreateRequest()
         result = self.stub.Create(request)
-        return result.result
+        return int(result.result)
 
     def delete_data_source(
         self,
@@ -107,16 +111,16 @@ class G2ConfigGrpc(G2ConfigAbstract):
     def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
         result = self.stub.ListDataSources(request)
-        return result.result
+        return str(result.result)
 
     def load(
         self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
     ) -> int:
         request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
         result = self.stub.Load(request)
-        return result.result
+        return int(result.result)
 
     def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         request = g2config_pb2.SaveRequest(configHandle=config_handle)
         result = self.stub.Save(request)
-        return result.result
+        return str(result.result)

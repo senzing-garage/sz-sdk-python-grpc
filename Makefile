@@ -75,7 +75,6 @@ pylint:
 mypy:
 	mypy --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:docs/source/*' ':!:tests/*')
 
-
 .PHONY: pytest
 pytest:
 	@pytest --cov=src/senzing --cov-report=xml  tests
