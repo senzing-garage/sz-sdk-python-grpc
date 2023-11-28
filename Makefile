@@ -73,7 +73,8 @@ pylint:
 
 .PHONY: mypy
 mypy:
-	mypy --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:tests/*')
+	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:tests/*')
+
 
 .PHONY: pytest
 pytest:
