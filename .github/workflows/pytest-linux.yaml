@@ -1,0 +1,33 @@
+name: pytest-linux.yaml
+
+on: [push]
+
+jobs:
+  go-test-linux:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.11"]
+    name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
+    services:
+      servegrpc:
+        env:
+          SENZING_TOOLS_ENABLE_ALL: true
+        image: senzing/serve-grpc
+        ports:
+          - 8261:8261
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install psutil pytest pytest-cov pytest-schema
+      - name: Run pytest on tests
+        run: pytest tests/ --verbose --capture=no --cov=src/senzing
