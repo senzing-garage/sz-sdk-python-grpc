@@ -2,7 +2,7 @@ import json
 
 import pytest
 from pytest_schema import Or, schema
-from senzing import g2config, g2exception
+from senzing import g2config
 
 # -----------------------------------------------------------------------------
 # G2Config fixtures

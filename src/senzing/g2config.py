@@ -4,7 +4,7 @@
 TODO: g2config_grpc.py
 """
 
-# Import from standard library. https://docs.python.org/3/library/
+# pylint: disable=E1101
 
 from typing import Any, Dict, Union
 
@@ -13,10 +13,6 @@ import grpc
 from .g2helpers import as_str
 from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
 from .tmp.g2config_abstract import G2ConfigAbstract
-
-# import pb2_grpc.g2config_pb2 as g2config_pb2
-# import pb2_grpc.g2config_pb2_grpc as g2config_pb2_grpc
-
 
 # Metadata
 
