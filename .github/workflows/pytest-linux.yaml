@@ -25,9 +25,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install psutil pytest pytest-cov pytest-schema
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov pytest-schema
       - name: Run pytest on tests
         run: pytest tests/ --verbose --capture=no --cov=src/senzing
