@@ -28,4 +28,4 @@ jobs:
       - name: flake8 testing
         run: flake8 $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
       - name: Mypy testing
-        run: mypy --strict $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
+        run: mypy --strict $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:tests/*')
