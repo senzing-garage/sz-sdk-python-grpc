@@ -62,8 +62,8 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> int:
-        request = g2configmgr_pb2.AddDataSourceRequest(
-            configStr=config_str, configComments=as_str(config_str)
+        request = g2configmgr_pb2.AddConfigRequest(
+            configStr=as_str(config_str), configComments=as_str(config_comments)
         )
         result = self.stub.AddConfig(request)
         return int(result.result)
@@ -84,7 +84,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
     def get_default_config_id(self, *args: Any, **kwargs: Any) -> int:
         request = g2configmgr_pb2.GetDefaultConfigIDRequest()
         result = self.stub.GetDefaultConfigID(request)
-        return int(result.result)
+        return int(result.configID)
 
     def init(
         self,

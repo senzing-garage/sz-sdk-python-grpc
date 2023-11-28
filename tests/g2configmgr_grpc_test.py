@@ -364,7 +364,7 @@ config_schema = {
 # -----------------------------------------------------------------------------
 
 
-def test_constructor(engine_vars):
+def test_constructor():
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)

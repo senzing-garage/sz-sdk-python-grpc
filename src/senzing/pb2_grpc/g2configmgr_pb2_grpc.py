@@ -4,8 +4,9 @@
 # pylint: disable=R0205,R0902,R0903,R0913,E1101
 
 
-import g2configmgr_pb2 as g2configmgr__pb2
 import grpc
+
+from . import g2configmgr_pb2 as g2configmgr__pb2
 
 
 class G2ConfigMgrStub(object):
