@@ -68,7 +68,7 @@ test: test-osarch-specific
 
 .PHONY: pylint
 pylint:
-	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*')
+	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*'  ':!:src/senzing/pb2_grpc/*')
 
 
 .PHONY: mypy

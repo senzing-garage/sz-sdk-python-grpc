@@ -19,6 +19,7 @@ jobs:
       - name: flake8 Lint
         uses: py-actions/flake8@v2
         with:
+          exclude: "src/senzing/pb2_grpc"
           max-line-length: "88"
           path: "src/senzing"
           plugins: "flake8-black"

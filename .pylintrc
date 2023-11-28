@@ -1,26 +1,12 @@
 [pylint]
 disable=
-    broad-except,
-    broad-exception-raised,
-    consider-using-f-string,
-    import-error,
-    import-outside-toplevel,
-    invalid-name,
+    duplicate-code,
     line-too-long,
-    missing-class-docstring,
-    missing-function-docstring,
     missing-module-docstring,
-    no-value-for-parameter,
-    too-many-branches,
-    too-many-locals,
+    too-many-arguments,
     too-many-public-methods,
-    too-many-statements,
-    unexpected-keyword-arg,
-    unused-argument,
-    wrong-import-position,
-good-names=
-    template-python
 ignore=
     __init__.py,
+    docs/source/conf.py
 notes=
     FIXME,
