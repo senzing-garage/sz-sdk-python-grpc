@@ -2,8 +2,11 @@ name: pytest-linux.yaml
 
 on: [push]
 
+env:
+  PYTHONPATH: /home/runner/work/g2-sdk-python-grpc/g2-sdk-python-grpc/src
+
 jobs:
-  go-test-linux:
+  pytest-linux:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
