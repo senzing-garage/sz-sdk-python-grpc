@@ -10,8 +10,8 @@ from typing import Any, Dict, Union
 
 import grpc
 
-import g2config_pb2
-import g2config_pb2_grpc
+import pb2_grpc.g2config_pb2 as g2config_pb2
+import pb2_grpc.g2config_pb2_grpc as g2config_pb2_grpc
 
 from .g2config_abstract import G2ConfigAbstract
 from .g2helpers import as_str
