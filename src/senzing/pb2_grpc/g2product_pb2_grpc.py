@@ -3,8 +3,9 @@
 
 # pylint: disable=R0205,R0902,R0903,R0913,E1101
 
-import g2product_pb2 as g2product__pb2
 import grpc
+
+from . import g2product_pb2 as g2product__pb2
 
 
 class G2ProductStub(object):
