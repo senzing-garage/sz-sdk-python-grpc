@@ -40,7 +40,6 @@ class G2ConfigGrpc(G2ConfigAbstract):
     def __init__(
         self,
         grpc_url: str = "",
-        **kwargs: Any,
     ) -> None:
         """
         Constructor
