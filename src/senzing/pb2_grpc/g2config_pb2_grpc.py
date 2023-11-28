@@ -6,7 +6,7 @@
 
 import grpc
 
-import g2config_pb2 as g2config__pb2
+from . import g2config_pb2 as g2config__pb2
 
 
 class G2ConfigStub(object):
