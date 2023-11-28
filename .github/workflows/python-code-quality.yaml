@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs:
-  build:
+  python-code-quality:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,17 +16,16 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Update pip
-        run: python3 -m pip install --upgrade pip
-      - name: Pip install python packages for testing
-        # run: pip install black pylint mypy
-        run: pip install black flake8 pylint mypy psutil types-psutil
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --requirement requirements.txt
+          python -m pip install black flake8  mypy pylint pytest pytest_schema psutil types-psutil
       - name: Black testing
-        run: black --diff --check $(git ls-files '*.py' ':!:docs/source/*')
-      #- name: Pylint testing
-      #  run: pylint $(git ls-files '*.py' ':!:docs/source/*')
+        run: black --diff --check $(git ls-files '*.py')
+      - name: Pylint testing
+        run: pylint $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
       - name: flake8 testing
-        run: flake8 $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing/pb2_grpc/*')
+        run: flake8 $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
       - name: Mypy testing
-        #run: mypy --strict $(git ls-files '*.py' ':!:docs/source/*')
-        run: mypy --strict $(git ls-files '*.py' ':!:docs/source/*' ':!:tests/*')
+        run: mypy --strict $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
