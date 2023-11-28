@@ -39,7 +39,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def __init__(
         self,
-        grpc_url: str = "",
+        grpc_channel: grpc.Channel,
     ) -> None:
         """
         Constructor
@@ -47,9 +47,8 @@ class G2ConfigGrpc(G2ConfigAbstract):
         For return value of -> None, see https://peps.python.org/pep-0484/#the-meaning-of-annotations
         """
 
-        self.channel = grpc.insecure_channel(grpc_url)
-        self.stub = g2config_pb2_grpc.G2ConfigStub(self.channel)
-        self.url = grpc_url
+        self.channel = grpc_channel
+        self.stub = g2config_pb2_grpc.G2ConfigStub(self.channel)  # type: ignore
 
     # -------------------------------------------------------------------------
     # G2Config methods
@@ -62,18 +61,18 @@ class G2ConfigGrpc(G2ConfigAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> str:
-        request = g2config_pb2.AddDataSourceRequest(
+        request = g2config_pb2.AddDataSourceRequest(  # type: ignore
             configHandle=config_handle, inputJson=as_str(input_json)
         )
         result = self.stub.AddDataSource(request)
         return str(result.result)
 
     def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
-        request = g2config_pb2.CloseRequest(configHandle=config_handle)
+        request = g2config_pb2.CloseRequest(configHandle=config_handle)  # type: ignore
         self.stub.Close(request)
 
     def create(self, *args: Any, **kwargs: Any) -> int:
-        request = g2config_pb2.CreateRequest()
+        request = g2config_pb2.CreateRequest()  # type: ignore
         result = self.stub.Create(request)
         return int(result.result)
 
@@ -84,7 +83,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        request = g2config_pb2.DeleteDataSourceRequest(
+        request = g2config_pb2.DeleteDataSourceRequest(  # type: ignore
             configHandle=config_handle, inputJson=as_str(input_json)
         )
         self.stub.DeleteDataSource(request)
@@ -102,18 +101,18 @@ class G2ConfigGrpc(G2ConfigAbstract):
         """No-op"""
 
     def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
+        request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)  # type: ignore
         result = self.stub.ListDataSources(request)
         return str(result.result)
 
     def load(
         self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
     ) -> int:
-        request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
+        request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))  # type: ignore
         result = self.stub.Load(request)
         return int(result.result)
 
     def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        request = g2config_pb2.SaveRequest(configHandle=config_handle)
+        request = g2config_pb2.SaveRequest(configHandle=config_handle)  # type: ignore
         result = self.stub.Save(request)
         return str(result.result)

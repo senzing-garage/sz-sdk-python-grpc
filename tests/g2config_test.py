@@ -1,7 +1,9 @@
 import json
 
+import grpc
 import pytest
 from pytest_schema import Or, schema
+
 from senzing import g2config
 
 # -----------------------------------------------------------------------------
@@ -16,7 +18,8 @@ def g2config_fixture():
     """
 
     grpc_url = "localhost:8261"
-    result = g2config.G2ConfigGrpc(grpc_url=grpc_url)
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    result = g2config.G2ConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -359,7 +362,8 @@ save_schema = {
 def test_constructor():
     """Test constructor."""
     grpc_url = "localhost:8261"
-    actual = g2config.G2ConfigGrpc(grpc_url=grpc_url)
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    actual = g2config.G2ConfigGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, g2config.G2ConfigGrpc)
 
 
