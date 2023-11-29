@@ -10,6 +10,7 @@ from typing import Any, Dict, Union
 
 import grpc  # type: ignore
 
+from .g2helpers import new_exception
 from .localcopy.g2diagnostic_abstract import G2DiagnosticAbstract
 from .pb2_grpc import g2diagnostic_pb2, g2diagnostic_pb2_grpc
 
@@ -29,7 +30,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/Senzing/knowledge-base/blo
 
 class G2DiagnosticGrpc(G2DiagnosticAbstract):
     """
-    G2 config module access library
+    G2 diagnostic module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -56,37 +57,55 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
     # -------------------------------------------------------------------------
 
     def check_db_perf(self, seconds_to_run: int, *args: Any, **kwargs: Any) -> str:
-        request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)
-        response = self.stub.CheckDBPerf(request)
-        return str(response.result)
+        try:
+            request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)
+            response = self.stub.CheckDBPerf(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def get_available_memory(self, *args: Any, **kwargs: Any) -> int:
-        request = g2diagnostic_pb2.GetAvailableMemoryRequest()
-        response = self.stub.GetAvailableMemory(request)
-        return int(response.result)
+        try:
+            request = g2diagnostic_pb2.GetAvailableMemoryRequest()
+            response = self.stub.GetAvailableMemory(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_db_info(self, *args: Any, **kwargs: Any) -> str:
-        request = g2diagnostic_pb2.GetDBInfoRequest()
-        response = self.stub.GetDBInfo(request)
-        return str(response.result)
+        try:
+            request = g2diagnostic_pb2.GetDBInfoRequest()
+            response = self.stub.GetDBInfo(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_logical_cores(self, *args: Any, **kwargs: Any) -> int:
-        request = g2diagnostic_pb2.GetLogicalCoresRequest()
-        response = self.stub.GetLogicalCores(request)
-        return int(response.result)
+        try:
+            request = g2diagnostic_pb2.GetLogicalCoresRequest()
+            response = self.stub.GetLogicalCores(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_physical_cores(self, *args: Any, **kwargs: Any) -> int:
-        request = g2diagnostic_pb2.GetPhysicalCoresRequest()
-        response = self.stub.GetPhysicalCores(request)
-        return int(response.result)
+        try:
+            request = g2diagnostic_pb2.GetPhysicalCoresRequest()
+            response = self.stub.GetPhysicalCores(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_total_system_memory(self, *args: Any, **kwargs: Any) -> int:
-        request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()
-        response = self.stub.GetTotalSystemMemory(request)
-        return int(response.result)
+        try:
+            request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()
+            response = self.stub.GetTotalSystemMemory(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def init(
         self,
@@ -95,7 +114,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def init_with_config_id(
         self,
@@ -105,7 +124,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def reinit(self, init_config_id: int, *args: Any, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""

@@ -62,11 +62,17 @@ def test_check_db_perf(g2_diagnostic):
     assert schema(check_db_perf_schema) == actual_json
 
 
-def test_check_db_perf_bad_seconds_to_run(g2_diagnostic):
+def test_check_db_perf_bad_seconds_to_run_type(g2_diagnostic):
     """Test G2Diagnostic().check_db_perf()."""
     bad_seconds_to_run = "string"
     with pytest.raises(TypeError):
         g2_diagnostic.check_db_perf(bad_seconds_to_run)
+
+
+def test_check_db_perf_bad_seconds_to_run_value(g2_diagnostic):
+    """Test G2Diagnostic().check_db_perf()."""
+    bad_seconds_to_run = -1
+    g2_diagnostic.check_db_perf(bad_seconds_to_run)
 
 
 def test_get_available_memory(g2_diagnostic):

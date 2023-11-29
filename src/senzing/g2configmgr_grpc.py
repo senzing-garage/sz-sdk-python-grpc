@@ -11,7 +11,7 @@ from typing import Any, Dict, Union
 import grpc  # type: ignore
 
 # from .g2exception import translate_exception
-from .g2helpers import as_str
+from .g2helpers import as_str, new_exception
 from .localcopy.g2configmgr_abstract import G2ConfigMgrAbstract
 from .pb2_grpc import g2configmgr_pb2, g2configmgr_pb2_grpc
 
@@ -31,7 +31,7 @@ SENZING_PRODUCT_ID = "5051"  # See https://github.com/Senzing/knowledge-base/blo
 
 class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
     """
-    G2 config-manager module access library
+    G2 config-manager module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -62,29 +62,41 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> int:
-        request = g2configmgr_pb2.AddConfigRequest(
-            configStr=as_str(config_str), configComments=as_str(config_comments)
-        )
-        response = self.stub.AddConfig(request)
-        return int(response.result)
+        try:
+            request = g2configmgr_pb2.AddConfigRequest(
+                configStr=as_str(config_str), configComments=as_str(config_comments)
+            )
+            response = self.stub.AddConfig(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def get_config(self, config_id: int, *args: Any, **kwargs: Any) -> str:
-        request = g2configmgr_pb2.GetConfigRequest(configID=config_id)
-        response = self.stub.GetConfig(request)
-        return str(response.result)
+        try:
+            request = g2configmgr_pb2.GetConfigRequest(configID=config_id)
+            response = self.stub.GetConfig(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_config_list(self, *args: Any, **kwargs: Any) -> str:
-        request = g2configmgr_pb2.GetConfigListRequest()
-        response = self.stub.GetConfigList(request)
-        return str(response.result)
+        try:
+            request = g2configmgr_pb2.GetConfigListRequest()
+            response = self.stub.GetConfigList(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_default_config_id(self, *args: Any, **kwargs: Any) -> int:
-        request = g2configmgr_pb2.GetDefaultConfigIDRequest()
-        response = self.stub.GetDefaultConfigID(request)
-        return int(response.configID)
+        try:
+            request = g2configmgr_pb2.GetDefaultConfigIDRequest()
+            response = self.stub.GetDefaultConfigID(request)
+            return int(response.configID)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def init(
         self,
@@ -93,19 +105,25 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def replace_default_config_id(
         self, old_config_id: int, new_config_id: int, *args: Any, **kwargs: Any
     ) -> None:
-        request = g2configmgr_pb2.ReplaceDefaultConfigIDRequest(
-            oldConfigID=old_config_id,
-            newConfigID=new_config_id,
-        )
-        self.stub.ReplaceDefaultConfigID(request)
+        try:
+            request = g2configmgr_pb2.ReplaceDefaultConfigIDRequest(
+                oldConfigID=old_config_id,
+                newConfigID=new_config_id,
+            )
+            self.stub.ReplaceDefaultConfigID(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def set_default_config_id(self, config_id: int, *args: Any, **kwargs: Any) -> None:
-        request = g2configmgr_pb2.SetDefaultConfigIDRequest(
-            configID=config_id,
-        )
-        self.stub.SetDefaultConfigID(request)
+        try:
+            request = g2configmgr_pb2.SetDefaultConfigIDRequest(
+                configID=config_id,
+            )
+            self.stub.SetDefaultConfigID(request)
+        except Exception as err:
+            raise new_exception(err) from err

@@ -4,7 +4,7 @@ import grpc
 import pytest
 from pytest_schema import Or, schema
 
-from senzing import g2config_grpc, g2configmgr_grpc
+from senzing import g2config_grpc, g2configmgr_grpc, g2exception
 
 # -----------------------------------------------------------------------------
 # G2ConfigMgr fixtures
@@ -393,12 +393,21 @@ def test_add_config_dict(g2_configmgr, g2_config):
     assert actual > 0
 
 
-def test_add_config_bad_config_str(g2_configmgr):
+def test_add_config_bad_config_str_type(g2_configmgr):
     """Test G2ConfigMgr().add_config()."""
     bad_config_str = 0
     config_comments = "Test"
     with pytest.raises(TypeError):
         g2_configmgr.add_config(bad_config_str, config_comments)
+
+
+def test_add_config_bad_config_str_value(g2_configmgr):
+    """Test G2ConfigMgr().add_config()."""
+    config_str_dict = {"just": "junk"}
+    config_comments = "Test"
+    actual = g2_configmgr.add_config(config_str_dict, config_comments)
+    assert isinstance(actual, int)
+    assert actual > 0
 
 
 def test_add_config_bad_config_comments(g2_configmgr, g2_config):
@@ -418,10 +427,17 @@ def test_get_config(g2_configmgr):
     assert schema(config_schema) == actual_json
 
 
-def test_get_config_bad_config_id(g2_configmgr):
+def test_get_config_bad_config_id_type(g2_configmgr):
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
+        g2_configmgr.get_config(bad_config_id)
+
+
+def test_get_config_bad_config_id_value(g2_configmgr):
+    """Test G2ConfigMgr().get_default_config_id()."""
+    bad_config_id = 1234
+    with pytest.raises(g2exception.G2ConfigurationError):
         g2_configmgr.get_config(bad_config_id)
 
 
@@ -452,7 +468,7 @@ def test_replace_default_config_id(g2_configmgr, g2_config):
     assert actual == new_config_id
 
 
-def test_replace_default_config_id_bad_old_id(g2_configmgr, g2_config):
+def test_replace_default_config_id_bad_old_id_type(g2_configmgr, g2_config):
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_old_config_id = "string"
     config_handle = g2_config.create()
@@ -464,11 +480,31 @@ def test_replace_default_config_id_bad_old_id(g2_configmgr, g2_config):
         g2_configmgr.replace_default_config_id(bad_old_config_id, new_config_id)
 
 
-def test_replace_default_config_id_bad_new_id(g2_configmgr):
+def test_replace_default_config_id_bad_old_id_value(g2_configmgr, g2_config):
+    """Test G2ConfigMgr().get_default_config_id()."""
+    bad_old_config_id = 1234
+    config_handle = g2_config.create()
+    input_json_dict = {"DSRC_CODE": "REPLACE_DEFAULT_CONFIG_ID"}
+    g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
+    json_config = g2_config.save(config_handle)
+    new_config_id = g2_configmgr.add_config(json_config, "Test")
+    with pytest.raises(g2exception.G2ConfigurationError):
+        g2_configmgr.replace_default_config_id(bad_old_config_id, new_config_id)
+
+
+def test_replace_default_config_id_bad_new_id_type(g2_configmgr):
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
     bad_new_config_id = "string"
     with pytest.raises(TypeError):
+        g2_configmgr.replace_default_config_id(old_config_id, bad_new_config_id)
+
+
+def test_replace_default_config_id_bad_new_id_value(g2_configmgr):
+    """Test G2ConfigMgr().get_default_config_id()."""
+    old_config_id = g2_configmgr.get_default_config_id()
+    bad_new_config_id = 1234
+    with pytest.raises(g2exception.G2ConfigurationError):
         g2_configmgr.replace_default_config_id(old_config_id, bad_new_config_id)
 
 
@@ -486,11 +522,17 @@ def test_set_default_config_id(g2_configmgr, g2_config):
     assert actual == new_config_id
 
 
-def test_set_default_config_id_bad_config_id(g2_configmgr):
+def test_set_default_config_id_bad_config_id_type(g2_configmgr):
     """Test G2ConfigMgr().get_default_config_id()."""
-
     bad_config_id = "string"
     with pytest.raises(TypeError):
+        g2_configmgr.set_default_config_id(bad_config_id)
+
+
+def test_set_default_config_id_bad_config_id_value(g2_configmgr):
+    """Test G2ConfigMgr().set_default_config_id()."""
+    bad_config_id = 1
+    with pytest.raises(g2exception.G2ConfigurationError):
         g2_configmgr.set_default_config_id(bad_config_id)
 
 

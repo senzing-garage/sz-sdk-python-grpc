@@ -10,6 +10,7 @@ from typing import Any, Dict, Union
 
 import grpc  # type: ignore
 
+from .g2helpers import new_exception
 from .localcopy.g2product_abstract import G2ProductAbstract
 from .pb2_grpc import g2product_pb2, g2product_pb2_grpc
 
@@ -29,7 +30,7 @@ SENZING_PRODUCT_ID = "5056"  # See https://github.com/Senzing/knowledge-base/blo
 
 class G2ProductGrpc(G2ProductAbstract):
     """
-    G2 product module access library
+    G2 product module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -55,7 +56,7 @@ class G2ProductGrpc(G2ProductAbstract):
     # -------------------------------------------------------------------------
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def init(
         self,
@@ -64,14 +65,20 @@ class G2ProductGrpc(G2ProductAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def license(self, *args: Any, **kwargs: Any) -> str:
-        request = g2product_pb2.LicenseRequest()
-        response = self.stub.License(request)
-        return str(response.result)
+        try:
+            request = g2product_pb2.LicenseRequest()
+            response = self.stub.License(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def version(self, *args: Any, **kwargs: Any) -> str:
-        request = g2product_pb2.VersionRequest()
-        response = self.stub.Version(request)
-        return str(response.result)
+        try:
+            request = g2product_pb2.VersionRequest()
+            response = self.stub.Version(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err

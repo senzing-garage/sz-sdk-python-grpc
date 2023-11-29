@@ -10,7 +10,7 @@ from typing import Any, Tuple
 
 import grpc  # type: ignore
 
-from .g2helpers import as_str
+from .g2helpers import as_str, new_exception
 from .localcopy.g2engine_abstract import G2EngineAbstract
 from .localcopy.g2engineflags import G2EngineFlags
 from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
@@ -31,7 +31,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/Senzing/knowledge-base/blo
 
 class G2EngineGrpc(G2EngineAbstract):
     """
-    G2 engine module access library
+    G2 engine module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -75,13 +75,16 @@ class G2EngineGrpc(G2EngineAbstract):
         flags: int = 0,  # pylint: disable=W0613
         **kwargs: Any,
     ) -> None:
-        request = g2engine_pb2.AddRecordRequest(
-            dataSourceCode=data_source_code,
-            recordID=record_id,
-            jsonData=as_str(json_data),
-            loadID=load_id,
-        )
-        self.stub.AddRecord(request)
+        try:
+            request = g2engine_pb2.AddRecordRequest(
+                dataSourceCode=data_source_code,
+                recordID=record_id,
+                jsonData=as_str(json_data),
+                loadID=load_id,
+            )
+            self.stub.AddRecord(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def add_record_with_info(
         self,
@@ -93,22 +96,28 @@ class G2EngineGrpc(G2EngineAbstract):
         flags: int = 0,
         **kwargs: Any,
     ) -> str:
-        request = g2engine_pb2.AddRecordWithInfoRequest(
-            dataSourceCode=data_source_code,
-            recordID=record_id,
-            jsonData=as_str(json_data),
-            loadID=load_id,
-        )
-        response = self.stub.AddRecordWithInfo(request)
-        return str(response.result)
+        try:
+            request = g2engine_pb2.AddRecordWithInfoRequest(
+                dataSourceCode=data_source_code,
+                recordID=record_id,
+                jsonData=as_str(json_data),
+                loadID=load_id,
+            )
+            response = self.stub.AddRecordWithInfo(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def close_export(self, response_handle: int, **kwargs: Any) -> None:
         self.fake_g2engine(response_handle)
 
     def count_redo_records(self, **kwargs: Any) -> int:
-        request = g2engine_pb2.CountRedoRecordsRequest()
-        response = self.stub.CountRedoRecords(request)
-        return int(response.result)
+        try:
+            request = g2engine_pb2.CountRedoRecordsRequest()
+            response = self.stub.CountRedoRecords(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def delete_record(
         self,

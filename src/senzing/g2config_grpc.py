@@ -10,7 +10,7 @@ from typing import Any, Dict, Union
 
 import grpc  # type: ignore
 
-from .g2helpers import as_str
+from .g2helpers import as_str, new_exception
 from .localcopy.g2config_abstract import G2ConfigAbstract
 from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
 
@@ -30,7 +30,7 @@ SENZING_PRODUCT_ID = "5050"  # See https://github.com/Senzing/knowledge-base/blo
 
 class G2ConfigGrpc(G2ConfigAbstract):
     """
-    G2 config module access library
+    G2 config module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -61,20 +61,29 @@ class G2ConfigGrpc(G2ConfigAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> str:
-        request = g2config_pb2.AddDataSourceRequest(
-            configHandle=config_handle, inputJson=as_str(input_json)
-        )
-        response = self.stub.AddDataSource(request)
-        return str(response.result)
+        try:
+            request = g2config_pb2.AddDataSourceRequest(
+                configHandle=config_handle, inputJson=as_str(input_json)
+            )
+            response = self.stub.AddDataSource(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
-        request = g2config_pb2.CloseRequest(configHandle=config_handle)
-        self.stub.Close(request)
+        try:
+            request = g2config_pb2.CloseRequest(configHandle=config_handle)
+            self.stub.Close(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def create(self, *args: Any, **kwargs: Any) -> int:
-        request = g2config_pb2.CreateRequest()
-        response = self.stub.Create(request)
-        return int(response.result)
+        try:
+            request = g2config_pb2.CreateRequest()
+            response = self.stub.Create(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def delete_data_source(
         self,
@@ -83,13 +92,16 @@ class G2ConfigGrpc(G2ConfigAbstract):
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        request = g2config_pb2.DeleteDataSourceRequest(
-            configHandle=config_handle, inputJson=as_str(input_json)
-        )
-        self.stub.DeleteDataSource(request)
+        try:
+            request = g2config_pb2.DeleteDataSourceRequest(
+                configHandle=config_handle, inputJson=as_str(input_json)
+            )
+            self.stub.DeleteDataSource(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def init(
         self,
@@ -98,21 +110,30 @@ class G2ConfigGrpc(G2ConfigAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
-        response = self.stub.ListDataSources(request)
-        return str(response.result)
+        try:
+            request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
+            response = self.stub.ListDataSources(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def load(
         self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
     ) -> int:
-        request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
-        response = self.stub.Load(request)
-        return int(response.result)
+        try:
+            request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
+            response = self.stub.Load(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        request = g2config_pb2.SaveRequest(configHandle=config_handle)
-        response = self.stub.Save(request)
-        return str(response.result)
+        try:
+            request = g2config_pb2.SaveRequest(configHandle=config_handle)
+            response = self.stub.Save(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
