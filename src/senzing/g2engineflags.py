@@ -4,6 +4,8 @@
 TODO: g2engineflags.py
 """
 
+# TODO: Fix the duplication of this file with g2-sdk-python-next.
+
 from enum import IntFlag
 from typing import Any, List
 
