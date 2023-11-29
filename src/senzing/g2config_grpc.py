@@ -11,8 +11,8 @@ from typing import Any, Dict, Union
 import grpc  # type: ignore
 
 from .g2helpers import as_str
+from .localcopy.g2config_abstract import G2ConfigAbstract
 from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
-from .tmp.g2config_abstract import G2ConfigAbstract
 
 # Metadata
 

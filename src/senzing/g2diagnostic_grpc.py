@@ -10,8 +10,8 @@ from typing import Any, Dict, Union
 
 import grpc  # type: ignore
 
+from .localcopy.g2diagnostic_abstract import G2DiagnosticAbstract
 from .pb2_grpc import g2diagnostic_pb2, g2diagnostic_pb2_grpc
-from .tmp.g2diagnostic_abstract import G2DiagnosticAbstract
 
 # Metadata
 

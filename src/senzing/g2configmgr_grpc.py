@@ -12,8 +12,8 @@ import grpc  # type: ignore
 
 # from .g2exception import translate_exception
 from .g2helpers import as_str
+from .localcopy.g2configmgr_abstract import G2ConfigMgrAbstract
 from .pb2_grpc import g2configmgr_pb2, g2configmgr_pb2_grpc
-from .tmp.g2configmgr_abstract import G2ConfigMgrAbstract
 
 # Metadata
 

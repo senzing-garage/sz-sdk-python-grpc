@@ -13,7 +13,7 @@ import json
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, cast
 
-from senzing.tmp.g2engineflags import G2EngineFlags  # TODO: Fix this import mess
+from senzing.localcopy.g2engineflags import G2EngineFlags  # TODO: Fix this import mess
 
 # Metadata
 
