@@ -4,6 +4,7 @@
 TODO: g2product_grpc.py
 """
 
+# pylint: disable=E1101
 
 from typing import Any, Dict, Union
 

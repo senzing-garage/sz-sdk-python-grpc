@@ -13,7 +13,7 @@ import json
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, cast
 
-from .g2engineflags import G2EngineFlags
+from g2engineflags import G2EngineFlags
 
 # Metadata
 
