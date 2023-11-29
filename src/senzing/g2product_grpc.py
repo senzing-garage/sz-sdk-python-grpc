@@ -68,10 +68,10 @@ class G2ProductGrpc(G2ProductAbstract):
 
     def license(self, *args: Any, **kwargs: Any) -> str:
         request = g2product_pb2.LicenseRequest()
-        result = self.stub.License(request)
-        return str(result.result)
+        response = self.stub.License(request)
+        return str(response.result)
 
     def version(self, *args: Any, **kwargs: Any) -> str:
         request = g2product_pb2.VersionRequest()
-        result = self.stub.Version(request)
-        return str(result.result)
+        response = self.stub.Version(request)
+        return str(response.result)

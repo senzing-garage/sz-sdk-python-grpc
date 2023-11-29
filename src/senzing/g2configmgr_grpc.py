@@ -65,26 +65,26 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         request = g2configmgr_pb2.AddConfigRequest(
             configStr=as_str(config_str), configComments=as_str(config_comments)
         )
-        result = self.stub.AddConfig(request)
-        return int(result.result)
+        response = self.stub.AddConfig(request)
+        return int(response.result)
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
         """No-op"""
 
     def get_config(self, config_id: int, *args: Any, **kwargs: Any) -> str:
         request = g2configmgr_pb2.GetConfigRequest(configID=config_id)
-        result = self.stub.GetConfig(request)
-        return str(result.result)
+        response = self.stub.GetConfig(request)
+        return str(response.result)
 
     def get_config_list(self, *args: Any, **kwargs: Any) -> str:
         request = g2configmgr_pb2.GetConfigListRequest()
-        result = self.stub.GetConfigList(request)
-        return str(result.result)
+        response = self.stub.GetConfigList(request)
+        return str(response.result)
 
     def get_default_config_id(self, *args: Any, **kwargs: Any) -> int:
         request = g2configmgr_pb2.GetDefaultConfigIDRequest()
-        result = self.stub.GetDefaultConfigID(request)
-        return int(result.configID)
+        response = self.stub.GetDefaultConfigID(request)
+        return int(response.configID)
 
     def init(
         self,

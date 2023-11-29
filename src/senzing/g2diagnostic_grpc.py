@@ -57,36 +57,36 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def check_db_perf(self, seconds_to_run: int, *args: Any, **kwargs: Any) -> str:
         request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)
-        result = self.stub.CheckDBPerf(request)
-        return str(result.result)
+        response = self.stub.CheckDBPerf(request)
+        return str(response.result)
 
     def destroy(self, *args: Any, **kwargs: Any) -> None:
         """No-op"""
 
     def get_available_memory(self, *args: Any, **kwargs: Any) -> int:
         request = g2diagnostic_pb2.GetAvailableMemoryRequest()
-        result = self.stub.GetAvailableMemory(request)
-        return int(result.result)
+        response = self.stub.GetAvailableMemory(request)
+        return int(response.result)
 
     def get_db_info(self, *args: Any, **kwargs: Any) -> str:
         request = g2diagnostic_pb2.GetDBInfoRequest()
-        result = self.stub.GetDBInfo(request)
-        return str(result.result)
+        response = self.stub.GetDBInfo(request)
+        return str(response.result)
 
     def get_logical_cores(self, *args: Any, **kwargs: Any) -> int:
         request = g2diagnostic_pb2.GetLogicalCoresRequest()
-        result = self.stub.GetLogicalCores(request)
-        return int(result.result)
+        response = self.stub.GetLogicalCores(request)
+        return int(response.result)
 
     def get_physical_cores(self, *args: Any, **kwargs: Any) -> int:
         request = g2diagnostic_pb2.GetPhysicalCoresRequest()
-        result = self.stub.GetPhysicalCores(request)
-        return int(result.result)
+        response = self.stub.GetPhysicalCores(request)
+        return int(response.result)
 
     def get_total_system_memory(self, *args: Any, **kwargs: Any) -> int:
         request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()
-        result = self.stub.GetTotalSystemMemory(request)
-        return int(result.result)
+        response = self.stub.GetTotalSystemMemory(request)
+        return int(response.result)
 
     def init(
         self,

@@ -64,8 +64,8 @@ class G2ConfigGrpc(G2ConfigAbstract):
         request = g2config_pb2.AddDataSourceRequest(
             configHandle=config_handle, inputJson=as_str(input_json)
         )
-        result = self.stub.AddDataSource(request)
-        return str(result.result)
+        response = self.stub.AddDataSource(request)
+        return str(response.result)
 
     def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
         request = g2config_pb2.CloseRequest(configHandle=config_handle)
@@ -73,8 +73,8 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def create(self, *args: Any, **kwargs: Any) -> int:
         request = g2config_pb2.CreateRequest()
-        result = self.stub.Create(request)
-        return int(result.result)
+        response = self.stub.Create(request)
+        return int(response.result)
 
     def delete_data_source(
         self,
@@ -102,17 +102,17 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
-        result = self.stub.ListDataSources(request)
-        return str(result.result)
+        response = self.stub.ListDataSources(request)
+        return str(response.result)
 
     def load(
         self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
     ) -> int:
         request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
-        result = self.stub.Load(request)
-        return int(result.result)
+        response = self.stub.Load(request)
+        return int(response.result)
 
     def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         request = g2config_pb2.SaveRequest(configHandle=config_handle)
-        result = self.stub.Save(request)
-        return str(result.result)
+        response = self.stub.Save(request)
+        return str(response.result)
