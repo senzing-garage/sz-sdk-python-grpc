@@ -1,0 +1,36 @@
+name: pytest-darwin.yaml
+
+on: [push]
+
+env:
+  PYTHONPATH: /Users/runner/work/g2-sdk-python-grpc/g2-sdk-python-grpc/src
+  SENZING_TOOLS_ENABLE_ALL: true
+
+jobs:
+  pytest-darwin:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        # python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.11"]
+    name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --requirement requirements.txt
+          python -m pip install psutil pytest pytest-cov pytest-schema
+      - name: Install Docker
+        uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
+      - name: gRPC service
+        run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
+      - name: Run pytest on tests
+        run: pytest tests/ --verbose --capture=no --cov=src/senzing
