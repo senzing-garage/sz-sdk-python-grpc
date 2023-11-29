@@ -9,7 +9,7 @@ the recommendation is not to use it yet.
 ## Synopsis
 
 The Senzing `g2-sdk-python-grpc` package provides a Python Software Development Kit
-adhering to the Abstract classes of
+adhering to the abstract classes of
 [g2-sdk-python-next](https://github.com/Senzing/g2-sdk-python-next/tree/main/src/senzing)
 that communicates with a
 [Senzing gRPC server](https://github.com/Senzing/servegrpc).
@@ -20,7 +20,7 @@ The Senzing `g2-sdk-python-grpc` packages enable Python programs to call Senzing
 across a network to a
 [Senzing gRPC server](https://github.com/Senzing/servegrpc).
 
-`g2-sdk-python-grpc` package implement thes following
+The `g2-sdk-python-grpc` package implement thes following
 [g2-sdk-python](https://github.com/Senzing/fixme)
 interfaces:
 

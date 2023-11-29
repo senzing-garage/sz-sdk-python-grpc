@@ -10,10 +10,10 @@ from typing import Any, Tuple
 
 import grpc  # type: ignore
 
-from .g2engineflags import G2EngineFlags
 from .g2helpers import as_str
 from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
 from .tmp.g2engine_abstract import G2EngineAbstract
+from .tmp.g2engineflags import G2EngineFlags
 
 # Metadata
 
