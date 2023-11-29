@@ -71,7 +71,7 @@ class G2EngineGrpc(G2EngineAbstract):
         json_data: str,  # TODO: Fix typing to accept dict
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
-        flags: int = 0,
+        flags: int = 0,  # pylint: disable=W0613
         **kwargs: Any,
     ) -> None:
         request = g2engine_pb2.AddRecordRequest(
