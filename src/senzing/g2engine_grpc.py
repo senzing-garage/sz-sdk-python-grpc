@@ -50,6 +50,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
         self.channel = grpc_channel
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
+        self.noop = ""
 
     # -------------------------------------------------------------------------
     # Development methods - to be removed after initial development
