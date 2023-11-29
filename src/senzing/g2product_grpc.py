@@ -69,7 +69,7 @@ class G2ProductGrpc(G2ProductAbstract):
 
     def license(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2product_pb2.LicenseRequest()
+            request = g2product_pb2.LicenseRequest()  # type: ignore[unused-ignore]
             response = self.stub.License(request)
             return str(response.result)
         except Exception as err:
@@ -77,7 +77,7 @@ class G2ProductGrpc(G2ProductAbstract):
 
     def version(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2product_pb2.VersionRequest()
+            request = g2product_pb2.VersionRequest()  # type: ignore[unused-ignore]
             response = self.stub.Version(request)
             return str(response.result)
         except Exception as err:

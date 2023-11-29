@@ -76,7 +76,7 @@ class G2EngineGrpc(G2EngineAbstract):
         **kwargs: Any,
     ) -> None:
         try:
-            request = g2engine_pb2.AddRecordRequest(
+            request = g2engine_pb2.AddRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
                 recordID=record_id,
                 jsonData=as_str(json_data),
@@ -97,7 +97,7 @@ class G2EngineGrpc(G2EngineAbstract):
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.AddRecordWithInfoRequest(
+            request = g2engine_pb2.AddRecordWithInfoRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
                 recordID=record_id,
                 jsonData=as_str(json_data),
@@ -113,7 +113,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def count_redo_records(self, **kwargs: Any) -> int:
         try:
-            request = g2engine_pb2.CountRedoRecordsRequest()
+            request = g2engine_pb2.CountRedoRecordsRequest()  # type: ignore[unused-ignore]
             response = self.stub.CountRedoRecords(request)
             return int(response.result)
         except Exception as err:

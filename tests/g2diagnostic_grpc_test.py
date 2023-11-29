@@ -90,7 +90,6 @@ def test_get_db_info(g2_diagnostic):
     assert schema(get_db_info_schema) == actual_json
 
 
-# TODO: Likely going away in V4
 def test_get_logical_cores(g2_diagnostic):
     """Test G2Diagnostic().get_logical_cores()."""
     actual = g2_diagnostic.get_logical_cores()
@@ -98,7 +97,6 @@ def test_get_logical_cores(g2_diagnostic):
     assert actual == expected
 
 
-# TODO: Likely going away in V4
 # BUG: Returns wrong value!
 def test_get_physical_cores(g2_diagnostic):
     """Test G2Diagnostic().get_physical_cores()."""

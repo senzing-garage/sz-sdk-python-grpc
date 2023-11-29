@@ -58,7 +58,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def check_db_perf(self, seconds_to_run: int, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)
+            request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckDBPerf(request)
             return str(response.result)
         except Exception as err:
@@ -69,7 +69,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def get_available_memory(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2diagnostic_pb2.GetAvailableMemoryRequest()
+            request = g2diagnostic_pb2.GetAvailableMemoryRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetAvailableMemory(request)
             return int(response.result)
         except Exception as err:
@@ -77,7 +77,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def get_db_info(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2diagnostic_pb2.GetDBInfoRequest()
+            request = g2diagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetDBInfo(request)
             return str(response.result)
         except Exception as err:
@@ -85,7 +85,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def get_logical_cores(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2diagnostic_pb2.GetLogicalCoresRequest()
+            request = g2diagnostic_pb2.GetLogicalCoresRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetLogicalCores(request)
             return int(response.result)
         except Exception as err:
@@ -93,7 +93,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def get_physical_cores(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2diagnostic_pb2.GetPhysicalCoresRequest()
+            request = g2diagnostic_pb2.GetPhysicalCoresRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetPhysicalCores(request)
             return int(response.result)
         except Exception as err:
@@ -101,7 +101,7 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
 
     def get_total_system_memory(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()
+            request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetTotalSystemMemory(request)
             return int(response.result)
         except Exception as err:

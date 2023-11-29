@@ -63,7 +63,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         **kwargs: Any,
     ) -> int:
         try:
-            request = g2configmgr_pb2.AddConfigRequest(
+            request = g2configmgr_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
                 configStr=as_str(config_str), configComments=as_str(config_comments)
             )
             response = self.stub.AddConfig(request)
@@ -76,7 +76,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
 
     def get_config(self, config_id: int, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2configmgr_pb2.GetConfigRequest(configID=config_id)
+            request = g2configmgr_pb2.GetConfigRequest(configID=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
             return str(response.result)
         except Exception as err:
@@ -84,7 +84,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
 
     def get_config_list(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2configmgr_pb2.GetConfigListRequest()
+            request = g2configmgr_pb2.GetConfigListRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetConfigList(request)
             return str(response.result)
         except Exception as err:
@@ -92,7 +92,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
 
     def get_default_config_id(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2configmgr_pb2.GetDefaultConfigIDRequest()
+            request = g2configmgr_pb2.GetDefaultConfigIDRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetDefaultConfigID(request)
             return int(response.configID)
         except Exception as err:
@@ -111,7 +111,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         self, old_config_id: int, new_config_id: int, *args: Any, **kwargs: Any
     ) -> None:
         try:
-            request = g2configmgr_pb2.ReplaceDefaultConfigIDRequest(
+            request = g2configmgr_pb2.ReplaceDefaultConfigIDRequest(  # type: ignore[unused-ignore]
                 oldConfigID=old_config_id,
                 newConfigID=new_config_id,
             )
@@ -121,7 +121,7 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
 
     def set_default_config_id(self, config_id: int, *args: Any, **kwargs: Any) -> None:
         try:
-            request = g2configmgr_pb2.SetDefaultConfigIDRequest(
+            request = g2configmgr_pb2.SetDefaultConfigIDRequest(  # type: ignore[unused-ignore]
                 configID=config_id,
             )
             self.stub.SetDefaultConfigID(request)

@@ -48,7 +48,7 @@ def new_exception(initial_exception: Exception) -> Exception:
     result = initial_exception
 
     if isinstance(initial_exception, grpc.RpcError):
-        details = initial_exception.details()
+        details = initial_exception.details()  # type: ignore[unused-ignore]
         details_dict = {}
         try:
             details_dict = json.loads(details)

@@ -4,7 +4,7 @@ import grpc
 import pytest
 from pytest_schema import schema
 
-from senzing import g2engine_grpc
+from senzing import g2engine_grpc, g2exception
 
 # -----------------------------------------------------------------------------
 # G2Engine fixtures
@@ -56,8 +56,28 @@ def test_add_record(g2_engine):
     g2_engine.add_record(data_source_code, record_id, json_data, load_id)
 
 
-def test_add_record_with_info(g2_engine):
+def test_add_record_bad_data_source_code_type(g2_engine):
     """Test G2Engine().add_record()."""
+    data_source_code = 1
+    record_id = "1"
+    json_data = {}
+    load_id = "Test Load"
+    with pytest.raises(TypeError):
+        g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+
+
+def test_add_record_bad_data_source_code_value(g2_engine):
+    """Test G2Engine().add_record()."""
+    data_source_code = "DOESN'T EXIST"
+    record_id = "1"
+    json_data = {}
+    load_id = "Test Load"
+    with pytest.raises(g2exception.G2UnknownDatasourceError):
+        g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+
+
+def test_add_record_with_info(g2_engine):
+    """Test G2Engine().add_record_with_info()."""
     data_source_code = "TEST"
     record_id = "1"
     json_data = {}
@@ -67,3 +87,27 @@ def test_add_record_with_info(g2_engine):
     )
     actual_json = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_json
+
+
+def test_add_record_with_info_bad_data_source_code_type(g2_engine):
+    """Test G2Engine().add_record_with_info()."""
+    data_source_code = 1
+    record_id = "1"
+    json_data = {}
+    load_id = "Test Load"
+    with pytest.raises(TypeError):
+        _ = g2_engine.add_record_with_info(
+            data_source_code, record_id, json_data, load_id
+        )
+
+
+def test_add_record_with_info_bad_data_source_code_value(g2_engine):
+    """Test G2Engine().add_record_with_info()."""
+    data_source_code = "DOESN'T EXIST"
+    record_id = "1"
+    json_data = {}
+    load_id = "Test Load"
+    with pytest.raises(g2exception.G2UnknownDatasourceError):
+        _ = g2_engine.add_record_with_info(
+            data_source_code, record_id, json_data, load_id
+        )

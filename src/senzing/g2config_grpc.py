@@ -62,7 +62,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2config_pb2.AddDataSourceRequest(
+            request = g2config_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
                 configHandle=config_handle, inputJson=as_str(input_json)
             )
             response = self.stub.AddDataSource(request)
@@ -72,14 +72,14 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
         try:
-            request = g2config_pb2.CloseRequest(configHandle=config_handle)
+            request = g2config_pb2.CloseRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             self.stub.Close(request)
         except Exception as err:
             raise new_exception(err) from err
 
     def create(self, *args: Any, **kwargs: Any) -> int:
         try:
-            request = g2config_pb2.CreateRequest()
+            request = g2config_pb2.CreateRequest()  # type: ignore[unused-ignore]
             response = self.stub.Create(request)
             return int(response.result)
         except Exception as err:
@@ -93,7 +93,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
         **kwargs: Any,
     ) -> None:
         try:
-            request = g2config_pb2.DeleteDataSourceRequest(
+            request = g2config_pb2.DeleteDataSourceRequest(  # type: ignore[unused-ignore]
                 configHandle=config_handle, inputJson=as_str(input_json)
             )
             self.stub.DeleteDataSource(request)
@@ -114,7 +114,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)
+            request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.ListDataSources(request)
             return str(response.result)
         except Exception as err:
@@ -124,7 +124,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
         self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
     ) -> int:
         try:
-            request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))
+            request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))  # type: ignore[unused-ignore]
             response = self.stub.Load(request)
             return int(response.result)
         except Exception as err:
@@ -132,7 +132,7 @@ class G2ConfigGrpc(G2ConfigAbstract):
 
     def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2config_pb2.SaveRequest(configHandle=config_handle)
+            request = g2config_pb2.SaveRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.Save(request)
             return str(response.result)
         except Exception as err:
