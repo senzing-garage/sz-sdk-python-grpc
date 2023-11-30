@@ -118,3 +118,13 @@ def test_init_and_destroy(g2_diagnostic):
     """Test G2Diagnostic().init() and G2Diagnostic.destroy()."""
     g2_diagnostic.init("MODULE_NAME", "{}", 0)
     g2_diagnostic.destroy()
+
+
+def test_context_managment():
+    """Test the use of G2DiagnosticGrpc in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel) as g2_diagnostic:
+        actual = g2_diagnostic.get_db_info()
+        actual_json = json.loads(actual)
+        assert schema(get_db_info_schema) == actual_json

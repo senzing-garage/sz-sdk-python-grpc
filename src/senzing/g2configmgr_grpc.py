@@ -51,6 +51,13 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         self.channel = grpc_channel
         self.stub = g2configmgr_pb2_grpc.G2ConfigMgrStub(self.channel)
 
+    def __enter__(self):
+        """Context Manager method."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context Manager method."""
+
     # -------------------------------------------------------------------------
     # G2ConfigMgr methods
     # -------------------------------------------------------------------------

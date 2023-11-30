@@ -52,6 +52,13 @@ class G2EngineGrpc(G2EngineAbstract):
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
         self.noop = ""
 
+    def __enter__(self):
+        """Context Manager method."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context Manager method."""
+
     # -------------------------------------------------------------------------
     # Development methods - to be removed after initial development
     # -------------------------------------------------------------------------

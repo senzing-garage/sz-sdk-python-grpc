@@ -52,6 +52,13 @@ class G2DiagnosticGrpc(G2DiagnosticAbstract):
         self.channel = grpc_channel
         self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
 
+    def __enter__(self):
+        """Context Manager method."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context Manager method."""
+
     # -------------------------------------------------------------------------
     # G2Diagnostic methods
     # -------------------------------------------------------------------------

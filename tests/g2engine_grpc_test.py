@@ -111,3 +111,15 @@ def test_add_record_with_info_bad_data_source_code_value(g2_engine):
         _ = g2_engine.add_record_with_info(
             data_source_code, record_id, json_data, load_id
         )
+
+
+def test_context_managment():
+    """Test the use of G2EngineGrpc in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel) as g2_engine:
+        data_source_code = "TEST"
+        record_id = "2"
+        json_data = "{}"
+        load_id = "Test Load"
+        g2_engine.add_record(data_source_code, record_id, json_data, load_id)

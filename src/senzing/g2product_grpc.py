@@ -51,6 +51,13 @@ class G2ProductGrpc(G2ProductAbstract):
         self.channel = grpc_channel
         self.stub = g2product_pb2_grpc.G2ProductStub(self.channel)
 
+    def __enter__(self):
+        """Context Manager method."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context Manager method."""
+
     # -------------------------------------------------------------------------
     # G2Product methods
     # -------------------------------------------------------------------------

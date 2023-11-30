@@ -604,3 +604,16 @@ def test_init_and_destroy_again(g2_config):
     """Test G2Config().init() and G2Config.destroy()."""
     g2_config.init("Example", "{}", 0)
     g2_config.destroy()
+
+
+def test_context_managment():
+    """Test the use of G2ConfigGrpc in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel) as g2_config:
+        config_handle = g2_config.create()
+        actual = g2_config.list_data_sources(config_handle)
+        g2_config.close(config_handle)
+        assert isinstance(actual, str)
+        actual_json = json.loads(actual)
+        assert schema(list_data_sources_schema) == actual_json

@@ -546,3 +546,14 @@ def test_init_and_destroy_again(g2_configmgr):
     """Test G2ConfigMgr().init() and G2ConfigMgr.destroy()."""
     g2_configmgr.init("Example", "{}", 0)
     g2_configmgr.destroy()
+
+
+def test_context_managment():
+    """Test the use of G2ConfigMgrGrpc in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel) as g2_configmgr:
+        config_id = g2_configmgr.get_default_config_id()
+        actual = g2_configmgr.get_config(config_id)
+        actual_json = json.loads(actual)
+        assert schema(config_schema) == actual_json

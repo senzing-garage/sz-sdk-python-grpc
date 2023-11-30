@@ -96,3 +96,14 @@ def test_init_and_destroy_again(g2_product):
     """Test init/destroy cycle a second time."""
     g2_product.init("Example", "{}", 0)
     g2_product.destroy()
+
+
+def test_context_managment():
+    """Test the use of G2ProductGrpc in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with g2product_grpc.G2ProductGrpc(grpc_channel=grpc_channel) as g2_product:
+        actual = g2_product.license()
+        assert isinstance(actual, str)
+        actual_json = json.loads(actual)
+        assert schema(license_schema) == actual_json
