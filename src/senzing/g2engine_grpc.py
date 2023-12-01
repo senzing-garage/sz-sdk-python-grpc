@@ -63,9 +63,9 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def __exit__(
         self,
-        exc_type: type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: TracebackType | None,
+        exc_type: Union[type[BaseException], None],
+        exc_val: Union[BaseException, None],
+        exc_tb: Union[TracebackType, None],
     ) -> None:
         """Context Manager method."""
 
@@ -790,7 +790,9 @@ class G2EngineGrpc(G2EngineAbstract):
     # -------------------------------------------------------------------------
 
     def export_json_entity_report_iteritems(
-        self, flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS, **kwargs: Any
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
     ) -> Iterable[Union[str, Dict[str, Any]]]:
         """_summary_
 
@@ -806,6 +808,8 @@ class G2EngineGrpc(G2EngineAbstract):
         Yields:
             Iterator[Iterable[Union[str, dict]]]: _description_
         """
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
         try:
             request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
                 flags=flags

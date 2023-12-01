@@ -198,6 +198,28 @@ def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config)
         assert schema(export_json_entity_report_iteritems_schema) == actual_json
     assert i == 2
 
+    actual = g2_engine.export_json_entity_report_iteritems()
+    print(">>>>", actual)
+
+    # Delete records.
+
+    for customer_id in customer_ids:
+        customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
+        g2_engine.delete_record(
+            customer.get("DataSource"),
+            customer.get("Id"),
+            load_id,
+        )
+
+    # Test export, again.
+
+    i = 0
+    for actual in g2_engine.export_json_entity_report_iteritems():
+        i += 1
+        actual_json = json.loads(actual)
+        assert schema(export_json_entity_report_iteritems_schema) == actual_json
+    assert i == 1
+
 
 def test_context_managment():
     """Test the use of G2EngineGrpc in context."""
