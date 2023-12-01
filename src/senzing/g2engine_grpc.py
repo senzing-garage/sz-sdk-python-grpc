@@ -6,7 +6,8 @@ TODO: g2engine_grpc.py
 
 # pylint: disable=E1101
 
-from typing import Any, Iterable, Tuple, Union
+from types import TracebackType
+from typing import Any, Dict, Iterable, Tuple, Union
 
 import grpc  # type: ignore
 
@@ -52,11 +53,20 @@ class G2EngineGrpc(G2EngineAbstract):
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
         self.noop = ""
 
-    def __enter__(self):
+    def __enter__(
+        self,
+    ) -> (
+        Any
+    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
         """Context Manager method."""
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
@@ -134,7 +144,15 @@ class G2EngineGrpc(G2EngineAbstract):
         load_id: str = "",
         **kwargs: Any,
     ) -> None:
-        self.fake_g2engine(data_source_code, record_id, load_id)
+        try:
+            request = g2engine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordID=record_id,
+                loadID=load_id,
+            )
+            self.stub.DeleteRecord(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def delete_record_with_info(
         self,
@@ -617,7 +635,13 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def reinit(self, init_config_id: int, **kwargs: Any) -> None:
-        """No-op"""
+        try:
+            request = g2engine_pb2.ReinitRequest(  # type: ignore[unused-ignore]
+                initConfigID=init_config_id,
+            )
+            self.stub.Reinit(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def replace_record(
         self,
@@ -767,7 +791,21 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def export_json_entity_report_iteritems(
         self, flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS, **kwargs: Any
-    ) -> Iterable[Union[str, dict]]:
+    ) -> Iterable[Union[str, Dict[str, Any]]]:
+        """_summary_
+
+        Args:
+            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
+
+        Raises:
+            new_exception: _description_
+
+        Returns:
+            Iterable[Union[str, dict]]: _description_
+
+        Yields:
+            Iterator[Iterable[Union[str, dict]]]: _description_
+        """
         try:
             request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
                 flags=flags

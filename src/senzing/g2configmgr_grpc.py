@@ -6,6 +6,7 @@ TODO: g2configmgr_grpc.py
 
 # pylint: disable=E1101
 
+from types import TracebackType
 from typing import Any, Dict, Union
 
 import grpc  # type: ignore
@@ -51,11 +52,20 @@ class G2ConfigMgrGrpc(G2ConfigMgrAbstract):
         self.channel = grpc_channel
         self.stub = g2configmgr_pb2_grpc.G2ConfigMgrStub(self.channel)
 
-    def __enter__(self):
+    def __enter__(
+        self,
+    ) -> (
+        Any
+    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
         """Context Manager method."""
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context Manager method."""
 
     # -------------------------------------------------------------------------

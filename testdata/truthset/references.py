@@ -1,4 +1,4 @@
-REFERENCE_RECORDS = {
+TRUTHSET_REFERENCE_RECORDS = {
     "2012": {
         "DataSource": "REFERENCE",
         "Id": "2012",

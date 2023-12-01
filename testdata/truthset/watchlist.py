@@ -1,4 +1,4 @@
-WATCHLIST_RECORDS = {
+TRUTHSET_WATCHLIST_RECORDS = {
     "1006": {
         "DataSource": "WATCHLIST",
         "Id": "1006",

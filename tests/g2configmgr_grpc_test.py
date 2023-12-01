@@ -3,6 +3,7 @@ import json
 import grpc
 import pytest
 from pytest_schema import Or, schema
+from testdata.truthset.datasources import TRUTHSET_DATASOURCES
 
 from senzing import g2config_grpc, g2configmgr_grpc, g2exception
 
@@ -458,6 +459,8 @@ def test_replace_default_config_id(g2_configmgr, g2_config):
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
     config_handle = g2_config.create()
+    for _, value in TRUTHSET_DATASOURCES.items():
+        g2_config.add_data_source(config_handle, value.get("Json", ""))
     input_json_dict = {"DSRC_CODE": "REPLACE_DEFAULT_CONFIG_ID"}
     g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
     json_config = g2_config.save(config_handle)
@@ -500,7 +503,7 @@ def test_replace_default_config_id_bad_old_id_value(g2_configmgr, g2_config):
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_old_config_id = 1234
     config_handle = g2_config.create()
-    input_json_dict = {"DSRC_CODE": "REPLACE_DEFAULT_CONFIG_ID"}
+    input_json_dict = {"DSRC_CODE": "CUSTOMERS"}
     g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
     json_config = g2_config.save(config_handle)
     new_config_id = g2_configmgr.add_config(json_config, "Test")
@@ -512,7 +515,7 @@ def test_set_default_config_id(g2_configmgr, g2_config):
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
     config_handle = g2_config.create()
-    input_json_dict = {"DSRC_CODE": "SET_DEFAULT_CONFIG_ID"}
+    input_json_dict = {"DSRC_CODE": "CUSTOMERS"}
     g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
     json_config = g2_config.save(config_handle)
     new_config_id = g2_configmgr.add_config(json_config, "Test")

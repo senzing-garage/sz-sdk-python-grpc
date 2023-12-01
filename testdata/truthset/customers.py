@@ -1,4 +1,4 @@
-CUSTOMER_RECORDS = {
+TRUTHSET_CUSTOMER_RECORDS = {
     "1001": {
         "DataSource": "CUSTOMERS",
         "Id": "1001",
