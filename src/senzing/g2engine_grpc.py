@@ -7,7 +7,7 @@ TODO: g2engine_grpc.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Dict, Iterable, Tuple, Union
+from typing import Any, Dict, Iterable, Tuple, Type, Union
 
 import grpc  # type: ignore
 
@@ -63,7 +63,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def __exit__(
         self,
-        exc_type: Union[type[BaseException], None],
+        exc_type: Union[Type[BaseException], None],
         exc_val: Union[BaseException, None],
         exc_tb: Union[TracebackType, None],
     ) -> None:

@@ -198,9 +198,6 @@ def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config)
         assert schema(export_json_entity_report_iteritems_schema) == actual_json
     assert i == 2
 
-    actual = g2_engine.export_json_entity_report_iteritems()
-    print(">>>>", actual)
-
     # Delete records.
 
     for customer_id in customer_ids:
