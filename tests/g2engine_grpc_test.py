@@ -113,6 +113,16 @@ def test_add_record_with_info_bad_data_source_code_value(g2_engine):
         )
 
 
+def test_export_json_entity_report_iteritems(g2_engine):
+    """Test G2Engine().add_record()."""
+    FIXME:
+    data_source_code = "TEST"
+    record_id = "1"
+    json_data = {}
+    load_id = "Test Load"
+    g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+
+
 def test_context_managment():
     """Test the use of G2EngineGrpc in context."""
     grpc_url = "localhost:8261"

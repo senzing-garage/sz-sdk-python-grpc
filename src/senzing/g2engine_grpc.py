@@ -6,7 +6,7 @@ TODO: g2engine_grpc.py
 
 # pylint: disable=E1101
 
-from typing import Any, Tuple
+from typing import Any, Iterable, Tuple, Union
 
 import grpc  # type: ignore
 
@@ -760,3 +760,20 @@ class G2EngineGrpc(G2EngineAbstract):
             data_source_code_1, record_id_1, data_source_code_2, record_id_2
         )
         return "string"
+
+    # -------------------------------------------------------------------------
+    # Methods not currently in G2EngineAbstract
+    # -------------------------------------------------------------------------
+
+    def export_json_entity_report_iteritems(
+        self, flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS, **kwargs: Any
+    ) -> Iterable[Union[str, dict]]:
+        try:
+            request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportJSONEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err
