@@ -7,7 +7,7 @@ TODO: g2engine_grpc.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Dict, Iterable, Tuple, Type, Union
+from typing import Any, Iterable, Tuple, Type, Union
 
 import grpc  # type: ignore
 
@@ -789,11 +789,43 @@ class G2EngineGrpc(G2EngineAbstract):
     # Methods not currently in G2EngineAbstract
     # -------------------------------------------------------------------------
 
+    def export_csv_entity_report_iteritems(
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> Iterable[str]:
+        """_summary_
+
+        Args:
+            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
+
+        Raises:
+            new_exception: _description_
+
+        Returns:
+            Iterable[Union[str, dict]]: _description_
+
+        Yields:
+            Iterator[Iterable[Union[str, dict]]]: _description_
+        """
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
+        try:
+            request = g2engine_pb2.StreamExportCSVEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportCSVEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err
+
     def export_json_entity_report_iteritems(
         self,
         flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
-    ) -> Iterable[Union[str, Dict[str, Any]]]:
+    ) -> Iterable[str]:
+        # ) -> Iterable[Union[str, Dict[str, Any]]]:
         """_summary_
 
         Args:

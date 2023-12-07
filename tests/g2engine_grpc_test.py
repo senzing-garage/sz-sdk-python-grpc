@@ -163,6 +163,79 @@ def test_add_record_with_info_bad_data_source_code_value(g2_engine):
         )
 
 
+def test_export_csv_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
+    """Test G2Engine().add_record()."""
+
+    # Add data sources.
+
+    config_handle = g2_config.create()
+    for _, value in TRUTHSET_DATASOURCES.items():
+        g2_config.add_data_source(config_handle, value.get("Json", ""))
+    json_config = g2_config.save(config_handle)
+    new_config_id = g2_configmgr.add_config(json_config, "Test")
+    g2_configmgr.set_default_config_id(new_config_id)
+    g2_engine.reinit(new_config_id)
+
+    # Add records.
+
+    customer_ids = ["1001", "1002", "1003"]
+    load_id = "Test Load"
+    for customer_id in customer_ids:
+        customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
+        g2_engine.add_record(
+            customer.get("DataSource"),
+            customer.get("Id"),
+            customer.get("Json"),
+            load_id,
+        )
+
+    # Test export.
+
+    expected = [
+        "RESOLVED_ENTITY_ID,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,DATA_SOURCE,RECORD_ID",
+        '1,0,0,"","TEST","1"',
+        '100001,0,0,"","CUSTOMERS","1001"',
+        '100001,0,1,"+NAME+DOB+PHONE","CUSTOMERS","1002"',
+        '100001,0,1,"+NAME+DOB+EMAIL","CUSTOMERS","1003"',
+    ]
+
+    i = 0
+    for actual in g2_engine.export_csv_entity_report_iteritems():
+        assert actual.strip() == expected[i]
+        i += 1
+    assert i == len(expected)
+
+    # Run again to make sure it starts from beginning.
+
+    i = 0
+    for _ in g2_engine.export_csv_entity_report_iteritems():
+        i += 1
+    assert i == len(expected)
+
+    # Delete records.
+
+    for customer_id in customer_ids:
+        customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
+        g2_engine.delete_record(
+            customer.get("DataSource"),
+            customer.get("Id"),
+            load_id,
+        )
+
+    # Test export, again.
+
+    expected = [
+        "RESOLVED_ENTITY_ID,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,DATA_SOURCE,RECORD_ID",
+        '1,0,0,"","TEST","1"',
+    ]
+
+    i = 0
+    for actual in g2_engine.export_csv_entity_report_iteritems():
+        assert actual.strip() == expected[i]
+        i += 1
+    assert i == len(expected)
+
+
 def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
     """Test G2Engine().add_record()."""
 
