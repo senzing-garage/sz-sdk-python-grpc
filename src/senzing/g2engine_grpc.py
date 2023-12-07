@@ -803,10 +803,10 @@ class G2EngineGrpc(G2EngineAbstract):
             new_exception: _description_
 
         Returns:
-            Iterable[Union[str, dict]]: _description_
+            Iterable[str]: _description_
 
         Yields:
-            Iterator[Iterable[Union[str, dict]]]: _description_
+            Iterator[Iterable[str]]: _description_
         """
         if len(kwargs) > 0:
             pass  # TODO: To disable pylint W0613
@@ -825,7 +825,6 @@ class G2EngineGrpc(G2EngineAbstract):
         flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> Iterable[str]:
-        # ) -> Iterable[Union[str, Dict[str, Any]]]:
         """_summary_
 
         Args:
@@ -835,10 +834,10 @@ class G2EngineGrpc(G2EngineAbstract):
             new_exception: _description_
 
         Returns:
-            Iterable[Union[str, dict]]: _description_
+            Iterable[str]: _description_
 
         Yields:
-            Iterator[Iterable[Union[str, dict]]]: _description_
+            Iterator[Iterable[str]]: _description_
         """
         if len(kwargs) > 0:
             pass  # TODO: To disable pylint W0613

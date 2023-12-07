@@ -13,7 +13,7 @@ DYLD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
 SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 # -----------------------------------------------------------------------------
-# OS-ARCH specific targets
+# OS specific targets
 # -----------------------------------------------------------------------------
 
 .PHONY: clean-osarch-specific
@@ -48,7 +48,6 @@ test-osarch-specific:
 .PHONY: view-sphinx-osarch-specific
 view-sphinx-osarch-specific:
 	@open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
-
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
