@@ -789,7 +789,7 @@ class G2EngineGrpc(G2EngineAbstract):
     # Methods not currently in G2EngineAbstract
     # -------------------------------------------------------------------------
 
-    def export_csv_entity_report_iteritems(
+    def export_csv_entity_report_iterator(
         self,
         flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -820,7 +820,7 @@ class G2EngineGrpc(G2EngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def export_json_entity_report_iteritems(
+    def export_json_entity_report_iterator(
         self,
         flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,

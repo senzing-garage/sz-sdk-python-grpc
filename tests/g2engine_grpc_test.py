@@ -60,7 +60,7 @@ add_record_with_info_schema = {
     "INTERESTING_ENTITIES": {"ENTITIES": []},
 }
 
-export_json_entity_report_iteritems_schema = {
+export_json_entity_report_iterator_schema = {
     "RESOLVED_ENTITY": {
         "ENTITY_ID": int,
         "ENTITY_NAME": str,
@@ -163,7 +163,7 @@ def test_add_record_with_info_bad_data_source_code_value(g2_engine):
         )
 
 
-def test_export_csv_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
+def test_export_csv_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
     """Test G2Engine().add_record()."""
 
     # Add data sources.
@@ -200,7 +200,7 @@ def test_export_csv_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
     ]
 
     i = 0
-    for actual in g2_engine.export_csv_entity_report_iteritems():
+    for actual in g2_engine.export_csv_entity_report_iterator():
         assert actual.strip() == expected[i]
         i += 1
     assert i == len(expected)
@@ -208,7 +208,7 @@ def test_export_csv_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
     # Run again to make sure it starts from beginning.
 
     i = 0
-    for _ in g2_engine.export_csv_entity_report_iteritems():
+    for _ in g2_engine.export_csv_entity_report_iterator():
         i += 1
     assert i == len(expected)
 
@@ -230,13 +230,13 @@ def test_export_csv_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
     ]
 
     i = 0
-    for actual in g2_engine.export_csv_entity_report_iteritems():
+    for actual in g2_engine.export_csv_entity_report_iterator():
         assert actual.strip() == expected[i]
         i += 1
     assert i == len(expected)
 
 
-def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config):
+def test_export_json_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
     """Test G2Engine().add_record()."""
 
     # Add data sources.
@@ -265,10 +265,10 @@ def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config)
     # Test export.
 
     i = 0
-    for actual in g2_engine.export_json_entity_report_iteritems():
+    for actual in g2_engine.export_json_entity_report_iterator():
         i += 1
         actual_json = json.loads(actual)
-        assert schema(export_json_entity_report_iteritems_schema) == actual_json
+        assert schema(export_json_entity_report_iterator_schema) == actual_json
     assert i == 2
 
     # Delete records.
@@ -284,10 +284,10 @@ def test_export_json_entity_report_iteritems(g2_engine, g2_configmgr, g2_config)
     # Test export, again.
 
     i = 0
-    for actual in g2_engine.export_json_entity_report_iteritems():
+    for actual in g2_engine.export_json_entity_report_iterator():
         i += 1
         actual_json = json.loads(actual)
-        assert schema(export_json_entity_report_iteritems_schema) == actual_json
+        assert schema(export_json_entity_report_iterator_schema) == actual_json
     assert i == 1
 
 
