@@ -1,14 +1,6 @@
 senzing package
 ===============
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   senzing.pb2_grpc
-
 Submodules
 ----------
 

@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to g2-sdk-python-grpc's documentation!
-==============================================
+g2-sdk-python-grpc
+==================
 
 .. toctree::
    :maxdepth: 2
