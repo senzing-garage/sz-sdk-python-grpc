@@ -1,31 +1,16 @@
 #! /usr/bin/env python3
 
-import json
 
-from senzing import g2config
+import grpc
+
+from senzing import g2config_grpc
 from senzing.g2exception import G2Exception
-
-ini_params_dict = {
-    "PIPELINE": {
-        "CONFIGPATH": "/etc/opt/senzing",
-        "RESOURCEPATH": "/opt/senzing/g2/resources",
-        "SUPPORTPATH": "/opt/senzing/data",
-    },
-    "SQL": {"CONNECTION": "sqlite3://na:na@/tmp/sqlite/G2C.db"},
-}
-MODULE_NAME = "Example"
 
 # Example 1
 
 try:
-    g2_config = g2config.G2Config(MODULE_NAME, json.dumps(ini_params_dict))
-except G2Exception as err:
-    print(err)
-
-# Example 2
-
-try:
-    g2_config = g2config.G2Config()
-    g2_config.init(MODULE_NAME, json.dumps(ini_params_dict))
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    g2_config = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
 except G2Exception as err:
     print(err)

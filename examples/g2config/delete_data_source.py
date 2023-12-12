@@ -2,22 +2,17 @@
 
 import json
 
-from senzing import g2config
+import grpc
+
+from senzing import g2config_grpc
 from senzing.g2exception import G2Exception
 
-ini_params_dict = {
-    "PIPELINE": {
-        "CONFIGPATH": "/etc/opt/senzing",
-        "RESOURCEPATH": "/opt/senzing/g2/resources",
-        "SUPPORTPATH": "/opt/senzing/data",
-    },
-    "SQL": {"CONNECTION": "sqlite3://na:na@/tmp/sqlite/G2C.db"},
-}
-MODULE_NAME = "Example"
 input_json_dict = {"DSRC_CODE": "TEST"}
 
 try:
-    g2_config = g2config.G2Config(MODULE_NAME, json.dumps(ini_params_dict))
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    g2_config = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
     config_handle = g2_config.create()
     g2_config.delete_data_source(config_handle, json.dumps(input_json_dict))
     g2_config.close(config_handle)
