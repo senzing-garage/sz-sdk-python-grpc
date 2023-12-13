@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-import json
+import grpc
 
-from senzing import g2configmgr, g2diagnostic
+from senzing import g2configmgr_grpc, g2diagnostic_grpc
 from senzing.g2exception import G2Exception
 
 ini_params_dict = {
@@ -16,9 +16,11 @@ ini_params_dict = {
 MODULE_NAME = "Example"
 
 try:
-    g2_configmgr = g2configmgr.G2ConfigMgr(MODULE_NAME, json.dumps(ini_params_dict))
-    g2_diagnostic = g2diagnostic.G2Diagnostic(MODULE_NAME, json.dumps(ini_params_dict))
+    GRPC_URL = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(GRPC_URL)
+    g2_configmgr = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
+    g2_diagnostic = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
     config_id = g2_configmgr.get_default_config_id()
     g2_diagnostic.reinit(config_id)
 except G2Exception as err:
-    print(err)
+    print(f"\nError:\n{err}\n")

@@ -167,7 +167,7 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def destroy(self, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def export_config(self, **kwargs: Any) -> str:
         self.fake_g2engine()
@@ -581,7 +581,7 @@ class G2EngineGrpc(G2EngineAbstract):
     def init(
         self, module_name: str, ini_params: str, verbose_logging: int = 0, **kwargs: Any
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def init_with_config_id(
         self,
@@ -591,10 +591,10 @@ class G2EngineGrpc(G2EngineAbstract):
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def prime_engine(self, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def process(self, record: str, **kwargs: Any) -> None:
         self.fake_g2engine(record)
