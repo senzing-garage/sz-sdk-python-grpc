@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import grpc  # type: ignore
+import grpc
 
 from senzing import g2product_grpc
 from senzing.g2exception import G2Exception
