@@ -4,10 +4,8 @@ from typing import Any, Dict
 import grpc
 import pytest
 from pytest_schema import schema
-from testdata.truthset.datasources import (
-    TRUTHSET_CUSTOMER_RECORDS,
-    TRUTHSET_DATASOURCES,
-)
+from testdata.truthset.customers import TRUTHSET_CUSTOMER_RECORDS
+from testdata.truthset.datasources import TRUTHSET_DATASOURCES
 
 from senzing import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 
