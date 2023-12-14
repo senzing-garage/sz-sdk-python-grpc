@@ -39,10 +39,10 @@ interface include:
 
 ## Use
 
-The following example shows how to start up a Senzing gRPC server Docker container
+The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` python package.
 
-1. In a separate window, run Senzing gRPC with an internal Sqlite database.
+1. In a separate window, run a Senzing gRPC service using Docker.
 
    **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
    Thus it is temporal and will be deleted when the container is killed.
