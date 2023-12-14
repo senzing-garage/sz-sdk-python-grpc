@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
 import grpc
-
 from senzing_grpc import g2configmgr_grpc, g2diagnostic_grpc
 from senzing_grpc.g2exception import G2Exception
 

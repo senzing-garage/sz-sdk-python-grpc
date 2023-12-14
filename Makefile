@@ -68,17 +68,17 @@ test: test-osarch-specific
 
 .PHONY: pylint
 pylint:
-	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*'  ':!:src/senzing/pb2_grpc/*')
+	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*'  ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: mypy
 mypy:
-	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
+	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: pytest
 pytest:
-	@pytest --cov=src/senzing --cov-report=xml  tests
+	@pytest --cov=src/senzing_grpc --cov-report=xml  tests
 
 # -----------------------------------------------------------------------------
 # Documentation
