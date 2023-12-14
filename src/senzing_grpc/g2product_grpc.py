@@ -11,7 +11,7 @@ from typing import Any, Dict, Type, Union
 
 import grpc
 
-from .abstract.g2product_abstract import G2ProductAbstract
+from .g2abstract.g2product_abstract import G2ProductAbstract
 from .g2helpers import new_exception
 from .pb2_grpc import g2product_pb2, g2product_pb2_grpc
 

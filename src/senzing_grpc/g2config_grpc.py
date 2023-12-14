@@ -11,7 +11,7 @@ from typing import Any, Dict, Type, Union
 
 import grpc
 
-from .abstract.g2config_abstract import G2ConfigAbstract
+from .g2abstract.g2config_abstract import G2ConfigAbstract
 from .g2helpers import as_str, new_exception
 from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
 

@@ -1,0 +1,18 @@
+name: publish-to-pypi.yaml
+
+on: [push]
+
+env:
+  PYTHONPATH: /home/runner/work/g2-sdk-python-grpc/g2-sdk-python-grpc/src
+
+jobs:
+  pytest-linux:
+    runs-on: ubuntu-latest
+    name: "Publish to PYPI"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+      - name: Python version
+        run: python --version
