@@ -39,9 +39,13 @@ interface include:
 
 ## Use
 
-(TODO:)
+The following example shows how to start up a Senzing gRPC server Docker container
+and access it using the `senzing_grpc` python package.
 
-1. In a separate window, run Senzing gRPC wiht an internal Sqlite database.
+1. In a separate window, run Senzing gRPC with an internal Sqlite database.
+
+   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
+   Thus it is temporal and will be deleted when the container is killed.
    Example:
 
     ```console
@@ -62,14 +66,14 @@ interface include:
     python3 -m pip install senzing-grpc
     ```
 
-1. xxx.
+1. Start an interactive python session.
    Example:
 
     ```console
     python3
     ```
 
-1. In the python REPL
+1. Paste the following into the interactive Python session.
    Example:
 
     ```console
@@ -77,15 +81,6 @@ interface include:
     from senzing_grpc import g2product_grpc
     g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
     print(g2_product.version())
-    ```
-
-    ```console
-    >>> import grpc
-    >>> from senzing_grpc import g2product_grpc
-    >>> g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
-    >>> print(g2_product.version())
-    >>>
-{"PRODUCT_NAME":"Senzing API","VERSION":"3.8.0","BUILD_VERSION":"3.8.0.23303","BUILD_DATE":"2023-10-30","BUILD_NUMBER":"2023_10_30__10_45","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.8","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
     ```
 
 ## References
