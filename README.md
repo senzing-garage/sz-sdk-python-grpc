@@ -41,6 +41,53 @@ interface include:
 
 (TODO:)
 
+1. In a separate window, run Senzing gRPC wiht an internal Sqlite database.
+   Example:
+
+    ```console
+    docker run \
+      --env SENZING_TOOLS_COMMAND=serve-grpc \
+      --env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db \
+      --env SENZING_TOOLS_ENABLE_ALL=true \
+      --name senzing-tools-serve-grpc \
+      --publish 8261:8261 \
+      --rm \
+      senzing/senzing-tools
+    ```
+
+1. Install the `senzing-grpc` python package.
+   Example:
+
+    ```console
+    python3 -m pip install senzing-grpc
+    ```
+
+1. xxx.
+   Example:
+
+    ```console
+    python3
+    ```
+
+1. In the python REPL
+   Example:
+
+    ```console
+    import grpc
+    from senzing_grpc import g2product_grpc
+    g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    print(g2_product.version())
+    ```
+
+    ```console
+    >>> import grpc
+    >>> from senzing_grpc import g2product_grpc
+    >>> g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    >>> print(g2_product.version())
+    >>>
+{"PRODUCT_NAME":"Senzing API","VERSION":"3.8.0","BUILD_VERSION":"3.8.0.23303","BUILD_DATE":"2023-10-30","BUILD_NUMBER":"2023_10_30__10_45","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.8","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+    ```
+
 ## References
 
 1. [Development](docs/development.md)

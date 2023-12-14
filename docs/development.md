@@ -30,27 +30,43 @@ see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/main/
 
 ## Working with Python wheel file
 
-1. xxx
+1. Build the `wheel` file for distribution.
+   Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
     make package
     ```
 
-1. xxx
+1. Verify that `senzing-grpc` is not installed.
+   Example:
 
     ```console
-    python3 -m pip freeze | grep senzing_grpc
+    python3 -m pip freeze | grep senzing-grpc
     ```
 
-1. xxx
+   Nothing is returned.
+
+1. Install directly from `wheel` file.
+   Example:
 
     ```console
     python3 -m pip install ${GIT_REPOSITORY_DIR}/dist/*.whl
     ```
 
-1. xxx
+1. Verify that `senzing-grpc` is installed.
+   Example:
 
     ```console
-    python3 -m pip
+    python3 -m pip freeze | grep senzing-grpc
+    ```
+
+    Example return:
+    > senzing-grpc @ file:///home/senzing/senzing.git/g2-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
+
+1. Uninstall the `senzing-grpc` python package.
+   Example:
+
+    ```console
+    python3 -m pip uninstall senzing-grpc
     ```
