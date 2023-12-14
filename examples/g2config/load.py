@@ -4,8 +4,8 @@ from typing import Any, Dict
 
 import grpc
 
-from senzing import g2config_grpc
-from senzing.g2exception import G2Exception
+from senzing_grpc import g2config_grpc
+from senzing_grpc.g2exception import G2Exception
 
 # This would be a full Senzing configuration.
 json_config: Dict[str, Any] = {}  # In this example, an exception occurs.

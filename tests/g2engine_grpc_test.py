@@ -4,10 +4,9 @@ from typing import Any, Dict
 import grpc
 import pytest
 from pytest_schema import schema
+from senzing_grpc import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 from testdata.truthset.customers import TRUTHSET_CUSTOMER_RECORDS
 from testdata.truthset.datasources import TRUTHSET_DATASOURCES
-
-from senzing import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 
 # -----------------------------------------------------------------------------
 # G2Engine fixtures
@@ -198,9 +197,9 @@ def test_export_csv_entity_report_iterator(
     for customer_id in customer_ids:
         customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
         g2_engine.add_record(
-            customer.get("DataSource"),
-            customer.get("Id"),
-            customer.get("Json"),
+            customer.get("DataSource", ""),
+            customer.get("Id", ""),
+            customer.get("Json", ""),
             load_id,
         )
 
@@ -232,8 +231,8 @@ def test_export_csv_entity_report_iterator(
     for customer_id in customer_ids:
         customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
         g2_engine.delete_record(
-            customer.get("DataSource"),
-            customer.get("Id"),
+            customer.get("DataSource", ""),
+            customer.get("Id", ""),
             load_id,
         )
 
@@ -275,9 +274,9 @@ def test_export_json_entity_report_iterator(
     for customer_id in customer_ids:
         customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
         g2_engine.add_record(
-            customer.get("DataSource"),
-            customer.get("Id"),
-            customer.get("Json"),
+            customer.get("DataSource", ""),
+            customer.get("Id", ""),
+            customer.get("Json", ""),
             load_id,
         )
 
@@ -295,8 +294,8 @@ def test_export_json_entity_report_iterator(
     for customer_id in customer_ids:
         customer = TRUTHSET_CUSTOMER_RECORDS.get(customer_id, {})
         g2_engine.delete_record(
-            customer.get("DataSource"),
-            customer.get("Id"),
+            customer.get("DataSource", ""),
+            customer.get("Id", ""),
             load_id,
         )
 

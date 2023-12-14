@@ -13,7 +13,9 @@ import json
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, Union, cast
 
-from senzing.abstract.g2engineflags import G2EngineFlags  # TODO: Fix this import mess
+from senzing_grpc.abstract.g2engineflags import (
+    G2EngineFlags,
+)  # TODO: Fix this import mess
 
 # Metadata
 
