@@ -11,7 +11,7 @@ TODO: g2engine_abstract.py
 
 import json
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple, cast
+from typing import Any, Dict, Tuple, Union, cast
 
 from senzing.localcopy.g2engineflags import G2EngineFlags  # TODO: Fix this import mess
 
@@ -156,7 +156,7 @@ class G2EngineAbstract(ABC):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         **kwargs: Any,
@@ -168,7 +168,7 @@ class G2EngineAbstract(ABC):
         Args:
             data_source_code (str): Identifies the provenance of the data.
             record_id (str): The unique identifier within the records of the same data source.
-            json_data (str): A JSON document containing the record to be added to the Senzing repository.
+            json_data (Union[str, Dict[Any, Any]]): A JSON document containing the record to be added to the Senzing repository.
             load_id (str, optional): An identifier used to distinguish different load batches/sessions. An empty string is acceptable. Defaults to "".
 
         Raises:
@@ -185,7 +185,7 @@ class G2EngineAbstract(ABC):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -199,7 +199,7 @@ class G2EngineAbstract(ABC):
         Args:
             data_source_code (str): Identifies the provenance of the data.
             record_id (str): The unique identifier within the records of the same data source.
-            json_data (str): A JSON document containing the record to be added to the Senzing repository.
+            json_data (Union[str, Dict[Any, Any]]): A JSON document containing the record to be added to the Senzing repository.
             load_id (str, optional): An identifier used to distinguish different load batches/sessions. An empty string is acceptable. Defaults to "".
             flags (int, optional): Flags used to control information returned. Defaults to 0.
 
@@ -561,7 +561,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def find_network_by_entity_id_v2(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -574,7 +574,7 @@ class G2EngineAbstract(ABC):
         It extends `find_network_by_entity_id` by adding output control flags.
 
         Args:
-            entity_list (str): A JSON document listing entities.
+            entity_list (Union[str, Dict[Any, Any]]): A JSON document listing entities.
             max_degree (int): The maximum number of degrees in paths between search entities.
             build_out_degree (int): The number of degrees of relationships to show around each search entity.
             max_entities (int): The maximum number of entities to return in the discovered network.
@@ -601,7 +601,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def find_network_by_entity_id(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -617,7 +617,7 @@ class G2EngineAbstract(ABC):
         To control output, use `find_network_by_entity_id_v2` instead.
 
         Args:
-            entity_list (str): A JSON document listing entities.
+            entity_list (Union[str, Dict[Any, Any]]): A JSON document listing entities.
             max_degree (int): The maximum number of degrees in paths between search entities.
             build_out_degree (int): The number of degrees of relationships to show around each search entity.
             max_entities (int): The maximum number of entities to return in the discovered network.
@@ -645,7 +645,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def find_network_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -661,7 +661,7 @@ class G2EngineAbstract(ABC):
         It extends `find_network_by_record_id` by adding output control flags.
 
         Args:
-            record_list (str): A JSON document listing records.
+            record_list (Union[str, Dict[Any, Any]]): A JSON document listing records.
             max_degree (int): The maximum number of degrees in paths between search entities.
             build_out_degree (int): The number of degrees of relationships to show around each search entity.
             max_entities (int): The maximum number of entities to return in the discovered network.
@@ -688,7 +688,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def find_network_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -704,7 +704,7 @@ class G2EngineAbstract(ABC):
         To control output, use `find_network_by_record_id_v2` instead.
 
         Args:
-            record_list (str): A JSON document listing records.
+            record_list (Union[str, Dict[Any, Any]]): A JSON document listing records.
             max_degree (int): The maximum number of degrees in paths between search entities.
             build_out_degree (int): The number of degrees of relationships to show around each search entity.
             max_entities (int): The maximum number of entities to return in the discovered network.
@@ -903,7 +903,7 @@ class G2EngineAbstract(ABC):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -917,7 +917,7 @@ class G2EngineAbstract(ABC):
             entity_id_1 (int): The entity ID for the starting entity of the search path.
             entity_id_2 (int): The entity ID for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_entities (str): A JSON document listing entities that should be avoided on the path.
+            excluded_entities (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -944,7 +944,7 @@ class G2EngineAbstract(ABC):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -965,7 +965,7 @@ class G2EngineAbstract(ABC):
             entity_id_1 (int): The entity ID for the starting entity of the search path.
             entity_id_2 (int): The entity ID for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_entities (str): A JSON document listing entities that should be avoided on the path.
+            excluded_entities (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -995,7 +995,7 @@ class G2EngineAbstract(ABC):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1016,7 +1016,7 @@ class G2EngineAbstract(ABC):
             data_source_code_2 (str): Identifies the provenance of the record for the ending entity of the search path.
             record_id_2 (str): The unique identifier within the records of the same data source for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_records (str): A JSON document listing entities that should be avoided on the path.
+            excluded_records (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1045,7 +1045,7 @@ class G2EngineAbstract(ABC):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1068,7 +1068,7 @@ class G2EngineAbstract(ABC):
             data_source_code_2 (str): Identifies the provenance of the record for the ending entity of the search path.
             record_id_2 (str): The unique identifier within the records of the same data source for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_records (str): A JSON document listing entities that should be avoided on the path.
+            excluded_records (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1096,8 +1096,8 @@ class G2EngineAbstract(ABC):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1112,8 +1112,8 @@ class G2EngineAbstract(ABC):
             entity_id_1 (int): The entity ID for the starting entity of the search path.
             entity_id_2 (int): The entity ID for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_entities (str): A JSON document listing entities that should be avoided on the path.
-            required_dsrcs (str): A JSON document listing data sources that should be included on the path.
+            excluded_entities (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
+            required_dsrcs (Union[str, Dict[Any, Any]]): A JSON document listing data sources that should be included on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1140,8 +1140,8 @@ class G2EngineAbstract(ABC):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1164,8 +1164,8 @@ class G2EngineAbstract(ABC):
             entity_id_1 (int): The entity ID for the starting entity of the search path.
             entity_id_2 (int): The entity ID for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_entities (str): A JSON document listing entities that should be avoided on the path.
-            required_dsrcs (str): A JSON document listing data sources that should be included on the path.
+            excluded_entities (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
+            required_dsrcs (Union[str, Dict[Any, Any]]): A JSON document listing data sources that should be included on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1195,8 +1195,8 @@ class G2EngineAbstract(ABC):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1213,8 +1213,8 @@ class G2EngineAbstract(ABC):
             data_source_code_2 (str): Identifies the provenance of the record for the ending entity of the search path.
             record_id_2 (str): The unique identifier within the records of the same data source for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_records (str): A JSON document listing entities that should be avoided on the path.
-            required_dsrcs (str):  A JSON document listing data sources that should be included on the path.
+            excluded_records (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
+            required_dsrcs (Union[str, Dict[Any, Any]]):  A JSON document listing data sources that should be included on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1243,8 +1243,8 @@ class G2EngineAbstract(ABC):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1270,8 +1270,8 @@ class G2EngineAbstract(ABC):
             data_source_code_2 (str): Identifies the provenance of the record for the ending entity of the search path.
             record_id_2 (str): The unique identifier within the records of the same data source for the ending entity of the search path.
             max_degree (int): The maximum number of degrees in paths between search entities.
-            excluded_records (str): A JSON document listing entities that should be avoided on the path.
-            required_dsrcs (str): A JSON document listing data sources that should be included on the path.
+            excluded_records (Union[str, Dict[Any, Any]]): A JSON document listing entities that should be avoided on the path.
+            required_dsrcs (Union[str, Dict[Any, Any]]): A JSON document listing data sources that should be included on the path.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS.
 
         Returns:
@@ -1579,7 +1579,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def get_virtual_entity_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1588,7 +1588,7 @@ class G2EngineAbstract(ABC):
         It extends `get_virtual_entity_by_record_id` by adding output control flags.
 
         Args:
-            record_list (str): A JSON document of one or more records by DATA_SOURCE and RECORD_ID pairs, formatted as `{"RECORDS":[{"DATA_SOURCE":"DS1","RECORD_ID":"R1"},{"DATA_SOURCE":"DS2","RECORD_ID":"R2"}]}`.
+            record_list (Union[str, Dict[Any, Any]]): A JSON document of one or more records by DATA_SOURCE and RECORD_ID pairs, formatted as `{"RECORDS":[{"DATA_SOURCE":"DS1","RECORD_ID":"R1"},{"DATA_SOURCE":"DS2","RECORD_ID":"R2"}]}`.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS.
 
         Returns:
@@ -1612,7 +1612,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def get_virtual_entity_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -1624,7 +1624,7 @@ class G2EngineAbstract(ABC):
         To control output, use `get_virtual_entity_by_record_id_v2` instead.
 
         Args:
-            record_list (str): A JSON document of one or more records by DATA_SOURCE and RECORD_ID pairs, formatted as `{"RECORDS":[{"DATA_SOURCE":"DS1","RECORD_ID":"R1"},{"DATA_SOURCE":"DS2","RECORD_ID":"R2"}]}`.
+            record_list (Union[str, Dict[Any, Any]]): A JSON document of one or more records by DATA_SOURCE and RECORD_ID pairs, formatted as `{"RECORDS":[{"DATA_SOURCE":"DS1","RECORD_ID":"R1"},{"DATA_SOURCE":"DS2","RECORD_ID":"R2"}]}`.
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS.
 
         Returns:
@@ -1717,7 +1717,11 @@ class G2EngineAbstract(ABC):
 
     @abstractmethod
     def init(
-        self, module_name: str, ini_params: str, verbose_logging: int = 0, **kwargs: Any
+        self,
+        module_name: str,
+        ini_params: Union[str, Dict[Any, Any]],
+        verbose_logging: int = 0,
+        **kwargs: Any,
     ) -> None:
         """
         The `init` method initializes the Senzing G2Engine object.
@@ -1735,7 +1739,7 @@ class G2EngineAbstract(ABC):
 
         Args:
             module_name (str): A short name given to this instance of the G2Engine object, to help identify it within system logs.
-            ini_params (str): A JSON string containing configuration parameters.
+            ini_params (Union[str, Dict[Any, Any]]): A JSON document containing configuration parameters.
             verbose_logging (int): `Optional:` A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging. Default: 0
 
         Raises:
@@ -1752,7 +1756,7 @@ class G2EngineAbstract(ABC):
     def init_with_config_id(
         self,
         module_name: str,
-        ini_params: str,
+        ini_params: Union[str, Dict[Any, Any]],
         init_config_id: int,
         verbose_logging: int = 0,
         **kwargs: Any,
@@ -1773,7 +1777,7 @@ class G2EngineAbstract(ABC):
 
         Args:
             module_name (str): A short name given to this instance of the G2Engine object, to help identify it within system logs.
-            ini_params (str): A JSON string containing configuration parameters.
+            ini_params (Union[str, Dict[Any, Any]]): A JSON document containing configuration parameters.
             init_config_id (int): The configuration ID used for the initialization.
             verbose_logging (int): `Optional:` A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging. Default: 0
 
@@ -1806,13 +1810,13 @@ class G2EngineAbstract(ABC):
         """
 
     @abstractmethod
-    def process(self, record: str, **kwargs: Any) -> None:
+    def process(self, record: Union[str, Dict[Any, Any]], **kwargs: Any) -> None:
         """
         The `process` method processes the redo record.
         Usually the redo record is retrieved with `get_redo_record`.
 
         Args:
-            record (str):  A JSON document containing the redo record to be processed.
+            record (Union[str, Dict[Any, Any]]):  A JSON document containing the redo record to be processed.
 
         Raises:
 
@@ -1824,13 +1828,15 @@ class G2EngineAbstract(ABC):
         """
 
     @abstractmethod
-    def process_with_info(self, record: str, flags: int, **kwargs: Any) -> str:
+    def process_with_info(
+        self, record: Union[str, Dict[Any, Any]], flags: int, **kwargs: Any
+    ) -> str:
         """_summary_
         The `process_with_info` method processes the redo record
         and returns a JSON document containing the ENTITY_ID values of the affected entities.
 
         Args:
-            record (str): A JSON document containing the record to be added to the Senzing repository.
+            record (Union[str, Dict[Any, Any]]): A JSON document containing the record to be added to the Senzing repository.
             flags (int): Flags used to control information returned.
 
         Returns:
@@ -1995,7 +2001,7 @@ class G2EngineAbstract(ABC):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         **kwargs: Any,
@@ -2007,7 +2013,7 @@ class G2EngineAbstract(ABC):
         Args:
             data_source_code (str): Identifies the provenance of the data.
             record_id (str): The unique identifier within the records of the same data source.
-            json_data (str): A JSON document containing the record to be added to the Senzing repository.
+            json_data (Union[str, Dict[Any, Any]]): A JSON document containing the record to be added to the Senzing repository.
             load_id (str, optional): An identifier used to distinguish different load batches/sessions. An empty string is acceptable. Defaults to "".
 
         Raises:
@@ -2024,7 +2030,7 @@ class G2EngineAbstract(ABC):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -2038,7 +2044,7 @@ class G2EngineAbstract(ABC):
         Args:
             data_source_code (str): Identifies the provenance of the data.
             record_id (str): The unique identifier within the records of the same data source.
-            json_data (str): A JSON document containing the record to be added to the Senzing repository.
+            json_data (Union[str, Dict[Any, Any]]): A JSON document containing the record to be added to the Senzing repository.
             load_id (str, optional): An identifier used to distinguish different load batches/sessions. An empty string is acceptable. Defaults to "".
             flags (int, optional): Flags used to control information returned. Defaults to 0.
 
@@ -2064,7 +2070,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def search_by_attributes_v2(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -2073,7 +2079,7 @@ class G2EngineAbstract(ABC):
         It extends `search_by_attributes` by adding output control flags.
 
         Args:
-            json_data (str): TODO:
+            json_data (Union[str, Dict[Any, Any]]): TODO:
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS.
 
         Returns:
@@ -2098,7 +2104,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def search_by_attributes_v3(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         search_profile: str,
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -2108,7 +2114,7 @@ class G2EngineAbstract(ABC):
         It extends `search_by_attributes` by adding output control flags and supporting a `search_profile`.
 
         Args:
-            json_data (str): TODO:
+            json_data (Union[str, Dict[Any, Any]]): TODO:
             search_profile (str): TODO:
             flags (int, optional): Flags used to control information returned. Defaults to G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS.
 
@@ -2133,7 +2139,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def search_by_attributes(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -2143,7 +2149,7 @@ class G2EngineAbstract(ABC):
         To specify a search profile, use `search_by_attributes_v3` instead.
 
         Args:
-            json_data (str):  A JSON document with the attribute data to search for.
+            json_data (Union[str, Dict[Any, Any]]):  A JSON document with the attribute data to search for.
             flags (int, optional): _description_. Defaults to G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS.
 
         Returns:
@@ -2266,7 +2272,7 @@ class G2EngineAbstract(ABC):
     @abstractmethod
     def why_entity_by_entity_id_v2(
         self,
-        entity_id: str,
+        entity_id: int,
         flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:

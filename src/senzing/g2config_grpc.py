@@ -9,7 +9,7 @@ TODO: g2config_grpc.py
 from types import TracebackType
 from typing import Any, Dict, Type, Union
 
-import grpc  # type: ignore
+import grpc
 
 from .g2helpers import as_str, new_exception
 from .localcopy.g2config_abstract import G2ConfigAbstract

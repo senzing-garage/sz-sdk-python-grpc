@@ -5,7 +5,7 @@ TODO: g2helpers.py
 import json
 from typing import Any, Dict, Union
 
-import grpc  # type: ignore
+import grpc
 
 from . import g2exception
 

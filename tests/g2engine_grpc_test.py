@@ -1,10 +1,13 @@
 import json
+from typing import Any, Dict
 
 import grpc
 import pytest
 from pytest_schema import schema
-from testdata.truthset.customers import TRUTHSET_CUSTOMER_RECORDS
-from testdata.truthset.datasources import TRUTHSET_DATASOURCES
+from testdata.truthset.datasources import (
+    TRUTHSET_CUSTOMER_RECORDS,
+    TRUTHSET_DATASOURCES,
+)
 
 from senzing import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 
@@ -13,8 +16,8 @@ from senzing import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_config", scope="module")
-def g2config_fixture():
+@pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
+def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
     """
     Single engine object to use for all tests.
     """
@@ -25,8 +28,8 @@ def g2config_fixture():
     return result
 
 
-@pytest.fixture(name="g2_configmgr", scope="module")
-def g2configmgr_fixture():
+@pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
+def g2configmgr_fixture() -> g2configmgr_grpc.G2ConfigMgrGrpc:
     """
     Single engine object to use for all tests.
     """
@@ -37,8 +40,8 @@ def g2configmgr_fixture():
     return result
 
 
-@pytest.fixture(name="g2_engine", scope="module")
-def g2engine_fixture():
+@pytest.fixture(name="g2_engine", scope="module")  # type: ignore[misc]
+def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
     """
     Single engine object to use for all tests.
     """
@@ -89,7 +92,7 @@ export_json_entity_report_iterator_schema = {
 # -----------------------------------------------------------------------------
 
 
-def test_constructor():
+def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
@@ -97,40 +100,46 @@ def test_constructor():
     assert isinstance(actual, g2engine_grpc.G2EngineGrpc)
 
 
-def test_add_record(g2_engine):
+def test_add_record(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
     """Test G2Engine().add_record()."""
     data_source_code = "TEST"
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     g2_engine.add_record(data_source_code, record_id, json_data, load_id)
 
 
-def test_add_record_bad_data_source_code_type(g2_engine):
+def test_add_record_bad_data_source_code_type(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
     """Test G2Engine().add_record()."""
     data_source_code = 1
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     with pytest.raises(TypeError):
-        g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+        g2_engine.add_record(
+            data_source_code, record_id, json_data, load_id  # type: ignore[arg-type]
+        )
 
 
-def test_add_record_bad_data_source_code_value(g2_engine):
+def test_add_record_bad_data_source_code_value(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
     """Test G2Engine().add_record()."""
     data_source_code = "DOESN'T EXIST"
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     with pytest.raises(g2exception.G2UnknownDatasourceError):
         g2_engine.add_record(data_source_code, record_id, json_data, load_id)
 
 
-def test_add_record_with_info(g2_engine):
+def test_add_record_with_info(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
     """Test G2Engine().add_record_with_info()."""
     data_source_code = "TEST"
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     actual = g2_engine.add_record_with_info(
         data_source_code, record_id, json_data, load_id
@@ -139,23 +148,27 @@ def test_add_record_with_info(g2_engine):
     assert schema(add_record_with_info_schema) == actual_json
 
 
-def test_add_record_with_info_bad_data_source_code_type(g2_engine):
+def test_add_record_with_info_bad_data_source_code_type(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
     """Test G2Engine().add_record_with_info()."""
     data_source_code = 1
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     with pytest.raises(TypeError):
         _ = g2_engine.add_record_with_info(
-            data_source_code, record_id, json_data, load_id
+            data_source_code, record_id, json_data, load_id  # type: ignore[arg-type]
         )
 
 
-def test_add_record_with_info_bad_data_source_code_value(g2_engine):
+def test_add_record_with_info_bad_data_source_code_value(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
     """Test G2Engine().add_record_with_info()."""
     data_source_code = "DOESN'T EXIST"
     record_id = "1"
-    json_data = {}
+    json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
     with pytest.raises(g2exception.G2UnknownDatasourceError):
         _ = g2_engine.add_record_with_info(
@@ -163,7 +176,11 @@ def test_add_record_with_info_bad_data_source_code_value(g2_engine):
         )
 
 
-def test_export_csv_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
+def test_export_csv_entity_report_iterator(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_config: g2config_grpc.G2ConfigGrpc,
+) -> None:
     """Test G2Engine().add_record()."""
 
     # Add data sources.
@@ -236,7 +253,11 @@ def test_export_csv_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
     assert i == len(expected)
 
 
-def test_export_json_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
+def test_export_json_entity_report_iterator(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_config: g2config_grpc.G2ConfigGrpc,
+) -> None:
     """Test G2Engine().add_record()."""
 
     # Add data sources.
@@ -291,7 +312,7 @@ def test_export_json_entity_report_iterator(g2_engine, g2_configmgr, g2_config):
     assert i == 1
 
 
-def test_context_managment():
+def test_context_managment() -> None:
     """Test the use of G2EngineGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)

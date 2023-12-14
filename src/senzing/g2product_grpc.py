@@ -9,7 +9,7 @@ TODO: g2product_grpc.py
 from types import TracebackType
 from typing import Any, Dict, Type, Union
 
-import grpc  # type: ignore
+import grpc
 
 from .g2helpers import new_exception
 from .localcopy.g2product_abstract import G2ProductAbstract

@@ -7,9 +7,9 @@ TODO: g2engine_grpc.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Iterable, Tuple, Type, Union
+from typing import Any, Dict, Iterable, Tuple, Type, Union
 
-import grpc  # type: ignore
+import grpc
 
 from .g2helpers import as_str, new_exception
 from .localcopy.g2engine_abstract import G2EngineAbstract
@@ -86,7 +86,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,  # TODO: Fix typing to accept dict
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,  # pylint: disable=W0613
@@ -107,7 +107,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -214,7 +214,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_entity_id_v2(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -228,7 +228,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_entity_id(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -240,7 +240,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -254,7 +254,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -326,7 +326,7 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -340,7 +340,7 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -354,7 +354,7 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -376,7 +376,7 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -395,8 +395,8 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -415,8 +415,8 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -432,8 +432,8 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -456,8 +456,8 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -544,7 +544,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def get_virtual_entity_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -553,7 +553,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def get_virtual_entity_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -579,14 +579,18 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def init(
-        self, module_name: str, ini_params: str, verbose_logging: int = 0, **kwargs: Any
+        self,
+        module_name: str,
+        ini_params: Union[str, Dict[Any, Any]],
+        verbose_logging: int = 0,
+        **kwargs: Any,
     ) -> None:
         """Null function"""
 
     def init_with_config_id(
         self,
         module_name: str,
-        ini_params: str,
+        ini_params: Union[str, Dict[Any, Any]],
         init_config_id: int,
         verbose_logging: int = 0,
         **kwargs: Any,
@@ -596,10 +600,12 @@ class G2EngineGrpc(G2EngineAbstract):
     def prime_engine(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def process(self, record: str, **kwargs: Any) -> None:
+    def process(self, record: Union[str, Dict[Any, Any]], **kwargs: Any) -> None:
         self.fake_g2engine(record)
 
-    def process_with_info(self, record: str, flags: int, **kwargs: Any) -> str:
+    def process_with_info(
+        self, record: Union[str, Dict[Any, Any]], flags: int, **kwargs: Any
+    ) -> str:
         self.fake_g2engine(record, flags)
         return "string"
 
@@ -647,7 +653,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         **kwargs: Any,
@@ -658,7 +664,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -669,7 +675,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes_v2(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -678,7 +684,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes_v3(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         search_profile: str,
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -688,7 +694,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -721,7 +727,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def why_entity_by_entity_id_v2(
         self,
-        entity_id: str,
+        entity_id: int,
         flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:

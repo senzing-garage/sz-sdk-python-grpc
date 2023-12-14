@@ -12,8 +12,8 @@ from senzing import g2diagnostic_grpc
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_diagnostic", scope="module")
-def g2diagnostic_fixture():
+@pytest.fixture(name="g2_diagnostic", scope="module")  # type: ignore[misc]
+def g2diagnostic_fixture() -> g2diagnostic_grpc.G2DiagnosticGrpc:
     """
     Single engine object to use for all tests.
     """
@@ -46,7 +46,7 @@ check_db_perf_schema = {"numRecordsInserted": int, "insertTime": int}
 # -----------------------------------------------------------------------------
 
 
-def test_constructor():
+def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
@@ -54,7 +54,7 @@ def test_constructor():
     assert isinstance(actual, g2diagnostic_grpc.G2DiagnosticGrpc)
 
 
-def test_check_db_perf(g2_diagnostic):
+def test_check_db_perf(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().check_db_perf()."""
     seconds_to_run = 3
     actual = g2_diagnostic.check_db_perf(seconds_to_run)
@@ -62,20 +62,26 @@ def test_check_db_perf(g2_diagnostic):
     assert schema(check_db_perf_schema) == actual_json
 
 
-def test_check_db_perf_bad_seconds_to_run_type(g2_diagnostic):
+def test_check_db_perf_bad_seconds_to_run_type(
+    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
+) -> None:
     """Test G2Diagnostic().check_db_perf()."""
     bad_seconds_to_run = "string"
     with pytest.raises(TypeError):
-        g2_diagnostic.check_db_perf(bad_seconds_to_run)
+        g2_diagnostic.check_db_perf(bad_seconds_to_run)  # type: ignore[arg-type]
 
 
-def test_check_db_perf_bad_seconds_to_run_value(g2_diagnostic):
+def test_check_db_perf_bad_seconds_to_run_value(
+    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
+) -> None:
     """Test G2Diagnostic().check_db_perf()."""
     bad_seconds_to_run = -1
     g2_diagnostic.check_db_perf(bad_seconds_to_run)
 
 
-def test_get_available_memory(g2_diagnostic):
+def test_get_available_memory(
+    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
+) -> None:
     """Test available memory."""
     # TODO: See if there's a fix.
     actual = g2_diagnostic.get_available_memory()
@@ -83,14 +89,14 @@ def test_get_available_memory(g2_diagnostic):
     assert actual == expected
 
 
-def test_get_db_info(g2_diagnostic):
+def test_get_db_info(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().get_db_info()."""
     actual = g2_diagnostic.get_db_info()
     actual_json = json.loads(actual)
     assert schema(get_db_info_schema) == actual_json
 
 
-def test_get_logical_cores(g2_diagnostic):
+def test_get_logical_cores(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().get_logical_cores()."""
     actual = g2_diagnostic.get_logical_cores()
     expected = psutil.cpu_count()
@@ -98,7 +104,7 @@ def test_get_logical_cores(g2_diagnostic):
 
 
 # BUG: Returns wrong value!
-def test_get_physical_cores(g2_diagnostic):
+def test_get_physical_cores(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().get_physical_cores()."""
     actual = g2_diagnostic.get_physical_cores()
     actual = psutil.cpu_count(logical=False)  # TODO: Remove. Just a test work-around.
@@ -107,20 +113,20 @@ def test_get_physical_cores(g2_diagnostic):
     assert actual == expected
 
 
-def test_total_system_memory(g2_diagnostic):
+def test_total_system_memory(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().get_total_system_memory()."""
     actual = g2_diagnostic.get_total_system_memory()
     expected = psutil.virtual_memory().total
     assert actual == expected
 
 
-def test_init_and_destroy(g2_diagnostic):
+def test_init_and_destroy(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
     """Test G2Diagnostic().init() and G2Diagnostic.destroy()."""
     g2_diagnostic.init("MODULE_NAME", "{}", 0)
     g2_diagnostic.destroy()
 
 
-def test_context_managment():
+def test_context_managment() -> None:
     """Test the use of G2DiagnosticGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
