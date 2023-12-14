@@ -11,9 +11,9 @@ from typing import Any, Dict, Iterable, Tuple, Type, Union
 
 import grpc
 
+from .abstract.g2engine_abstract import G2EngineAbstract
+from .abstract.g2engineflags import G2EngineFlags
 from .g2helpers import as_str, new_exception
-from .localcopy.g2engine_abstract import G2EngineAbstract
-from .localcopy.g2engineflags import G2EngineFlags
 from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
 
 # Metadata
