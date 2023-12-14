@@ -2,7 +2,7 @@
 
 # Detect the operating system and architecture.
 
-include Makefile.osdetect
+include makefiles/osdetect.mk
 
 # -----------------------------------------------------------------------------
 # Variables
@@ -12,7 +12,7 @@ include Makefile.osdetect
 
 # PROGRAM_NAME is the name of the GIT repository.
 PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
-MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_PATH := $(abspath $(firstword $(MAKEFILE_LIST)))
 MAKEFILE_DIRECTORY := $(shell dirname $(MAKEFILE_PATH))
 TARGET_DIRECTORY := $(MAKEFILE_DIRECTORY)/target
 BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 's/v//')
@@ -44,8 +44,8 @@ default: help
 # Operating System / Architecture targets
 # -----------------------------------------------------------------------------
 
--include Makefile.$(OSTYPE)
--include Makefile.$(OSTYPE)_$(OSARCH)
+-include makefiles/$(OSTYPE).mk
+-include makefiles/$(OSTYPE)_$(OSARCH).mk
 
 
 .PHONY: hello-world
@@ -73,7 +73,7 @@ pylint:
 
 .PHONY: mypy
 mypy:
-	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:tests/*')
+	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
 
 
 .PHONY: pytest

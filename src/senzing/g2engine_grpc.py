@@ -6,9 +6,10 @@ TODO: g2engine_grpc.py
 
 # pylint: disable=E1101
 
-from typing import Any, Tuple
+from types import TracebackType
+from typing import Any, Dict, Iterable, Tuple, Type, Union
 
-import grpc  # type: ignore
+import grpc
 
 from .g2helpers import as_str, new_exception
 from .localcopy.g2engine_abstract import G2EngineAbstract
@@ -52,6 +53,22 @@ class G2EngineGrpc(G2EngineAbstract):
         self.stub = g2engine_pb2_grpc.G2EngineStub(self.channel)
         self.noop = ""
 
+    def __enter__(
+        self,
+    ) -> (
+        Any
+    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
+        """Context Manager method."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Union[Type[BaseException], None],
+        exc_val: Union[BaseException, None],
+        exc_tb: Union[TracebackType, None],
+    ) -> None:
+        """Context Manager method."""
+
     # -------------------------------------------------------------------------
     # Development methods - to be removed after initial development
     # -------------------------------------------------------------------------
@@ -69,7 +86,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,  # TODO: Fix typing to accept dict
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,  # pylint: disable=W0613
@@ -90,7 +107,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -127,7 +144,15 @@ class G2EngineGrpc(G2EngineAbstract):
         load_id: str = "",
         **kwargs: Any,
     ) -> None:
-        self.fake_g2engine(data_source_code, record_id, load_id)
+        try:
+            request = g2engine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordID=record_id,
+                loadID=load_id,
+            )
+            self.stub.DeleteRecord(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def delete_record_with_info(
         self,
@@ -142,7 +167,7 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def destroy(self, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
     def export_config(self, **kwargs: Any) -> str:
         self.fake_g2engine()
@@ -189,7 +214,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_entity_id_v2(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -203,7 +228,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_entity_id(
         self,
-        entity_list: str,
+        entity_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -215,7 +240,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -229,7 +254,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def find_network_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -301,7 +326,7 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -315,7 +340,7 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -329,7 +354,7 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -351,7 +376,7 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -370,8 +395,8 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -390,8 +415,8 @@ class G2EngineGrpc(G2EngineAbstract):
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        excluded_entities: str,
-        required_dsrcs: str,
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -407,8 +432,8 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -431,8 +456,8 @@ class G2EngineGrpc(G2EngineAbstract):
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        excluded_records: str,
-        required_dsrcs: str,
+        excluded_records: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -519,7 +544,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def get_virtual_entity_by_record_id_v2(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -528,7 +553,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def get_virtual_entity_by_record_id(
         self,
-        record_list: str,
+        record_list: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -554,27 +579,33 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def init(
-        self, module_name: str, ini_params: str, verbose_logging: int = 0, **kwargs: Any
+        self,
+        module_name: str,
+        ini_params: Union[str, Dict[Any, Any]],
+        verbose_logging: int = 0,
+        **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def init_with_config_id(
         self,
         module_name: str,
-        ini_params: str,
+        ini_params: Union[str, Dict[Any, Any]],
         init_config_id: int,
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """No-op"""
+        """Null function"""
 
     def prime_engine(self, **kwargs: Any) -> None:
-        """No-op"""
+        """Null function"""
 
-    def process(self, record: str, **kwargs: Any) -> None:
+    def process(self, record: Union[str, Dict[Any, Any]], **kwargs: Any) -> None:
         self.fake_g2engine(record)
 
-    def process_with_info(self, record: str, flags: int, **kwargs: Any) -> str:
+    def process_with_info(
+        self, record: Union[str, Dict[Any, Any]], flags: int, **kwargs: Any
+    ) -> str:
         self.fake_g2engine(record, flags)
         return "string"
 
@@ -610,13 +641,19 @@ class G2EngineGrpc(G2EngineAbstract):
         return "string"
 
     def reinit(self, init_config_id: int, **kwargs: Any) -> None:
-        """No-op"""
+        try:
+            request = g2engine_pb2.ReinitRequest(  # type: ignore[unused-ignore]
+                initConfigID=init_config_id,
+            )
+            self.stub.Reinit(request)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def replace_record(
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         **kwargs: Any,
@@ -627,7 +664,7 @@ class G2EngineGrpc(G2EngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         # TODO: load_id is no longer used, being removed from V4 C api?
         load_id: str = "",
         flags: int = 0,
@@ -638,7 +675,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes_v2(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -647,7 +684,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes_v3(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         search_profile: str,
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -657,7 +694,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def search_by_attributes(
         self,
-        json_data: str,
+        json_data: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -690,7 +727,7 @@ class G2EngineGrpc(G2EngineAbstract):
 
     def why_entity_by_entity_id_v2(
         self,
-        entity_id: str,
+        entity_id: int,
         flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -753,3 +790,69 @@ class G2EngineGrpc(G2EngineAbstract):
             data_source_code_1, record_id_1, data_source_code_2, record_id_2
         )
         return "string"
+
+    # -------------------------------------------------------------------------
+    # Methods not currently in G2EngineAbstract
+    # -------------------------------------------------------------------------
+
+    def export_csv_entity_report_iterator(
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> Iterable[str]:
+        """_summary_
+
+        Args:
+            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
+
+        Raises:
+            new_exception: _description_
+
+        Returns:
+            Iterable[str]: _description_
+
+        Yields:
+            Iterator[Iterable[str]]: _description_
+        """
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
+        try:
+            request = g2engine_pb2.StreamExportCSVEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportCSVEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def export_json_entity_report_iterator(
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> Iterable[str]:
+        """_summary_
+
+        Args:
+            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
+
+        Raises:
+            new_exception: _description_
+
+        Returns:
+            Iterable[str]: _description_
+
+        Yields:
+            Iterator[Iterable[str]]: _description_
+        """
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
+        try:
+            request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportJSONEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err

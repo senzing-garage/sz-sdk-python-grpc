@@ -6,9 +6,10 @@ TODO: g2product_grpc.py
 
 # pylint: disable=E1101
 
-from typing import Any, Dict, Union
+from types import TracebackType
+from typing import Any, Dict, Type, Union
 
-import grpc  # type: ignore
+import grpc
 
 from .g2helpers import new_exception
 from .localcopy.g2product_abstract import G2ProductAbstract
@@ -50,6 +51,22 @@ class G2ProductGrpc(G2ProductAbstract):
 
         self.channel = grpc_channel
         self.stub = g2product_pb2_grpc.G2ProductStub(self.channel)
+
+    def __enter__(
+        self,
+    ) -> (
+        Any
+    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
+        """Context Manager method."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Union[Type[BaseException], None],
+        exc_val: Union[BaseException, None],
+        exc_tb: Union[TracebackType, None],
+    ) -> None:
+        """Context Manager method."""
 
     # -------------------------------------------------------------------------
     # G2Product methods

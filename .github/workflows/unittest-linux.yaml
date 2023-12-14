@@ -1,0 +1,39 @@
+name: unittest-linux.yaml
+
+on: [push]
+
+env:
+  PYTHONPATH: /home/runner/work/g2-sdk-python-grpc/g2-sdk-python-grpc/src
+
+jobs:
+  pytest-linux:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.11"]
+    name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
+    services:
+      servegrpc:
+        env:
+          SENZING_TOOLS_COMMAND: serve-grpc
+          SENZING_TOOLS_DATABASE_URL: sqlite3://na:na@/tmp/sqlite/G2C.db
+          SENZING_TOOLS_ENABLE_ALL: true
+        image: senzing/senzing-tools
+        ports:
+          - 8261:8261
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --requirement requirements.txt
+          # python -m pip install psutil pytest pytest-cov pytest-schema
+      - name: Run pytest on tests
+        run: python3 -m unittest examples/g2config/*.py examples/g2configmgr/*.py examples/g2diagnostic/*.py examples/g2engine/*.py examples/g2product/*.py

@@ -22,10 +22,10 @@ jobs:
           python -m pip install --requirement requirements.txt
           python -m pip install black flake8 mypy psutil pylint pytest pytest_schema types-psutil types-protobuf
       - name: Black testing
-        run: black --diff --check $(git ls-files '*.py')
+        run: black --diff --check $(git ls-files '*.py' ':!:docs/source/*')
       - name: Pylint testing
-        run: pylint $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
+        run: pylint $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing/pb2_grpc/*')
       - name: flake8 testing
-        run: flake8 $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*')
+        run: flake8 $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing/pb2_grpc/*')
       - name: Mypy testing
-        run: mypy --follow-imports skip --strict $(git ls-files '*.py' ':!:src/senzing/pb2_grpc/*' ':!:tests/*')
+        run: mypy --follow-imports skip --strict $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing/pb2_grpc/*')
