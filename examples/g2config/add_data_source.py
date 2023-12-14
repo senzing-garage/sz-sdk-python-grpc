@@ -2,8 +2,8 @@
 
 import grpc
 
-from senzing import g2config_grpc
-from senzing.g2exception import G2Exception
+from senzing_grpc import g2config_grpc
+from senzing_grpc.g2exception import G2Exception
 
 input_json = {"DSRC_CODE": "NAME_OF_DATASOURCE"}
 

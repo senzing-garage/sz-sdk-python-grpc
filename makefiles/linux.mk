@@ -44,9 +44,9 @@ setup-osarch-specific:
 .PHONY: test-osarch-specific
 test-osarch-specific:
 	@echo "--- Unit tests -------------------------------------------------------"
-	@pytest tests/ --verbose --capture=no --cov=src/senzing --cov-report xml:coverage.xml
+	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc --cov-report xml:coverage.xml
 #	@echo "--- Test examples ----------------------------------------------------"
-#	@pytest examples/ --verbose --capture=no --cov=src/senzing
+#	@pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
 	@echo "--- Test examples using unittest -------------------------------------"
 	@python3 -m unittest \
 		examples/g2config/*.py \

@@ -5,7 +5,7 @@ import psutil
 import pytest
 from pytest_schema import schema
 
-from senzing import g2diagnostic_grpc
+from senzing_grpc import g2diagnostic_grpc
 
 # -----------------------------------------------------------------------------
 # G2Diagnostic fixtures

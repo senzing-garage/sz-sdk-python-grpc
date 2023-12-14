@@ -4,7 +4,7 @@ import grpc
 import pytest
 from pytest_schema import Or, schema
 
-from senzing import g2config_grpc, g2exception
+from senzing_grpc import g2config_grpc, g2exception
 
 # -----------------------------------------------------------------------------
 # G2Config fixtures

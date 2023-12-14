@@ -11,9 +11,10 @@ from typing import Any, Dict, Type, Union
 
 import grpc
 
+from .abstract.g2configmgr_abstract import G2ConfigMgrAbstract
+
 # from .g2exception import translate_exception
 from .g2helpers import as_str, new_exception
-from .localcopy.g2configmgr_abstract import G2ConfigMgrAbstract
 from .pb2_grpc import g2configmgr_pb2, g2configmgr_pb2_grpc
 
 # Metadata

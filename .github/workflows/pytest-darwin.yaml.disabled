@@ -33,4 +33,4 @@ jobs:
       - name: gRPC service
         run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
       - name: Run pytest on tests
-        run: pytest tests/ --verbose --capture=no --cov=src/senzing
+        run: pytest tests/ --verbose --capture=no --cov=src/senzing_grpc

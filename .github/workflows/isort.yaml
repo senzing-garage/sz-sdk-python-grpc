@@ -11,4 +11,4 @@ jobs:
         with:
           configuration:
           requirements-files: "requirements.txt"
-          sort-paths: "src/senzing examples tests"
+          sort-paths: "src/senzing_grpc examples tests"

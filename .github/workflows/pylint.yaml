@@ -21,4 +21,4 @@ jobs:
           python -m pip install psutil pylint pytest pytest_schema
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing/pb2_grpc/*')
+          pylint $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')

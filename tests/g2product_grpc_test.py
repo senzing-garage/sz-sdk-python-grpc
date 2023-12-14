@@ -4,7 +4,7 @@ import grpc
 import pytest
 from pytest_schema import Regex, schema
 
-from senzing import g2product_grpc
+from senzing_grpc import g2product_grpc
 
 # -----------------------------------------------------------------------------
 # G2Product fixtures
