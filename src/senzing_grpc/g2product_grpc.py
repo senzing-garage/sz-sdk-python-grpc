@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5056"  # See https://github.com/Senzing/knowledge-base/blo
 # -----------------------------------------------------------------------------
 
 
-class G2ProductGrpc(G2ProductAbstract):
+class G2ProductGrpc(G2ProductAbstract):  # type: ignore
     """
     G2 product module access library over gRPC.
     """

@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/Senzing/knowledge-base/blo
 # -----------------------------------------------------------------------------
 
 
-class G2DiagnosticGrpc(G2DiagnosticAbstract):
+class G2DiagnosticGrpc(G2DiagnosticAbstract):  # type: ignore
     """
     G2 diagnostic module access library over gRPC.
     """

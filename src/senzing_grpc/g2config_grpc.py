@@ -30,7 +30,7 @@ SENZING_PRODUCT_ID = "5050"  # See https://github.com/Senzing/knowledge-base/blo
 # -----------------------------------------------------------------------------
 
 
-class G2ConfigGrpc(G2ConfigAbstract):
+class G2ConfigGrpc(G2ConfigAbstract):  # type: ignore
     """
     G2 config module access library over gRPC.
     """
