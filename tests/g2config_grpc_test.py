@@ -3,8 +3,9 @@ import json
 import grpc
 import pytest
 from pytest_schema import Or, schema
+from senzing_abstract import g2exception
 
-from senzing_grpc import g2config_grpc, g2exception
+from senzing_grpc import G2BadInputError, g2config_grpc
 
 # -----------------------------------------------------------------------------
 # G2Config fixtures
@@ -432,7 +433,7 @@ def test_add_data_source_bad_input_json_value(
     config_handle = g2_config.create()
     bad_input_dict = {"XXXX": "YYYY"}
     try:
-        with pytest.raises(g2exception.G2BadInputError):
+        with pytest.raises(G2BadInputError):
             g2_config.add_data_source(config_handle, bad_input_dict)
     finally:
         g2_config.close(config_handle)

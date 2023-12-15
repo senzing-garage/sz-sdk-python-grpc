@@ -2,8 +2,7 @@
 
 import grpc
 
-from senzing_grpc import g2diagnostic_grpc
-from senzing_grpc.g2exception import G2Exception
+from senzing_grpc import G2Exception, g2diagnostic_grpc
 
 SECONDS_TO_RUN = 3
 

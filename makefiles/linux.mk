@@ -20,7 +20,7 @@ clean-osarch-specific:
 .PHONY: dependencies-osarch-specific
 dependencies-osarch-specific:
 	python3 -m pip install --upgrade pip
-	pip install psutil pytest pytest-cov pytest-schema
+	pip install build psutil pytest pytest-cov pytest-schema virtualenv
 
 
 .PHONY: hello-world-osarch-specific

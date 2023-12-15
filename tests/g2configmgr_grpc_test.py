@@ -5,7 +5,7 @@ import pytest
 from pytest_schema import Or, schema
 from testdata.truthset.datasources import TRUTHSET_DATASOURCES
 
-from senzing_grpc import g2config_grpc, g2configmgr_grpc, g2exception
+from senzing_grpc import G2ConfigurationError, g2config_grpc, g2configmgr_grpc
 
 # -----------------------------------------------------------------------------
 # G2ConfigMgr fixtures
@@ -459,7 +459,7 @@ def test_get_config_bad_config_id_value(
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_config_id = 1234
-    with pytest.raises(g2exception.G2ConfigurationError):
+    with pytest.raises(G2ConfigurationError):
         g2_configmgr.get_config(bad_config_id)
 
 
@@ -513,7 +513,7 @@ def test_replace_default_config_id_bad_new_id_value(
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
     bad_new_config_id = 1234
-    with pytest.raises(g2exception.G2ConfigurationError):
+    with pytest.raises(G2ConfigurationError):
         g2_configmgr.replace_default_config_id(old_config_id, bad_new_config_id)
 
 
@@ -545,7 +545,7 @@ def test_replace_default_config_id_bad_old_id_value(
     g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
     json_config = g2_config.save(config_handle)
     new_config_id = g2_configmgr.add_config(json_config, "Test")
-    with pytest.raises(g2exception.G2ConfigurationError):
+    with pytest.raises(G2ConfigurationError):
         g2_configmgr.replace_default_config_id(bad_old_config_id, new_config_id)
 
 
@@ -580,7 +580,7 @@ def test_set_default_config_id_bad_config_id_value(
 ) -> None:
     """Test G2ConfigMgr().set_default_config_id()."""
     bad_config_id = 1
-    with pytest.raises(g2exception.G2ConfigurationError):
+    with pytest.raises(G2ConfigurationError):
         g2_configmgr.set_default_config_id(bad_config_id)
 
 

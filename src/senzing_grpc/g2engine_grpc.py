@@ -10,9 +10,8 @@ from types import TracebackType
 from typing import Any, Dict, Iterable, Tuple, Type, Union
 
 import grpc
+from senzing_abstract import G2EngineAbstract, G2EngineFlags
 
-from .abstract.g2engine_abstract import G2EngineAbstract
-from .abstract.g2engineflags import G2EngineFlags
 from .g2helpers import as_str, new_exception
 from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
 
@@ -21,7 +20,7 @@ from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
 __all__ = ["G2EngineGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-11-27"
+__updated__ = "2023-12-16"
 
 SENZING_PRODUCT_ID = "5053"  # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -30,7 +29,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/Senzing/knowledge-base/blo
 # -----------------------------------------------------------------------------
 
 
-class G2EngineGrpc(G2EngineAbstract):
+class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     """
     G2 engine module access library over gRPC.
     """
@@ -186,11 +185,45 @@ class G2EngineGrpc(G2EngineAbstract):
         self.fake_g2engine(csv_column_list, flags)
         return 0
 
+    def export_csv_entity_report_iterator(
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> Iterable[str]:
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
+        try:
+            request = g2engine_pb2.StreamExportCSVEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportCSVEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err
+
     def export_json_entity_report(
         self, flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS, **kwargs: Any
     ) -> int:
         self.fake_g2engine(flags)
         return 0
+
+    def export_json_entity_report_iterator(
+        self,
+        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> Iterable[str]:
+        if len(kwargs) > 0:
+            pass  # TODO: To disable pylint W0613
+        try:
+            request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
+                flags=flags
+            )
+            for item in self.stub.StreamExportJSONEntityReport(request):
+                if item.result:
+                    yield item.result
+        except Exception as err:
+            raise new_exception(err) from err
 
     def fetch_next(self, response_handle: int, **kwargs: Any) -> str:
         self.fake_g2engine(response_handle)
@@ -763,6 +796,25 @@ class G2EngineGrpc(G2EngineAbstract):
         self.fake_g2engine(data_source_code, record_id)
         return "string"
 
+    def why_record_in_entity(
+        self,
+        data_source_code: str,
+        record_id: str,
+        **kwargs: Any,
+    ) -> str:
+        self.fake_g2engine(data_source_code, record_id)
+        return "string"
+
+    def why_record_in_entity_v2(
+        self,
+        data_source_code: str,
+        record_id: str,
+        flags: int,
+        **kwargs: Any,
+    ) -> str:
+        self.fake_g2engine(data_source_code, record_id, flags)
+        return "string"
+
     def why_records_v2(
         self,
         data_source_code_1: str,
@@ -790,69 +842,3 @@ class G2EngineGrpc(G2EngineAbstract):
             data_source_code_1, record_id_1, data_source_code_2, record_id_2
         )
         return "string"
-
-    # -------------------------------------------------------------------------
-    # Methods not currently in G2EngineAbstract
-    # -------------------------------------------------------------------------
-
-    def export_csv_entity_report_iterator(
-        self,
-        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> Iterable[str]:
-        """_summary_
-
-        Args:
-            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
-
-        Raises:
-            new_exception: _description_
-
-        Returns:
-            Iterable[str]: _description_
-
-        Yields:
-            Iterator[Iterable[str]]: _description_
-        """
-        if len(kwargs) > 0:
-            pass  # TODO: To disable pylint W0613
-        try:
-            request = g2engine_pb2.StreamExportCSVEntityReportRequest(  # type: ignore[unused-ignore]
-                flags=flags
-            )
-            for item in self.stub.StreamExportCSVEntityReport(request):
-                if item.result:
-                    yield item.result
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def export_json_entity_report_iterator(
-        self,
-        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> Iterable[str]:
-        """_summary_
-
-        Args:
-            flags (int, optional): _description_. Defaults to G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS.
-
-        Raises:
-            new_exception: _description_
-
-        Returns:
-            Iterable[str]: _description_
-
-        Yields:
-            Iterator[Iterable[str]]: _description_
-        """
-        if len(kwargs) > 0:
-            pass  # TODO: To disable pylint W0613
-        try:
-            request = g2engine_pb2.StreamExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
-                flags=flags
-            )
-            for item in self.stub.StreamExportJSONEntityReport(request):
-                if item.result:
-                    yield item.result
-        except Exception as err:
-            raise new_exception(err) from err

@@ -2,8 +2,7 @@
 
 import grpc
 
-from senzing_grpc import g2config_grpc
-from senzing_grpc.g2exception import G2Exception
+from senzing_grpc import G2Exception, g2config_grpc
 
 try:
     GRPC_URL = "localhost:8261"

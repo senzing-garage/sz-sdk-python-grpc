@@ -9,6 +9,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: isort/isort-action@v1
         with:
-          configuration:
           requirements-files: "requirements.txt"
           sort-paths: "src/senzing_grpc examples tests"

@@ -1,12 +1,10 @@
 #! /usr/bin/env python3
 
-
 import time
 
 import grpc
 
-from senzing_grpc import g2config_grpc, g2configmgr_grpc
-from senzing_grpc.g2exception import G2Exception
+from senzing_grpc import G2Exception, g2config_grpc, g2configmgr_grpc
 
 COMMENT = "Just an empty example"
 

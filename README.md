@@ -39,7 +39,49 @@ interface include:
 
 ## Use
 
-(TODO:)
+The following example shows how to start a Senzing gRPC server Docker container
+and access it using the `senzing_grpc` python package.
+
+1. In a separate window, run a Senzing gRPC service using Docker.
+
+   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
+   Thus it is temporal and will be deleted when the container is killed.
+   Example:
+
+    ```console
+    docker run \
+      --env SENZING_TOOLS_COMMAND=serve-grpc \
+      --env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db \
+      --env SENZING_TOOLS_ENABLE_ALL=true \
+      --name senzing-tools-serve-grpc \
+      --publish 8261:8261 \
+      --rm \
+      senzing/senzing-tools
+    ```
+
+1. Install the `senzing-grpc` python package.
+   Example:
+
+    ```console
+    python3 -m pip install senzing-grpc
+    ```
+
+1. Start an interactive python session.
+   Example:
+
+    ```console
+    python3
+    ```
+
+1. Paste the following into the interactive Python session.
+   Example:
+
+    ```console
+    import grpc
+    from senzing_grpc import g2product_grpc
+    g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    print(g2_product.version())
+    ```
 
 ## References
 
