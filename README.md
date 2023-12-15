@@ -78,8 +78,8 @@ and access it using the `senzing_grpc` python package.
 
     ```console
     import grpc
-    from senzing_grpc import g2product_grpc
-    g2_product = g2product_grpc.G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    from senzing_grpc import G2ProductGrpc
+    g2_product = G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
     print(g2_product.version())
     ```
 
