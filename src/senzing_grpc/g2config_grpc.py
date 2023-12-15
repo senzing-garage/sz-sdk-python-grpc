@@ -10,8 +10,9 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
+from senzing_abstract import G2ConfigAbstract
 
-from .g2abstract.g2config_abstract import G2ConfigAbstract
+# from .g2abstract.g2config_abstract import G2ConfigAbstract
 from .g2helpers import as_str, new_exception
 from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
 
@@ -20,7 +21,7 @@ from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
 __all__ = ["G2ConfigGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-11-27"
+__updated__ = "2023-12-16"
 
 SENZING_PRODUCT_ID = "5050"  # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
 

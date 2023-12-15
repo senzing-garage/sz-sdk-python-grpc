@@ -4,9 +4,15 @@ from typing import Any, Dict
 import grpc
 import pytest
 from pytest_schema import schema
-from senzing_grpc import g2config_grpc, g2configmgr_grpc, g2engine_grpc, g2exception
 from testdata.truthset.customers import TRUTHSET_CUSTOMER_RECORDS
 from testdata.truthset.datasources import TRUTHSET_DATASOURCES
+
+from senzing_grpc import (
+    G2UnknownDatasourceError,
+    g2config_grpc,
+    g2configmgr_grpc,
+    g2engine_grpc,
+)
 
 # -----------------------------------------------------------------------------
 # G2Engine fixtures
@@ -128,7 +134,7 @@ def test_add_record_bad_data_source_code_value(
     record_id = "1"
     json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
-    with pytest.raises(g2exception.G2UnknownDatasourceError):
+    with pytest.raises(G2UnknownDatasourceError):
         g2_engine.add_record(data_source_code, record_id, json_data, load_id)
 
 
@@ -167,7 +173,7 @@ def test_add_record_with_info_bad_data_source_code_value(
     record_id = "1"
     json_data: Dict[Any, Any] = {}
     load_id = "Test Load"
-    with pytest.raises(g2exception.G2UnknownDatasourceError):
+    with pytest.raises(G2UnknownDatasourceError):
         _ = g2_engine.add_record_with_info(
             data_source_code, record_id, json_data, load_id
         )
