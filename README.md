@@ -42,6 +42,15 @@ interface include:
 The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` python package.
 
+1. Install the `senzing-grpc` python package.
+   If the `senzing-grpc` Python package is already installed,
+   this step is not necessary.
+   Example:
+
+    ```console
+    python3 -m pip install senzing-grpc
+    ```
+
 1. In a separate window, run a Senzing gRPC service using Docker.
 
    **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
@@ -59,14 +68,7 @@ and access it using the `senzing_grpc` python package.
       senzing/senzing-tools
     ```
 
-1. Install the `senzing-grpc` python package.
-   Example:
-
-    ```console
-    python3 -m pip install senzing-grpc
-    ```
-
-1. Start an interactive python session.
+1. In a separate window, start an interactive python session.
    Example:
 
     ```console
