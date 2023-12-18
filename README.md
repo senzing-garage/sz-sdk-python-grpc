@@ -48,7 +48,7 @@ and access it using the `senzing_grpc` Python package.
    Example:
 
     ```console
-    python3 -m pip install senzing-grpc
+    python3 -m pip install --upgrade senzing-grpc
     ```
 
 1. Run a Senzing gRPC service using Docker.
