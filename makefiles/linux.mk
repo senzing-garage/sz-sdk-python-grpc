@@ -53,9 +53,7 @@ test-osarch-specific:
 		examples/g2configmgr/*.py \
 		examples/g2diagnostic/*.py \
 		examples/g2engine/*.py \
-		examples/g2product/*.py \
-		examples/misc/add_truthset_datasources.py \
-		examples/misc/add_truthset_data.py
+		examples/g2product/*.py
 
 .PHONY: test-examples
 test-examples:
