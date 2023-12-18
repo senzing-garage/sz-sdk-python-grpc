@@ -66,7 +66,7 @@ and access it using the `senzing_grpc` python package.
     ```
 
    **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
-   Thus it is temporal and will be deleted when the container is killed.
+   Thus the database is temporal and will be deleted when the container is killed.
 
 1. In a separate window, start an interactive python session.
    Example:
