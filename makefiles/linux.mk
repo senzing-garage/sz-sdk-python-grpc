@@ -53,7 +53,16 @@ test-osarch-specific:
 		examples/g2configmgr/*.py \
 		examples/g2diagnostic/*.py \
 		examples/g2engine/*.py \
-		examples/g2product/*.py
+		examples/g2product/*.py \
+		examples/misc/add_truthset_datasources.py \
+		examples/misc/add_truthset_data.py
+
+.PHONY: test-examples
+test-examples:
+	@echo "--- Test examples using unittest -------------------------------------"
+	@python3 -m unittest \
+		examples/misc/add_truthset_datasources.py \
+		examples/misc/add_truthset_data.py
 
 
 .PHONY: view-sphinx-osarch-specific
