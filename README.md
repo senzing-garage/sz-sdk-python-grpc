@@ -83,6 +83,9 @@ and access it using the `senzing_grpc` python package.
     print(g2_product.version())
     ```
 
+More can be see in
+[Examples](docs/examples.md).
+
 ## References
 
 1. [Development](docs/development.md)
