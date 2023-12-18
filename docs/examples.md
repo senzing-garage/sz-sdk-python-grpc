@@ -1,11 +1,6 @@
 # g2-sdk-python-grpc examples
 
-## Examples of CLI
+## Example TruthSet python
 
-The following examples require initialization described in
-[Demonstrate using Command Line Interface](../README.md#demonstrate-using-command-line-interface).
-
-## Examples of Docker
-
-The following examples require initialization described in
-[Demonstrate using Docker](../README.md#demonstrate-using-docker).
+1. [Add TruthSet datasources](../examples/misc/add_truthset_datasources.py)
+1. [Add TruthSet data](../examples/misc/add_truthset_data.py)
