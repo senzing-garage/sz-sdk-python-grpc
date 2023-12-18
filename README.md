@@ -52,9 +52,6 @@ and access it using the `senzing_grpc` python package.
     ```
 
 1. In a separate window, run a Senzing gRPC service using Docker.
-
-   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
-   Thus it is temporal and will be deleted when the container is killed.
    Example:
 
     ```console
@@ -67,6 +64,9 @@ and access it using the `senzing_grpc` python package.
       --rm \
       senzing/senzing-tools
     ```
+
+   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
+   Thus it is temporal and will be deleted when the container is killed.
 
 1. In a separate window, start an interactive python session.
    Example:
