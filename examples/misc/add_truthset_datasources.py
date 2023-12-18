@@ -19,8 +19,8 @@ try:
     old_config_id = g2_configmgr.get_default_config_id()
     OLD_JSON_CONFIG = g2_configmgr.get_config(old_config_id)
     config_handle = g2_config.load(OLD_JSON_CONFIG)
-    for key, value in TRUTHSET_DATASOURCES.items():
-        g2_config.add_data_source(config_handle, value.get("Json", {}))
+    for datasource in TRUTHSET_DATASOURCES.values():
+        g2_config.add_data_source(config_handle, datasource.get("Json", {}))
     NEW_JSON_CONFIG = g2_config.save(config_handle)
     new_config_id = g2_configmgr.add_config(NEW_JSON_CONFIG, "Add TruthSet datasources")
     g2_configmgr.replace_default_config_id(old_config_id, new_config_id)

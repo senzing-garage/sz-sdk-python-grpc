@@ -19,9 +19,9 @@ try:
         TRUTHSET_WATCHLIST_RECORDS,
     ]
     for record_set in record_sets:
-        for key, value in record_set.items():
+        for record in record_set.values():
             g2_engine.add_record(
-                value.get("DataSource"), value.get("Id"), value.get("Json")
+                record.get("DataSource"), record.get("Id"), record.get("Json")
             )
 except G2Exception as err:
     print(f"\nError:\n{err}\n")

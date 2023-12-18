@@ -10,7 +10,7 @@ the recommendation is not to use it yet.
 
 The Senzing `g2-sdk-python-grpc` package provides a Python Software Development Kit
 adhering to the abstract classes of
-[g2-sdk-python-next](https://github.com/Senzing/g2-sdk-python-next/tree/main/src/senzing)
+[g2-sdk-python-abstract](https://github.com/Senzing/g2-sdk-python-abstract/tree/main/src/senzing_abstract)
 that communicates with a
 [Senzing gRPC server](https://github.com/Senzing/servegrpc).
 
@@ -20,18 +20,18 @@ The Senzing `g2-sdk-python-grpc` packages enable Python programs to call Senzing
 across a network to a
 [Senzing gRPC server](https://github.com/Senzing/servegrpc).
 
-The `g2-sdk-python-grpc` package implement thes following
-[g2-sdk-python](https://github.com/Senzing/fixme)
+The `g2-sdk-python-grpc` package implements the following
+[g2-sdk-python-abstract](https://github.com/Senzing/g2-sdk-python-abstract/tree/main/src/senzing_abstract)
 interfaces:
 
-1. [G2config](https://github.com/Senzing/g2-sdk-python-next/blob/main/src/senzing/g2config_abstract.py)
-1. [G2configmgr](https://github.com/Senzing/g2-sdk-python-next/blob/main/src/senzing/g2configmgr_abstract.py)
-1. [G2diagnostic](https://github.com/Senzing/g2-sdk-python-next/blob/main/src/senzing/g2diagnostic_abstract.py)
-1. [G2engine](https://github.com/Senzing/g2-sdk-python-next/blob/main/src/senzing/g2engine_abstract.py)
-1. [G2product](https://github.com/Senzing/g2-sdk-python-next/blob/main/src/senzing/g2product_abstract.py)
+1. [G2ConfigAbstract](https://github.com/Senzing/g2-sdk-python-abstract/blob/main/src/senzing_abstract/g2config_abstract.py)
+1. [G2ConfigMgrAbstract](https://github.com/Senzing/g2-sdk-python-abstract/blob/main/src/senzing_abstract/g2configmgr_abstract.py)
+1. [G2DiagnosticAbstract](https://github.com/Senzing/g2-sdk-python-abstract/blob/main/src/senzing_abstract/g2diagnostic_abstract.py)
+1. [G2EngineAbstract](https://github.com/Senzing/g2-sdk-python-abstract/blob/main/src/senzing_abstract/g2engine_abstract.py)
+1. [G2ProductAbstract](https://github.com/Senzing/g2-sdk-python-abstract/blob/main/src/senzing_abstract/g2product_abstract.py)
 
 Other implementations of the
-[g2-sdk-python](https://github.com/Senzing/fixme)
+[g2-sdk-python-abstract](https://github.com/Senzing/g2-sdk-python-abstract/tree/main/src/senzing_abstract)
 interface include:
 
 - [g2-sdk-python-next](https://github.com/Senzing/g2-sdk-python-next) - for
@@ -40,12 +40,18 @@ interface include:
 ## Use
 
 The following example shows how to start a Senzing gRPC server Docker container
-and access it using the `senzing_grpc` python package.
+and access it using the `senzing_grpc` Python package.
 
-1. In a separate window, run a Senzing gRPC service using Docker.
+1. Install the `senzing-grpc` Python package.
+   If the `senzing-grpc` Python package is already installed,
+   this step is not necessary.
+   Example:
 
-   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
-   Thus it is temporal and will be deleted when the container is killed.
+    ```console
+    python3 -m pip install --upgrade senzing-grpc
+    ```
+
+1. Run a Senzing gRPC service using Docker.
    Example:
 
     ```console
@@ -59,14 +65,10 @@ and access it using the `senzing_grpc` python package.
       senzing/senzing-tools
     ```
 
-1. Install the `senzing-grpc` python package.
-   Example:
+   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
+   Thus the database is temporal and will be deleted when the container is killed.
 
-    ```console
-    python3 -m pip install senzing-grpc
-    ```
-
-1. Start an interactive python session.
+1. In a separate window, start an interactive Python session.
    Example:
 
     ```console
@@ -83,7 +85,7 @@ and access it using the `senzing_grpc` python package.
     print(g2_product.version())
     ```
 
-More can be see in
+More can be seen in
 [Examples](docs/examples.md).
 
 ## References
@@ -91,4 +93,4 @@ More can be see in
 1. [Development](docs/development.md)
 1. [Errors](docs/errors.md)
 1. [Examples](docs/examples.md)
-1. [g2-sdk-python-next package reference](https://hub.senzing.com/g2-sdk-python-next/)
+1. [g2-sdk-python-abstract package reference](http://hub.senzing.com/g2-sdk-python-abstract/)
