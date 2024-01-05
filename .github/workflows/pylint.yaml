@@ -1,7 +1,5 @@
 name: pylint.yaml
-
 on: [push]
-
 jobs:
   pylint:
     runs-on: ubuntu-latest
