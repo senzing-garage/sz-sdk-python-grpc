@@ -8,25 +8,25 @@ The following instructions are used when modifying and building the Docker image
 These are "one-time tasks" which may already have been completed.
 
 1. The following software programs need to be installed:
-    1. [git](https://github.com/Senzing/knowledge-base/blob/main/WHATIS/git.md)
-    1. [make](https://github.com/Senzing/knowledge-base/blob/main/WHATIS/make.md)
-    1. [docker](https://github.com/Senzing/knowledge-base/blob/main/WHATIS/docker.md)
+    1. [git](https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/git.md)
+    1. [make](https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/make.md)
+    1. [docker](https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/docker.md)
 
 ## Clone repository
 
 For more information on environment variables,
-see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/main/lists/environment-variables.md).
+see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blob/main/lists/environment-variables.md).
 
 1. Set these environment variable values:
 
     ```console
-    export GIT_ACCOUNT=senzing
+    export GIT_ACCOUNT=senzing-garage
     export GIT_REPOSITORY=g2-sdk-python-grpc
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```
 
-1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
+1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/senzing-garage/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
 
 ## Working with Python wheel file
 
@@ -62,7 +62,7 @@ see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/main/
     ```
 
     Example return:
-    > senzing-grpc @ file:///home/senzing/senzing.git/g2-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
+    > senzing-grpc @ file:///home/senzing/senzing-garage.git/g2-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
 
 1. Uninstall the `senzing-grpc` python package.
    Example:
