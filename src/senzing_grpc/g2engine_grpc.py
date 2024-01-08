@@ -127,7 +127,9 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
 
     def close_export(self, response_handle: int, **kwargs: Any) -> None:
         try:
-            request = g2engine_pb2.CloseExportRequest()  # type: ignore[unused-ignore]
+            request = g2engine_pb2.CloseExportRequest(  # type: ignore[unused-ignore]
+                responseHandle=response_handle,
+            )
             self.stub.CloseExport(request)
         except Exception as err:
             raise new_exception(err) from err
