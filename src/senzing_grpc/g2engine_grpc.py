@@ -665,7 +665,6 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
                 maxDegree=max_degree,
                 excludedRecords=as_str(excluded_records),
                 requiredDsrcs=as_str(required_dsrcs),
-                flags=flags,
             )
             response = self.stub.FindPathIncludingSourceByRecordID(request)
             return str(response.result)
@@ -895,7 +894,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self, record: Union[str, Dict[Any, Any]], flags: int, **kwargs: Any
     ) -> str:
         try:
-            request = g2engine_pb2.ProcessWithInfoResponse(  # type: ignore[unused-ignore]
+            request = g2engine_pb2.ProcessWithInfoRequest(  # type: ignore[unused-ignore]
                 record=as_str(record),
                 flags=flags,
             )
@@ -1036,12 +1035,12 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def search_by_attributes_v3(
         self,
         json_data: Union[str, Dict[Any, Any]],
-        search_profile: str,
+        search_profile: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         self.fake_g2engine(json_data, search_profile, flags)
-        return "string"
+        return "{}"
         # TODO: Uncomment after V3 is published.
         # try:
         #     request = g2engine_pb2.SearchByAttributes_V3Request(  # type: ignore[unused-ignore]

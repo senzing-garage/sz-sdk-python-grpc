@@ -12,6 +12,7 @@ from senzing_truthset import (
 )
 
 from senzing_grpc import (
+    G2NotFoundError,
     G2UnknownDatasourceError,
     g2config_grpc,
     g2configmgr_grpc,
@@ -78,7 +79,7 @@ def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
 add_record_with_info_schema = {
     "DATA_SOURCE": str,
     "RECORD_ID": str,
-    "AFFECTED_ENTITIES": [],
+    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
     "INTERESTING_ENTITIES": {"ENTITIES": []},
 }
 
@@ -389,6 +390,26 @@ g2_config_schema = {
     },
 }
 
+how_results_schema = {
+    "HOW_RESULTS": {
+        "RESOLUTION_STEPS": [],
+        "FINAL_STATE": {
+            "NEED_REEVALUATION": int,
+            "VIRTUAL_ENTITIES": [
+                {
+                    "VIRTUAL_ENTITY_ID": str,
+                    "MEMBER_RECORDS": [
+                        {
+                            "INTERNAL_ID": int,
+                            "RECORDS": [{"DATA_SOURCE": str, "RECORD_ID": str}],
+                        }
+                    ],
+                }
+            ],
+        },
+    }
+}
+
 interesting_entities_schema = {
     "INTERESTING_ENTITIES": {"ENTITIES": []},
 }
@@ -435,6 +456,163 @@ path_schema = {
             "RELATED_ENTITIES": [],
         }
     ],
+}
+
+
+process_withinfo_schema = {
+    "DATA_SOURCE": str,
+    "RECORD_ID": str,
+    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
+    "INTERESTING_ENTITIES": {"ENTITIES": []},
+}
+
+record_schema = {"DATA_SOURCE": str, "RECORD_ID": str, "JSON_DATA": {}}
+
+redo_record_schema = {
+    "REASON": str,
+    "DATA_SOURCE": str,
+    "RECORD_ID": str,
+    "ENTITY_TYPE": str,
+    "DSRC_ACTION": str,
+}
+
+resolved_entity_schema = {
+    "RESOLVED_ENTITY": {
+        "ENTITY_ID": int,
+        "ENTITY_NAME": str,
+        "FEATURES": {},
+        "RECORD_SUMMARY": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_COUNT": int,
+                "FIRST_SEEN_DT": str,
+                "LAST_SEEN_DT": str,
+            }
+        ],
+        "LAST_SEEN_DT": str,
+        "RECORDS": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_ID": str,
+                "ENTITY_TYPE": str,
+                "INTERNAL_ID": int,
+                "ENTITY_KEY": str,
+                "ENTITY_DESC": str,
+                "MATCH_KEY": str,
+                "MATCH_LEVEL": int,
+                "MATCH_LEVEL_CODE": str,
+                "ERRULE_CODE": str,
+                "LAST_SEEN_DT": str,
+            },
+        ],
+    },
+    "RELATED_ENTITIES": [],
+}
+
+search_schema = {
+    "RESOLVED_ENTITIES": [
+        {
+            "MATCH_INFO": {
+                "MATCH_LEVEL": int,
+                "MATCH_LEVEL_CODE": str,
+                "MATCH_KEY": str,
+                "ERRULE_CODE": str,
+                "FEATURE_SCORES": {},
+            },
+            "ENTITY": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": int,
+                    "ENTITY_NAME": str,
+                    "FEATURES": {},
+                    "RECORD_SUMMARY": [
+                        {
+                            "DATA_SOURCE": str,
+                            "RECORD_COUNT": int,
+                            "FIRST_SEEN_DT": str,
+                            "LAST_SEEN_DT": str,
+                        }
+                    ],
+                    "LAST_SEEN_DT": str,
+                }
+            },
+        }
+    ]
+}
+
+stats_schema = {
+    "workload": {
+        "apiVersion": str,
+        "loadedRecords": int,
+        "addedRecords": int,
+        "deletedRecords": int,
+        "reevaluations": int,
+        "repairedEntities": int,
+        "duration": int,
+        "retries": int,
+        "candidates": int,
+        "actualAmbiguousTest": int,
+        "cachedAmbiguousTest": int,
+        "libFeatCacheHit": int,
+        "libFeatCacheMiss": int,
+        "resFeatStatCacheHit": int,
+        "resFeatStatCacheMiss": int,
+        "resFeatStatUpdate": int,
+        "unresolveTest": int,
+        "abortedUnresolve": int,
+        "gnrScorersUsed": int,
+        "unresolveTriggers": {},
+        "reresolveTriggers": {},
+        "reresolveSkipped": int,
+        "filteredObsFeat": int,
+        "expressedFeatureCalls": [],
+        "expressedFeaturesCreated": [],
+        "scoredPairs": [],
+        "cacheHit": [],
+        "cacheMiss": [],
+        "redoTriggers": [],
+        "latchContention": [],
+        "highContentionFeat": [],
+        "highContentionResEnt": [],
+        "genericDetect": [],
+        "candidateBuilders": [],
+        "suppressedCandidateBuilders": [],
+        "suppressedScoredFeatureType": [],
+        "reducedScoredFeatureType": [],
+        "suppressedDisclosedRelationshipDomainCount": int,
+        "CorruptEntityTestDiagnosis": {},
+        "threadState": {},
+        "systemResources": {},
+    }
+}
+
+
+virtual_entity_schema = {
+    "RESOLVED_ENTITY": {
+        "ENTITY_ID": int,
+        "ENTITY_NAME": str,
+        "FEATURES": {},
+        "RECORD_SUMMARY": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_COUNT": int,
+                "FIRST_SEEN_DT": str,
+                "LAST_SEEN_DT": str,
+            }
+        ],
+        "LAST_SEEN_DT": str,
+        "RECORDS": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_ID": str,
+                "ENTITY_TYPE": str,
+                "INTERNAL_ID": int,
+                "ENTITY_KEY": str,
+                "ENTITY_DESC": str,
+                "LAST_SEEN_DT": str,
+                "FEATURES": [{"LIB_FEAT_ID": int}],
+            },
+        ],
+    },
 }
 
 
@@ -640,7 +818,7 @@ def test_export_csv_entity_report_iterator(
     g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
     g2_config: g2config_grpc.G2ConfigGrpc,
 ) -> None:
-    """Test G2Engine().add_record()."""
+    """Test G2Engine().export_csv_entity_report_iterator()."""
 
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
@@ -707,7 +885,7 @@ def test_export_json_entity_report_iterator(
     g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
     g2_config: g2config_grpc.G2ConfigGrpc,
 ) -> None:
-    """Test G2Engine().add_record()."""
+    """Test G2Engine().export_json_entity_report_iterator()."""
 
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
@@ -769,7 +947,7 @@ def test_find_interesting_entities_by_record_id(
 def test_find_network_by_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_network_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -800,7 +978,7 @@ def test_find_network_by_entity_id(
 def test_find_network_by_entity_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_network_by_entity_id_v2()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -833,7 +1011,7 @@ def test_find_network_by_entity_id_v2(
 def test_find_network_by_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_network_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -864,7 +1042,7 @@ def test_find_network_by_record_id(
 def test_find_network_by_record_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_network_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -897,7 +1075,7 @@ def test_find_network_by_record_id_v2(
 def test_find_path_by_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -919,7 +1097,7 @@ def test_find_path_by_entity_id(
 def test_find_path_by_entity_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -943,7 +1121,7 @@ def test_find_path_by_entity_id_v2(
 def test_find_path_by_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -965,7 +1143,7 @@ def test_find_path_by_record_id(
 def test_find_path_by_record_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_by_record_id_v2()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -989,7 +1167,7 @@ def test_find_path_by_record_id_v2(
 def test_find_path_excluding_by_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_excluding_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -1017,7 +1195,7 @@ def test_find_path_excluding_by_entity_id(
 def test_find_path_excluding_by_entity_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_excluding_by_entity_id_v2()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -1047,7 +1225,7 @@ def test_find_path_excluding_by_entity_id_v2(
 def test_find_path_excluding_by_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_excluding_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -1074,7 +1252,7 @@ def test_find_path_excluding_by_record_id(
 def test_find_path_excluding_by_record_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_excluding_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -1103,7 +1281,7 @@ def test_find_path_excluding_by_record_id_v2(
 def test_find_path_including_source_by_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test G2Engine().find_path_including_source_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("customers", "1001"),
         ("customers", "1002"),
@@ -1128,6 +1306,509 @@ def test_find_path_including_source_by_entity_id(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(path_schema) == actual_dict
+
+
+def test_find_path_including_source_by_entity_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_path_including_source_by_entity_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id_1 = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    entity_id_2 = get_entity_id_from_record_id(g2_engine, "customers", "1002")
+    entity_id_3 = get_entity_id_from_record_id(g2_engine, "customers", "1003")
+    max_degree = 1
+    excluded_entities = {
+        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
+    }
+    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
+    flags = -1
+    actual = g2_engine.find_path_including_source_by_entity_id(
+        entity_id_1,
+        entity_id_2,
+        max_degree,
+        excluded_entities,
+        required_dsrcs,
+        flags,
+    )
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(path_schema) == actual_dict
+
+
+def test_find_path_including_source_by_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_path_including_source_by_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id_3 = get_entity_id_from_record_id(g2_engine, "customers", "1003")
+    max_degree = 1
+    excluded_entities = {
+        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
+    }
+    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
+    actual = g2_engine.find_path_including_source_by_record_id(
+        "CUSTOMERS",
+        "1001",
+        "CUSTOMERS",
+        "1002",
+        max_degree,
+        excluded_entities,
+        required_dsrcs,
+    )
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(path_schema) == actual_dict
+
+
+def test_find_path_including_source_by_record_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_path_including_source_by_record_id_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id_3 = get_entity_id_from_record_id(g2_engine, "customers", "1003")
+    max_degree = 1
+    excluded_entities = {
+        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
+    }
+    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
+    flags = -1
+    actual = g2_engine.find_path_including_source_by_record_id_v2(
+        "CUSTOMERS",
+        "1001",
+        "CUSTOMERS",
+        "1002",
+        max_degree,
+        excluded_entities,
+        required_dsrcs,
+        flags,
+    )
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(path_schema) == actual_dict
+
+
+def test_get_active_config_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_active_config_id()."""
+    actual = g2_engine.get_active_config_id()
+    assert actual >= 0
+
+
+def test_get_entity_by_entity_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_by_entity_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    actual = g2_engine.get_entity_by_entity_id(entity_id)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(resolved_entity_schema) == actual_dict
+
+
+def test_get_entity_by_entity_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_by_entity_id_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    flags = -1
+    actual = g2_engine.get_entity_by_entity_id_v2(entity_id, flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(resolved_entity_schema) == actual_dict
+
+
+def test_get_entity_by_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_by_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    actual = g2_engine.get_entity_by_record_id("CUSTOMERS", "1001")
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(resolved_entity_schema) == actual_dict
+
+
+def test_get_entity_by_record_id_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_by_record_id()."""
+
+    with pytest.raises(G2NotFoundError):
+        actual = g2_engine.get_entity_by_record_id("CUSTOMERS", "1001")
+        actual_dict = json.loads(actual)
+        assert schema(resolved_entity_schema) == actual_dict
+
+
+def test_get_entity_by_record_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_by_record_id_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    flags = -1
+    actual = g2_engine.get_entity_by_record_id_v2("CUSTOMERS", "1001", flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(resolved_entity_schema) == actual_dict
+
+
+def test_get_record(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    actual = g2_engine.get_record("CUSTOMERS", "1001")
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(record_schema) == actual_dict
+
+
+def test_get_record_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    flags = -1
+    actual = g2_engine.get_record_v2("CUSTOMERS", "1001", flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(record_schema) == actual_dict
+
+
+def test_get_redo_record(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_redo_record()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    actual = g2_engine.get_redo_record()
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(redo_record_schema) == actual_dict
+
+
+def test_get_repository_last_modified_time(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_repository_last_modified_time()."""
+    actual = g2_engine.get_repository_last_modified_time()
+    assert actual >= 0
+
+
+def test_get_virtual_entity_by_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+    ]
+    add_records(g2_engine, test_records)
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
+        ]
+    }
+    actual = g2_engine.get_virtual_entity_by_record_id(record_list)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(virtual_entity_schema) == actual_dict
+
+
+def test_get_virtual_entity_by_record_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+    ]
+    add_records(g2_engine, test_records)
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
+        ]
+    }
+    flags = -1
+    actual = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(virtual_entity_schema) == actual_dict
+
+
+def test_how_entity_by_entity_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().how_entity_by_entity_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    actual = g2_engine.how_entity_by_entity_id(entity_id)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(how_results_schema) == actual_dict
+
+
+def test_how_entity_by_entity_id_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().how_entity_by_entity_id_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    flags = -1
+    actual = g2_engine.how_entity_by_entity_id_v2(entity_id, flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(how_results_schema) == actual_dict
+
+
+def test_prime_engine(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().prime_engine()."""
+    g2_engine.prime_engine()
+
+
+def test_process(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_redo_record()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    redo_records_processed = 0
+    while g2_engine.count_redo_records() > 0:
+        record = g2_engine.get_redo_record()
+        g2_engine.process(record)
+        redo_records_processed += 1
+    delete_records(g2_engine, test_records)
+    assert redo_records_processed > 0
+
+
+def test_process_with_info(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().process_with_info()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    flags = -1
+    redo_records_processed = 0
+    while g2_engine.count_redo_records() > 0:
+        record = g2_engine.get_redo_record()
+        actual = g2_engine.process_with_info(record, flags)
+        actual_dict = json.loads(actual)
+        assert schema(process_withinfo_schema) == actual_dict
+        redo_records_processed += 1
+    delete_records(g2_engine, test_records)
+    assert redo_records_processed > 0
+
+
+def test_reevaluate_entity(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_id_from_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    g2_engine.reevaluate_entity(entity_id)
+    delete_records(g2_engine, test_records)
+
+
+def test_reevaluate_entity_with_info(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().reevaluate_entity_with_info()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    flags = -1
+    actual = g2_engine.reevaluate_entity_with_info(entity_id, flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(add_record_with_info_schema) == actual_dict
+
+
+def test_reevaluate_record(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_entity_id_from_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    g2_engine.reevaluate_entity(entity_id)
+    delete_records(g2_engine, test_records)
+
+
+def test_reevaluate_record_with_info(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().reevaluate_entity_with_info()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id = get_entity_id_from_record_id(g2_engine, "customers", "1001")
+    actual = g2_engine.reevaluate_entity_with_info(entity_id)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(add_record_with_info_schema) == actual_dict
+
+
+def test_replace_record(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().replace_record()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
+    data = json.loads(json_data)
+    data["ADDR_POSTAL_CODE"] = "99999"
+    g2_engine.replace_record("CUSTOMERS", "1001", data, LOAD_ID)
+    delete_records(g2_engine, test_records)
+
+
+def test_replace_record_with_info(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().replace_record_with_info()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+    ]
+    add_records(g2_engine, test_records)
+    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
+    data = json.loads(json_data)
+    data["ADDR_POSTAL_CODE"] = "99999"
+    actual = g2_engine.replace_record_with_info("CUSTOMERS", "1001", data, LOAD_ID)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(add_record_with_info_schema) == actual_dict
+
+
+def test_search_by_attributes(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().search_by_attributes()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    actual = g2_engine.search_by_attributes(json_data)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(search_schema) == actual_dict
+
+
+def test_search_by_attributes_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().search_by_attributes_v2()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    flags = -1
+    actual = g2_engine.search_by_attributes_v2(json_data, flags)
+    delete_records(g2_engine, test_records)
+    actual_dict = json.loads(actual)
+    assert schema(search_schema) == actual_dict
+
+
+def test_search_by_attributes_v3(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().search_by_attributes_v3()."""
+    test_records: List[Tuple[str, str]] = [
+        ("customers", "1001"),
+        ("customers", "1002"),
+        ("customers", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    # TODO: Uncomment after V3 is published.
+    # json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    # search_profile = {}
+    # flags = -1
+    # actual = g2_engine.search_by_attributes_v3(json_data, search_profile, flags)
+    delete_records(g2_engine, test_records)
+    # actual_dict = json.loads(actual)
+    # assert schema(search_schema) == actual_dict
+
+
+def test_stats(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().stats()."""
+    actual = g2_engine.stats()
+    actual_dict = json.loads(actual)
+    assert schema(stats_schema) == actual_dict
 
 
 # -----------------------------------------------------------------------------
