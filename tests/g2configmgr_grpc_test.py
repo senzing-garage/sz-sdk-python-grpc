@@ -3,7 +3,7 @@ import json
 import grpc
 import pytest
 from pytest_schema import Or, schema
-from testdata.truthset.datasources import TRUTHSET_DATASOURCES
+from senzing_truthset import TRUTHSET_DATASOURCES
 
 from senzing_grpc import G2ConfigurationError, g2config_grpc, g2configmgr_grpc
 
