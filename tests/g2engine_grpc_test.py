@@ -20,745 +20,6 @@ from senzing_grpc import (
 )
 
 # -----------------------------------------------------------------------------
-# Constants
-# -----------------------------------------------------------------------------
-
-DATA_SOURCES = {
-    "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
-    "REFERENCE": TRUTHSET_REFERENCE_RECORDS,
-    "WATCHLIST": TRUTHSET_WATCHLIST_RECORDS,
-}
-
-LOAD_ID = "Test Load"
-
-# -----------------------------------------------------------------------------
-# G2Engine fixtures
-# -----------------------------------------------------------------------------
-
-
-@pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
-    """
-    Single engine object to use for all tests.
-    """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
-    return result
-
-
-@pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
-def g2configmgr_fixture() -> g2configmgr_grpc.G2ConfigMgrGrpc:
-    """
-    Single engine object to use for all tests.
-    """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
-    return result
-
-
-@pytest.fixture(name="g2_engine", scope="module")  # type: ignore[misc]
-def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
-    """
-    Single engine object to use for all tests.
-    """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel)
-    return result
-
-
-# -----------------------------------------------------------------------------
-# G2Engine schemas
-# -----------------------------------------------------------------------------
-
-add_record_with_info_schema = {
-    "DATA_SOURCE": str,
-    "RECORD_ID": str,
-    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
-    "INTERESTING_ENTITIES": {"ENTITIES": []},
-}
-
-export_json_entity_report_iterator_schema = {
-    "RESOLVED_ENTITY": {
-        "ENTITY_ID": int,
-        "ENTITY_NAME": str,
-        "FEATURES": {},
-        "RECORDS": [
-            {
-                "DATA_SOURCE": str,
-                "RECORD_ID": str,
-                "ENTITY_TYPE": str,
-                "INTERNAL_ID": int,
-                "ENTITY_KEY": str,
-                "ENTITY_DESC": str,
-                "MATCH_KEY": str,
-                "MATCH_LEVEL": int,
-                "MATCH_LEVEL_CODE": str,
-                "ERRULE_CODE": str,
-                "LAST_SEEN_DT": str,
-            }
-        ],
-    },
-    "RELATED_ENTITIES": [],
-}
-
-
-g2_config_schema = {
-    "G2_CONFIG": {
-        "CFG_ETYPE": [
-            {
-                "ETYPE_ID": int,
-                "ETYPE_CODE": str,
-                "ETYPE_DESC": str,
-            },
-        ],
-        "CFG_DSRC_INTEREST": [],
-        "CFG_RCLASS": [
-            {
-                "RCLASS_ID": int,
-                "RCLASS_CODE": str,
-                "RCLASS_DESC": str,
-                "IS_DISCLOSED": str,
-            },
-        ],
-        "CFG_FTYPE": [
-            {
-                "FTYPE_ID": int,
-                "FTYPE_CODE": Or(str, None),
-                "FCLASS_ID": int,
-                "FTYPE_FREQ": str,
-                "FTYPE_EXCL": str,
-                "FTYPE_STAB": str,
-                "PERSIST_HISTORY": str,
-                "USED_FOR_CAND": str,
-                "DERIVED": str,
-                "RTYPE_ID": int,
-                "ANONYMIZE": str,
-                "VERSION": int,
-                "SHOW_IN_MATCH_KEY": str,
-            },
-        ],
-        "CFG_FCLASS": [
-            {
-                "FCLASS_ID": int,
-                "FCLASS_CODE": str,
-            },
-        ],
-        "CFG_FBOM": [
-            {
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "EXEC_ORDER": int,
-                "DISPLAY_LEVEL": int,
-                "DISPLAY_DELIM": Or(str, None),
-                "DERIVED": str,
-            },
-        ],
-        "CFG_FELEM": [
-            {
-                "FELEM_ID": int,
-                "FELEM_CODE": str,
-                "TOKENIZE": str,
-                "DATA_TYPE": str,
-            },
-        ],
-        "CFG_DSRC": [
-            {
-                "DSRC_ID": int,
-                "DSRC_CODE": str,
-                "DSRC_DESC": str,
-                "DSRC_RELY": int,
-                "RETENTION_LEVEL": str,
-                "CONVERSATIONAL": str,
-            },
-        ],
-        "CFG_EFBOM": [
-            {
-                "EFCALL_ID": int,
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "EXEC_ORDER": int,
-                "FELEM_REQ": str,
-            },
-        ],
-        "CFG_EFUNC": [
-            {
-                "EFUNC_ID": int,
-                "EFUNC_CODE": str,
-                "FUNC_LIB": str,
-                "FUNC_VER": str,
-                "CONNECT_STR": str,
-                "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
-            },
-        ],
-        "CFG_EFCALL": [
-            {
-                "EFCALL_ID": int,
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "EFUNC_ID": int,
-                "EXEC_ORDER": int,
-                "EFEAT_FTYPE_ID": int,
-                "IS_VIRTUAL": str,
-            },
-        ],
-        "CFG_SFCALL": [
-            {
-                "SFCALL_ID": int,
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "SFUNC_ID": int,
-                "EXEC_ORDER": int,
-            },
-        ],
-        "CFG_SFUNC": [
-            {
-                "SFUNC_ID": int,
-                "SFUNC_CODE": str,
-                "FUNC_LIB": str,
-                "FUNC_VER": str,
-                "CONNECT_STR": str,
-                "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
-            },
-        ],
-        "SYS_OOM": [
-            {
-                "OOM_TYPE": str,
-                "OOM_LEVEL": str,
-                "FTYPE_ID": int,
-                "THRESH1_CNT": int,
-                "THRESH1_OOM": int,
-                "NEXT_THRESH": int,
-            },
-        ],
-        "CFG_CFUNC": [
-            {
-                "CFUNC_ID": int,
-                "CFUNC_CODE": str,
-                "FUNC_LIB": str,
-                "FUNC_VER": str,
-                "CONNECT_STR": str,
-                "ANON_SUPPORT": str,
-                "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
-            },
-        ],
-        "CFG_CFCALL": [
-            {
-                "CFCALL_ID": int,
-                "FTYPE_ID": int,
-                "CFUNC_ID": int,
-                "EXEC_ORDER": int,
-            },
-        ],
-        "CFG_GPLAN": [
-            {
-                "GPLAN_ID": int,
-                "GPLAN_CODE": str,
-            },
-        ],
-        "CFG_ERRULE": [
-            {
-                "ERRULE_ID": int,
-                "ERRULE_CODE": str,
-                "ERRULE_DESC": str,
-                "RESOLVE": str,
-                "RELATE": str,
-                "REF_SCORE": int,
-                "RTYPE_ID": int,
-                "QUAL_ERFRAG_CODE": str,
-                "DISQ_ERFRAG_CODE": Or(str, None),
-                "ERRULE_TIER": Or(int, None),
-            },
-        ],
-        "CFG_ERFRAG": [
-            {
-                "ERFRAG_ID": int,
-                "ERFRAG_CODE": str,
-                "ERFRAG_DESC": str,
-                "ERFRAG_SOURCE": str,
-                "ERFRAG_DEPENDS": Or(str, None),
-            },
-        ],
-        "CFG_CFBOM": [
-            {
-                "CFCALL_ID": int,
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "EXEC_ORDER": int,
-            },
-        ],
-        "CFG_DFUNC": [
-            {
-                "DFUNC_ID": int,
-                "DFUNC_CODE": str,
-                "FUNC_LIB": str,
-                "FUNC_VER": str,
-                "CONNECT_STR": str,
-                "ANON_SUPPORT": str,
-                "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
-            },
-        ],
-        "CFG_DFCALL": [
-            {
-                "DFCALL_ID": int,
-                "FTYPE_ID": int,
-                "DFUNC_ID": int,
-                "EXEC_ORDER": int,
-            },
-        ],
-        "CFG_DFBOM": [
-            {
-                "DFCALL_ID": int,
-                "FTYPE_ID": int,
-                "FELEM_ID": int,
-                "EXEC_ORDER": int,
-            },
-        ],
-        "CFG_CFRTN": [
-            {
-                "CFRTN_ID": int,
-                "CFUNC_ID": int,
-                "FTYPE_ID": int,
-                "CFUNC_RTNVAL": str,
-                "EXEC_ORDER": int,
-                "SAME_SCORE": int,
-                "CLOSE_SCORE": int,
-                "LIKELY_SCORE": int,
-                "PLAUSIBLE_SCORE": int,
-                "UN_LIKELY_SCORE": int,
-            },
-        ],
-        "CFG_RTYPE": [
-            {
-                "RTYPE_ID": int,
-                "RTYPE_CODE": str,
-                "RCLASS_ID": int,
-                "REL_STRENGTH": int,
-                "BREAK_RES": str,
-            },
-        ],
-        "CFG_GENERIC_THRESHOLD": [
-            {
-                "GPLAN_ID": int,
-                "BEHAVIOR": str,
-                "FTYPE_ID": int,
-                "CANDIDATE_CAP": int,
-                "SCORING_CAP": int,
-                "SEND_TO_REDO": str,
-            },
-        ],
-        "CFG_FBOVR": [
-            {
-                "FTYPE_ID": int,
-                "UTYPE_CODE": str,
-                "FTYPE_FREQ": str,
-                "FTYPE_EXCL": str,
-                "FTYPE_STAB": str,
-            },
-        ],
-        "CFG_ATTR": [
-            {
-                "ATTR_ID": int,
-                "ATTR_CODE": str,
-                "ATTR_CLASS": str,
-                "FTYPE_CODE": Or(str, None),
-                "FELEM_CODE": Or(str, None),
-                "FELEM_REQ": str,
-                "DEFAULT_VALUE": Or(str, None),
-                "ADVANCED": str,
-                "INTERNAL": str,
-            },
-        ],
-        "CONFIG_BASE_VERSION": {
-            "VERSION": str,
-            "BUILD_VERSION": str,
-            "BUILD_DATE": str,
-            "BUILD_NUMBER": str,
-            "COMPATIBILITY_VERSION": {
-                "CONFIG_VERSION": str,
-            },
-        },
-    },
-}
-
-how_results_schema = {
-    "HOW_RESULTS": {
-        "RESOLUTION_STEPS": [],
-        "FINAL_STATE": {
-            "NEED_REEVALUATION": int,
-            "VIRTUAL_ENTITIES": [
-                {
-                    "VIRTUAL_ENTITY_ID": str,
-                    "MEMBER_RECORDS": [
-                        {
-                            "INTERNAL_ID": int,
-                            "RECORDS": [{"DATA_SOURCE": str, "RECORD_ID": str}],
-                        }
-                    ],
-                }
-            ],
-        },
-    }
-}
-
-interesting_entities_schema = {
-    "INTERESTING_ENTITIES": {"ENTITIES": []},
-}
-
-network_schema = {
-    "ENTITY_PATHS": [],
-    "ENTITIES": [
-        {
-            "RESOLVED_ENTITY": {
-                "ENTITY_ID": int,
-                "ENTITY_NAME": str,
-                "RECORD_SUMMARY": [
-                    {
-                        "DATA_SOURCE": str,
-                        "RECORD_COUNT": int,
-                        "FIRST_SEEN_DT": str,
-                        "LAST_SEEN_DT": str,
-                    }
-                ],
-                "LAST_SEEN_DT": str,
-            },
-            "RELATED_ENTITIES": [],
-        }
-    ],
-}
-
-path_schema = {
-    "ENTITY_PATHS": [{"START_ENTITY_ID": int, "END_ENTITY_ID": int, "ENTITIES": [int]}],
-    "ENTITIES": [
-        {
-            "RESOLVED_ENTITY": {
-                "ENTITY_ID": int,
-                "ENTITY_NAME": str,
-                "RECORD_SUMMARY": [
-                    {
-                        "DATA_SOURCE": str,
-                        "RECORD_COUNT": int,
-                        "FIRST_SEEN_DT": str,
-                        "LAST_SEEN_DT": str,
-                    }
-                ],
-                "LAST_SEEN_DT": str,
-            },
-            "RELATED_ENTITIES": [],
-        }
-    ],
-}
-
-
-process_withinfo_schema = {
-    "DATA_SOURCE": str,
-    "RECORD_ID": str,
-    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
-    "INTERESTING_ENTITIES": {"ENTITIES": []},
-}
-
-record_schema = {"DATA_SOURCE": str, "RECORD_ID": str, "JSON_DATA": {}}
-
-redo_record_schema = {
-    "REASON": str,
-    "DATA_SOURCE": str,
-    "RECORD_ID": str,
-    "ENTITY_TYPE": str,
-    "DSRC_ACTION": str,
-}
-
-resolved_entity_schema = {
-    "RESOLVED_ENTITY": {
-        "ENTITY_ID": int,
-        "ENTITY_NAME": str,
-        "FEATURES": {},
-        "RECORD_SUMMARY": [
-            {
-                "DATA_SOURCE": str,
-                "RECORD_COUNT": int,
-                "FIRST_SEEN_DT": str,
-                "LAST_SEEN_DT": str,
-            }
-        ],
-        "LAST_SEEN_DT": str,
-        "RECORDS": [
-            {
-                "DATA_SOURCE": str,
-                "RECORD_ID": str,
-                "ENTITY_TYPE": str,
-                "INTERNAL_ID": int,
-                "ENTITY_KEY": str,
-                "ENTITY_DESC": str,
-                "MATCH_KEY": str,
-                "MATCH_LEVEL": int,
-                "MATCH_LEVEL_CODE": str,
-                "ERRULE_CODE": str,
-                "LAST_SEEN_DT": str,
-            },
-        ],
-    },
-    "RELATED_ENTITIES": [],
-}
-
-search_schema = {
-    "RESOLVED_ENTITIES": [
-        {
-            "MATCH_INFO": {
-                "MATCH_LEVEL": int,
-                "MATCH_LEVEL_CODE": str,
-                "MATCH_KEY": str,
-                "ERRULE_CODE": str,
-                "FEATURE_SCORES": {},
-            },
-            "ENTITY": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": int,
-                    "ENTITY_NAME": str,
-                    "FEATURES": {},
-                    "RECORD_SUMMARY": [
-                        {
-                            "DATA_SOURCE": str,
-                            "RECORD_COUNT": int,
-                            "FIRST_SEEN_DT": str,
-                            "LAST_SEEN_DT": str,
-                        }
-                    ],
-                    "LAST_SEEN_DT": str,
-                }
-            },
-        }
-    ]
-}
-
-stats_schema = {
-    "workload": {
-        "apiVersion": str,
-        "loadedRecords": int,
-        "addedRecords": int,
-        "deletedRecords": int,
-        "reevaluations": int,
-        "repairedEntities": int,
-        "duration": int,
-        "retries": int,
-        "candidates": int,
-        "actualAmbiguousTest": int,
-        "cachedAmbiguousTest": int,
-        "libFeatCacheHit": int,
-        "libFeatCacheMiss": int,
-        "resFeatStatCacheHit": int,
-        "resFeatStatCacheMiss": int,
-        "resFeatStatUpdate": int,
-        "unresolveTest": int,
-        "abortedUnresolve": int,
-        "gnrScorersUsed": int,
-        "unresolveTriggers": {},
-        "reresolveTriggers": {},
-        "reresolveSkipped": int,
-        "filteredObsFeat": int,
-        "expressedFeatureCalls": [{}],
-        "expressedFeaturesCreated": [{}],
-        "scoredPairs": [{}],
-        "cacheHit": [{}],
-        "cacheMiss": [{}],
-        "redoTriggers": [{}],
-        "latchContention": [],
-        "highContentionFeat": [],
-        "highContentionResEnt": [],
-        "genericDetect": [],
-        "candidateBuilders": [{}],
-        "suppressedCandidateBuilders": [],
-        "suppressedScoredFeatureType": [],
-        "reducedScoredFeatureType": [],
-        "suppressedDisclosedRelationshipDomainCount": int,
-        "CorruptEntityTestDiagnosis": {},
-        "threadState": {},
-        "systemResources": {},
-    }
-}
-
-virtual_entity_schema = {
-    "RESOLVED_ENTITY": {
-        "ENTITY_ID": int,
-        "ENTITY_NAME": str,
-        "FEATURES": {},
-        "RECORD_SUMMARY": [
-            {
-                "DATA_SOURCE": str,
-                "RECORD_COUNT": int,
-                "FIRST_SEEN_DT": str,
-                "LAST_SEEN_DT": str,
-            }
-        ],
-        "LAST_SEEN_DT": str,
-        "RECORDS": [
-            {
-                "DATA_SOURCE": str,
-                "RECORD_ID": str,
-                "ENTITY_TYPE": str,
-                "INTERNAL_ID": int,
-                "ENTITY_KEY": str,
-                "ENTITY_DESC": str,
-                "LAST_SEEN_DT": str,
-                "FEATURES": [{"LIB_FEAT_ID": int}],
-            },
-        ],
-    },
-}
-
-why_entities_results_schema = {
-    "WHY_RESULTS": [
-        {
-            "ENTITY_ID": int,
-            "ENTITY_ID_2": int,
-            "MATCH_INFO": {},
-        }
-    ],
-    "ENTITIES": [
-        {
-            "RESOLVED_ENTITY": {
-                "ENTITY_ID": int,
-                "ENTITY_NAME": str,
-                "FEATURES": {},
-                "RECORD_SUMMARY": [{}],
-                "LAST_SEEN_DT": str,
-                "RECORDS": [
-                    {
-                        "DATA_SOURCE": str,
-                        "RECORD_ID": str,
-                        "ENTITY_TYPE": str,
-                        "INTERNAL_ID": int,
-                        "ENTITY_KEY": str,
-                        "ENTITY_DESC": str,
-                        "MATCH_KEY": str,
-                        "MATCH_LEVEL": int,
-                        "MATCH_LEVEL_CODE": str,
-                        "ERRULE_CODE": str,
-                        "LAST_SEEN_DT": str,
-                        "FEATURES": [{}],
-                    }
-                ],
-            },
-            "RELATED_ENTITIES": [{}],
-        }
-    ],
-}
-
-
-why_entity_results_schema = {
-    "WHY_RESULTS": [
-        {
-            "INTERNAL_ID": int,
-            "ENTITY_ID": int,
-            "FOCUS_RECORDS": [{}],
-            "MATCH_INFO": {
-                "WHY_KEY": str,
-                "WHY_ERRULE_CODE": str,
-                "MATCH_LEVEL_CODE": str,
-                "CANDIDATE_KEYS": {},
-                "FEATURE_SCORES": {},
-            },
-        }
-    ],
-    "ENTITIES": [
-        {
-            "RESOLVED_ENTITY": {
-                "ENTITY_ID": int,
-                "ENTITY_NAME": str,
-                "FEATURES": {},
-                "RECORD_SUMMARY": [{}],
-                "LAST_SEEN_DT": str,
-                "RECORDS": [
-                    {
-                        "DATA_SOURCE": str,
-                        "RECORD_ID": str,
-                        "ENTITY_TYPE": str,
-                        "INTERNAL_ID": int,
-                        "ENTITY_KEY": str,
-                        "ENTITY_DESC": str,
-                        "MATCH_KEY": str,
-                        "MATCH_LEVEL": int,
-                        "MATCH_LEVEL_CODE": str,
-                        "ERRULE_CODE": str,
-                        "LAST_SEEN_DT": str,
-                        "FEATURES": [{}],
-                    }
-                ],
-            },
-            "RELATED_ENTITIES": [{}],
-        }
-    ],
-}
-
-
-# -----------------------------------------------------------------------------
-# Utilities
-# -----------------------------------------------------------------------------
-
-
-def add_records(
-    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
-) -> None:
-    for record_id in record_id_list:
-        datasource = record_id[0]
-        record_id = record_id[1]
-        record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        g2_engine.add_record(
-            record.get("DataSource", ""),
-            record.get("Id", ""),
-            record.get("Json", ""),
-            LOAD_ID,
-        )
-
-
-def add_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    for record_set in DATA_SOURCES.values():
-        for record in record_set.values():
-            g2_engine.add_record(
-                record.get("DataSource"), record.get("Id"), record.get("Json"), LOAD_ID
-            )
-    while g2_engine.count_redo_records() > 0:
-        record = g2_engine.get_redo_record()
-        g2_engine.process(record)
-
-
-def delete_records(
-    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
-) -> None:
-    for record_id in record_id_list:
-        datasource = record_id[0]
-        record_id = record_id[1]
-        record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        g2_engine.delete_record(
-            record.get("DataSource", ""),
-            record.get("Id", ""),
-            LOAD_ID,
-        )
-
-
-def delete_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    for record_set in DATA_SOURCES.values():
-        for record in record_set.values():
-            g2_engine.delete_record(record.get("DataSource"), record.get("Id"), LOAD_ID)
-
-
-def get_entity_id_from_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc, data_source_code: str, record_id: str
-) -> int:
-    entity_json = g2_engine.get_entity_by_record_id(data_source_code, record_id)
-    entity = json.loads(entity_json)
-    return entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0)
-
-
-# -----------------------------------------------------------------------------
 # G2Engine pre tests
 # -----------------------------------------------------------------------------
 
@@ -2137,3 +1398,743 @@ def test_destroy(
 ) -> None:
     """Test G2Engine().destroy()."""
     g2_engine.destroy()
+
+
+# -----------------------------------------------------------------------------
+# G2Engine fixtures
+# -----------------------------------------------------------------------------
+
+
+@pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
+def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
+    """
+    Single engine object to use for all tests.
+    """
+
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    result = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
+    return result
+
+
+@pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
+def g2configmgr_fixture() -> g2configmgr_grpc.G2ConfigMgrGrpc:
+    """
+    Single engine object to use for all tests.
+    """
+
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    result = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
+    return result
+
+
+@pytest.fixture(name="g2_engine", scope="module")  # type: ignore[misc]
+def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
+    """
+    Single engine object to use for all tests.
+    """
+
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    result = g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel)
+    return result
+
+
+# -----------------------------------------------------------------------------
+# Utilities
+# -----------------------------------------------------------------------------
+
+
+def add_records(
+    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
+) -> None:
+    for record_id in record_id_list:
+        datasource = record_id[0]
+        record_id = record_id[1]
+        record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
+        g2_engine.add_record(
+            record.get("DataSource", ""),
+            record.get("Id", ""),
+            record.get("Json", ""),
+            LOAD_ID,
+        )
+
+
+def add_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+    for record_set in DATA_SOURCES.values():
+        for record in record_set.values():
+            g2_engine.add_record(
+                record.get("DataSource"), record.get("Id"), record.get("Json"), LOAD_ID
+            )
+    while g2_engine.count_redo_records() > 0:
+        record = g2_engine.get_redo_record()
+        g2_engine.process(record)
+
+
+def delete_records(
+    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
+) -> None:
+    for record_id in record_id_list:
+        datasource = record_id[0]
+        record_id = record_id[1]
+        record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
+        g2_engine.delete_record(
+            record.get("DataSource", ""),
+            record.get("Id", ""),
+            LOAD_ID,
+        )
+
+
+def delete_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+    for record_set in DATA_SOURCES.values():
+        for record in record_set.values():
+            g2_engine.delete_record(record.get("DataSource"), record.get("Id"), LOAD_ID)
+
+
+def get_entity_id_from_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc, data_source_code: str, record_id: str
+) -> int:
+    entity_json = g2_engine.get_entity_by_record_id(data_source_code, record_id)
+    entity = json.loads(entity_json)
+    return entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0)
+
+
+# -----------------------------------------------------------------------------
+# Constants
+# -----------------------------------------------------------------------------
+
+DATA_SOURCES = {
+    "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
+    "REFERENCE": TRUTHSET_REFERENCE_RECORDS,
+    "WATCHLIST": TRUTHSET_WATCHLIST_RECORDS,
+}
+
+LOAD_ID = "Test Load"
+
+
+# -----------------------------------------------------------------------------
+# G2Engine schemas
+# -----------------------------------------------------------------------------
+
+add_record_with_info_schema = {
+    "DATA_SOURCE": str,
+    "RECORD_ID": str,
+    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
+    "INTERESTING_ENTITIES": {"ENTITIES": []},
+}
+
+export_json_entity_report_iterator_schema = {
+    "RESOLVED_ENTITY": {
+        "ENTITY_ID": int,
+        "ENTITY_NAME": str,
+        "FEATURES": {},
+        "RECORDS": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_ID": str,
+                "ENTITY_TYPE": str,
+                "INTERNAL_ID": int,
+                "ENTITY_KEY": str,
+                "ENTITY_DESC": str,
+                "MATCH_KEY": str,
+                "MATCH_LEVEL": int,
+                "MATCH_LEVEL_CODE": str,
+                "ERRULE_CODE": str,
+                "LAST_SEEN_DT": str,
+            }
+        ],
+    },
+    "RELATED_ENTITIES": [],
+}
+
+
+g2_config_schema = {
+    "G2_CONFIG": {
+        "CFG_ETYPE": [
+            {
+                "ETYPE_ID": int,
+                "ETYPE_CODE": str,
+                "ETYPE_DESC": str,
+            },
+        ],
+        "CFG_DSRC_INTEREST": [],
+        "CFG_RCLASS": [
+            {
+                "RCLASS_ID": int,
+                "RCLASS_CODE": str,
+                "RCLASS_DESC": str,
+                "IS_DISCLOSED": str,
+            },
+        ],
+        "CFG_FTYPE": [
+            {
+                "FTYPE_ID": int,
+                "FTYPE_CODE": Or(str, None),
+                "FCLASS_ID": int,
+                "FTYPE_FREQ": str,
+                "FTYPE_EXCL": str,
+                "FTYPE_STAB": str,
+                "PERSIST_HISTORY": str,
+                "USED_FOR_CAND": str,
+                "DERIVED": str,
+                "RTYPE_ID": int,
+                "ANONYMIZE": str,
+                "VERSION": int,
+                "SHOW_IN_MATCH_KEY": str,
+            },
+        ],
+        "CFG_FCLASS": [
+            {
+                "FCLASS_ID": int,
+                "FCLASS_CODE": str,
+            },
+        ],
+        "CFG_FBOM": [
+            {
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "EXEC_ORDER": int,
+                "DISPLAY_LEVEL": int,
+                "DISPLAY_DELIM": Or(str, None),
+                "DERIVED": str,
+            },
+        ],
+        "CFG_FELEM": [
+            {
+                "FELEM_ID": int,
+                "FELEM_CODE": str,
+                "TOKENIZE": str,
+                "DATA_TYPE": str,
+            },
+        ],
+        "CFG_DSRC": [
+            {
+                "DSRC_ID": int,
+                "DSRC_CODE": str,
+                "DSRC_DESC": str,
+                "DSRC_RELY": int,
+                "RETENTION_LEVEL": str,
+                "CONVERSATIONAL": str,
+            },
+        ],
+        "CFG_EFBOM": [
+            {
+                "EFCALL_ID": int,
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "EXEC_ORDER": int,
+                "FELEM_REQ": str,
+            },
+        ],
+        "CFG_EFUNC": [
+            {
+                "EFUNC_ID": int,
+                "EFUNC_CODE": str,
+                "FUNC_LIB": str,
+                "FUNC_VER": str,
+                "CONNECT_STR": str,
+                "LANGUAGE": Or(str, None),
+                "JAVA_CLASS_NAME": Or(str, None),
+            },
+        ],
+        "CFG_EFCALL": [
+            {
+                "EFCALL_ID": int,
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "EFUNC_ID": int,
+                "EXEC_ORDER": int,
+                "EFEAT_FTYPE_ID": int,
+                "IS_VIRTUAL": str,
+            },
+        ],
+        "CFG_SFCALL": [
+            {
+                "SFCALL_ID": int,
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "SFUNC_ID": int,
+                "EXEC_ORDER": int,
+            },
+        ],
+        "CFG_SFUNC": [
+            {
+                "SFUNC_ID": int,
+                "SFUNC_CODE": str,
+                "FUNC_LIB": str,
+                "FUNC_VER": str,
+                "CONNECT_STR": str,
+                "LANGUAGE": Or(str, None),
+                "JAVA_CLASS_NAME": Or(str, None),
+            },
+        ],
+        "SYS_OOM": [
+            {
+                "OOM_TYPE": str,
+                "OOM_LEVEL": str,
+                "FTYPE_ID": int,
+                "THRESH1_CNT": int,
+                "THRESH1_OOM": int,
+                "NEXT_THRESH": int,
+            },
+        ],
+        "CFG_CFUNC": [
+            {
+                "CFUNC_ID": int,
+                "CFUNC_CODE": str,
+                "FUNC_LIB": str,
+                "FUNC_VER": str,
+                "CONNECT_STR": str,
+                "ANON_SUPPORT": str,
+                "LANGUAGE": Or(str, None),
+                "JAVA_CLASS_NAME": Or(str, None),
+            },
+        ],
+        "CFG_CFCALL": [
+            {
+                "CFCALL_ID": int,
+                "FTYPE_ID": int,
+                "CFUNC_ID": int,
+                "EXEC_ORDER": int,
+            },
+        ],
+        "CFG_GPLAN": [
+            {
+                "GPLAN_ID": int,
+                "GPLAN_CODE": str,
+            },
+        ],
+        "CFG_ERRULE": [
+            {
+                "ERRULE_ID": int,
+                "ERRULE_CODE": str,
+                "ERRULE_DESC": str,
+                "RESOLVE": str,
+                "RELATE": str,
+                "REF_SCORE": int,
+                "RTYPE_ID": int,
+                "QUAL_ERFRAG_CODE": str,
+                "DISQ_ERFRAG_CODE": Or(str, None),
+                "ERRULE_TIER": Or(int, None),
+            },
+        ],
+        "CFG_ERFRAG": [
+            {
+                "ERFRAG_ID": int,
+                "ERFRAG_CODE": str,
+                "ERFRAG_DESC": str,
+                "ERFRAG_SOURCE": str,
+                "ERFRAG_DEPENDS": Or(str, None),
+            },
+        ],
+        "CFG_CFBOM": [
+            {
+                "CFCALL_ID": int,
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "EXEC_ORDER": int,
+            },
+        ],
+        "CFG_DFUNC": [
+            {
+                "DFUNC_ID": int,
+                "DFUNC_CODE": str,
+                "FUNC_LIB": str,
+                "FUNC_VER": str,
+                "CONNECT_STR": str,
+                "ANON_SUPPORT": str,
+                "LANGUAGE": Or(str, None),
+                "JAVA_CLASS_NAME": Or(str, None),
+            },
+        ],
+        "CFG_DFCALL": [
+            {
+                "DFCALL_ID": int,
+                "FTYPE_ID": int,
+                "DFUNC_ID": int,
+                "EXEC_ORDER": int,
+            },
+        ],
+        "CFG_DFBOM": [
+            {
+                "DFCALL_ID": int,
+                "FTYPE_ID": int,
+                "FELEM_ID": int,
+                "EXEC_ORDER": int,
+            },
+        ],
+        "CFG_CFRTN": [
+            {
+                "CFRTN_ID": int,
+                "CFUNC_ID": int,
+                "FTYPE_ID": int,
+                "CFUNC_RTNVAL": str,
+                "EXEC_ORDER": int,
+                "SAME_SCORE": int,
+                "CLOSE_SCORE": int,
+                "LIKELY_SCORE": int,
+                "PLAUSIBLE_SCORE": int,
+                "UN_LIKELY_SCORE": int,
+            },
+        ],
+        "CFG_RTYPE": [
+            {
+                "RTYPE_ID": int,
+                "RTYPE_CODE": str,
+                "RCLASS_ID": int,
+                "REL_STRENGTH": int,
+                "BREAK_RES": str,
+            },
+        ],
+        "CFG_GENERIC_THRESHOLD": [
+            {
+                "GPLAN_ID": int,
+                "BEHAVIOR": str,
+                "FTYPE_ID": int,
+                "CANDIDATE_CAP": int,
+                "SCORING_CAP": int,
+                "SEND_TO_REDO": str,
+            },
+        ],
+        "CFG_FBOVR": [
+            {
+                "FTYPE_ID": int,
+                "UTYPE_CODE": str,
+                "FTYPE_FREQ": str,
+                "FTYPE_EXCL": str,
+                "FTYPE_STAB": str,
+            },
+        ],
+        "CFG_ATTR": [
+            {
+                "ATTR_ID": int,
+                "ATTR_CODE": str,
+                "ATTR_CLASS": str,
+                "FTYPE_CODE": Or(str, None),
+                "FELEM_CODE": Or(str, None),
+                "FELEM_REQ": str,
+                "DEFAULT_VALUE": Or(str, None),
+                "ADVANCED": str,
+                "INTERNAL": str,
+            },
+        ],
+        "CONFIG_BASE_VERSION": {
+            "VERSION": str,
+            "BUILD_VERSION": str,
+            "BUILD_DATE": str,
+            "BUILD_NUMBER": str,
+            "COMPATIBILITY_VERSION": {
+                "CONFIG_VERSION": str,
+            },
+        },
+    },
+}
+
+how_results_schema = {
+    "HOW_RESULTS": {
+        "RESOLUTION_STEPS": [],
+        "FINAL_STATE": {
+            "NEED_REEVALUATION": int,
+            "VIRTUAL_ENTITIES": [
+                {
+                    "VIRTUAL_ENTITY_ID": str,
+                    "MEMBER_RECORDS": [
+                        {
+                            "INTERNAL_ID": int,
+                            "RECORDS": [{"DATA_SOURCE": str, "RECORD_ID": str}],
+                        }
+                    ],
+                }
+            ],
+        },
+    }
+}
+
+interesting_entities_schema = {
+    "INTERESTING_ENTITIES": {"ENTITIES": []},
+}
+
+network_schema = {
+    "ENTITY_PATHS": [],
+    "ENTITIES": [
+        {
+            "RESOLVED_ENTITY": {
+                "ENTITY_ID": int,
+                "ENTITY_NAME": str,
+                "RECORD_SUMMARY": [
+                    {
+                        "DATA_SOURCE": str,
+                        "RECORD_COUNT": int,
+                        "FIRST_SEEN_DT": str,
+                        "LAST_SEEN_DT": str,
+                    }
+                ],
+                "LAST_SEEN_DT": str,
+            },
+            "RELATED_ENTITIES": [],
+        }
+    ],
+}
+
+path_schema = {
+    "ENTITY_PATHS": [{"START_ENTITY_ID": int, "END_ENTITY_ID": int, "ENTITIES": [int]}],
+    "ENTITIES": [
+        {
+            "RESOLVED_ENTITY": {
+                "ENTITY_ID": int,
+                "ENTITY_NAME": str,
+                "RECORD_SUMMARY": [
+                    {
+                        "DATA_SOURCE": str,
+                        "RECORD_COUNT": int,
+                        "FIRST_SEEN_DT": str,
+                        "LAST_SEEN_DT": str,
+                    }
+                ],
+                "LAST_SEEN_DT": str,
+            },
+            "RELATED_ENTITIES": [],
+        }
+    ],
+}
+
+
+process_withinfo_schema = {
+    "DATA_SOURCE": str,
+    "RECORD_ID": str,
+    "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
+    "INTERESTING_ENTITIES": {"ENTITIES": []},
+}
+
+record_schema = {"DATA_SOURCE": str, "RECORD_ID": str, "JSON_DATA": {}}
+
+redo_record_schema = {
+    "REASON": str,
+    "DATA_SOURCE": str,
+    "RECORD_ID": str,
+    "ENTITY_TYPE": str,
+    "DSRC_ACTION": str,
+}
+
+resolved_entity_schema = {
+    "RESOLVED_ENTITY": {
+        "ENTITY_ID": int,
+        "ENTITY_NAME": str,
+        "FEATURES": {},
+        "RECORD_SUMMARY": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_COUNT": int,
+                "FIRST_SEEN_DT": str,
+                "LAST_SEEN_DT": str,
+            }
+        ],
+        "LAST_SEEN_DT": str,
+        "RECORDS": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_ID": str,
+                "ENTITY_TYPE": str,
+                "INTERNAL_ID": int,
+                "ENTITY_KEY": str,
+                "ENTITY_DESC": str,
+                "MATCH_KEY": str,
+                "MATCH_LEVEL": int,
+                "MATCH_LEVEL_CODE": str,
+                "ERRULE_CODE": str,
+                "LAST_SEEN_DT": str,
+            },
+        ],
+    },
+    "RELATED_ENTITIES": [],
+}
+
+search_schema = {
+    "RESOLVED_ENTITIES": [
+        {
+            "MATCH_INFO": {
+                "MATCH_LEVEL": int,
+                "MATCH_LEVEL_CODE": str,
+                "MATCH_KEY": str,
+                "ERRULE_CODE": str,
+                "FEATURE_SCORES": {},
+            },
+            "ENTITY": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": int,
+                    "ENTITY_NAME": str,
+                    "FEATURES": {},
+                    "RECORD_SUMMARY": [
+                        {
+                            "DATA_SOURCE": str,
+                            "RECORD_COUNT": int,
+                            "FIRST_SEEN_DT": str,
+                            "LAST_SEEN_DT": str,
+                        }
+                    ],
+                    "LAST_SEEN_DT": str,
+                }
+            },
+        }
+    ]
+}
+
+stats_schema = {
+    "workload": {
+        "apiVersion": str,
+        "loadedRecords": int,
+        "addedRecords": int,
+        "deletedRecords": int,
+        "reevaluations": int,
+        "repairedEntities": int,
+        "duration": int,
+        "retries": int,
+        "candidates": int,
+        "actualAmbiguousTest": int,
+        "cachedAmbiguousTest": int,
+        "libFeatCacheHit": int,
+        "libFeatCacheMiss": int,
+        "resFeatStatCacheHit": int,
+        "resFeatStatCacheMiss": int,
+        "resFeatStatUpdate": int,
+        "unresolveTest": int,
+        "abortedUnresolve": int,
+        "gnrScorersUsed": int,
+        "unresolveTriggers": {},
+        "reresolveTriggers": {},
+        "reresolveSkipped": int,
+        "filteredObsFeat": int,
+        "expressedFeatureCalls": [{}],
+        "expressedFeaturesCreated": [{}],
+        "scoredPairs": [{}],
+        "cacheHit": [{}],
+        "cacheMiss": [{}],
+        "redoTriggers": [{}],
+        "latchContention": [],
+        "highContentionFeat": [],
+        "highContentionResEnt": [],
+        "genericDetect": [],
+        "candidateBuilders": [{}],
+        "suppressedCandidateBuilders": [],
+        "suppressedScoredFeatureType": [],
+        "reducedScoredFeatureType": [],
+        "suppressedDisclosedRelationshipDomainCount": int,
+        "CorruptEntityTestDiagnosis": {},
+        "threadState": {},
+        "systemResources": {},
+    }
+}
+
+virtual_entity_schema = {
+    "RESOLVED_ENTITY": {
+        "ENTITY_ID": int,
+        "ENTITY_NAME": str,
+        "FEATURES": {},
+        "RECORD_SUMMARY": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_COUNT": int,
+                "FIRST_SEEN_DT": str,
+                "LAST_SEEN_DT": str,
+            }
+        ],
+        "LAST_SEEN_DT": str,
+        "RECORDS": [
+            {
+                "DATA_SOURCE": str,
+                "RECORD_ID": str,
+                "ENTITY_TYPE": str,
+                "INTERNAL_ID": int,
+                "ENTITY_KEY": str,
+                "ENTITY_DESC": str,
+                "LAST_SEEN_DT": str,
+                "FEATURES": [{"LIB_FEAT_ID": int}],
+            },
+        ],
+    },
+}
+
+why_entities_results_schema = {
+    "WHY_RESULTS": [
+        {
+            "ENTITY_ID": int,
+            "ENTITY_ID_2": int,
+            "MATCH_INFO": {},
+        }
+    ],
+    "ENTITIES": [
+        {
+            "RESOLVED_ENTITY": {
+                "ENTITY_ID": int,
+                "ENTITY_NAME": str,
+                "FEATURES": {},
+                "RECORD_SUMMARY": [{}],
+                "LAST_SEEN_DT": str,
+                "RECORDS": [
+                    {
+                        "DATA_SOURCE": str,
+                        "RECORD_ID": str,
+                        "ENTITY_TYPE": str,
+                        "INTERNAL_ID": int,
+                        "ENTITY_KEY": str,
+                        "ENTITY_DESC": str,
+                        "MATCH_KEY": str,
+                        "MATCH_LEVEL": int,
+                        "MATCH_LEVEL_CODE": str,
+                        "ERRULE_CODE": str,
+                        "LAST_SEEN_DT": str,
+                        "FEATURES": [{}],
+                    }
+                ],
+            },
+            "RELATED_ENTITIES": [{}],
+        }
+    ],
+}
+
+
+why_entity_results_schema = {
+    "WHY_RESULTS": [
+        {
+            "INTERNAL_ID": int,
+            "ENTITY_ID": int,
+            "FOCUS_RECORDS": [{}],
+            "MATCH_INFO": {
+                "WHY_KEY": str,
+                "WHY_ERRULE_CODE": str,
+                "MATCH_LEVEL_CODE": str,
+                "CANDIDATE_KEYS": {},
+                "FEATURE_SCORES": {},
+            },
+        }
+    ],
+    "ENTITIES": [
+        {
+            "RESOLVED_ENTITY": {
+                "ENTITY_ID": int,
+                "ENTITY_NAME": str,
+                "FEATURES": {},
+                "RECORD_SUMMARY": [{}],
+                "LAST_SEEN_DT": str,
+                "RECORDS": [
+                    {
+                        "DATA_SOURCE": str,
+                        "RECORD_ID": str,
+                        "ENTITY_TYPE": str,
+                        "INTERNAL_ID": int,
+                        "ENTITY_KEY": str,
+                        "ENTITY_DESC": str,
+                        "MATCH_KEY": str,
+                        "MATCH_LEVEL": int,
+                        "MATCH_LEVEL_CODE": str,
+                        "ERRULE_CODE": str,
+                        "LAST_SEEN_DT": str,
+                        "FEATURES": [{}],
+                    }
+                ],
+            },
+            "RELATED_ENTITIES": [{}],
+        }
+    ],
+}

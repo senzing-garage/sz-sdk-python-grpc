@@ -8,40 +8,6 @@ from pytest_schema import schema
 from senzing_grpc import g2diagnostic_grpc
 
 # -----------------------------------------------------------------------------
-# G2Diagnostic fixtures
-# -----------------------------------------------------------------------------
-
-
-@pytest.fixture(name="g2_diagnostic", scope="module")  # type: ignore[misc]
-def g2diagnostic_fixture() -> g2diagnostic_grpc.G2DiagnosticGrpc:
-    """
-    Single engine object to use for all tests.
-    """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
-    return result
-
-
-# -----------------------------------------------------------------------------
-# G2Diagnostic schemas
-# -----------------------------------------------------------------------------
-
-
-get_db_info_schema = {
-    "Hybrid Mode": bool,
-    "Database Details": [
-        {
-            "Name": str,
-            "Type": str,
-        }
-    ],
-}
-
-check_db_perf_schema = {"numRecordsInserted": int, "insertTime": int}
-
-# -----------------------------------------------------------------------------
 # G2Diagnostic testcases
 # -----------------------------------------------------------------------------
 
@@ -134,3 +100,38 @@ def test_context_managment() -> None:
         actual = g2_diagnostic.get_db_info()
         actual_json = json.loads(actual)
         assert schema(get_db_info_schema) == actual_json
+
+
+# -----------------------------------------------------------------------------
+# G2Diagnostic fixtures
+# -----------------------------------------------------------------------------
+
+
+@pytest.fixture(name="g2_diagnostic", scope="module")  # type: ignore[misc]
+def g2diagnostic_fixture() -> g2diagnostic_grpc.G2DiagnosticGrpc:
+    """
+    Single engine object to use for all tests.
+    """
+
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    result = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
+    return result
+
+
+# -----------------------------------------------------------------------------
+# G2Diagnostic schemas
+# -----------------------------------------------------------------------------
+
+
+get_db_info_schema = {
+    "Hybrid Mode": bool,
+    "Database Details": [
+        {
+            "Name": str,
+            "Type": str,
+        }
+    ],
+}
+
+check_db_perf_schema = {"numRecordsInserted": int, "insertTime": int}

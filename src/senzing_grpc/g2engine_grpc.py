@@ -20,7 +20,7 @@ from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
 __all__ = ["G2EngineGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-12-16"
+__updated__ = "2024-01-10"
 
 SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -303,6 +303,27 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
+    def find_network_by_entity_id(
+        self,
+        entity_list: Union[str, Dict[Any, Any]],
+        max_degree: int,
+        build_out_degree: int,
+        max_entities: int,
+        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.FindNetworkByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityList=as_str(entity_list),
+                maxDegree=max_degree,
+                buildOutDegree=build_out_degree,
+                maxEntities=max_entities,
+            )
+            response = self.stub.FindNetworkByEntityID(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     def find_network_by_entity_id_v2(
         self,
         entity_list: Union[str, Dict[Any, Any]],
@@ -325,9 +346,9 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_network_by_entity_id(
+    def find_network_by_record_id(
         self,
-        entity_list: Union[str, Dict[Any, Any]],
+        record_list: Union[str, Dict[Any, Any]],
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
@@ -335,13 +356,13 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindNetworkByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityList=as_str(entity_list),
+            request = g2engine_pb2.FindNetworkByRecordIDRequest(  # type: ignore[unused-ignore]
+                recordList=as_str(record_list),
                 maxDegree=max_degree,
                 buildOutDegree=build_out_degree,
                 maxEntities=max_entities,
             )
-            response = self.stub.FindNetworkByEntityID(request)
+            response = self.stub.FindNetworkByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -368,23 +389,21 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_network_by_record_id(
+    def find_path_by_entity_id(
         self,
-        record_list: Union[str, Dict[Any, Any]],
+        entity_id_1: int,
+        entity_id_2: int,
         max_degree: int,
-        build_out_degree: int,
-        max_entities: int,
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindNetworkByRecordIDRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+            request = g2engine_pb2.FindPathByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID1=entity_id_1,
+                entityID2=entity_id_2,
                 maxDegree=max_degree,
-                buildOutDegree=build_out_degree,
-                maxEntities=max_entities,
             )
-            response = self.stub.FindNetworkByRecordID(request)
+            response = self.stub.FindPathByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -409,21 +428,25 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_by_entity_id(
+    def find_path_by_record_id(
         self,
-        entity_id_1: int,
-        entity_id_2: int,
+        data_source_code_1: str,
+        record_id_1: str,
+        data_source_code_2: str,
+        record_id_2: str,
         max_degree: int,
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindPathByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
+            request = g2engine_pb2.FindPathByRecordIDRequest(  # type: ignore[unused-ignore]
+                dataSourceCode1=data_source_code_1,
+                recordID1=record_id_1,
+                dataSourceCode2=data_source_code_2,
+                recordID2=record_id_2,
                 maxDegree=max_degree,
             )
-            response = self.stub.FindPathByEntityID(request)
+            response = self.stub.FindPathByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -452,25 +475,23 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_by_record_id(
+    def find_path_excluding_by_entity_id(
         self,
-        data_source_code_1: str,
-        record_id_1: str,
-        data_source_code_2: str,
-        record_id_2: str,
+        entity_id_1: int,
+        entity_id_2: int,
         max_degree: int,
+        excluded_entities: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindPathByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
+            request = g2engine_pb2.FindPathExcludingByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID1=entity_id_1,
+                entityID2=entity_id_2,
                 maxDegree=max_degree,
+                excludedEntities=as_str(excluded_entities),
             )
-            response = self.stub.FindPathByRecordID(request)
+            response = self.stub.FindPathExcludingByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -497,23 +518,27 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_excluding_by_entity_id(
+    def find_path_excluding_by_record_id(
         self,
-        entity_id_1: int,
-        entity_id_2: int,
+        data_source_code_1: str,
+        record_id_1: str,
+        data_source_code_2: str,
+        record_id_2: str,
         max_degree: int,
-        excluded_entities: Union[str, Dict[Any, Any]],
+        excluded_records: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindPathExcludingByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
+            request = g2engine_pb2.FindPathExcludingByRecordIDRequest(  # type: ignore[unused-ignore]
+                dataSourceCode1=data_source_code_1,
+                recordID1=record_id_1,
+                dataSourceCode2=data_source_code_2,
+                recordID2=record_id_2,
                 maxDegree=max_degree,
-                excludedEntities=as_str(excluded_entities),
+                excludedRecords=as_str(excluded_records),
             )
-            response = self.stub.FindPathExcludingByEntityID(request)
+            response = self.stub.FindPathExcludingByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -544,27 +569,25 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_excluding_by_record_id(
+    def find_path_including_source_by_entity_id(
         self,
-        data_source_code_1: str,
-        record_id_1: str,
-        data_source_code_2: str,
-        record_id_2: str,
+        entity_id_1: int,
+        entity_id_2: int,
         max_degree: int,
-        excluded_records: Union[str, Dict[Any, Any]],
+        excluded_entities: Union[str, Dict[Any, Any]],
+        required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindPathExcludingByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
+            request = g2engine_pb2.FindPathIncludingSourceByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID1=entity_id_1,
+                entityID2=entity_id_2,
                 maxDegree=max_degree,
-                excludedRecords=as_str(excluded_records),
+                excludedEntities=as_str(excluded_entities),
+                requiredDsrcs=as_str(required_dsrcs),
             )
-            response = self.stub.FindPathExcludingByRecordID(request)
+            response = self.stub.FindPathIncludingSourceByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -593,25 +616,29 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_including_source_by_entity_id(
+    def find_path_including_source_by_record_id(
         self,
-        entity_id_1: int,
-        entity_id_2: int,
+        data_source_code_1: str,
+        record_id_1: str,
+        data_source_code_2: str,
+        record_id_2: str,
         max_degree: int,
-        excluded_entities: Union[str, Dict[Any, Any]],
+        excluded_records: Union[str, Dict[Any, Any]],
         required_dsrcs: Union[str, Dict[Any, Any]],
         flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.FindPathIncludingSourceByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
+            request = g2engine_pb2.FindPathIncludingSourceByRecordIDRequest(  # type: ignore[unused-ignore]
+                dataSourceCode1=data_source_code_1,
+                recordID1=record_id_1,
+                dataSourceCode2=data_source_code_2,
+                recordID2=record_id_2,
                 maxDegree=max_degree,
-                excludedEntities=as_str(excluded_entities),
+                excludedRecords=as_str(excluded_records),
                 requiredDsrcs=as_str(required_dsrcs),
             )
-            response = self.stub.FindPathIncludingSourceByEntityID(request)
+            response = self.stub.FindPathIncludingSourceByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -644,38 +671,26 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_path_including_source_by_record_id(
-        self,
-        data_source_code_1: str,
-        record_id_1: str,
-        data_source_code_2: str,
-        record_id_2: str,
-        max_degree: int,
-        excluded_records: Union[str, Dict[Any, Any]],
-        required_dsrcs: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.FindPathIncludingSourceByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
-                maxDegree=max_degree,
-                excludedRecords=as_str(excluded_records),
-                requiredDsrcs=as_str(required_dsrcs),
-            )
-            response = self.stub.FindPathIncludingSourceByRecordID(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
     def get_active_config_id(self, **kwargs: Any) -> int:
         try:
             request = g2engine_pb2.GetActiveConfigIDRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetActiveConfigID(request)
             return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def get_entity_by_entity_id(
+        self,
+        entity_id: int,
+        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.GetEntityByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID=entity_id,
+            )
+            response = self.stub.GetEntityByEntityID(request)
+            return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
@@ -695,17 +710,19 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_entity_by_entity_id(
+    def get_entity_by_record_id(
         self,
-        entity_id: int,
+        data_source_code: str,
+        record_id: str,
         flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.GetEntityByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
+            request = g2engine_pb2.GetEntityByRecordIDRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordID=record_id,
             )
-            response = self.stub.GetEntityByEntityID(request)
+            response = self.stub.GetEntityByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -728,24 +745,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_entity_by_record_id(
-        self,
-        data_source_code: str,
-        record_id: str,
-        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.GetEntityByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordID=record_id,
-            )
-            response = self.stub.GetEntityByRecordID(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def get_record_v2(
+    def get_record(
         self,
         data_source_code: str,
         record_id: str,
@@ -763,7 +763,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_record(
+    def get_record_v2(
         self,
         data_source_code: str,
         record_id: str,
@@ -797,6 +797,21 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
+    def get_virtual_entity_by_record_id(
+        self,
+        record_list: Union[str, Dict[Any, Any]],
+        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.GetVirtualEntityByRecordIDRequest(  # type: ignore[unused-ignore]
+                recordList=as_str(record_list),
+            )
+            response = self.stub.GetVirtualEntityByRecordID(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     def get_virtual_entity_by_record_id_v2(
         self,
         record_list: Union[str, Dict[Any, Any]],
@@ -813,17 +828,17 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_virtual_entity_by_record_id(
+    def how_entity_by_entity_id(
         self,
-        record_list: Union[str, Dict[Any, Any]],
+        entity_id: int,
         flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.GetVirtualEntityByRecordIDRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+            request = g2engine_pb2.HowEntityByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID=entity_id,
             )
-            response = self.stub.GetVirtualEntityByRecordID(request)
+            response = self.stub.HowEntityByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -840,21 +855,6 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
                 flags=flags,
             )
             response = self.stub.HowEntityByEntityID_V2(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def how_entity_by_entity_id(
-        self,
-        entity_id: int,
-        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.HowEntityByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
-            )
-            response = self.stub.HowEntityByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -1016,6 +1016,21 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
+    def search_by_attributes(
+        self,
+        json_data: Union[str, Dict[Any, Any]],
+        flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
+                jsonData=as_str(json_data),
+            )
+            response = self.stub.SearchByAttributes(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     def search_by_attributes_v2(
         self,
         json_data: Union[str, Dict[Any, Any]],
@@ -1053,25 +1068,27 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         # except Exception as err:
         #     raise new_exception(err) from err
 
-    def search_by_attributes(
-        self,
-        json_data: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                jsonData=as_str(json_data),
-            )
-            response = self.stub.SearchByAttributes(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
     def stats(self, **kwargs: Any) -> str:
         try:
             request = g2engine_pb2.StatsRequest()  # type: ignore[unused-ignore]
             response = self.stub.Stats(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def why_entities(
+        self,
+        entity_id_1: int,
+        entity_id_2: int,
+        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.WhyEntitiesRequest(  # type: ignore[unused-ignore]
+                entityID1=entity_id_1,
+                entityID2=entity_id_2,
+            )
+            response = self.stub.WhyEntities(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -1094,19 +1111,17 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def why_entities(
+    def why_entity_by_entity_id(
         self,
-        entity_id_1: int,
-        entity_id_2: int,
+        entity_id: int,
         flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.WhyEntitiesRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
+            request = g2engine_pb2.WhyEntityByEntityIDRequest(  # type: ignore[unused-ignore]
+                entityID=entity_id,
             )
-            response = self.stub.WhyEntities(request)
+            response = self.stub.WhyEntityByEntityID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -1127,17 +1142,19 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def why_entity_by_entity_id(
+    def why_entity_by_record_id(
         self,
-        entity_id: int,
+        data_source_code: str,
+        record_id: str,
         flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2engine_pb2.WhyEntityByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
+            request = g2engine_pb2.WhyEntityByRecordIDRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordID=record_id,
             )
-            response = self.stub.WhyEntityByEntityID(request)
+            response = self.stub.WhyEntityByRecordID(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -1157,23 +1174,6 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
             )
             response = self.stub.WhyEntityByRecordID_V2(request)
             return as_str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def why_entity_by_record_id(
-        self,
-        data_source_code: str,
-        record_id: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.WhyEntityByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordID=record_id,
-            )
-            response = self.stub.WhyEntityByRecordID(request)
-            return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
@@ -1198,6 +1198,27 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self.fake_g2engine(data_source_code, record_id, flags)
         return "string"
 
+    def why_records(
+        self,
+        data_source_code_1: str,
+        record_id_1: str,
+        data_source_code_2: str,
+        record_id_2: str,
+        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        **kwargs: Any,
+    ) -> str:
+        try:
+            request = g2engine_pb2.WhyRecordsRequest(  # type: ignore[unused-ignore]
+                dataSourceCode1=data_source_code_1,
+                recordID1=record_id_1,
+                dataSourceCode2=data_source_code_2,
+                recordID2=record_id_2,
+            )
+            response = self.stub.WhyRecords(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     def why_records_v2(
         self,
         data_source_code_1: str,
@@ -1216,27 +1237,6 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
                 flags=flags,
             )
             response = self.stub.WhyRecords_V2(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def why_records(
-        self,
-        data_source_code_1: str,
-        record_id_1: str,
-        data_source_code_2: str,
-        record_id_2: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
-        **kwargs: Any,
-    ) -> str:
-        try:
-            request = g2engine_pb2.WhyRecordsRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
-            )
-            response = self.stub.WhyRecords(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
