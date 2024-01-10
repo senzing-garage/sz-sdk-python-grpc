@@ -12,6 +12,7 @@ from senzing_truthset import (
 )
 
 from senzing_grpc import (
+    G2ConfigurationError,
     G2NotFoundError,
     G2UnknownDatasourceError,
     g2config_grpc,
@@ -149,6 +150,21 @@ def test_delete_record(
     g2_engine.delete_record("CUSTOMERS", "1001")
 
 
+def test_delete_record_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().delete_record()."""
+    with pytest.raises(G2ConfigurationError):
+        g2_engine.delete_record("XXXX", "9999")
+
+
+def test_delete_record_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().delete_record()."""
+    g2_engine.delete_record("CUSTOMERS", "9999")
+
+
 def test_delete_record_with_info(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -158,6 +174,23 @@ def test_delete_record_with_info(
     ]
     add_records(g2_engine, test_records)
     actual = g2_engine.delete_record_with_info("CUSTOMERS", "1001")
+    actual_dict = json.loads(actual)
+    assert schema(add_record_with_info_schema) == actual_dict
+
+
+def test_delete_record_with_info_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().delete_record_with_info()."""
+    with pytest.raises(G2ConfigurationError):
+        _ = g2_engine.delete_record_with_info("XXXX", "9999")
+
+
+def test_delete_record_with_info_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().delete_record_with_info()."""
+    actual = g2_engine.delete_record_with_info("CUSTOMERS", "9999")
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
@@ -315,6 +348,14 @@ def test_find_interesting_entities_by_entity_id(
     assert schema(interesting_entities_schema) == actual_dict
 
 
+def test_find_interesting_entities_by_entity_id_bad_entity_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_interesting_entities_by_entity_id()."""
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_interesting_entities_by_entity_id(0)
+
+
 def test_find_interesting_entities_by_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -327,6 +368,22 @@ def test_find_interesting_entities_by_record_id(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(interesting_entities_schema) == actual_dict
+
+
+def test_find_interesting_entities_by_record_id_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.find_interesting_entities_by_record_id("XXXX", "9999")
+
+
+def test_find_interesting_entities_by_record_id_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_interesting_entities_by_record_id("CUSTOMERS", "9999")
 
 
 def test_find_network_by_entity_id(
@@ -358,6 +415,28 @@ def test_find_network_by_entity_id(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(network_schema) == actual_dict
+
+
+def test_find_network_by_entity_id_bad_entity_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_entity_id()."""
+    entity_list = {
+        "ENTITIES": [
+            {"ENTITY_ID": 0},
+            {"ENTITY_ID": 1},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_network_by_entity_id(
+            entity_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+        )
 
 
 def test_find_network_by_entity_id_v2(
@@ -393,28 +472,50 @@ def test_find_network_by_entity_id_v2(
     assert schema(network_schema) == actual_dict
 
 
-def test_find_network_by_record_id(
+def test_find_network_by_entity_id_v2_bad_entity_ids(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().find_network_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
     entity_list = {
         "ENTITIES": [
-            {"ENTITY_ID": entity_id_1},
-            {"ENTITY_ID": entity_id_2},
+            {"ENTITY_ID": 0},
+            {"ENTITY_ID": 1},
         ]
     }
     max_degree = 2
     build_out_degree = 1
     max_entities = 10
-    actual = g2_engine.find_network_by_entity_id(
-        entity_list,
+    flags = -1
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_network_by_entity_id_v2(
+            entity_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+            flags,
+        )
+
+
+def test_find_network_by_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_record_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("CUSTOMERS", "1001"),
+        ("CUSTOMERS", "1002"),
+    ]
+    add_records(g2_engine, test_records)
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    actual = g2_engine.find_network_by_record_id(
+        record_list,
         max_degree,
         build_out_degree,
         max_entities,
@@ -424,29 +525,71 @@ def test_find_network_by_record_id(
     assert schema(network_schema) == actual_dict
 
 
+def test_find_network_by_record_id_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.find_network_by_record_id(
+            record_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+        )
+
+
+def test_find_network_by_record_id_bad_record_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_network_by_record_id(
+            record_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+        )
+
+
 def test_find_network_by_record_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_entity_id()."""
+    """Test G2Engine().find_network_by_entity_id_v2()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
     add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_list = {
-        "ENTITIES": [
-            {"ENTITY_ID": entity_id_1},
-            {"ENTITY_ID": entity_id_2},
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
         ]
     }
     max_degree = 2
     build_out_degree = 1
     max_entities = 10
     flags = -1
-    actual = g2_engine.find_network_by_entity_id(
-        entity_list,
+    actual = g2_engine.find_network_by_entity_id_v2(
+        record_list,
         max_degree,
         build_out_degree,
         max_entities,
@@ -455,6 +598,54 @@ def test_find_network_by_record_id_v2(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(network_schema) == actual_dict
+
+
+def test_find_network_by_record_id_v2_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    flags = -1
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.find_network_by_record_id_v2(
+            record_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+            flags,
+        )
+
+
+def test_find_network_by_record_id_v2_bad_record_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_network_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
+        ]
+    }
+    max_degree = 2
+    build_out_degree = 1
+    max_entities = 10
+    flags = -1
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_network_by_record_id_v2(
+            record_list,
+            max_degree,
+            build_out_degree,
+            max_entities,
+            flags,
+        )
 
 
 def test_find_path_by_entity_id(
