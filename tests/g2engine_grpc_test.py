@@ -1440,7 +1440,7 @@ def test_init(
 ) -> None:
     """Test G2Engine().init()."""
     module_name = "Test"
-    ini_params = {}
+    ini_params: Dict[str, str] = {}
     g2_engine.init(module_name, ini_params)
 
 
@@ -1449,7 +1449,7 @@ def test_init_with_config_id(
 ) -> None:
     """Test G2Engine().init_with_config_id()."""
     module_name = "Test"
-    ini_params = {}
+    ini_params: Dict[str, str] = {}
     init_config_id = 0
     g2_engine.init_with_config_id(module_name, ini_params, init_config_id)
 
@@ -2153,9 +2153,9 @@ def add_records(
     g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
     """Add all of the records in the list."""
-    for record_id in record_id_list:
-        datasource = record_id[0]
-        record_id = record_id[1]
+    for record_identification in record_id_list:
+        datasource = record_identification[0]
+        record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
         g2_engine.add_record(
             record.get("DataSource", ""),
@@ -2181,9 +2181,9 @@ def delete_records(
     g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
     """Delete all of the records in the list."""
-    for record_id in record_id_list:
-        datasource = record_id[0]
-        record_id = record_id[1]
+    for record_identification in record_id_list:
+        datasource = record_identification[0]
+        record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
         g2_engine.delete_record(
             record.get("DataSource", ""),
@@ -2205,7 +2205,7 @@ def get_entity_id_from_record_id(
     """Given a (datasource, record_id), return the entity ID."""
     entity_json = g2_engine.get_entity_by_record_id(data_source_code, record_id)
     entity = json.loads(entity_json)
-    return entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0)
+    return int(entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0))
 
 
 # -----------------------------------------------------------------------------
@@ -2559,7 +2559,7 @@ how_results_schema = {
     }
 }
 
-interesting_entities_schema = {
+interesting_entities_schema: Dict[Any, Any] = {
     "INTERESTING_ENTITIES": {"ENTITIES": []},
 }
 
