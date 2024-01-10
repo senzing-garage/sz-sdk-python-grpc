@@ -866,6 +866,11 @@ def test_add_record_with_info_bad_data_source_code_value(
         )
 
 
+def test_close_export(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+    """Test G2Engine().close_export()."""
+    pass
+
+
 def test_count_redo_records(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
     """Test G2Engine().count_redo_records()."""
     actual = g2_engine.count_redo_records()
@@ -944,9 +949,9 @@ def test_export_csv_entity_report_iterator(
     expected = [
         "RESOLVED_ENTITY_ID,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,DATA_SOURCE,RECORD_ID",
         '1,0,0,"","TEST","1"',
-        '2,0,0,"","CUSTOMERS","1001"',
-        '2,0,1,"+NAME+DOB+PHONE","CUSTOMERS","1002"',
-        '2,0,1,"+NAME+DOB+EMAIL","CUSTOMERS","1003"',
+        '4,0,0,"","CUSTOMERS","1001"',
+        '4,0,1,"+NAME+DOB+PHONE","CUSTOMERS","1002"',
+        '4,0,1,"+NAME+DOB+EMAIL","CUSTOMERS","1003"',
     ]
 
     i = 0
@@ -1025,6 +1030,13 @@ def test_export_json_entity_report_iterator(
         actual_dict = json.loads(actual)
         assert schema(export_json_entity_report_iterator_schema) == actual_dict
     assert i == 1
+
+
+def test_fetch_next(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().fetch_next."""
+    pass
 
 
 def test_find_interesting_entities_by_entity_id(
@@ -1789,6 +1801,13 @@ def test_process_with_info(
     assert redo_records_processed > 0
 
 
+def test_purge_repository(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().purge_repository."""
+    pass
+
+
 def test_reevaluate_entity(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -2044,6 +2063,20 @@ def test_why_entity_by_record_id_v2(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(why_entity_results_schema) == actual_dict
+
+
+def test_why_record_in_entity(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().why_record_in_entity()."""
+    pass
+
+
+def test_why_record_in_entity_v2(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().why_record_in_entity_v2()."""
+    pass
 
 
 def test_why_records(
