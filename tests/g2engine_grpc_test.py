@@ -1,3 +1,6 @@
+# pylint: disable=C0302
+
+
 import json
 from typing import Any, Dict, List, Tuple
 
@@ -39,6 +42,7 @@ def test_add_truthset_datasources(
     g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
     g2_config: g2config_grpc.G2ConfigGrpc,
 ) -> None:
+    """Add needed datasources for tests."""
     config_handle = g2_config.create()
     for _, value in TRUTHSET_DATASOURCES.items():
         g2_config.add_data_source(config_handle, value.get("Json", ""))
@@ -129,9 +133,8 @@ def test_add_record_with_info_bad_data_source_code_value(
         )
 
 
-def test_close_export(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+def test_close_export() -> None:
     """Test G2Engine().close_export()."""
-    pass
 
 
 def test_count_redo_records(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
@@ -227,8 +230,6 @@ def test_export_csv_entity_report(g2_engine: g2engine_grpc.G2EngineGrpc) -> None
 
 def test_export_csv_entity_report_iterator(
     g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
 ) -> None:
     """Test G2Engine().export_csv_entity_report_iterator()."""
 
@@ -294,8 +295,6 @@ def test_export_json_entity_report(g2_engine: g2engine_grpc.G2EngineGrpc) -> Non
 
 def test_export_json_entity_report_iterator(
     g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
 ) -> None:
     """Test G2Engine().export_json_entity_report_iterator()."""
 
@@ -327,11 +326,8 @@ def test_export_json_entity_report_iterator(
     assert i == 1
 
 
-def test_fetch_next(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
+def test_fetch_next() -> None:
     """Test G2Engine().fetch_next."""
-    pass
 
 
 def test_find_interesting_entities_by_entity_id(
@@ -1523,11 +1519,8 @@ def test_process_with_info_bad_empty_record(
         _ = g2_engine.process_with_info("", flags)
 
 
-def test_purge_repository(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
+def test_purge_repository() -> None:
     """Test G2Engine().purge_repository."""
-    pass
 
 
 def test_reevaluate_entity(
@@ -1588,6 +1581,7 @@ def test_reevaluate_record(
 def test_reevaluate_record_bad_datasource(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
+    """Test G2Engine().reevaluate_record()."""
     with pytest.raises(G2UnknownDatasourceError):
         g2_engine.reevaluate_record("XXXX", "9999")
 
@@ -1595,6 +1589,7 @@ def test_reevaluate_record_bad_datasource(
 def test_reevaluate_record_bad_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
+    """Test G2Engine().reevaluate_record()."""
     with pytest.raises(G2NotFoundError):
         g2_engine.reevaluate_record("CUSTOMERS", "9999")
 
@@ -1827,9 +1822,7 @@ def test_search_by_attributes_v3(
     # assert schema(search_schema) == actual_dict
 
 
-def test_search_by_attributes_v3_bad_json_data(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
+def test_search_by_attributes_v3_bad_json_data() -> None:
     """Test G2Engine().search_by_attributes()."""
     # search_profile = {}
     # flags = -1
@@ -2008,18 +2001,12 @@ def test_why_entity_by_record_id_v2_bad_record_id(
         _ = g2_engine.why_entity_by_record_id_v2("CUSTOMERS", "9999", flags)
 
 
-def test_why_record_in_entity(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
+def test_why_record_in_entity() -> None:
     """Test G2Engine().why_record_in_entity()."""
-    pass
 
 
-def test_why_record_in_entity_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
+def test_why_record_in_entity_v2() -> None:
     """Test G2Engine().why_record_in_entity_v2()."""
-    pass
 
 
 def test_why_records(
@@ -2165,6 +2152,7 @@ def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
 def add_records(
     g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
+    """Add all of the records in the list."""
     for record_id in record_id_list:
         datasource = record_id[0]
         record_id = record_id[1]
@@ -2178,6 +2166,7 @@ def add_records(
 
 
 def add_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+    """Add all truth-set the records."""
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
             g2_engine.add_record(
@@ -2191,6 +2180,7 @@ def add_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
 def delete_records(
     g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
+    """Delete all of the records in the list."""
     for record_id in record_id_list:
         datasource = record_id[0]
         record_id = record_id[1]
@@ -2203,6 +2193,7 @@ def delete_records(
 
 
 def delete_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+    """Delete all truth-set the records."""
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
             g2_engine.delete_record(record.get("DataSource"), record.get("Id"), LOAD_ID)
@@ -2211,6 +2202,7 @@ def delete_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
 def get_entity_id_from_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc, data_source_code: str, record_id: str
 ) -> int:
+    """Given a (datasource, record_id), return the entity ID."""
     entity_json = g2_engine.get_entity_by_record_id(data_source_code, record_id)
     entity = json.loads(entity_json)
     return entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0)
