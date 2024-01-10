@@ -1867,7 +1867,7 @@ def test_why_entities_bad_entity_ids(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().why_entities()."""
-    with pytest.raises(G2BadInputError):
+    with pytest.raises(G2NotFoundError):
         _ = g2_engine.why_entities(0, 1)
 
 
@@ -1894,7 +1894,7 @@ def test_why_entities_v2_bad_entity_ids(
 ) -> None:
     """Test G2Engine().why_entities_v2()."""
     flags = -1
-    with pytest.raises(G2BadInputError):
+    with pytest.raises(G2NotFoundError):
         _ = g2_engine.why_entities_v2(0, 1, flags)
 
 
@@ -1917,7 +1917,7 @@ def test_why_entity_by_entity_id_bad_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().why_entity_by_entity_id()."""
-    with pytest.raises(G2BadInputError):
+    with pytest.raises(G2NotFoundError):
         _ = g2_engine.why_entity_by_entity_id(0)
 
 
@@ -1941,7 +1941,7 @@ def test_why_entity_by_entity_id_v2_bad_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().why_entity_by_entity_id_v2()."""
-    with pytest.raises(G2BadInputError):
+    with pytest.raises(G2NotFoundError):
         _ = g2_engine.why_entity_by_entity_id_v2(0)
 
 
@@ -1971,8 +1971,8 @@ def test_why_entity_by_record_id_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().why_entity_by_record_id()."""
-    with pytest.raises(G2BadInputError):
-        _ = g2_engine.why_entity_by_record_id("XXXX", "9999")
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.why_entity_by_record_id("CUSTOMERS", "9999")
 
 
 def test_why_entity_by_record_id_v2(
@@ -1999,13 +1999,13 @@ def test_why_entity_by_record_id_v2_bad_datasource(
         _ = g2_engine.why_entity_by_record_id_v2("XXXX", "1001", flags)
 
 
-def test_why_entity_by_record_id_v2_record_id(
+def test_why_entity_by_record_id_v2_bad_record_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
     """Test G2Engine().why_entity_by_record_id_v2()."""
     flags = -1
-    with pytest.raises(G2BadInputError):
-        _ = g2_engine.why_entity_by_record_id_v2("XXXX", "9999", flags)
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.why_entity_by_record_id_v2("CUSTOMERS", "9999", flags)
 
 
 def test_why_record_in_entity(
