@@ -931,7 +931,13 @@ def test_find_path_excluding_by_record_id_v2_bad_record_ids(
     flags = -1
     with pytest.raises(G2NotFoundError):
         _ = g2_engine.find_path_excluding_by_record_id_v2(
-            "CUSTOMERS", "9999", "CUSTOMERS", "9998", max_degree, excluded_records
+            "CUSTOMERS",
+            "9999",
+            "CUSTOMERS",
+            "9998",
+            max_degree,
+            excluded_records,
+            flags,
         )
 
 
@@ -959,6 +965,48 @@ def test_find_path_including_source_by_entity_id(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(path_schema) == actual_dict
+
+
+def test_find_path_including_source_by_entity_id_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_path_including_source_by_entity_id()."""
+    test_records: List[Tuple[str, str]] = [
+        ("CUSTOMERS", "1001"),
+        ("CUSTOMERS", "1002"),
+        ("CUSTOMERS", "1003"),
+    ]
+    add_records(g2_engine, test_records)
+    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
+    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
+    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
+    max_degree = 1
+    excluded_entities = {
+        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
+    }
+    required_dsrcs = {"DATA_SOURCES": ["XXXX"]}
+    try:
+        with pytest.raises(G2UnknownDatasourceError):
+            _ = g2_engine.find_path_including_source_by_entity_id(
+                entity_id_1, entity_id_2, max_degree, excluded_entities, required_dsrcs
+            )
+    finally:
+        delete_records(g2_engine, test_records)
+
+
+def test_find_path_including_source_by_entity_id_bad_entity_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().find_path_including_source_by_entity_id()."""
+    max_degree = 1
+    excluded_entities = {
+        "ENTITIES": [{"ENTITY_ID": 2}],
+    }
+    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.find_path_including_source_by_entity_id(
+            0, 1, max_degree, excluded_entities, required_dsrcs
+        )
 
 
 def test_find_path_including_source_by_entity_id_v2(
@@ -1168,6 +1216,22 @@ def test_get_record(
     assert schema(record_schema) == actual_dict
 
 
+def test_get_record_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record()."""
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.get_record("XXXX", "9999")
+
+
+def test_get_record_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record()."""
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.get_record("CUSTOMERS", "9999")
+
+
 def test_get_record_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -1181,6 +1245,24 @@ def test_get_record_v2(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(record_schema) == actual_dict
+
+
+def test_get_record_v2_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record()."""
+    flags = -1
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.get_record_v2("XXXX", "9999", flags)
+
+
+def test_get_record_v2_bad_record_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_record()."""
+    flags = -1
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.get_record_v2("CUSTOMERS", "9999", flags)
 
 
 def test_get_redo_record(
@@ -1228,6 +1310,34 @@ def test_get_virtual_entity_by_record_id(
     assert schema(virtual_entity_schema) == actual_dict
 
 
+def test_get_virtual_entity_by_record_id_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
+        ]
+    }
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.get_virtual_entity_by_record_id(record_list)
+
+
+def test_get_virtual_entity_by_record_id_bad_record_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
+        ]
+    }
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.get_virtual_entity_by_record_id(record_list)
+
+
 def test_get_virtual_entity_by_record_id_v2(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -1250,6 +1360,36 @@ def test_get_virtual_entity_by_record_id_v2(
     assert schema(virtual_entity_schema) == actual_dict
 
 
+def test_get_virtual_entity_by_record_id_v2_bad_datasource(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
+        ]
+    }
+    flags = -1
+    with pytest.raises(G2UnknownDatasourceError):
+        _ = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
+
+
+def test_get_virtual_entity_by_record_id_v2_bad_record_ids(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    record_list = {
+        "RECORDS": [
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
+            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
+        ]
+    }
+    flags = -1
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
+
+
 def test_how_entity_by_entity_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -1263,6 +1403,14 @@ def test_how_entity_by_entity_id(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(how_results_schema) == actual_dict
+
+
+def test_how_entity_by_entity_id_bad_entity_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().how_entity_by_entity_id()."""
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.how_entity_by_entity_id(0)
 
 
 def test_how_entity_by_entity_id_v2(
@@ -1279,6 +1427,15 @@ def test_how_entity_by_entity_id_v2(
     delete_records(g2_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(how_results_schema) == actual_dict
+
+
+def test_how_entity_by_entity_id_v2_bad_entity_id(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().how_entity_by_entity_id()."""
+    flags = -1
+    with pytest.raises(G2NotFoundError):
+        _ = g2_engine.how_entity_by_entity_id_v2(0, flags)
 
 
 def test_init(
@@ -1326,6 +1483,14 @@ def test_process(
     assert redo_records_processed > 0
 
 
+def test_process_bad_empty_record(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    """Test G2Engine().get_redo_record()."""
+    with pytest.raises(G2BadInputError):
+        g2_engine.process("")
+
+
 def test_process_with_info(
     g2_engine: g2engine_grpc.G2EngineGrpc,
 ) -> None:
@@ -1346,6 +1511,20 @@ def test_process_with_info(
         redo_records_processed += 1
     delete_records(g2_engine, test_records)
     assert redo_records_processed > 0
+
+
+def test_bob(
+    g2_engine: g2engine_grpc.G2EngineGrpc,
+) -> None:
+    g2_engine.find_interesting_entities_by_entity_id()
+
+
+# def test_process_with_info_bad_empty_record(
+#     g2_engine: g2engine_grpc.G2EngineGrpc,
+# ) -> None:
+#     """Test G2Engine().get_redo_record()."""
+#     with pytest.raises(G2BadInputError):
+#         g2_engine.process_with_info("")
 
 
 def test_purge_repository(
