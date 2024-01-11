@@ -4,58 +4,50 @@ senzing package
 Submodules
 ----------
 
-senzing.g2config\_grpc module
------------------------------
+senzing\_grpc.g2config\_grpc module
+-----------------------------------
 
-.. automodule:: senzing.g2config_grpc
+.. automodule:: senzing_grpc.g2config_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing.g2configmgr\_grpc module
---------------------------------
+senzing\_grpc.g2configmgr\_grpc module
+--------------------------------------
 
-.. automodule:: senzing.g2configmgr_grpc
+.. automodule:: senzing_grpc.g2configmgr_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing.g2diagnostic\_grpc module
----------------------------------
+senzing\_grpc.g2diagnostic\_grpc module
+---------------------------------------
 
-.. automodule:: senzing.g2diagnostic_grpc
+.. automodule:: senzing_grpc.g2diagnostic_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing.g2engine\_grpc module
------------------------------
+senzing\_grpc.g2engine\_grpc module
+-----------------------------------
 
-.. automodule:: senzing.g2engine_grpc
+.. automodule:: senzing_grpc.g2engine_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing.g2exception module
---------------------------
-
-.. automodule:: senzing.g2exception
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-senzing.g2helpers module
-------------------------
-
-.. automodule:: senzing.g2helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-senzing.g2product\_grpc module
+senzing\_grpc.g2helpers module
 ------------------------------
 
-.. automodule:: senzing.g2product_grpc
+.. automodule:: senzing_grpc.g2helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+senzing\_grpc.g2product\_grpc module
+------------------------------------
+
+.. automodule:: senzing_grpc.g2product_grpc
    :members:
    :undoc-members:
    :show-inheritance:
@@ -63,7 +55,7 @@ senzing.g2product\_grpc module
 Module contents
 ---------------
 
-.. automodule:: senzing
+.. automodule:: senzing_grpc
    :members:
    :undoc-members:
    :show-inheritance:
