@@ -55,8 +55,6 @@ The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` Python package.
 
 1. Install the `senzing-grpc` Python package.
-   If the `senzing-grpc` Python package is already installed,
-   this step is not necessary.
    Example:
 
     ```console
