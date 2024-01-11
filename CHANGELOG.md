@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.1.1] - 2024-01-11
+
+### Changed in 0.1.1
+
+- Implemented g2_engine
+- Added test cases
+
 ## [0.1.0] - 2024-01-05
 
 ### Changed in 0.1.0

@@ -12,7 +12,6 @@ Although this GitHub repository may help you understand an approach to using Sen
 it's not considered to be "production ready" and is not considered to be part of the Senzing product.
 Heck, it may not even be appropriate for your application of Senzing!
 
-
 ## :warning: WARNING: g2-sdk-python-grpc is still in development :warning: _
 
 At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
@@ -56,8 +55,6 @@ The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` Python package.
 
 1. Install the `senzing-grpc` Python package.
-   If the `senzing-grpc` Python package is already installed,
-   this step is not necessary.
    Example:
 
     ```console
@@ -74,6 +71,7 @@ and access it using the `senzing_grpc` Python package.
       --env SENZING_TOOLS_ENABLE_ALL=true \
       --name senzing-tools-serve-grpc \
       --publish 8261:8261 \
+      --pull always \
       --rm \
       senzing/senzing-tools
     ```
