@@ -1,24 +1,29 @@
-name: build-distribution.yaml
+name: build distribution
 
 on: [push]
 
 jobs:
   build-distribution:
-    name: Build distribution
+    name: build distribution
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v4
-      - name: Set up Python
+
+      - name: set up Python
         uses: actions/setup-python@v5
-      - name: Install pypa/build
+
+      - name: install pypa/build
         run: |
           python -m pip install --upgrade pip
           python -m pip install --requirement requirements.txt
           python -m pip install build
-      - name: Build a binary wheel and a source tarball
+
+      - name: build a binary wheel and a source tarball
         run: python3 -m build
-      - name: Store the distribution packages
+
+      - name: store the distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
