@@ -12,9 +12,10 @@ from typing import Any, Dict, Type, Union
 import grpc
 from senzing_abstract import SzConfigAbstract
 
+from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
+
 # from .g2abstract.g2config_abstract import G2ConfigAbstract
-from .g2helpers import as_str, new_exception
-from .pb2_grpc import g2config_pb2, g2config_pb2_grpc
+from .szhelpers import as_str, new_exception
 
 # Metadata
 
@@ -50,7 +51,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
         """
 
         self.channel = grpc_channel
-        self.stub = g2config_pb2_grpc.G2ConfigStub(self.channel)
+        self.stub = szconfig_pb2_grpc.SzConfigStub(self.channel)
 
     def __enter__(
         self,
@@ -75,83 +76,76 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
     def add_data_source(
         self,
         config_handle: int,
-        input_json: Union[str, Dict[Any, Any]],
-        *args: Any,
+        data_source_code: str,
         **kwargs: Any,
     ) -> str:
         try:
-            request = g2config_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
-                configHandle=config_handle, inputJson=as_str(input_json)
+            request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
+                config_handle=config_handle, data_source_code=data_source_code
             )
             response = self.stub.AddDataSource(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def close(self, config_handle: int, *args: Any, **kwargs: Any) -> None:
+    def close_config(self, config_handle: int, **kwargs: Any) -> None:
         try:
-            request = g2config_pb2.CloseRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
-            self.stub.Close(request)
+            request = szconfig_pb2.CloseConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            self.stub.CloseConfig(request)
         except Exception as err:
             raise new_exception(err) from err
 
-    def create(self, *args: Any, **kwargs: Any) -> int:
+    def create_config(self, **kwargs: Any) -> int:
         try:
-            request = g2config_pb2.CreateRequest()  # type: ignore[unused-ignore]
-            response = self.stub.Create(request)
+            request = szconfig_pb2.CreateConfigRequest()  # type: ignore[unused-ignore]
+            response = self.stub.CreateConfig(request)
             return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
     def delete_data_source(
-        self,
-        config_handle: int,
-        input_json: Union[str, Dict[Any, Any]],
-        *args: Any,
-        **kwargs: Any,
+        self, config_handle: int, data_source_code: str, **kwargs: Any
     ) -> None:
         try:
-            request = g2config_pb2.DeleteDataSourceRequest(  # type: ignore[unused-ignore]
-                configHandle=config_handle, inputJson=as_str(input_json)
-            )
+            request = szconfig_pb2.DeleteDataSourceRequest(config_handle=config_handle, data_source_code=data_source_code)  # type: ignore[unused-ignore]
             self.stub.DeleteDataSource(request)
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, *args: Any, **kwargs: Any) -> None:
+    def destroy(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def init(
+    def export_config(self, config_handle: int, **kwargs: Any) -> str:
+        try:
+            request = szconfig_pb2.SaveRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            response = self.stub.ExportConfig(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def get_data_sources(self, config_handle: int, **kwargs: Any) -> str:
+        try:
+            request = szconfig_pb2.ListDataSourcesRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            response = self.stub.GetDataSources(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def initialize(
         self,
-        module_name: str,
-        ini_params: Union[str, Dict[Any, Any]],
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
         """Null function"""
 
-    def list_data_sources(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        try:
-            request = g2config_pb2.ListDataSourcesRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
-            response = self.stub.ListDataSources(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def load(
-        self, json_config: Union[str, Dict[Any, Any]], *args: Any, **kwargs: Any
+    def import_config(
+        self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any
     ) -> int:
         try:
-            request = g2config_pb2.LoadRequest(jsonConfig=as_str(json_config))  # type: ignore[unused-ignore]
-            response = self.stub.Load(request)
+            request = szconfig_pb2.LoadRequest(config_definition=as_str(config_definition))  # type: ignore[unused-ignore]
+            response = self.stub.ImportConfig(request)
             return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def save(self, config_handle: int, *args: Any, **kwargs: Any) -> str:
-        try:
-            request = g2config_pb2.SaveRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
-            response = self.stub.Save(request)
-            return str(response.result)
         except Exception as err:
             raise new_exception(err) from err

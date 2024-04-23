@@ -12,8 +12,8 @@ from typing import Any, Dict, Type, Union
 import grpc
 from senzing_abstract import SzProductAbstract
 
-from .g2helpers import new_exception
-from .pb2_grpc import g2product_pb2, g2product_pb2_grpc
+from .pb2_grpc import szproduct_pb2, szproduct_pb2_grpc
+from .szhelpers import new_exception
 
 # Metadata
 
@@ -50,7 +50,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
         # pylint: disable=W0613
 
         self.channel = grpc_channel
-        self.stub = g2product_pb2_grpc.G2ProductStub(self.channel)
+        self.stub = szproduct_pb2_grpc.G2ProductStub(self.channel)
 
     def __enter__(
         self,
@@ -86,7 +86,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
 
     def license(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2product_pb2.LicenseRequest()  # type: ignore[unused-ignore]
+            request = szproduct_pb2.LicenseRequest()  # type: ignore[unused-ignore]
             response = self.stub.License(request)
             return str(response.result)
         except Exception as err:
@@ -94,7 +94,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
 
     def version(self, *args: Any, **kwargs: Any) -> str:
         try:
-            request = g2product_pb2.VersionRequest()  # type: ignore[unused-ignore]
+            request = szproduct_pb2.VersionRequest()  # type: ignore[unused-ignore]
             response = self.stub.Version(request)
             return str(response.result)
         except Exception as err:

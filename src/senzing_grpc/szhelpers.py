@@ -6,7 +6,7 @@ import json
 from typing import Any, Dict, Union
 
 import grpc
-from senzing_abstract import EXCEPTION_MAP, G2Exception
+from senzing_abstract import EXCEPTION_MAP, SzError
 
 # Metadata
 
@@ -65,7 +65,7 @@ def new_exception(initial_exception: Exception) -> Exception:
         initial_exception (Exception): An unknown Exception
 
     Returns:
-        Exception: Either a G2Exception or the original exception.
+        Exception: Either a SzError or the original exception.
     """
 
     result = initial_exception
@@ -84,7 +84,7 @@ def new_exception(initial_exception: Exception) -> Exception:
             if senzing_error_code > 0:
                 break
 
-        senzing_error_class = EXCEPTION_MAP.get(senzing_error_code, G2Exception)
+        senzing_error_class = EXCEPTION_MAP.get(senzing_error_code, SzError)
         result = senzing_error_class(details)
 
     return result

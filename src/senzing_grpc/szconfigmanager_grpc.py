@@ -12,9 +12,10 @@ from typing import Any, Dict, Type, Union
 import grpc
 from senzing_abstract import SzConfigManagerAbstract
 
+from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
+
 # from .g2exception import translate_exception
-from .g2helpers import as_str, new_exception
-from .pb2_grpc import g2configmgr_pb2, g2configmgr_pb2_grpc
+from .szhelpers import as_str, new_exception
 
 # Metadata
 
@@ -50,7 +51,7 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
         """
 
         self.channel = grpc_channel
-        self.stub = g2configmgr_pb2_grpc.G2ConfigMgrStub(self.channel)
+        self.stub = szconfigmanager_pb2_grpc.SzConfigManagerStub(self.channel)
 
     def __enter__(
         self,
@@ -74,73 +75,73 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
 
     def add_config(
         self,
-        config_str: Union[str, Dict[Any, Any]],
-        config_comments: str,
-        *args: Any,
+        config_definition: Union[str, Dict[Any, Any]],
+        config_comment: str,
         **kwargs: Any,
     ) -> int:
         try:
-            request = g2configmgr_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
-                configStr=as_str(config_str), configComments=as_str(config_comments)
+            request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
             )
             response = self.stub.AddConfig(request)
             return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, *args: Any, **kwargs: Any) -> None:
+    def destroy(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def get_config(self, config_id: int, *args: Any, **kwargs: Any) -> str:
+    def get_config(self, config_id: int, **kwargs: Any) -> str:
         try:
-            request = g2configmgr_pb2.GetConfigRequest(configID=config_id)  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.GetConfigRequest(configID=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_config_list(self, *args: Any, **kwargs: Any) -> str:
+    def get_config_list(self, **kwargs: Any) -> str:
         try:
-            request = g2configmgr_pb2.GetConfigListRequest()  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.GetConfigListRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetConfigList(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_default_config_id(self, *args: Any, **kwargs: Any) -> int:
+    def get_default_config_id(self, **kwargs: Any) -> int:
         try:
-            request = g2configmgr_pb2.GetDefaultConfigIDRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetDefaultConfigID(request)
+            request = szconfigmanager_pb2.GetDefaultConfigIDRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetDefaultConfigId(request)
             return int(response.configID)
         except Exception as err:
             raise new_exception(err) from err
 
-    def init(
+    def initialize(
         self,
-        module_name: str,
-        ini_params: Union[str, Dict[Any, Any]],
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
         """Null function"""
 
     def replace_default_config_id(
-        self, old_config_id: int, new_config_id: int, *args: Any, **kwargs: Any
+        self, current_default_config_id: int, new_default_config_id: int, **kwargs: Any
     ) -> None:
         try:
-            request = g2configmgr_pb2.ReplaceDefaultConfigIDRequest(  # type: ignore[unused-ignore]
-                oldConfigID=old_config_id,
-                newConfigID=new_config_id,
+            request = szconfigmanager_pb2.ReplaceDefaultConfigIDRequest(  # type: ignore[unused-ignore]
+                oldConfigID=current_default_config_id,
+                newConfigID=new_default_config_id,
             )
-            self.stub.ReplaceDefaultConfigID(request)
+            self.stub.ReplaceDefaultConfigId(request)
         except Exception as err:
             raise new_exception(err) from err
 
-    def set_default_config_id(self, config_id: int, *args: Any, **kwargs: Any) -> None:
+    def set_default_config_id(self, config_id: int, **kwargs: Any) -> None:
         try:
-            request = g2configmgr_pb2.SetDefaultConfigIDRequest(  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.SetDefaultConfigIDRequest(  # type: ignore[unused-ignore]
                 configID=config_id,
             )
-            self.stub.SetDefaultConfigID(request)
+            self.stub.SetDefaultConfigId(request)
         except Exception as err:
             raise new_exception(err) from err

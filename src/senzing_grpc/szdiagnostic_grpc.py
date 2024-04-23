@@ -7,13 +7,13 @@ TODO: g2diagnostic_grpc.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Dict, Type, Union
+from typing import Any, Dict, Optional, Type, Union
 
 import grpc
 from senzing_abstract import SzDiagnosticAbstract
 
-from .g2helpers import new_exception
-from .pb2_grpc import g2diagnostic_pb2, g2diagnostic_pb2_grpc
+from .pb2_grpc import szdiagnostic_pb2, szdiagnostic_pb2_grpc
+from .szhelpers import new_exception
 
 # Metadata
 
@@ -51,7 +51,7 @@ class G2DiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
         # pylint: disable=W0613
 
         self.channel = grpc_channel
-        self.stub = g2diagnostic_pb2_grpc.G2DiagnosticStub(self.channel)
+        self.stub = szdiagnostic_pb2_grpc.SzDiagnosticStub(self.channel)
 
     def __enter__(
         self,
@@ -73,75 +73,41 @@ class G2DiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
     # G2Diagnostic methods
     # -------------------------------------------------------------------------
 
-    def check_db_perf(self, seconds_to_run: int, *args: Any, **kwargs: Any) -> str:
+    def check_datastore_performance(self, seconds_to_run: int, **kwargs: Any) -> str:
         try:
-            request = g2diagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
-            response = self.stub.CheckDBPerf(request)
+            request = szdiagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
+            response = self.stub.CheckDatabasePerformance(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, *args: Any, **kwargs: Any) -> None:
+    def destroy(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def get_available_memory(self, *args: Any, **kwargs: Any) -> int:
-        try:
-            request = g2diagnostic_pb2.GetAvailableMemoryRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetAvailableMemory(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
+    # def get_datastore_info(self, **kwargs: Any) -> str:
+    #     try:
+    #         request = szdiagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
+    #         response = self.stub.GetDBInfo(request)
+    #         return str(response.result)
+    #     except Exception as err:
+    #         raise new_exception(err) from err
 
-    def get_db_info(self, *args: Any, **kwargs: Any) -> str:
-        try:
-            request = g2diagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetDBInfo(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
+    def get_feature(self, feature_id: int, **kwargs: Any) -> str:
+        """TODO: Add get_feature()"""
+        return ""
 
-    def get_logical_cores(self, *args: Any, **kwargs: Any) -> int:
-        try:
-            request = g2diagnostic_pb2.GetLogicalCoresRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetLogicalCores(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def get_physical_cores(self, *args: Any, **kwargs: Any) -> int:
-        try:
-            request = g2diagnostic_pb2.GetPhysicalCoresRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetPhysicalCores(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def get_total_system_memory(self, *args: Any, **kwargs: Any) -> int:
-        try:
-            request = g2diagnostic_pb2.GetTotalSystemMemoryRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetTotalSystemMemory(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def init(
+    def initialize(
         self,
-        module_name: str,
-        ini_params: Union[str, Dict[Any, Any]],
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
+        config_id: Optional[int] = None,
         verbose_logging: int = 0,
-        **kwargs: Any,
+        **kwargs: Any
     ) -> None:
         """Null function"""
 
-    def init_with_config_id(
-        self,
-        module_name: str,
-        ini_params: Union[str, Dict[Any, Any]],
-        init_config_id: int,
-        verbose_logging: int = 0,
-        **kwargs: Any,
-    ) -> None:
+    def purge_repository(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def reinit(self, init_config_id: int, *args: Any, **kwargs: Any) -> None:
+    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
         """Null function"""
