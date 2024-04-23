@@ -16,11 +16,11 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2config_grpc.G2ConfigGrpc)
+    actual = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, g2config_grpc.SzConfigGrpc)
 
 
-def test_add_data_source(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_add_data_source(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().add_data_source()."""
     input_json_dict = {"DSRC_CODE": "NAME_OF_DATASOURCE"}
     config_handle = g2_config.create()
@@ -31,7 +31,7 @@ def test_add_data_source(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     assert schema(add_data_source_schema) == actual_json
 
 
-def test_add_data_source_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_add_data_source_dict(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().add_data_source()."""
     input_json_dict = {"DSRC_CODE": "NAME_OF_DATASOURCE"}
     config_handle = g2_config.create()
@@ -43,7 +43,7 @@ def test_add_data_source_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
 
 
 def test_add_data_source_bad_config_handle_type(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().add_data_source()."""
     bad_config_handle = "string"
@@ -64,7 +64,7 @@ def test_add_data_source_bad_config_handle_type(
 
 
 def test_add_data_source_bad_input_json_type(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().add_data_source()."""
     config_handle = g2_config.create()
@@ -79,7 +79,7 @@ def test_add_data_source_bad_input_json_type(
 
 
 def test_add_data_source_bad_input_json_value(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().add_data_source()."""
     config_handle = g2_config.create()
@@ -91,7 +91,7 @@ def test_add_data_source_bad_input_json_value(
         g2_config.close(config_handle)
 
 
-def test_close_bad_config_handle_type(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_close_bad_config_handle_type(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().create()."""
     bad_config_handle = "string"
     with pytest.raises(TypeError):
@@ -106,7 +106,7 @@ def test_close_bad_config_handle_type(g2_config: g2config_grpc.G2ConfigGrpc) -> 
 #         g2_config.close(bad_config_handle)
 
 
-def test_create(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_create(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().create()."""
     config_handle = g2_config.create()
     assert isinstance(config_handle, int)
@@ -116,7 +116,7 @@ def test_create(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     assert config_handle > 0
 
 
-def test_delete_data_source(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_delete_data_source(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().delete_data_source()."""
     input_json_dict = {"DSRC_CODE": "TEST"}
     config_handle = g2_config.create()
@@ -124,7 +124,7 @@ def test_delete_data_source(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     g2_config.close(config_handle)
 
 
-def test_delete_data_source_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_delete_data_source_dict(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().delete_data_source()."""
     input_json_dict = {"DSRC_CODE": "TEST"}
     config_handle = g2_config.create()
@@ -133,7 +133,7 @@ def test_delete_data_source_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
 
 
 def test_delete_data_source_bad_config_handle_type(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().delete_data_source()."""
     input_json_dict = {"DSRC_CODE": "TEST"}
@@ -154,7 +154,7 @@ def test_delete_data_source_bad_config_handle_type(
 
 
 def test_delete_data_source_bad_input_json_type(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().delete_data_source()."""
     bad_input_json = 0
@@ -167,7 +167,7 @@ def test_delete_data_source_bad_input_json_type(
 
 
 def test_delete_data_source_bad_input_json_value(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().delete_data_source()."""
     input_json_dict = {"XXXX": "YYYY"}
@@ -176,7 +176,7 @@ def test_delete_data_source_bad_input_json_value(
     g2_config.close(config_handle)
 
 
-def test_list_data_sources(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_list_data_sources(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().list_data_sources()."""
     config_handle = g2_config.create()
     actual = g2_config.list_data_sources(config_handle)
@@ -187,7 +187,7 @@ def test_list_data_sources(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
 
 
 def test_list_data_sources_bad_config_handle_type(
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2Config().list_data_sources()."""
     bad_config_handle = "string"
@@ -203,7 +203,7 @@ def test_list_data_sources_bad_config_handle_type(
 #         g2_config.list_data_sources(bad_config_handle)
 
 
-def test_load(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_load(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().load()."""
     config_handle = g2_config.create()
     json_config = g2_config.save(config_handle)
@@ -213,7 +213,7 @@ def test_load(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     g2_config.close(config_handle)
 
 
-def test_load_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_load_dict(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().load()."""
     config_handle = g2_config.create()
     json_config = g2_config.save(config_handle)
@@ -224,21 +224,21 @@ def test_load_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     g2_config.close(config_handle)
 
 
-def test_load_bad_json_config_type(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_load_bad_json_config_type(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().load()."""
     bad_json_config = 0
     with pytest.raises(TypeError):
         g2_config.load(bad_json_config)  # type: ignore[arg-type]
 
 
-def test_load_bad_json_config_value(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_load_bad_json_config_value(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().load()."""
     bad_json_config = {"Just": "Junk"}
     with pytest.raises(g2exception.G2ConfigurationError):
         g2_config.load(bad_json_config)
 
 
-def test_save(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_save(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().save()."""
     config_handle = g2_config.create()
     actual = g2_config.save(config_handle)
@@ -248,7 +248,7 @@ def test_save(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
     assert schema(save_schema) == actual_json
 
 
-def test_save_bad_config_handle_type(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_save_bad_config_handle_type(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().save()."""
     bad_config_handle = "string"
     with pytest.raises(TypeError):
@@ -263,19 +263,19 @@ def test_save_bad_config_handle_type(g2_config: g2config_grpc.G2ConfigGrpc) -> N
 #         g2_config.save(bad_config_handle)
 
 
-def test_init_and_destroy(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_init_and_destroy(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().init() and G2Config.destroy()."""
     g2_config.init("Example", "{}", 0)
     g2_config.destroy()
 
 
-def test_init_and_destroy_dict(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_init_and_destroy_dict(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().init() and G2Config.destroy()."""
     g2_config.init("Example", {}, 0)
     g2_config.destroy()
 
 
-def test_init_and_destroy_again(g2_config: g2config_grpc.G2ConfigGrpc) -> None:
+def test_init_and_destroy_again(g2_config: g2config_grpc.SzConfigGrpc) -> None:
     """Test G2Config().init() and G2Config.destroy()."""
     g2_config.init("Example", "{}", 0)
     g2_config.destroy()
@@ -285,7 +285,7 @@ def test_context_managment() -> None:
     """Test the use of G2ConfigGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel) as g2_config:
+    with g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel) as g2_config:
         config_handle = g2_config.create()
         actual = g2_config.list_data_sources(config_handle)
         g2_config.close(config_handle)
@@ -300,14 +300,14 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
+def g2config_fixture() -> g2config_grpc.SzConfigGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
+    result = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 

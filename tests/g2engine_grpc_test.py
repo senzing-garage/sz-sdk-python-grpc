@@ -39,8 +39,8 @@ def test_constructor() -> None:
 
 def test_add_truthset_datasources(
     g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Add needed datasources for tests."""
     config_handle = g2_config.create()
@@ -1629,7 +1629,7 @@ def test_reevaluate_record_with_info_bad_record_id(
 
 def test_reinit(
     g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2Engine().reinit()."""
     init_config_id = g2_configmgr.get_default_config_id()
@@ -1638,7 +1638,7 @@ def test_reinit(
 
 def test_reinit_bad_init_config_id(
     g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2Engine().reinit()."""
     try:
@@ -2115,26 +2115,26 @@ def test_destroy(
 
 
 @pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
+def g2config_fixture() -> g2config_grpc.SzConfigGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
+    result = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
 @pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
-def g2configmgr_fixture() -> g2configmgr_grpc.G2ConfigMgrGrpc:
+def g2configmgr_fixture() -> g2configmgr_grpc.SzConfigManagerGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
+    result = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 

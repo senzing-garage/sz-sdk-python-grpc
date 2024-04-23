@@ -15,11 +15,11 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2product_grpc.G2ProductGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2product_grpc.G2ProductGrpc)
+    actual = g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, g2product_grpc.SzProductGrpc)
 
 
-def test_license(g2_product: g2product_grpc.G2ProductGrpc) -> None:
+def test_license(g2_product: g2product_grpc.SzProductGrpc) -> None:
     """Test Senzing license."""
     actual = g2_product.license()
     assert isinstance(actual, str)
@@ -27,7 +27,7 @@ def test_license(g2_product: g2product_grpc.G2ProductGrpc) -> None:
     assert schema(license_schema) == actual_json
 
 
-def test_version(g2_product: g2product_grpc.G2ProductGrpc) -> None:
+def test_version(g2_product: g2product_grpc.SzProductGrpc) -> None:
     """Test Senzing version."""
     actual = g2_product.version()
     assert isinstance(actual, str)
@@ -35,13 +35,13 @@ def test_version(g2_product: g2product_grpc.G2ProductGrpc) -> None:
     assert schema(version_schema) == actual_json
 
 
-def test_init_and_destroy(g2_product: g2product_grpc.G2ProductGrpc) -> None:
+def test_init_and_destroy(g2_product: g2product_grpc.SzProductGrpc) -> None:
     """Test init/destroy cycle."""
     g2_product.init("Example", "{}", 0)
     g2_product.destroy()
 
 
-def test_init_and_destroy_again(g2_product: g2product_grpc.G2ProductGrpc) -> None:
+def test_init_and_destroy_again(g2_product: g2product_grpc.SzProductGrpc) -> None:
     """Test init/destroy cycle a second time."""
     g2_product.init("Example", "{}", 0)
     g2_product.destroy()
@@ -51,7 +51,7 @@ def test_context_managment() -> None:
     """Test the use of G2ProductGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2product_grpc.G2ProductGrpc(grpc_channel=grpc_channel) as g2_product:
+    with g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel) as g2_product:
         actual = g2_product.license()
         assert isinstance(actual, str)
         actual_json = json.loads(actual)
@@ -64,13 +64,13 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="g2_product", scope="module")  # type: ignore[misc]
-def g2product_fixture() -> g2product_grpc.G2ProductGrpc:
+def g2product_fixture() -> g2product_grpc.SzProductGrpc:
     """
     Single engine object to use for all tests.
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2product_grpc.G2ProductGrpc(grpc_channel=grpc_channel)
+    result = g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel)
     return result
 
 

@@ -9,8 +9,8 @@ CONFIG_COMMENTS = "Just an empty example"
 try:
     GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    g2_config = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
-    g2_configmgr = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
+    g2_config = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
+    g2_configmgr = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
     config_handle = g2_config.create()
     CONFIG_STR = g2_config.save(config_handle)
     config_id = g2_configmgr.add_config(CONFIG_STR, CONFIG_COMMENTS)

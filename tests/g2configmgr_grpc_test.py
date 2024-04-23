@@ -16,13 +16,13 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2configmgr_grpc.G2ConfigMgrGrpc)
+    actual = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, g2configmgr_grpc.SzConfigManagerGrpc)
 
 
 def test_add_config(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().add_config()."""
     config_handle = g2_config.create()
@@ -34,8 +34,8 @@ def test_add_config(
 
 
 def test_add_config_dict(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().add_config()."""
     config_handle = g2_config.create()
@@ -48,7 +48,7 @@ def test_add_config_dict(
 
 
 def test_add_config_bad_config_str_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().add_config()."""
     bad_config_str = 0
@@ -60,7 +60,7 @@ def test_add_config_bad_config_str_type(
 
 
 def test_add_config_bad_config_str_value(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().add_config()."""
     config_str_dict = {"just": "junk"}
@@ -71,8 +71,8 @@ def test_add_config_bad_config_str_value(
 
 
 def test_add_config_bad_config_comments_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().add_config()."""
     config_handle = g2_config.create()
@@ -84,7 +84,7 @@ def test_add_config_bad_config_comments_type(
         )
 
 
-def test_get_config(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
+def test_get_config(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     config_id = g2_configmgr.get_default_config_id()
     actual = g2_configmgr.get_config(config_id)
@@ -93,7 +93,7 @@ def test_get_config(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
 
 
 def test_get_config_bad_config_id_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_config_id = "string"
@@ -102,7 +102,7 @@ def test_get_config_bad_config_id_type(
 
 
 def test_get_config_bad_config_id_value(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_config_id = 1234
@@ -110,22 +110,24 @@ def test_get_config_bad_config_id_value(
         g2_configmgr.get_config(bad_config_id)
 
 
-def test_get_config_list(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
+def test_get_config_list(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     actual = g2_configmgr.get_config_list()
     actual_json = json.loads(actual)
     assert schema(config_list_schema) == actual_json
 
 
-def test_get_default_config_id(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
+def test_get_default_config_id(
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     actual = g2_configmgr.get_default_config_id()
     assert isinstance(actual, int)
 
 
 def test_replace_default_config_id(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
@@ -143,7 +145,7 @@ def test_replace_default_config_id(
 
 
 def test_replace_default_config_id_bad_new_id_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
@@ -155,7 +157,7 @@ def test_replace_default_config_id_bad_new_id_type(
 
 
 def test_replace_default_config_id_bad_new_id_value(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
@@ -165,8 +167,8 @@ def test_replace_default_config_id_bad_new_id_value(
 
 
 def test_replace_default_config_id_bad_old_id_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_old_config_id = "string"
@@ -182,8 +184,8 @@ def test_replace_default_config_id_bad_old_id_type(
 
 
 def test_replace_default_config_id_bad_old_id_value(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_old_config_id = 1234
@@ -197,8 +199,8 @@ def test_replace_default_config_id_bad_old_id_value(
 
 
 def test_set_default_config_id(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
-    g2_config: g2config_grpc.G2ConfigGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    g2_config: g2config_grpc.SzConfigGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     old_config_id = g2_configmgr.get_default_config_id()
@@ -214,7 +216,7 @@ def test_set_default_config_id(
 
 
 def test_set_default_config_id_bad_config_id_type(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().get_default_config_id()."""
     bad_config_id = "string"
@@ -223,7 +225,7 @@ def test_set_default_config_id_bad_config_id_type(
 
 
 def test_set_default_config_id_bad_config_id_value(
-    g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc,
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
 ) -> None:
     """Test G2ConfigMgr().set_default_config_id()."""
     bad_config_id = 1
@@ -231,13 +233,15 @@ def test_set_default_config_id_bad_config_id_value(
         g2_configmgr.set_default_config_id(bad_config_id)
 
 
-def test_init_and_destroy(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
+def test_init_and_destroy(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
     """Test G2ConfigMgr().init() and G2ConfigMgr.destroy()."""
     g2_configmgr.init("Example", "{}", 0)
     g2_configmgr.destroy()
 
 
-def test_init_and_destroy_again(g2_configmgr: g2configmgr_grpc.G2ConfigMgrGrpc) -> None:
+def test_init_and_destroy_again(
+    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+) -> None:
     """Test G2ConfigMgr().init() and G2ConfigMgr.destroy()."""
     g2_configmgr.init("Example", "{}", 0)
     g2_configmgr.destroy()
@@ -247,7 +251,9 @@ def test_context_managment() -> None:
     """Test the use of G2ConfigMgrGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel) as g2_configmgr:
+    with g2configmgr_grpc.SzConfigManagerGrpc(
+        grpc_channel=grpc_channel
+    ) as g2_configmgr:
         config_id = g2_configmgr.get_default_config_id()
         actual = g2_configmgr.get_config(config_id)
         actual_json = json.loads(actual)
@@ -260,26 +266,26 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.G2ConfigGrpc:
+def g2config_fixture() -> g2config_grpc.SzConfigGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.G2ConfigGrpc(grpc_channel=grpc_channel)
+    result = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
 @pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
-def g2configmgr_fixture() -> g2configmgr_grpc.G2ConfigMgrGrpc:
+def g2configmgr_fixture() -> g2configmgr_grpc.SzConfigManagerGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2configmgr_grpc.G2ConfigMgrGrpc(grpc_channel=grpc_channel)
+    result = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 

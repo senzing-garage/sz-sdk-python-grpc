@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing_abstract import G2DiagnosticAbstract
+from senzing_abstract import SzDiagnosticAbstract
 
 from .g2helpers import new_exception
 from .pb2_grpc import g2diagnostic_pb2, g2diagnostic_pb2_grpc
@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class G2DiagnosticGrpc(G2DiagnosticAbstract):  # type: ignore
+class G2DiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
     """
     G2 diagnostic module access library over gRPC.
     """

@@ -10,14 +10,14 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing_abstract import G2ProductAbstract
+from senzing_abstract import SzProductAbstract
 
 from .g2helpers import new_exception
 from .pb2_grpc import g2product_pb2, g2product_pb2_grpc
 
 # Metadata
 
-__all__ = ["G2ProductGrpc"]
+__all__ = ["SzProductGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2023-12-16"
@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5056"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class G2ProductGrpc(G2ProductAbstract):  # type: ignore
+class SzProductGrpc(SzProductAbstract):  # type: ignore
     """
     G2 product module access library over gRPC.
     """

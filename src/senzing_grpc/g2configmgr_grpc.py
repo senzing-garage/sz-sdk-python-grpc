@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing_abstract import G2ConfigMgrAbstract
+from senzing_abstract import SzConfigManagerAbstract
 
 # from .g2exception import translate_exception
 from .g2helpers import as_str, new_exception
@@ -18,7 +18,7 @@ from .pb2_grpc import g2configmgr_pb2, g2configmgr_pb2_grpc
 
 # Metadata
 
-__all__ = ["G2ConfigMgrGrpc"]
+__all__ = ["SzConfigManagerGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2023-12-16"
@@ -30,7 +30,7 @@ SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class G2ConfigMgrGrpc(G2ConfigMgrAbstract):  # type: ignore
+class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
     """
     G2 config-manager module access library over gRPC.
     """

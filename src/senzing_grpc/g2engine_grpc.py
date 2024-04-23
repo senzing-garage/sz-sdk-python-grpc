@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Iterable, Tuple, Type, Union
 
 import grpc
-from senzing_abstract import G2EngineAbstract, G2EngineFlags
+from senzing_abstract import SzEngineAbstract, SzEngineFlags
 
 from .g2helpers import as_str, new_exception
 from .pb2_grpc import g2engine_pb2, g2engine_pb2_grpc
@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class G2EngineGrpc(G2EngineAbstract):  # type: ignore
+class G2EngineGrpc(SzEngineAbstract):  # type: ignore
     """
     G2 engine module access library over gRPC.
     """
@@ -203,7 +203,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def export_csv_entity_report(
         self,
         csv_column_list: str,
-        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> int:
         try:
@@ -218,7 +218,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
 
     def export_csv_entity_report_iterator(
         self,
-        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> Iterable[str]:
         if len(kwargs) > 0:
@@ -234,7 +234,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def export_json_entity_report(
-        self, flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS, **kwargs: Any
+        self, flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS, **kwargs: Any
     ) -> int:
         try:
             request = g2engine_pb2.ExportJSONEntityReportRequest(  # type: ignore[unused-ignore]
@@ -247,7 +247,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
 
     def export_json_entity_report_iterator(
         self,
-        flags: int = G2EngineFlags.G2_EXPORT_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> Iterable[str]:
         if len(kwargs) > 0:
@@ -309,7 +309,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -330,7 +330,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -352,7 +352,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -373,7 +373,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         build_out_degree: int,
         max_entities: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -394,7 +394,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -413,7 +413,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         entity_id_1: int,
         entity_id_2: int,
         max_degree: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -435,7 +435,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -458,7 +458,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         data_source_code_2: str,
         record_id_2: str,
         max_degree: int,
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -481,7 +481,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         entity_id_2: int,
         max_degree: int,
         excluded_entities: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -502,7 +502,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         entity_id_2: int,
         max_degree: int,
         excluded_entities: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -526,7 +526,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         record_id_2: str,
         max_degree: int,
         excluded_records: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -551,7 +551,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         record_id_2: str,
         max_degree: int,
         excluded_records: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -576,7 +576,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         excluded_entities: Union[str, Dict[Any, Any]],
         required_dsrcs: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -599,7 +599,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         excluded_entities: Union[str, Dict[Any, Any]],
         required_dsrcs: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -625,7 +625,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         excluded_records: Union[str, Dict[Any, Any]],
         required_dsrcs: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -652,7 +652,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         max_degree: int,
         excluded_records: Union[str, Dict[Any, Any]],
         required_dsrcs: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -682,7 +682,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def get_entity_by_entity_id(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -697,7 +697,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def get_entity_by_entity_id_v2(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -714,7 +714,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -731,7 +731,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -749,7 +749,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_RECORD_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -767,7 +767,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_RECORD_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -800,7 +800,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def get_virtual_entity_by_record_id(
         self,
         record_list: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -815,7 +815,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def get_virtual_entity_by_record_id_v2(
         self,
         record_list: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -831,7 +831,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def how_entity_by_entity_id(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -846,7 +846,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def how_entity_by_entity_id_v2(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_HOW_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1019,7 +1019,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def search_by_attributes(
         self,
         json_data: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1034,7 +1034,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def search_by_attributes_v2(
         self,
         json_data: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1051,7 +1051,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         json_data: Union[str, Dict[Any, Any]],
         search_profile: Union[str, Dict[Any, Any]],
-        flags: int = G2EngineFlags.G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         self.fake_g2engine(json_data, search_profile, flags)
@@ -1080,7 +1080,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         entity_id_1: int,
         entity_id_2: int,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1097,7 +1097,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         entity_id_1: int,
         entity_id_2: int,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1114,7 +1114,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def why_entity_by_entity_id(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1129,7 +1129,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
     def why_entity_by_entity_id_v2(
         self,
         entity_id: int,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1146,7 +1146,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1163,7 +1163,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1204,7 +1204,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         record_id_1: str,
         data_source_code_2: str,
         record_id_2: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
@@ -1225,7 +1225,7 @@ class G2EngineGrpc(G2EngineAbstract):  # type: ignore
         record_id_1: str,
         data_source_code_2: str,
         record_id_2: str,
-        flags: int = G2EngineFlags.G2_WHY_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         try:
