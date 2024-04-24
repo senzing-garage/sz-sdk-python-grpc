@@ -1,44 +1,46 @@
 from senzing_abstract import (
     EXCEPTION_MAP,
-    G2BadInputError,
-    G2ConfigurationError,
-    G2DatabaseConnectionLostError,
-    G2DatabaseError,
-    G2Exception,
-    G2LicenseError,
-    G2NotFoundError,
-    G2NotInitializedError,
-    G2RetryableError,
-    G2RetryTimeoutExceededError,
-    G2UnhandledError,
-    G2UnknownDatasourceError,
-    G2UnrecoverableError,
+    SzBadInputError,
+    SzConfigurationError,
+    SzDatabaseConnectionLostError,
+    SzDatabaseError,
+    SzEngineFlags,
+    SzError,
+    SzLicenseError,
+    SzNotFoundError,
+    SzNotInitializedError,
+    SzRetryableError,
+    SzRetryTimeoutExceededError,
+    SzUnhandledError,
+    SzUnknownDataSourceError,
+    SzUnrecoverableError,
 )
 
-from .g2config_grpc import SzConfigGrpc
-from .g2configmgr_grpc import SzConfigManagerGrpc
-from .g2diagnostic_grpc import G2DiagnosticGrpc
-from .g2engine_grpc import G2EngineGrpc
-from .g2product_grpc import SzProductGrpc
+from .szconfig_grpc import SzConfigGrpc
+from .szconfigmanager_grpc import SzConfigManagerGrpc
+from .szdiagnostic_grpc import SzDiagnosticGrpc
+from .szengine_grpc import SzEngineGrpc
+from .szproduct_grpc import SzProductGrpc
 
 __all__ = [
     "EXCEPTION_MAP",
-    "G2BadInputError",
+    "SzBadInputError",
     "SzConfigGrpc",
     "SzConfigManagerGrpc",
-    "G2ConfigurationError",
-    "G2DatabaseConnectionLostError",
-    "G2DatabaseError",
-    "G2DiagnosticGrpc",
-    "G2EngineGrpc",
-    "G2Exception",
-    "G2LicenseError",
-    "G2NotFoundError",
-    "G2NotInitializedError",
+    "SzConfigurationError",
+    "SzDatabaseConnectionLostError",
+    "SzDatabaseError",
+    "SzDiagnosticGrpc",
+    "SzEngineGrpc",
+    "SzError",
+    "SzLicenseError",
+    "SzNotFoundError",
+    "SzNotInitializedError",
     "SzProductGrpc",
-    "G2RetryableError",
-    "G2RetryTimeoutExceededError",
-    "G2UnhandledError",
-    "G2UnknownDatasourceError",
-    "G2UnrecoverableError",
+    "SzRetryableError",
+    "SzRetryTimeoutExceededError",
+    "SzUnhandledError",
+    "SzUnknownDataSourceError",
+    "SzUnrecoverableError",
+    "SzEngineFlags",
 ]

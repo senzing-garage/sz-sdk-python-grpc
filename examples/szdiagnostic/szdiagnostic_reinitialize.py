@@ -2,7 +2,7 @@
 
 import grpc
 
-from senzing_grpc import G2Exception, g2configmgr_grpc, g2diagnostic_grpc
+from senzing_grpc import SzError, szconfigmanager_grpc, szdiagnostic_grpc
 
 ini_params_dict = {
     "PIPELINE": {
@@ -17,9 +17,11 @@ MODULE_NAME = "Example"
 try:
     GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    g2_configmgr = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
-    g2_diagnostic = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
-    config_id = g2_configmgr.get_default_config_id()
-    g2_diagnostic.reinit(config_id)
-except G2Exception as err:
+    sz_configmanager = szconfigmanager_grpc.SzConfigManagerGrpc(
+        grpc_channel=grpc_channel
+    )
+    sz_diagnostic = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
+    config_id = sz_configmanager.get_default_config_id()
+    sz_diagnostic.reinitialize(config_id)
+except SzError as err:
     print(f"\nError:\n{err}\n")

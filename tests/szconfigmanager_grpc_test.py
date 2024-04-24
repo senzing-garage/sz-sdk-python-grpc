@@ -5,10 +5,15 @@ import pytest
 from pytest_schema import Or, schema
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import G2ConfigurationError, g2config_grpc, g2configmgr_grpc
+from senzing_grpc import (
+    SzConfigurationError,
+    SzEngineFlags,
+    szconfig_grpc,
+    szconfigmanager_grpc,
+)
 
 # -----------------------------------------------------------------------------
-# G2ConfigMgr testcases
+# SzConfigManager testcases
 # -----------------------------------------------------------------------------
 
 
@@ -16,281 +21,309 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2configmgr_grpc.SzConfigManagerGrpc)
+    actual = szconfigmanager_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, szconfigmanager_grpc.SzConfigManagerGrpc)
 
 
 def test_add_config(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().add_config()."""
-    config_handle = g2_config.create()
-    config_str = g2_config.save(config_handle)
-    config_comments = "Test"
-    actual = g2_configmgr.add_config(config_str, config_comments)
+    """Test SzConfigManager().add_config()."""
+    config_handle = sz_config.create_config()
+    config_definition = sz_config.export_config(config_handle)
+    config_comment = "Test"
+    actual = sz_config_manager.add_config(config_definition, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
 def test_add_config_dict(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().add_config()."""
-    config_handle = g2_config.create()
-    config_str = g2_config.save(config_handle)
-    config_str_dict = json.loads(config_str)
-    config_comments = "Test"
-    actual = g2_configmgr.add_config(config_str_dict, config_comments)
+    """Test SzConfigManager().add_config()."""
+    config_handle = sz_config.create_config()
+    config_definition = sz_config.export_config(config_handle)
+    config_definition_dict = json.loads(config_definition)
+    config_comment = "Test"
+    actual = sz_config_manager.add_config(config_definition_dict, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
-def test_add_config_bad_config_str_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_add_config_bad_config_definition_type(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().add_config()."""
-    bad_config_str = 0
-    config_comments = "Test"
+    """Test SzConfigManager().add_config()."""
+    bad_config_definition = 0
+    config_comment = "Test"
     with pytest.raises(TypeError):
-        g2_configmgr.add_config(
-            bad_config_str, config_comments  # type: ignore[arg-type]
+        sz_config_manager.add_config(
+            bad_config_definition, config_comment  # type: ignore[arg-type]
         )
 
 
-def test_add_config_bad_config_str_value(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_add_config_bad_config_definition_value(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().add_config()."""
-    config_str_dict = {"just": "junk"}
-    config_comments = "Test"
-    actual = g2_configmgr.add_config(config_str_dict, config_comments)
+    """Test SzConfigManager().add_config()."""
+    bad_config_definition = '{"just": "junk"}'
+    config_comment = "Test"
+    actual = sz_config_manager.add_config(bad_config_definition, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
-def test_add_config_bad_config_comments_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+def test_add_config_bad_config_comment_type(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().add_config()."""
-    config_handle = g2_config.create()
-    config_str = g2_config.save(config_handle)
-    bad_config_comments = 0
+    """Test SzConfigManager().add_config()."""
+    config_handle = sz_config.create_config()
+    config_definition = sz_config.export_config(config_handle)
+    bad_config_comment = 0
     with pytest.raises(TypeError):
-        g2_configmgr.add_config(
-            config_str, bad_config_comments  # type: ignore[arg-type]
+        sz_config_manager.add_config(
+            config_definition, bad_config_comment  # type: ignore[arg-type]
         )
 
 
-def test_get_config(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    config_id = g2_configmgr.get_default_config_id()
-    actual = g2_configmgr.get_config(config_id)
+def test_get_config(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+) -> None:
+    """Test SzConfigManager().get_default_config_id()."""
+    config_id = sz_config_manager.get_default_config_id()
+    actual = sz_config_manager.get_config(config_id)
     actual_json = json.loads(actual)
     assert schema(config_schema) == actual_json
 
 
 def test_get_config_bad_config_id_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
+    """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
-        g2_configmgr.get_config(bad_config_id)  # type: ignore[arg-type]
+        sz_config_manager.get_config(bad_config_id)  # type: ignore[arg-type]
 
 
 def test_get_config_bad_config_id_value(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
+    """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = 1234
-    with pytest.raises(G2ConfigurationError):
-        g2_configmgr.get_config(bad_config_id)
+    with pytest.raises(SzConfigurationError):
+        sz_config_manager.get_config(bad_config_id)
 
 
-def test_get_config_list(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    actual = g2_configmgr.get_config_list()
+def test_get_config_list(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+) -> None:
+    """Test SzConfigManager().get_default_config_id()."""
+    actual = sz_config_manager.get_config_list()
     actual_json = json.loads(actual)
     assert schema(config_list_schema) == actual_json
 
 
 def test_get_default_config_id(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    actual = g2_configmgr.get_default_config_id()
+    """Test SzConfigManager().get_default_config_id()."""
+    actual = sz_config_manager.get_default_config_id()
     assert isinstance(actual, int)
 
 
 def test_replace_default_config_id(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    old_config_id = g2_configmgr.get_default_config_id()
-    config_handle = g2_config.create()
+    """Test SzConfigManager().get_default_config_id()."""
+    current_default_config_id = sz_config_manager.get_default_config_id()
+    config_handle = sz_config.create_config()
     for _, value in TRUTHSET_DATASOURCES.items():
-        g2_config.add_data_source(config_handle, value.get("Json", ""))
-    input_json_dict = {"DSRC_CODE": "REPLACE_DEFAULT_CONFIG_ID"}
-    g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
-    json_config = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(json_config, "Test")
-    assert old_config_id != new_config_id
-    g2_configmgr.replace_default_config_id(old_config_id, new_config_id)
-    actual = g2_configmgr.get_default_config_id()
-    assert actual == new_config_id
+        sz_config.add_data_source(config_handle, value.get("Json", ""))
+    data_source_code = "REPLACE_DEFAULT_CONFIG_ID"
+    sz_config.add_data_source(config_handle, data_source_code)
+    config_definition = sz_config.export_config(config_handle)
+    config_comment = "Test"
+    new_default_config_id = sz_config_manager.add_config(
+        config_definition, config_comment
+    )
+    assert current_default_config_id != new_default_config_id
+    sz_config_manager.replace_default_config_id(
+        current_default_config_id, new_default_config_id
+    )
+    actual = sz_config_manager.get_default_config_id()
+    assert actual == new_default_config_id
 
 
-def test_replace_default_config_id_bad_new_id_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_replace_default_config_id_bad_new_default_config_id_type(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    old_config_id = g2_configmgr.get_default_config_id()
-    bad_new_config_id = "string"
+    """Test SzConfigManager().get_default_config_id()."""
+    current_default_config_id = sz_config_manager.get_default_config_id()
+    bad_new_default_config_id = "string"
     with pytest.raises(TypeError):
-        g2_configmgr.replace_default_config_id(
-            old_config_id, bad_new_config_id  # type: ignore[arg-type]
+        sz_config_manager.replace_default_config_id(
+            current_default_config_id, bad_new_default_config_id  # type: ignore[arg-type]
         )
 
 
-def test_replace_default_config_id_bad_new_id_value(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_replace_default_config_id_bad_new_default_config_id_value(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    old_config_id = g2_configmgr.get_default_config_id()
-    bad_new_config_id = 1234
-    with pytest.raises(G2ConfigurationError):
-        g2_configmgr.replace_default_config_id(old_config_id, bad_new_config_id)
-
-
-def test_replace_default_config_id_bad_old_id_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
-) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    bad_old_config_id = "string"
-    config_handle = g2_config.create()
-    input_json_dict = {"DSRC_CODE": "REPLACE_DEFAULT_CONFIG_ID"}
-    g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
-    json_config = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(json_config, "Test")
-    with pytest.raises(TypeError):
-        g2_configmgr.replace_default_config_id(
-            bad_old_config_id, new_config_id  # type: ignore[arg-type]
+    """Test SzConfigManager().get_default_config_id()."""
+    current_default_config_id = sz_config_manager.get_default_config_id()
+    bad_new_default_config_id = 1234
+    with pytest.raises(SzConfigurationError):
+        sz_config_manager.replace_default_config_id(
+            current_default_config_id, bad_new_default_config_id
         )
 
 
-def test_replace_default_config_id_bad_old_id_value(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+def test_replace_default_config_id_bad_current_default_config_id_type(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    bad_old_config_id = 1234
-    config_handle = g2_config.create()
-    input_json_dict = {"DSRC_CODE": "CUSTOMERS"}
-    g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
-    json_config = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(json_config, "Test")
-    with pytest.raises(G2ConfigurationError):
-        g2_configmgr.replace_default_config_id(bad_old_config_id, new_config_id)
+    """Test SzConfigManager().get_default_config_id()."""
+    bad_current_default_config_id = "string"
+    config_handle = sz_config.create_config()
+    data_source_code = "REPLACE_DEFAULT_CONFIG_ID"
+    sz_config.add_data_source(config_handle, data_source_code)
+    config_definition = sz_config.export_config(config_handle)
+    config_comment = "Test"
+    new_default_config_id = sz_config_manager.add_config(
+        config_definition, config_comment
+    )
+    with pytest.raises(TypeError):
+        sz_config_manager.replace_default_config_id(
+            bad_current_default_config_id, new_default_config_id  # type: ignore[arg-type]
+        )
+
+
+def test_replace_default_config_id_bad_current_default_config_id_value(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
+) -> None:
+    """Test SzConfigManager().get_default_config_id()."""
+    bad_current_default_config_id = 1234
+    config_handle = sz_config.create_config()
+    data_source_code = "CUSTOMERS"
+    sz_config.add_data_source(config_handle, data_source_code)
+    config_definition = sz_config.export_config(config_handle)
+    config_comment = "Test"
+    new_default_config_id = sz_config_manager.add_config(
+        config_definition, config_comment
+    )
+    with pytest.raises(SzConfigurationError):
+        sz_config_manager.replace_default_config_id(
+            bad_current_default_config_id, new_default_config_id
+        )
 
 
 def test_set_default_config_id(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
-    old_config_id = g2_configmgr.get_default_config_id()
-    config_handle = g2_config.create()
-    input_json_dict = {"DSRC_CODE": "CUSTOMERS"}
-    g2_config.add_data_source(config_handle, json.dumps(input_json_dict))
-    json_config = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(json_config, "Test")
-    assert old_config_id != new_config_id
-    g2_configmgr.set_default_config_id(new_config_id)
-    actual = g2_configmgr.get_default_config_id()
-    assert actual == new_config_id
+    """Test SzConfigManager().get_default_config_id()."""
+    old_config_id = sz_config_manager.get_default_config_id()
+    config_handle = sz_config.create_config()
+    data_source_code = "CUSTOMERS"
+    sz_config.add_data_source(config_handle, json.dumps(data_source_code))
+    config_definition = sz_config.export_config(config_handle)
+    config_comment = "Test"
+    config_id = sz_config_manager.add_config(config_definition, config_comment)
+    assert old_config_id != config_id
+    sz_config_manager.set_default_config_id(config_id)
+    actual = sz_config_manager.get_default_config_id()
+    assert actual == config_id
 
 
 def test_set_default_config_id_bad_config_id_type(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().get_default_config_id()."""
+    """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
-        g2_configmgr.set_default_config_id(bad_config_id)  # type: ignore[arg-type]
+        sz_config_manager.set_default_config_id(bad_config_id)  # type: ignore[arg-type]
 
 
 def test_set_default_config_id_bad_config_id_value(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().set_default_config_id()."""
+    """Test SzConfigManager().set_default_config_id()."""
     bad_config_id = 1
-    with pytest.raises(G2ConfigurationError):
-        g2_configmgr.set_default_config_id(bad_config_id)
+    with pytest.raises(SzConfigurationError):
+        sz_config_manager.set_default_config_id(bad_config_id)
 
 
-def test_init_and_destroy(g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc) -> None:
-    """Test G2ConfigMgr().init() and G2ConfigMgr.destroy()."""
-    g2_configmgr.init("Example", "{}", 0)
-    g2_configmgr.destroy()
-
-
-def test_init_and_destroy_again(
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_initialize_and_destroy(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2ConfigMgr().init() and G2ConfigMgr.destroy()."""
-    g2_configmgr.init("Example", "{}", 0)
-    g2_configmgr.destroy()
+    """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
+    instance_name = "Example"
+    settings = "{}"
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_config_manager.initialize(instance_name, settings, verbose_logging)
+    sz_config_manager.destroy()
+
+
+def test_initialize_and_destroy_again(
+    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+) -> None:
+    """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
+    instance_name = "Example"
+    settings = {}
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_config_manager.initialize(instance_name, settings, verbose_logging)
+    sz_config_manager.destroy()
 
 
 def test_context_managment() -> None:
-    """Test the use of G2ConfigMgrGrpc in context."""
+    """Test the use of SzConfigManagerGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2configmgr_grpc.SzConfigManagerGrpc(
+    with szconfigmanager_grpc.SzConfigManagerGrpc(
         grpc_channel=grpc_channel
-    ) as g2_configmgr:
-        config_id = g2_configmgr.get_default_config_id()
-        actual = g2_configmgr.get_config(config_id)
+    ) as sz_configmanager:
+        config_id = sz_configmanager.get_default_config_id()
+        actual = sz_configmanager.get_config(config_id)
         actual_json = json.loads(actual)
         assert schema(config_schema) == actual_json
 
 
 # -----------------------------------------------------------------------------
-# G2ConfigMgr fixtures
+# SzConfigManager fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.SzConfigGrpc:
+@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
+def szconfig_fixture() -> szconfig_grpc.SzConfigGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
+    result = szconfig_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
-@pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
-def g2configmgr_fixture() -> g2configmgr_grpc.SzConfigManagerGrpc:
+@pytest.fixture(name="sz_config_manager", scope="module")  # type: ignore[misc]
+def szconfigmanager_fixture() -> szconfigmanager_grpc.SzConfigManagerGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = szconfigmanager_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 
 # -----------------------------------------------------------------------------
-# G2ConfigMgr schemas
+# SzConfigManager schemas
 # -----------------------------------------------------------------------------
 
 

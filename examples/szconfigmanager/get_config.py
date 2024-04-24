@@ -2,14 +2,16 @@
 
 import grpc
 
-from senzing_grpc import G2Exception, g2configmgr_grpc
+from senzing_grpc import SzError, szconfigmanager_grpc
 
 try:
     GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    g2_configmgr = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
-    config_id = g2_configmgr.get_default_config_id()
-    CONFIG_STR = g2_configmgr.get_config(config_id)
-    print(CONFIG_STR[:66], "...")
-except G2Exception as err:
+    sz_configmanager = szconfigmanager_grpc.SzConfigManagerGrpc(
+        grpc_channel=grpc_channel
+    )
+    config_id = sz_configmanager.get_default_config_id()
+    CONFIG_DEFINITION = sz_configmanager.get_config(config_id)
+    print(CONFIG_DEFINITION[:66], "...")
+except SzError as err:
     print(f"\nError:\n{err}\n")

@@ -4,10 +4,10 @@ import grpc
 import pytest
 from pytest_schema import Regex, schema
 
-from senzing_grpc import g2product_grpc
+from senzing_grpc import SzEngineFlags, szproduct_grpc
 
 # -----------------------------------------------------------------------------
-# G2Product testcases
+# SzProduct testcases
 # -----------------------------------------------------------------------------
 
 
@@ -15,70 +15,76 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2product_grpc.SzProductGrpc)
+    actual = szproduct_grpc.SzProductGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, szproduct_grpc.SzProductGrpc)
 
 
-def test_license(g2_product: g2product_grpc.SzProductGrpc) -> None:
+def test_get_license(sz_product: szproduct_grpc.SzProductGrpc) -> None:
     """Test Senzing license."""
-    actual = g2_product.license()
+    actual = sz_product.get_license()
     assert isinstance(actual, str)
     actual_json = json.loads(actual)
-    assert schema(license_schema) == actual_json
+    assert schema(get_license_schema) == actual_json
 
 
-def test_version(g2_product: g2product_grpc.SzProductGrpc) -> None:
+def test_get_version(sz_product: szproduct_grpc.SzProductGrpc) -> None:
     """Test Senzing version."""
-    actual = g2_product.version()
+    actual = sz_product.get_version()
     assert isinstance(actual, str)
     actual_json = json.loads(actual)
-    assert schema(version_schema) == actual_json
+    assert schema(get_version_schema) == actual_json
 
 
-def test_init_and_destroy(g2_product: g2product_grpc.SzProductGrpc) -> None:
+def test_initialize_and_destroy(sz_product: szproduct_grpc.SzProductGrpc) -> None:
     """Test init/destroy cycle."""
-    g2_product.init("Example", "{}", 0)
-    g2_product.destroy()
+    instance_name = "Example"
+    settings = {}
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_product.initialize(instance_name, settings, verbose_logging)
+    sz_product.destroy()
 
 
-def test_init_and_destroy_again(g2_product: g2product_grpc.SzProductGrpc) -> None:
+def test_initialize_and_destroy_again(sz_product: szproduct_grpc.SzProductGrpc) -> None:
     """Test init/destroy cycle a second time."""
-    g2_product.init("Example", "{}", 0)
-    g2_product.destroy()
+    instance_name = "Example"
+    settings = "{}"
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_product.initialize(instance_name, settings, verbose_logging)
+    sz_product.destroy()
 
 
 def test_context_managment() -> None:
-    """Test the use of G2ProductGrpc in context."""
+    """Test the use of SzProductGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel) as g2_product:
-        actual = g2_product.license()
+    with szproduct_grpc.SzProductGrpc(grpc_channel=grpc_channel) as sz_product:
+        actual = sz_product.get_license()
         assert isinstance(actual, str)
         actual_json = json.loads(actual)
-        assert schema(license_schema) == actual_json
+        assert schema(get_license_schema) == actual_json
 
 
 # -----------------------------------------------------------------------------
-# G2Product fixtures
+# SzProduct fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_product", scope="module")  # type: ignore[misc]
-def g2product_fixture() -> g2product_grpc.SzProductGrpc:
+@pytest.fixture(name="sz_product", scope="module")  # type: ignore[misc]
+def szproduct_fixture() -> szproduct_grpc.SzProductGrpc:
     """
     Single engine object to use for all tests.
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2product_grpc.SzProductGrpc(grpc_channel=grpc_channel)
+    result = szproduct_grpc.SzProductGrpc(grpc_channel=grpc_channel)
     return result
 
 
 # -----------------------------------------------------------------------------
-# G2Product schemas
+# SzProduct schemas
 # -----------------------------------------------------------------------------
 
-license_schema = {
+get_license_schema = {
     "customer": str,
     "contract": str,
     "issueDate": Regex(r"^\d{4}-\d{2}-\d{2}$"),
@@ -90,7 +96,7 @@ license_schema = {
 }
 
 
-version_schema = {
+get_version_schema = {
     "PRODUCT_NAME": str,
     "VERSION": Regex(
         r"^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$"

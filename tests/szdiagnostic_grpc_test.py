@@ -1,14 +1,13 @@
 import json
 
 import grpc
-import psutil
 import pytest
 from pytest_schema import schema
 
-from senzing_grpc import g2diagnostic_grpc
+from senzing_grpc import SzEngineFlags, szdiagnostic_grpc
 
 # -----------------------------------------------------------------------------
-# G2Diagnostic testcases
+# SzDiagnostic testcases
 # -----------------------------------------------------------------------------
 
 
@@ -16,115 +15,88 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2diagnostic_grpc.G2DiagnosticGrpc)
+    actual = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, szdiagnostic_grpc.SzDiagnosticGrpc)
 
 
-def test_check_db_perf(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().check_db_perf()."""
-    seconds_to_run = 3
-    actual = g2_diagnostic.check_db_perf(seconds_to_run)
-    actual_json = json.loads(actual)
-    assert schema(check_db_perf_schema) == actual_json
-
-
-def test_check_db_perf_bad_seconds_to_run_type(
-    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
+def test_check_datastore_performance(
+    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
 ) -> None:
-    """Test G2Diagnostic().check_db_perf()."""
+    """Test SzDiagnostic().check_datastore_performance()."""
+    seconds_to_run = 3
+    actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
+    actual_json = json.loads(actual)
+    assert schema(check_datastore_performance_schema) == actual_json
+
+
+def test_check_datastore_performance_bad_seconds_to_run_type(
+    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+) -> None:
+    """Test SzDiagnostic().check_datastore_performance()."""
     bad_seconds_to_run = "string"
     with pytest.raises(TypeError):
-        g2_diagnostic.check_db_perf(bad_seconds_to_run)  # type: ignore[arg-type]
+        sz_diagnostic.check_datastore_performance(bad_seconds_to_run)  # type: ignore[arg-type]
 
 
-def test_check_db_perf_bad_seconds_to_run_value(
-    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
+def test_check_datastore_performance_bad_seconds_to_run_value(
+    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
 ) -> None:
-    """Test G2Diagnostic().check_db_perf()."""
+    """Test SzDiagnostic().check_datastore_performance()."""
     bad_seconds_to_run = -1
-    g2_diagnostic.check_db_perf(bad_seconds_to_run)
+    sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
 
 
-def test_get_available_memory(
-    g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc,
-) -> None:
-    """Test available memory."""
-    # TODO: See if there's a fix.
-    actual = g2_diagnostic.get_available_memory()
-    expected = psutil.virtual_memory().available
-    assert actual == expected
-
-
-def test_get_db_info(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().get_db_info()."""
-    actual = g2_diagnostic.get_db_info()
+def test_get_datastore_info(sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc) -> None:
+    """Test SzDiagnostic().get_datastore_info()."""
+    actual = sz_diagnostic.get_datastore_info()
     actual_json = json.loads(actual)
-    assert schema(get_db_info_schema) == actual_json
+    assert schema(get_datastore_info_schema) == actual_json
 
 
-def test_get_logical_cores(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().get_logical_cores()."""
-    actual = g2_diagnostic.get_logical_cores()
-    expected = psutil.cpu_count()
-    assert actual == expected
-
-
-# BUG: Returns wrong value!
-def test_get_physical_cores(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().get_physical_cores()."""
-    actual = g2_diagnostic.get_physical_cores()
-    actual = psutil.cpu_count(logical=False)  # TODO: Remove. Just a test work-around.
-    expected = psutil.cpu_count(logical=False)
-    # This seems broken currently in C API
-    assert actual == expected
-
-
-def test_total_system_memory(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().get_total_system_memory()."""
-    actual = g2_diagnostic.get_total_system_memory()
-    expected = psutil.virtual_memory().total
-    assert actual == expected
-
-
-def test_init_and_destroy(g2_diagnostic: g2diagnostic_grpc.G2DiagnosticGrpc) -> None:
-    """Test G2Diagnostic().init() and G2Diagnostic.destroy()."""
-    g2_diagnostic.init("MODULE_NAME", "{}", 0)
-    g2_diagnostic.destroy()
+def test_initialize_and_destroy(
+    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+) -> None:
+    """Test SzDiagnostic().init() and SzDiagnostic.destroy()."""
+    instance_name = "Example"
+    settings = {}
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_diagnostic.initialize(instance_name, settings, verbose_logging)
+    sz_diagnostic.destroy()
 
 
 def test_context_managment() -> None:
-    """Test the use of G2DiagnosticGrpc in context."""
+    """Test the use of SzDiagnosticGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel) as g2_diagnostic:
-        actual = g2_diagnostic.get_db_info()
+    with szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel) as sz_diagnostic:
+        actual = sz_diagnostic.get_db_info()
         actual_json = json.loads(actual)
-        assert schema(get_db_info_schema) == actual_json
+        assert schema(get_datastore_info_schema) == actual_json
 
 
 # -----------------------------------------------------------------------------
-# G2Diagnostic fixtures
+# SzDiagnostic fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_diagnostic", scope="module")  # type: ignore[misc]
-def g2diagnostic_fixture() -> g2diagnostic_grpc.G2DiagnosticGrpc:
+@pytest.fixture(name="sz_diagnostic", scope="module")  # type: ignore[misc]
+def szdiagnostic_fixture() -> szdiagnostic_grpc.SzDiagnosticGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2diagnostic_grpc.G2DiagnosticGrpc(grpc_channel=grpc_channel)
+    result = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
     return result
 
 
 # -----------------------------------------------------------------------------
-# G2Diagnostic schemas
+# SzDiagnostic schemas
 # -----------------------------------------------------------------------------
 
 
-get_db_info_schema = {
+get_datastore_info_schema = {
     "Hybrid Mode": bool,
     "Database Details": [
         {
@@ -134,4 +106,4 @@ get_db_info_schema = {
     ],
 }
 
-check_db_perf_schema = {"numRecordsInserted": int, "insertTime": int}
+check_datastore_performance_schema = {"numRecordsInserted": int, "insertTime": int}

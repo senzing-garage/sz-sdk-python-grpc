@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
 
 """
-TODO: g2engine_grpc.py
+TODO: szengine_grpc.py
 """
 
 # pylint: disable=E1101,C0302
 
 from types import TracebackType
-from typing import Any, Dict, Iterable, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Type, Union
 
 import grpc
 from senzing_abstract import SzEngineAbstract, SzEngineFlags
@@ -17,7 +17,7 @@ from .szhelpers import as_str, new_exception
 
 # Metadata
 
-__all__ = ["G2EngineGrpc"]
+__all__ = ["SzEngineGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2024-01-10"
@@ -25,13 +25,13 @@ __updated__ = "2024-01-10"
 SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# G2EngineGrpc class
+# SzEngineGrpc class
 # -----------------------------------------------------------------------------
 
 
-class G2EngineGrpc(SzEngineAbstract):  # type: ignore
+class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     """
-    G2 engine module access library over gRPC.
+    Sz engine module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -72,13 +72,13 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
     # Development methods - to be removed after initial development
     # -------------------------------------------------------------------------
 
-    def fake_g2engine(self, *args: Any, **kwargs: Any) -> None:
+    def fake_szengine(self, *args: Any, **kwargs: Any) -> None:
         """TODO: Remove once SDK methods have been implemented."""
         if len(args) + len(kwargs) > 2000:
             print(self.noop)
 
     # -------------------------------------------------------------------------
-    # G2Engine methods
+    # SzEngine methods
     # -------------------------------------------------------------------------
 
     def add_record(
@@ -206,39 +206,43 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
     def fetch_next(self, export_handle: int, **kwargs: Any) -> str:
         try:
             request = szengine_pb2.FetchNextRequest(  # type: ignore[unused-ignore]
-                responseHandle=response_handle,
+                responseHandle=export_handle,
             )
             response = self.stub.FetchNext(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    # def find_interesting_entities_by_entity_id(
-    #     self, entity_id: int, flags: int = 0, **kwargs: Any
-    # ) -> str:
-    #     try:
-    #         request = szengine_pb2.FindInterestingEntitiesByEntityIDRequest(  # type: ignore[unused-ignore]
-    #             entityID=entity_id,
-    #             flags=flags,
-    #         )
-    #         response = self.stub.FindInterestingEntitiesByEntityId(request)
-    #         return str(response.result)
-    #     except Exception as err:
-    #         raise new_exception(err) from err
+    def find_interesting_entities_by_entity_id(
+        self, entity_id: int, flags: int = 0, **kwargs: Any
+    ) -> str:
+        # TODO: Implement find_interesting_entities_by_entity_id
+        # try:
+        #     request = szengine_pb2.FindInterestingEntitiesByEntityIDRequest(  # type: ignore[unused-ignore]
+        #         entityID=entity_id,
+        #         flags=flags,
+        #     )
+        #     response = self.stub.FindInterestingEntitiesByEntityId(request)
+        #     return str(response.result)
+        # except Exception as err:
+        #     raise new_exception(err) from err
+        return ""
 
-    # def find_interesting_entities_by_record_id(
-    #     self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
-    # ) -> str:
-    #     try:
-    #         request = szengine_pb2.FindInterestingEntitiesByRecordIDRequest(  # type: ignore[unused-ignore]
-    #             dataSourceCode=data_source_code,
-    #             recordID=record_id,
-    #             flags=flags,
-    #         )
-    #         response = self.stub.FindInterestingEntitiesByRecordID(request)
-    #         return str(response.result)
-    #     except Exception as err:
-    #         raise new_exception(err) from err
+    def find_interesting_entities_by_record_id(
+        self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
+    ) -> str:
+        # TODO: Implement find_interesting_entities_by_record_id
+        # try:
+        #     request = szengine_pb2.FindInterestingEntitiesByRecordIDRequest(  # type: ignore[unused-ignore]
+        #         dataSourceCode=data_source_code,
+        #         recordID=record_id,
+        #         flags=flags,
+        #     )
+        #     response = self.stub.FindInterestingEntitiesByRecordID(request)
+        #     return str(response.result)
+        # except Exception as err:
+        #     raise new_exception(err) from err
+        return ""
 
     def find_network_by_entity_id(
         self,
@@ -250,7 +254,7 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.FindNetworkByEntityIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityList=as_str(entity_list),
                 maxDegree=max_degrees,
                 buildOutDegree=build_out_degree,
@@ -271,13 +275,13 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.FindNetworkByRecordIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordList=as_str(record_list),
-                maxDegree=max_degree,
+                maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 maxEntities=max_entities,
             )
-            response = self.stub.FindNetworkByRecordID(request)
+            response = self.stub.FindNetworkByRecordId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -294,12 +298,12 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.FindPathByEntityIDRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
-                maxDegree=max_degree,
+            request = szengine_pb2.FindPathByEntityIdRequest(  # type: ignore[unused-ignore]
+                entityID1=start_entity_id,
+                entityID2=end_entity_id,
+                maxDegree=max_degrees,
             )
-            response = self.stub.FindPathByEntityID(request)
+            response = self.stub.FindPathByEntityId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -317,22 +321,22 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.FindPathByRecordIDRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
-                maxDegree=max_degree,
+            request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
+                dataSourceCode1=start_data_source_code,
+                recordID1=start_record_id,
+                dataSourceCode2=end_record_id,
+                recordID2=end_record_id,
+                maxDegree=max_degrees,
             )
-            response = self.stub.FindPathByRecordID(request)
+            response = self.stub.FindPathByRecordId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
     def get_active_config_id(self, **kwargs: Any) -> int:
         try:
-            request = szengine_pb2.GetActiveConfigIDRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetActiveConfigID(request)
+            request = szengine_pb2.GetActiveConfigIdRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetActiveConfigId(request)
             return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -344,10 +348,10 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.GetEntityByEntityIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.GetEntityByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityID=entity_id,
             )
-            response = self.stub.GetEntityByEntityID(request)
+            response = self.stub.GetEntityByEntityId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -360,11 +364,11 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.GetEntityByRecordIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.GetEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
                 recordID=record_id,
             )
-            response = self.stub.GetEntityByRecordID(request)
+            response = self.stub.GetEntityByRecordId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -377,12 +381,12 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.GetRecord_V2Request(  # type: ignore[unused-ignore]
+            request = szengine_pb2.GetRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
                 recordID=record_id,
                 flags=flags,
             )
-            response = self.stub.GetRecord_V2(request)
+            response = self.stub.GetRecord(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -405,8 +409,8 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
 
     def get_stats(self, **kwargs: Any) -> str:
         try:
-            request = szengine_pb2.StatsRequest()  # type: ignore[unused-ignore]
-            response = self.stub.Stats(request)
+            request = szengine_pb2.GetStatsRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetStats(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -418,10 +422,10 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.GetVirtualEntityByRecordIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordList=as_str(record_list),
             )
-            response = self.stub.GetVirtualEntityByRecordID(request)
+            response = self.stub.GetVirtualEntityByRecordId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -433,10 +437,10 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         try:
-            request = szengine_pb2.HowEntityByEntityIDRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.HowEntityByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityID=entity_id,
             )
-            response = self.stub.HowEntityByEntityID(request)
+            response = self.stub.HowEntityByEntityId(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -502,7 +506,7 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                jsonData=as_str(json_data),
+                jsonData=as_str(attributes),
             )
             response = self.stub.SearchByAttributes(request)
             return str(response.result)
@@ -534,7 +538,7 @@ class G2EngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         # TODO: Implement after V3 is published.
-        self.fake_g2engine(data_source_code, record_id)
+        self.fake_szengine(data_source_code, record_id)
         return "string"
 
     def why_records(

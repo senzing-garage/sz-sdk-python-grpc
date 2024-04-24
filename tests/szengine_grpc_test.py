@@ -15,17 +15,18 @@ from senzing_truthset import (
 )
 
 from senzing_grpc import (
-    G2BadInputError,
-    G2ConfigurationError,
-    G2NotFoundError,
-    G2UnknownDatasourceError,
-    g2config_grpc,
-    g2configmgr_grpc,
-    g2engine_grpc,
+    SzBadInputError,
+    SzConfigurationError,
+    SzEngineFlags,
+    SzNotFoundError,
+    SzUnknownDataSourceError,
+    szconfig_grpc,
+    szconfigmanager_grpc,
+    szengine_grpc,
 )
 
 # -----------------------------------------------------------------------------
-# G2Engine pre tests
+# SzEngine pre tests
 # -----------------------------------------------------------------------------
 
 
@@ -33,213 +34,215 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, g2engine_grpc.G2EngineGrpc)
+    actual = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    assert isinstance(actual, szengine_grpc.SzEngineGrpc)
 
 
 def test_add_truthset_datasources(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
-    g2_config: g2config_grpc.SzConfigGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
+    sz_configmgr: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_config: szconfig_grpc.SzConfigGrpc,
 ) -> None:
     """Add needed datasources for tests."""
-    config_handle = g2_config.create()
-    for _, value in TRUTHSET_DATASOURCES.items():
-        g2_config.add_data_source(config_handle, value.get("Json", ""))
-    json_config = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(json_config, "Test")
-    g2_configmgr.set_default_config_id(new_config_id)
-    g2_engine.reinit(new_config_id)
+    config_handle = sz_config.create_config()
+    for data_source_code in TRUTHSET_DATASOURCES.keys():
+        sz_config.add_data_source(config_handle, data_source_code)
+    config_definition = sz_config.export_config(config_handle)
+    config_id = sz_configmgr.add_config(config_definition, "Test")
+    sz_configmgr.set_default_config_id(config_id)
+    sz_engine.reinitialize(config_id)
 
 
 # -----------------------------------------------------------------------------
-# G2Engine testcases
+# SzEngine testcases
 # -----------------------------------------------------------------------------
 
 
-def test_add_record(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().add_record()."""
+def test_add_record(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
+    """Test SzEngine().add_record()."""
     data_source_code = "TEST"
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
-    g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.add_record(data_source_code, record_id, record_definition, flags)
 
 
 def test_add_record_bad_data_source_code_type(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().add_record()."""
-    data_source_code = 1
+    """Test SzEngine().add_record()."""
+    bad_data_source_code = 1
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
     with pytest.raises(TypeError):
-        g2_engine.add_record(
-            data_source_code, record_id, json_data, load_id  # type: ignore[arg-type]
+        sz_engine.add_record(
+            bad_data_source_code, record_id, record_definition, flags  # type: ignore[arg-type]
         )
 
 
 def test_add_record_bad_data_source_code_value(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().add_record()."""
-    data_source_code = "DOESN'T EXIST"
+    """Test SzEngine().add_record()."""
+    bad_data_source_code = "DOESN'T EXIST"
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
-    with pytest.raises(G2UnknownDatasourceError):
-        g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    with pytest.raises(SzUnknownDataSourceError):
+        sz_engine.add_record(bad_data_source_code, record_id, record_definition, flags)
 
 
-def test_add_record_with_info(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().add_record_with_info()."""
+def test_add_record_with_info(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
+    """Test SzEngine().add_record_with_info()."""
     data_source_code = "TEST"
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
-    actual = g2_engine.add_record_with_info(
-        data_source_code, record_id, json_data, load_id
-    )
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITH_INFO
+    actual = sz_engine.add_record(data_source_code, record_id, record_definition, flags)
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
 
 def test_add_record_with_info_bad_data_source_code_type(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().add_record_with_info()."""
-    data_source_code = 1
+    """Test SzEngine().add_record_with_info()."""
+    bad_data_source_code = 1
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITH_INFO
     with pytest.raises(TypeError):
-        _ = g2_engine.add_record_with_info(
-            data_source_code, record_id, json_data, load_id  # type: ignore[arg-type]
+        _ = sz_engine.add_record(
+            bad_data_source_code, record_id, record_definition, flags  # type: ignore[arg-type]
         )
 
 
 def test_add_record_with_info_bad_data_source_code_value(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().add_record_with_info()."""
-    data_source_code = "DOESN'T EXIST"
+    """Test SzEngine().add_record_with_info()."""
+    bad_data_source_code = "DOESN'T EXIST"
     record_id = "1"
-    json_data: Dict[Any, Any] = {}
-    load_id = "Test Load"
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.add_record_with_info(
-            data_source_code, record_id, json_data, load_id
+    record_definition: Dict[Any, Any] = {}
+    flags = SzEngineFlags.SZ_WITH_INFO
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.add_record(
+            bad_data_source_code, record_id, record_definition, flags
         )
 
 
 def test_close_export() -> None:
-    """Test G2Engine().close_export()."""
+    """Test SzEngine().close_export()."""
     # TODO: implement.
 
 
-def test_count_redo_records(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().count_redo_records()."""
-    actual = g2_engine.count_redo_records()
+def test_count_redo_records(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
+    """Test SzEngine().count_redo_records()."""
+    actual = sz_engine.count_redo_records()
     assert actual == 0
 
 
 def test_delete_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record()."""
+    """Test SzEngine().delete_record()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    g2_engine.delete_record("CUSTOMERS", "1001")
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.delete_record(data_source_code, record_id, flags)
 
 
-def test_delete_record_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_delete_record_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record()."""
-    with pytest.raises(G2ConfigurationError):
-        g2_engine.delete_record("XXXX", "9999")
+    """Test SzEngine().delete_record()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    with pytest.raises(SzConfigurationError):
+        sz_engine.delete_record(bad_data_source_code, record_id, flags)
 
 
 def test_delete_record_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record()."""
-    g2_engine.delete_record("CUSTOMERS", "9999")
+    """Test SzEngine().delete_record()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.delete_record(data_source_code, bad_record_id, flags)
 
 
 def test_delete_record_with_info(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record_with_info()."""
+    """Test SzEngine().delete_record_with_info()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.delete_record_with_info("CUSTOMERS", "1001")
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    actual = sz_engine.delete_record(data_source_code, record_id, flags)
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
 
-def test_delete_record_with_info_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_delete_record_with_info_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record_with_info()."""
-    with pytest.raises(G2ConfigurationError):
-        _ = g2_engine.delete_record_with_info("XXXX", "9999")
+    """Test SzEngine().delete_record_with_info()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    with pytest.raises(SzConfigurationError):
+        _ = sz_engine.delete_record(bad_data_source_code, record_id, flags)
 
 
 def test_delete_record_with_info_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().delete_record_with_info()."""
-    actual = g2_engine.delete_record_with_info("CUSTOMERS", "9999")
+    """Test SzEngine().delete_record_with_info()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    actual = sz_engine.delete_record(data_source_code, bad_record_id, flags)
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
 
-def test_export_config(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().export_config()."""
-    actual = g2_engine.export_config()
-    actual_dict = json.loads(actual)
-    assert schema(g2_config_schema) == actual_dict
-
-
-def test_export_config_and_config_id(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().export_config_and_config_id()."""
-    actual, actual_id = g2_engine.export_config_and_config_id()
-    actual_dict = json.loads(actual)
-    assert actual_id > 0
-    assert schema(g2_config_schema) == actual_dict
-
-
-def test_export_csv_entity_report(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().export_config()."""
-    csv_headers = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA,LAST_SEEN_DT,NAME_DATA,ATTRIBUTE_DATA,IDENTIFIER_DATA,ADDRESS_DATA,PHONE_DATA,RELATIONSHIP_DATA,ENTITY_DATA,OTHER_DATA"
-    handle = g2_engine.export_csv_entity_report(csv_headers)
+def test_export_csv_entity_report(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
+    """Test SzEngine().export_config()."""
+    csv_column_list = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA,LAST_SEEN_DT,NAME_DATA,ATTRIBUTE_DATA,IDENTIFIER_DATA,ADDRESS_DATA,PHONE_DATA,RELATIONSHIP_DATA,ENTITY_DATA,OTHER_DATA"
+    flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
+    export_handle = sz_engine.export_csv_entity_report(csv_column_list, flags)
     actual = ""
     while True:
-        fragment = g2_engine.fetch_next(handle)
+        fragment = sz_engine.fetch_next(export_handle)
         if len(fragment) == 0:
             break
         actual += fragment
-    g2_engine.close_export(handle)
+    sz_engine.close_export(export_handle)
     assert len(actual) > 0
 
 
 def test_export_csv_entity_report_iterator(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().export_csv_entity_report_iterator()."""
+    """Test SzEngine().export_csv_entity_report_iterator()."""
 
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
         ("CUSTOMERS", "1003"),
     ]
-    add_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
 
     # Test export.
 
@@ -251,8 +254,10 @@ def test_export_csv_entity_report_iterator(
         '4,0,1,"+NAME+DOB+EMAIL","CUSTOMERS","1003"',
     ]
 
+    csv_column_list = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA,LAST_SEEN_DT,NAME_DATA,ATTRIBUTE_DATA,IDENTIFIER_DATA,ADDRESS_DATA,PHONE_DATA,RELATIONSHIP_DATA,ENTITY_DATA,OTHER_DATA"
+    flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
     i = 0
-    for actual in g2_engine.export_csv_entity_report_iterator():
+    for actual in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
         assert actual.strip() == expected[i]
         i += 1
     assert i == len(expected)
@@ -260,11 +265,11 @@ def test_export_csv_entity_report_iterator(
     # Run again to make sure it starts from beginning.
 
     i = 0
-    for _ in g2_engine.export_csv_entity_report_iterator():
+    for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
         i += 1
     assert i == len(expected)
 
-    delete_records(g2_engine, test_records)
+    delete_records(sz_engine, test_records)
 
     # Test export, again.
 
@@ -274,53 +279,54 @@ def test_export_csv_entity_report_iterator(
     ]
 
     i = 0
-    for actual in g2_engine.export_csv_entity_report_iterator():
+    for actual in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
         assert actual.strip() == expected[i]
         i += 1
     assert i == len(expected)
 
 
-def test_export_json_entity_report(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
-    """Test G2Engine().export_json_entity_report()."""
-    handle = g2_engine.export_json_entity_report()
+def test_export_json_entity_report(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
+    """Test SzEngine().export_json_entity_report()."""
+    handle = sz_engine.export_json_entity_report()
     actual = ""
     while True:
-        fragment = g2_engine.fetch_next(handle)
+        fragment = sz_engine.fetch_next(handle)
         if len(fragment) == 0:
             break
         actual += fragment
-    g2_engine.close_export(handle)
+    sz_engine.close_export(handle)
     actual_dict = json.loads(actual)
     assert schema(export_json_entity_report_iterator_schema) == actual_dict
 
 
 def test_export_json_entity_report_iterator(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().export_json_entity_report_iterator()."""
+    """Test SzEngine().export_json_entity_report_iterator()."""
 
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
         ("CUSTOMERS", "1003"),
     ]
-    add_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
 
     # Test export.
 
+    flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
     i = 0
-    for actual in g2_engine.export_json_entity_report_iterator():
+    for actual in sz_engine.export_json_entity_report_iterator(flags):
         i += 1
         actual_dict = json.loads(actual)
         assert schema(export_json_entity_report_iterator_schema) == actual_dict
     assert i == 2
 
-    delete_records(g2_engine, test_records)
+    delete_records(sz_engine, test_records)
 
     # Test export, again.
 
     i = 0
-    for actual in g2_engine.export_json_entity_report_iterator():
+    for actual in sz_engine.export_json_entity_report_iterator(flags):
         i += 1
         actual_dict = json.loads(actual)
         assert schema(export_json_entity_report_iterator_schema) == actual_dict
@@ -328,1825 +334,896 @@ def test_export_json_entity_report_iterator(
 
 
 def test_fetch_next() -> None:
-    """Test G2Engine().fetch_next."""
-    # TODO: implement.
+    """Test SzEngine().fetch_next."""
+    # TODO: implement test_fetch_next.
 
 
 def test_find_interesting_entities_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_entity_id()."""
+    """Test SzEngine().find_interesting_entities_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    actual = g2_engine.find_interesting_entities_by_entity_id(entity_id)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    flags = SzEngineFlags.SZ_NO_FLAGS
+    actual = sz_engine.find_interesting_entities_by_entity_id(entity_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(interesting_entities_schema) == actual_dict
 
 
 def test_find_interesting_entities_by_entity_id_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_entity_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_interesting_entities_by_entity_id(0)
+    """Test SzEngine().find_interesting_entities_by_entity_id()."""
+    bad_entity_id = 0
+    flags = SzEngineFlags.SZ_NO_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_interesting_entities_by_entity_id(bad_entity_id, flags)
 
 
 def test_find_interesting_entities_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
+    """Test SzEngine().find_interesting_entities_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.find_interesting_entities_by_record_id("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_NO_FLAGS
+    actual = sz_engine.find_interesting_entities_by_record_id(
+        data_source_code, record_id, flags
+    )
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(interesting_entities_schema) == actual_dict
 
 
-def test_find_interesting_entities_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_find_interesting_entities_by_record_id_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_interesting_entities_by_record_id("XXXX", "9999")
+    """Test SzEngine().find_interesting_entities_by_record_id()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_NO_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.find_interesting_entities_by_record_id(
+            bad_data_source_code, record_id, flags
+        )
 
 
 def test_find_interesting_entities_by_record_id_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_interesting_entities_by_record_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_interesting_entities_by_record_id("CUSTOMERS", "9999")
+    """Test SzEngine().find_interesting_entities_by_record_id()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_NO_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_interesting_entities_by_record_id(
+            data_source_code, bad_record_id, flags
+        )
 
 
 def test_find_network_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_entity_id()."""
+    """Test SzEngine().find_network_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
+    add_records(sz_engine, test_records)
+    entity_id_1 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    entity_id_2 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002")
     entity_list = {
         "ENTITIES": [
             {"ENTITY_ID": entity_id_1},
             {"ENTITY_ID": entity_id_2},
         ]
     }
-    max_degree = 2
+    max_degrees = 2
     build_out_degree = 1
     max_entities = 10
-    actual = g2_engine.find_network_by_entity_id(
-        entity_list, max_degree, build_out_degree, max_entities
+    flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+    actual = sz_engine.find_network_by_entity_id(
+        entity_list, max_degrees, build_out_degree, max_entities, flags
     )
-    delete_records(g2_engine, test_records)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(network_schema) == actual_dict
 
 
 def test_find_network_by_entity_id_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_entity_id()."""
-    entity_list = {
+    """Test SzEngine().find_network_by_entity_id()."""
+    bad_entity_list = {
         "ENTITIES": [
             {"ENTITY_ID": 0},
             {"ENTITY_ID": 1},
         ]
     }
-    max_degree = 2
+    max_degrees = 2
     build_out_degree = 1
     max_entities = 10
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_network_by_entity_id(
-            entity_list, max_degree, build_out_degree, max_entities
-        )
-
-
-def test_find_network_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_network_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_list = {
-        "ENTITIES": [
-            {"ENTITY_ID": entity_id_1},
-            {"ENTITY_ID": entity_id_2},
-        ]
-    }
-    max_degree = 2
-    build_out_degree = 1
-    max_entities = 10
-    flags = -1
-    actual = g2_engine.find_network_by_entity_id_v2(
-        entity_list, max_degree, build_out_degree, max_entities, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(network_schema) == actual_dict
-
-
-def test_find_network_by_entity_id_v2_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_network_by_entity_id()."""
-    entity_list = {
-        "ENTITIES": [
-            {"ENTITY_ID": 0},
-            {"ENTITY_ID": 1},
-        ]
-    }
-    max_degree = 2
-    build_out_degree = 1
-    max_entities = 10
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_network_by_entity_id_v2(
-            entity_list, max_degree, build_out_degree, max_entities, flags
+    flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_network_by_entity_id(
+            bad_entity_list, max_degrees, build_out_degree, max_entities, flags
         )
 
 
 def test_find_network_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_record_id()."""
+    """Test SzEngine().find_network_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
     record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
         ]
     }
-    max_degree = 2
+    max_degrees = 2
     build_out_degree = 1
     max_entities = 10
-    actual = g2_engine.find_network_by_record_id(
-        record_list, max_degree, build_out_degree, max_entities
+    flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+    actual = sz_engine.find_network_by_record_id(
+        record_list, max_degrees, build_out_degree, max_entities, flags
     )
-    delete_records(g2_engine, test_records)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(network_schema) == actual_dict
 
 
-def test_find_network_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_find_network_by_record_id_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_record_id()."""
-    record_list = {
+    """Test SzEngine().find_network_by_record_id()."""
+    bad_record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
             {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
         ]
     }
-    max_degree = 2
+    max_degrees = 2
     build_out_degree = 1
     max_entities = 10
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_network_by_record_id(
-            record_list, max_degree, build_out_degree, max_entities
+    flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.find_network_by_record_id(
+            bad_record_list, max_degrees, build_out_degree, max_entities, flags
         )
 
 
 def test_find_network_by_record_id_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_network_by_record_id()."""
-    record_list = {
+    """Test SzEngine().find_network_by_record_id()."""
+    bad_record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
         ]
     }
-    max_degree = 2
+    max_degrees = 2
     build_out_degree = 1
     max_entities = 10
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_network_by_record_id(
-            record_list, max_degree, build_out_degree, max_entities
-        )
-
-
-def test_find_network_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_network_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
-        ]
-    }
-    max_degree = 2
-    build_out_degree = 1
-    max_entities = 10
-    flags = -1
-    actual = g2_engine.find_network_by_entity_id_v2(
-        record_list, max_degree, build_out_degree, max_entities, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(network_schema) == actual_dict
-
-
-def test_find_network_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_network_by_record_id()."""
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
-            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
-        ]
-    }
-    max_degree = 2
-    build_out_degree = 1
-    max_entities = 10
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_network_by_record_id_v2(
-            record_list, max_degree, build_out_degree, max_entities, flags
-        )
-
-
-def test_find_network_by_record_id_v2_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_network_by_record_id()."""
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
-        ]
-    }
-    max_degree = 2
-    build_out_degree = 1
-    max_entities = 10
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_network_by_record_id_v2(
-            record_list, max_degree, build_out_degree, max_entities, flags
+    flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_network_by_record_id(
+            bad_record_list, max_degrees, build_out_degree, max_entities, flags
         )
 
 
 def test_find_path_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_path_by_entity_id()."""
+    """Test SzEngine().find_path_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    max_degree = 1
-    actual = g2_engine.find_path_by_entity_id(entity_id_1, entity_id_2, max_degree)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    start_entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    end_entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002")
+    max_degrees = 1
+    exclusions = ""
+    required_data_sources = ""
+    flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+    actual = sz_engine.find_path_by_entity_id(
+        start_entity_id,
+        end_entity_id,
+        max_degrees,
+        exclusions,
+        required_data_sources,
+        flags,
+    )
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(path_schema) == actual_dict
 
 
 def test_find_path_by_entity_id_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_path_by_entity_id()."""
-    max_degree = 1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_by_entity_id(0, 1, max_degree)
-
-
-def test_find_path_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    max_degree = 1
-    flags = -1
-    actual = g2_engine.find_path_by_entity_id(
-        entity_id_1, entity_id_2, max_degree, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_by_entity_id_v2_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_entity_id()."""
-    max_degree = 1
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_by_entity_id_v2(0, 1, max_degree, flags)
-
-
-def test_find_path_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    max_degree = 1
-    actual = g2_engine.find_path_by_record_id(
-        "CUSTOMERS", "1001", "CUSTOMERS", "1002", max_degree
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id()."""
-    max_degree = 1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_path_by_record_id("XXXX", "9999", "XXXX", "9998", max_degree)
-
-
-def test_find_path_by_record_id_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id()."""
-    max_degree = 1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_by_record_id(
-            "CUSTOMERS", "9999", "CUSTOMERS", "9998", max_degree
-        )
-
-
-def test_find_path_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    max_degree = 1
-    flags = -1
-    actual = g2_engine.find_path_by_record_id_v2(
-        "CUSTOMERS", "1001", "CUSTOMERS", "1002", max_degree, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id()."""
-    max_degree = 1
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_path_by_record_id_v2(
-            "XXXX", "9999", "XXXX", "9998", max_degree, flags
-        )
-
-
-def test_find_path_by_record_id_v2_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_by_record_id()."""
-    max_degree = 1
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_by_record_id_v2(
-            "CUSTOMERS", "9999", "CUSTOMERS", "9998", max_degree, flags
-        )
-
-
-def test_find_path_excluding_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    actual = g2_engine.find_path_excluding_by_entity_id(
-        entity_id_1, entity_id_2, max_degree, excluded_entities
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_excluding_by_entity_id_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_entity_id()."""
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": 3}],
-    }
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_excluding_by_entity_id(
-            0, 1, max_degree, excluded_entities
-        )
-
-
-def test_find_path_excluding_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    flags = -1
-    actual = g2_engine.find_path_excluding_by_entity_id_v2(
-        entity_id_1, entity_id_2, max_degree, excluded_entities, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_excluding_by_entity_id_v2_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_entity_id()."""
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": 3}],
-    }
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_excluding_by_entity_id_v2(
-            0, 1, max_degree, excluded_entities, flags
-        )
-
-
-def test_find_path_excluding_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}],
-    }
-    actual = g2_engine.find_path_excluding_by_record_id(
-        "CUSTOMERS", "1001", "CUSTOMERS", "1002", max_degree, excluded_records
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_excluding_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "XXXX", "RECORD_ID": "9997"}],
-    }
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_path_excluding_by_record_id(
-            "XXXX", "9999", "XXXX", "9998", max_degree, excluded_records
-        )
-
-
-def test_find_path_excluding_by_record_id_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9997"}],
-    }
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_excluding_by_record_id(
-            "CUSTOMERS", "9999", "CUSTOMERS", "9998", max_degree, excluded_records
-        )
-
-
-def test_find_path_excluding_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}],
-    }
-    flags = -1
-    actual = g2_engine.find_path_excluding_by_record_id(
-        "CUSTOMERS", "1001", "CUSTOMERS", "1002", max_degree, excluded_records, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_excluding_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "XXXX", "RECORD_ID": "9997"}],
-    }
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.find_path_excluding_by_record_id_v2(
-            "XXXX", "9999", "XXXX", "9998", max_degree, excluded_records, flags
-        )
-
-
-def test_find_path_excluding_by_record_id_v2_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_excluding_by_record_id()."""
-    max_degree = 1
-    excluded_records = {
-        "RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9997"}],
-    }
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_excluding_by_record_id_v2(
-            "CUSTOMERS",
-            "9999",
-            "CUSTOMERS",
-            "9998",
-            max_degree,
-            excluded_records,
+    """Test SzEngine().find_path_by_entity_id()."""
+    bad_start_entity_id = 0
+    bad_end_entity_id = 1
+    max_degrees = 1
+    exclusions = ""
+    required_data_sources = ""
+    flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+    max_degrees = 1
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_path_by_entity_id(
+            bad_start_entity_id,
+            bad_end_entity_id,
+            max_degrees,
+            exclusions,
+            required_data_sources,
             flags,
         )
 
 
-def test_find_path_including_source_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_find_path_by_record_id(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_path_including_source_by_entity_id()."""
+    """Test SzEngine().find_path_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
-    actual = g2_engine.find_path_including_source_by_entity_id(
-        entity_id_1, entity_id_2, max_degree, excluded_entities, required_dsrcs
+    add_records(sz_engine, test_records)
+    start_data_source_code = "CUSTOMERS"
+    start_record_id = "1001"
+    end_data_source_code = "CUSTOMERS"
+    end_record_id = "1002"
+    max_degrees = 1
+    exclusions = ""
+    required_data_sources = ""
+    flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+    actual = sz_engine.find_path_by_record_id(
+        start_data_source_code,
+        start_record_id,
+        end_data_source_code,
+        end_record_id,
+        max_degrees,
+        exclusions,
+        required_data_sources,
+        flags,
     )
-    delete_records(g2_engine, test_records)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(path_schema) == actual_dict
 
 
-def test_find_path_including_source_by_entity_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_find_path_by_record_id_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_path_including_source_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["XXXX"]}
-    try:
-        with pytest.raises(G2UnknownDatasourceError):
-            _ = g2_engine.find_path_including_source_by_entity_id(
-                entity_id_1, entity_id_2, max_degree, excluded_entities, required_dsrcs
-            )
-    finally:
-        delete_records(g2_engine, test_records)
-
-
-def test_find_path_including_source_by_entity_id_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_including_source_by_entity_id()."""
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": 2}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.find_path_including_source_by_entity_id(
-            0, 1, max_degree, excluded_entities, required_dsrcs
+    """Test SzEngine().find_path_by_record_id()."""
+    bad_start_data_source_code = "XXXX"
+    start_record_id = "9999"
+    bad_end_data_source_code = "XXXX"
+    end_record_id = "9998"
+    max_degrees = 1
+    exclusions = ""
+    required_data_sources = ""
+    flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.find_path_by_record_id(
+            bad_start_data_source_code,
+            start_record_id,
+            bad_end_data_source_code,
+            end_record_id,
+            max_degrees,
+            exclusions,
+            required_data_sources,
+            flags,
         )
 
 
-def test_find_path_including_source_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_find_path_by_record_id_bad_record_ids(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().find_path_including_source_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
-    flags = -1
-    actual = g2_engine.find_path_including_source_by_entity_id(
-        entity_id_1, entity_id_2, max_degree, excluded_entities, required_dsrcs, flags
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_including_source_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_including_source_by_record_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
-    actual = g2_engine.find_path_including_source_by_record_id(
-        "CUSTOMERS",
-        "1001",
-        "CUSTOMERS",
-        "1002",
-        max_degree,
-        excluded_entities,
-        required_dsrcs,
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
-
-
-def test_find_path_including_source_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().find_path_including_source_by_record_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_3 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1003")
-    max_degree = 1
-    excluded_entities = {
-        "ENTITIES": [{"ENTITY_ID": entity_id_3}],
-    }
-    required_dsrcs = {"DATA_SOURCES": ["CUSTOMERS"]}
-    flags = -1
-    actual = g2_engine.find_path_including_source_by_record_id_v2(
-        "CUSTOMERS",
-        "1001",
-        "CUSTOMERS",
-        "1002",
-        max_degree,
-        excluded_entities,
-        required_dsrcs,
-        flags,
-    )
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(path_schema) == actual_dict
+    """Test SzEngine().find_path_by_record_id()."""
+    start_data_source_code = "CUSTOMERS"
+    bad_start_record_id = "9999"
+    end_data_source_code = "CUSTOMERS"
+    bad_end_record_id = "9998"
+    max_degrees = 1
+    exclusions = ""
+    required_data_sources = ""
+    flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.find_path_by_record_id(
+            start_data_source_code,
+            bad_start_record_id,
+            end_data_source_code,
+            bad_end_record_id,
+            max_degrees,
+            exclusions,
+            required_data_sources,
+            flags,
+        )
 
 
 def test_get_active_config_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_active_config_id()."""
-    actual = g2_engine.get_active_config_id()
+    """Test SzEngine().get_active_config_id()."""
+    actual = sz_engine.get_active_config_id()
     assert actual >= 0
 
 
 def test_get_entity_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_by_entity_id()."""
+    """Test SzEngine().get_entity_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    actual = g2_engine.get_entity_by_entity_id(entity_id)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(resolved_entity_schema) == actual_dict
-
-
-def test_get_entity_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_entity_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    flags = -1
-    actual = g2_engine.get_entity_by_entity_id_v2(entity_id, flags)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    flags = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS
+    actual = sz_engine.get_entity_by_entity_id(entity_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(resolved_entity_schema) == actual_dict
 
 
 def test_get_entity_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_by_record_id()."""
+    """Test SzEngine().get_entity_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.get_entity_by_record_id("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS
+    actual = sz_engine.get_entity_by_record_id(data_source_code, record_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(resolved_entity_schema) == actual_dict
 
 
-def test_get_entity_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_get_entity_by_record_id_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_by_record_id()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_entity_by_record_id("XXXX", "9999")
+    """Test SzEngine().get_entity_by_record_id()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.get_entity_by_record_id(bad_data_source_code, record_id, flags)
 
 
 def test_get_entity_by_record_id_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_by_record_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_entity_by_record_id("CUSTOMERS", "9999")
-
-
-def test_get_entity_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_entity_by_record_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    flags = -1
-    actual = g2_engine.get_entity_by_record_id_v2("CUSTOMERS", "1001", flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(resolved_entity_schema) == actual_dict
-
-
-def test_get_entity_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_entity_by_record_id_v2()."""
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_entity_by_record_id_v2("XXXX", "9999", flags)
-
-
-def test_get_entity_by_record_id_v2_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_entity_by_record_id_v2()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_entity_by_record_id_v2("CUSTOMERS", "9999", flags)
+    """Test SzEngine().get_entity_by_record_id()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.get_entity_by_record_id(data_source_code, bad_record_id, flags)
 
 
 def test_get_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_record()."""
+    """Test SzEngine().get_record()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.get_record("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+    actual = sz_engine.get_record(data_source_code, record_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(record_schema) == actual_dict
 
 
-def test_get_record_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_get_record_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_record()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_record("XXXX", "9999")
+    """Test SzEngine().get_record()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.get_record(bad_data_source_code, record_id, flags)
 
 
 def test_get_record_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_record()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_record("CUSTOMERS", "9999")
-
-
-def test_get_record_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_record_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    flags = -1
-    actual = g2_engine.get_record_v2("CUSTOMERS", "1001", flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(record_schema) == actual_dict
-
-
-def test_get_record_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_record()."""
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_record_v2("XXXX", "9999", flags)
-
-
-def test_get_record_v2_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_record()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_record_v2("CUSTOMERS", "9999", flags)
+    """Test SzEngine().get_record()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.get_record(data_source_code, bad_record_id, flags)
 
 
 def test_get_redo_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_redo_record()."""
+    """Test SzEngine().get_redo_record()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
         ("CUSTOMERS", "1003"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.get_redo_record()
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    actual = sz_engine.get_redo_record()
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(redo_record_schema) == actual_dict
 
 
 def test_get_repository_last_modified_time(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_repository_last_modified_time()."""
-    actual = g2_engine.get_repository_last_modified_time()
+    """Test SzEngine().get_repository_last_modified_time()."""
+    actual = sz_engine.get_repository_last_modified_time()
     assert actual >= 0
 
 
-def test_get_virtual_entity_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_get_stats(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id()."""
+    """Test SzEngine().stats()."""
+    actual = sz_engine.get_stats()
+    actual_dict = json.loads(actual)
+    assert schema(stats_schema) == actual_dict
+
+
+def test_get_virtual_entity_by_record_id(
+    sz_engine: szengine_grpc.SzEngineGrpc,
+) -> None:
+    """Test SzEngine().get_virtual_entity_by_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
     record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
         ]
     }
-    actual = g2_engine.get_virtual_entity_by_record_id(record_list)
-    delete_records(g2_engine, test_records)
+    flags = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS
+    actual = sz_engine.get_virtual_entity_by_record_id(record_list, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(virtual_entity_schema) == actual_dict
 
 
-def test_get_virtual_entity_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_get_virtual_entity_by_record_id_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id()."""
-    record_list = {
+    """Test SzEngine().get_virtual_entity_by_record_id()."""
+    bad_record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
             {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
         ]
     }
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_virtual_entity_by_record_id(record_list)
+    flags = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.get_virtual_entity_by_record_id(bad_record_list, flags)
 
 
 def test_get_virtual_entity_by_record_id_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id()."""
-    record_list = {
+    """Test SzEngine().get_virtual_entity_by_record_id()."""
+    bad_record_list = {
         "RECORDS": [
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
             {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
         ]
     }
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_virtual_entity_by_record_id(record_list)
-
-
-def test_get_virtual_entity_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
-        ]
-    }
-    flags = -1
-    actual = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(virtual_entity_schema) == actual_dict
-
-
-def test_get_virtual_entity_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id()."""
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9999"},
-            {"DATA_SOURCE": "XXXX", "RECORD_ID": "9998"},
-        ]
-    }
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
-
-
-def test_get_virtual_entity_by_record_id_v2_bad_record_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_virtual_entity_by_record_id()."""
-    record_list = {
-        "RECORDS": [
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9999"},
-            {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "9998"},
-        ]
-    }
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.get_virtual_entity_by_record_id_v2(record_list, flags)
+    flags = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.get_virtual_entity_by_record_id(bad_record_list, flags)
 
 
 def test_how_entity_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().how_entity_by_entity_id()."""
+    """Test SzEngine().how_entity_by_entity_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    actual = g2_engine.how_entity_by_entity_id(entity_id)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    flags = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS
+    actual = sz_engine.how_entity_by_entity_id(entity_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(how_results_schema) == actual_dict
 
 
 def test_how_entity_by_entity_id_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().how_entity_by_entity_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.how_entity_by_entity_id(0)
+    """Test SzEngine().how_entity_by_entity_id()."""
+    bad_entity_id = 0
+    flags = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.how_entity_by_entity_id(bad_entity_id, flags)
 
 
-def test_how_entity_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_initialize(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().how_entity_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    flags = -1
-    actual = g2_engine.how_entity_by_entity_id_v2(entity_id, flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(how_results_schema) == actual_dict
-
-
-def test_how_entity_by_entity_id_v2_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().how_entity_by_entity_id()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.how_entity_by_entity_id_v2(0, flags)
-
-
-def test_init(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().init()."""
-    module_name = "Test"
-    ini_params: Dict[str, str] = {}
-    g2_engine.init(module_name, ini_params)
-
-
-def test_init_with_config_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().init_with_config_id()."""
-    module_name = "Test"
-    ini_params: Dict[str, str] = {}
-    init_config_id = 0
-    g2_engine.init_with_config_id(module_name, ini_params, init_config_id)
+    """Test SzEngine().initialize()."""
+    instance_name = "Test"
+    settings: Dict[str, str] = {}
+    config_id = SzEngineFlags.SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION
+    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    sz_engine.initialize(instance_name, settings, config_id, verbose_logging)
 
 
 def test_prime_engine(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().prime_engine()."""
-    g2_engine.prime_engine()
-
-
-def test_process(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_redo_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    redo_records_processed = 0
-    while g2_engine.count_redo_records() > 0:
-        record = g2_engine.get_redo_record()
-        g2_engine.process(record)
-        redo_records_processed += 1
-    delete_records(g2_engine, test_records)
-    assert redo_records_processed > 0
-
-
-def test_process_bad_empty_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_redo_record()."""
-    with pytest.raises(G2BadInputError):
-        g2_engine.process("")
-
-
-def test_process_with_info(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().process_with_info()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    flags = -1
-    redo_records_processed = 0
-    while g2_engine.count_redo_records() > 0:
-        record = g2_engine.get_redo_record()
-        actual = g2_engine.process_with_info(record, flags)
-        actual_dict = json.loads(actual)
-        assert schema(process_withinfo_schema) == actual_dict
-        redo_records_processed += 1
-    delete_records(g2_engine, test_records)
-    assert redo_records_processed > 0
-
-
-def test_process_with_info_bad_empty_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().get_redo_record()."""
-    flags = -1
-    with pytest.raises(G2BadInputError):
-        _ = g2_engine.process_with_info("", flags)
-
-
-def test_purge_repository() -> None:
-    """Test G2Engine().purge_repository."""
-    # TODO: implement.
+    """Test SzEngine().prime_engine()."""
+    sz_engine.prime_engine()
 
 
 def test_reevaluate_entity(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_id_from_record_id()."""
+    """Test SzEngine().get_entity_id_from_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    g2_engine.reevaluate_entity(entity_id)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.reevaluate_entity(entity_id, flags)
+    delete_records(sz_engine, test_records)
 
 
 def test_reevaluate_entity_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_id_from_record_id()."""
-    g2_engine.reevaluate_entity(0)
+    """Test SzEngine().get_entity_id_from_record_id()."""
+    bad_entity_id = 0
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.reevaluate_entity(bad_entity_id, flags)
 
 
 def test_reevaluate_entity_with_info(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_entity_with_info()."""
+    """Test SzEngine().reevaluate_entity_with_info()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    flags = -1
-    actual = g2_engine.reevaluate_entity_with_info(entity_id, flags)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    flags = SzEngineFlags.SZ_WITH_INFO
+    actual = sz_engine.reevaluate_entity(entity_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
 
 def test_reevaluate_entity_with_info_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_entity_with_info()."""
-    _ = g2_engine.reevaluate_entity_with_info(0)
+    """Test SzEngine().reevaluate_entity_with_info()."""
+    bad_entity_id = 0
+    flags = SzEngineFlags.SZ_WITH_INFO
+    _ = sz_engine.reevaluate_entity(bad_entity_id, flags)
 
 
 def test_reevaluate_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().get_entity_id_from_record_id()."""
+    """Test SzEngine().get_entity_id_from_record_id()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    g2_engine.reevaluate_record("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    sz_engine.reevaluate_record(data_source_code, record_id, flags)
+    delete_records(sz_engine, test_records)
 
 
-def test_reevaluate_record_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_reevaluate_record_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_record()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        g2_engine.reevaluate_record("XXXX", "9999")
+    """Test SzEngine().reevaluate_record()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    with pytest.raises(SzUnknownDataSourceError):
+        sz_engine.reevaluate_record(bad_data_source_code, record_id, flags)
 
 
 def test_reevaluate_record_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_record()."""
-    with pytest.raises(G2NotFoundError):
-        g2_engine.reevaluate_record("CUSTOMERS", "9999")
+    """Test SzEngine().reevaluate_record()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    with pytest.raises(SzNotFoundError):
+        sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
 
 
 def test_reevaluate_record_with_info(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_entity_with_info()."""
+    """Test SzEngine().reevaluate_entity_with_info()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.reevaluate_record_with_info("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code = "CUSTOMERS"
+    record_id = "1001"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    actual = sz_engine.reevaluate_record(data_source_code, record_id, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_dict
 
 
-def test_reevaluate_record_with_info_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_reevaluate_record_with_info_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_entity_with_info()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.reevaluate_record_with_info("XXXX", "9999")
+    """Test SzEngine().reevaluate_entity_with_info()."""
+    bad_data_source_code = "XXXX"
+    record_id = "9999"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.reevaluate_record(bad_data_source_code, record_id, flags)
 
 
 def test_reevaluate_record_with_info_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().reevaluate_entity_with_info()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.reevaluate_record_with_info("CUSTOMERS", "9999")
+    """Test SzEngine().reevaluate_entity_with_info()."""
+    data_source_code = "CUSTOMERS"
+    bad_record_id = "9999"
+    flags = SzEngineFlags.SZ_WITH_INFO
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
 
 
-def test_reinit(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_reinitialize(
+    sz_engine: szengine_grpc.SzEngineGrpc,
+    sz_configmgr: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2Engine().reinit()."""
-    init_config_id = g2_configmgr.get_default_config_id()
-    g2_engine.reinit(init_config_id)
+    """Test SzEngine().reinitialize()."""
+    config_id = sz_configmgr.get_default_config_id()
+    sz_engine.reinitialize(config_id)
 
 
-def test_reinit_bad_init_config_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-    g2_configmgr: g2configmgr_grpc.SzConfigManagerGrpc,
+def test_reinitialize_bad_init_config_id(
+    sz_engine: szengine_grpc.SzEngineGrpc,
+    sz_configmgr: szconfigmanager_grpc.SzConfigManagerGrpc,
 ) -> None:
-    """Test G2Engine().reinit()."""
+    """Test SzEngine().reinit()."""
+    bad_config_id = 0
     try:
-        with pytest.raises(G2ConfigurationError):
-            g2_engine.reinit(0)
+        with pytest.raises(SzConfigurationError):
+            sz_engine.reinitialize(bad_config_id)
     finally:
-        init_config_id = g2_configmgr.get_default_config_id()
-        g2_engine.reinit(init_config_id)
-
-
-def test_replace_record(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    g2_engine.replace_record("CUSTOMERS", "1001", data, LOAD_ID)
-    delete_records(g2_engine, test_records)
-
-
-def test_replace_record_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    try:
-        with pytest.raises(G2BadInputError):
-            g2_engine.replace_record("XXXX", "9999", data, LOAD_ID)
-    finally:
-        delete_records(g2_engine, test_records)
-
-
-def test_replace_record_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    try:
-        with pytest.raises(G2BadInputError):
-            g2_engine.replace_record("CUSTOMERS", "9999", data, LOAD_ID)
-    finally:
-        delete_records(g2_engine, test_records)
-
-
-def test_replace_record_with_info(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record_with_info()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    actual = g2_engine.replace_record_with_info("CUSTOMERS", "1001", data, LOAD_ID)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(add_record_with_info_schema) == actual_dict
-
-
-def test_replace_record_with_info_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    try:
-        with pytest.raises(G2BadInputError):
-            _ = g2_engine.replace_record_with_info("XXXX", "9999", data, LOAD_ID)
-    finally:
-        delete_records(g2_engine, test_records)
-
-
-def test_replace_record_with_info_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().replace_record()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = TRUTHSET_CUSTOMER_RECORDS.get("1001", {}).get("Json", "")
-    data = json.loads(json_data)
-    data["ADDR_POSTAL_CODE"] = "99999"
-    try:
-        with pytest.raises(G2BadInputError):
-            _ = g2_engine.replace_record_with_info("CUSTOMERS", "9999", data, LOAD_ID)
-    finally:
-        delete_records(g2_engine, test_records)
+        config_id = sz_configmgr.get_default_config_id()
+        sz_engine.reinitialize(config_id)
 
 
 def test_search_by_attributes(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().search_by_attributes()."""
+    """Test SzEngine().search_by_attributes()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
         ("CUSTOMERS", "1003"),
     ]
-    add_records(g2_engine, test_records)
-    json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
-    actual = g2_engine.search_by_attributes(json_data)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    attributes = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    search_profile = "{}"
+    flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
+    actual = sz_engine.search_by_attributes(attributes, search_profile, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(search_schema) == actual_dict
 
 
-def test_search_by_attributes_bad_json_data(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_search_by_attributes_bad_attributes(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().search_by_attributes()."""
-    with pytest.raises(G2BadInputError):
-        _ = g2_engine.search_by_attributes("{")
-
-
-def test_search_by_attributes_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().search_by_attributes_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
-    flags = -1
-    actual = g2_engine.search_by_attributes_v2(json_data, flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(search_schema) == actual_dict
-
-
-def test_search_by_attributes_v2_bad_json_data(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().search_by_attributes()."""
-    flags = -1
-    with pytest.raises(G2BadInputError):
-        _ = g2_engine.search_by_attributes_v2("{", flags)
-
-
-def test_search_by_attributes_v3(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().search_by_attributes_v3()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(g2_engine, test_records)
-    # TODO: Uncomment after V3 is published.
-    # json_data = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
-    # search_profile = {}
-    # flags = -1
-    # actual = g2_engine.search_by_attributes_v3(json_data, search_profile, flags)
-    delete_records(g2_engine, test_records)
-    # actual_dict = json.loads(actual)
-    # assert schema(search_schema) == actual_dict
-
-
-def test_search_by_attributes_v3_bad_json_data() -> None:
-    """Test G2Engine().search_by_attributes()."""
-    # TODO: implement.
-    # search_profile = {}
-    # flags = -1
-    # with pytest.raises(G2BadInputError):
-    #     _ = g2_engine.search_by_attributes_v3("{", search_profile, flags)
-
-
-def test_stats(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().stats()."""
-    actual = g2_engine.stats()
-    actual_dict = json.loads(actual)
-    assert schema(stats_schema) == actual_dict
+    """Test SzEngine().search_by_attributes()."""
+    bad_attributes = "{"
+    search_profile = "{}"
+    flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
+    with pytest.raises(SzBadInputError):
+        _ = sz_engine.search_by_attributes(bad_attributes, search_profile, flags)
 
 
 def test_why_entities(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().why_entities()."""
+    """Test SzEngine().why_entities()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    actual = g2_engine.why_entities(entity_id_1, entity_id_2)
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    entity_id_1 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
+    entity_id_2 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002")
+    flags = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS
+    actual = sz_engine.why_entities(entity_id_1, entity_id_2, flags)
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(why_entities_results_schema) == actual_dict
 
 
 def test_why_entities_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().why_entities()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entities(0, 1)
-
-
-def test_why_entities_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entities_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id_1 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    entity_id_2 = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1002")
-    flags = -1
-    actual = g2_engine.why_entities_v2(entity_id_1, entity_id_2, flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entities_results_schema) == actual_dict
-
-
-def test_why_entities_v2_bad_entity_ids(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entities_v2()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entities_v2(0, 1, flags)
-
-
-def test_why_entity_by_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_entity_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    actual = g2_engine.why_entity_by_entity_id(entity_id)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entity_results_schema) == actual_dict
-
-
-def test_why_entity_by_entity_id_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_entity_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entity_by_entity_id(0)
-
-
-def test_why_entity_by_entity_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_entity_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    entity_id = get_entity_id_from_record_id(g2_engine, "CUSTOMERS", "1001")
-    flags = -1
-    actual = g2_engine.why_entity_by_entity_id_v2(entity_id, flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entity_results_schema) == actual_dict
-
-
-def test_why_entity_by_entity_id_v2_bad_entity_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_entity_id_v2()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entity_by_entity_id_v2(0)
-
-
-def test_why_entity_by_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.why_entity_by_record_id("CUSTOMERS", "1001")
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entity_results_schema) == actual_dict
-
-
-def test_why_entity_by_record_id_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.why_entity_by_record_id("XXXX", "1001")
-
-
-def test_why_entity_by_record_id_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entity_by_record_id("CUSTOMERS", "9999")
-
-
-def test_why_entity_by_record_id_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-    ]
-    add_records(g2_engine, test_records)
-    flags = -1
-    actual = g2_engine.why_entity_by_record_id_v2("CUSTOMERS", "1001", flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entity_results_schema) == actual_dict
-
-
-def test_why_entity_by_record_id_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id_v2()."""
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.why_entity_by_record_id_v2("XXXX", "1001", flags)
-
-
-def test_why_entity_by_record_id_v2_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_entity_by_record_id_v2()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_entity_by_record_id_v2("CUSTOMERS", "9999", flags)
+    """Test SzEngine().why_entities()."""
+    bad_entity_id_1 = 0
+    entity_id_2 = 1
+    flags = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.why_entities(bad_entity_id_1, entity_id_2, flags)
 
 
 def test_why_record_in_entity() -> None:
-    """Test G2Engine().why_record_in_entity()."""
+    """Test SzEngine().why_record_in_entity()."""
     # TODO: implement.
 
 
 def test_why_record_in_entity_v2() -> None:
-    """Test G2Engine().why_record_in_entity_v2()."""
+    """Test SzEngine().why_record_in_entity_v2()."""
     # TODO: implement.
 
 
 def test_why_records(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().why_records()."""
+    """Test SzEngine().why_records()."""
     test_records: List[Tuple[str, str]] = [
         ("CUSTOMERS", "1001"),
         ("CUSTOMERS", "1002"),
     ]
-    add_records(g2_engine, test_records)
-    actual = g2_engine.why_records("CUSTOMERS", "1001", "CUSTOMERS", "1002")
-    delete_records(g2_engine, test_records)
+    add_records(sz_engine, test_records)
+    data_source_code_1 = "CUSTOMERS"
+    record_id_1 = "1001"
+    data_source_code_2 = "CUSTOMERS"
+    record_id_2 = "1002"
+    flags = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS
+    actual = sz_engine.why_records(
+        data_source_code_1, record_id_1, data_source_code_2, record_id_2, flags
+    )
+    delete_records(sz_engine, test_records)
     actual_dict = json.loads(actual)
     assert schema(why_entity_results_schema) == actual_dict
 
 
-def test_why_records_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+def test_why_records_bad_data_source_code(
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().why_records()."""
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.why_records("CUSTOMERS", "1001", "XXXX", "9999")
+    """Test SzEngine().why_records()."""
+    data_source_code_1 = "CUSTOMERS"
+    record_id_1 = "1001"
+    bad_data_source_code_2 = "XXXX"
+    record_id_2 = "9999"
+    flags = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS
+    with pytest.raises(SzUnknownDataSourceError):
+        _ = sz_engine.why_records(
+            data_source_code_1, record_id_1, bad_data_source_code_2, record_id_2, flags
+        )
 
 
 def test_why_records_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().why_records()."""
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_records("CUSTOMERS", "1001", "CUSTOMERS", "9999")
-
-
-def test_why_records_v2(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_records_v2()."""
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-    ]
-    add_records(g2_engine, test_records)
-    flags = -1
-    actual = g2_engine.why_records_v2("CUSTOMERS", "1001", "CUSTOMERS", "1002", flags)
-    delete_records(g2_engine, test_records)
-    actual_dict = json.loads(actual)
-    assert schema(why_entity_results_schema) == actual_dict
-
-
-def test_why_records_v2_bad_datasource(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_records()."""
-    flags = -1
-    with pytest.raises(G2UnknownDatasourceError):
-        _ = g2_engine.why_records_v2("CUSTOMERS", "1001", "XXXX", "9999", flags)
-
-
-def test_why_records_v2_bad_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
-) -> None:
-    """Test G2Engine().why_records()."""
-    flags = -1
-    with pytest.raises(G2NotFoundError):
-        _ = g2_engine.why_records_v2("CUSTOMERS", "1001", "CUSTOMERS", "9999", flags)
+    """Test SzEngine().why_records()."""
+    data_source_code_1 = "CUSTOMERS"
+    record_id_1 = "1001"
+    data_source_code_2 = "CUSTOMERS"
+    bad_record_id_2 = "9999"
+    flags = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS
+    with pytest.raises(SzNotFoundError):
+        _ = sz_engine.why_records(
+            data_source_code_1, record_id_1, data_source_code_2, bad_record_id_2, flags
+        )
 
 
 # -----------------------------------------------------------------------------
-# G2Engine misc tests
+# SzEngine misc tests
 # -----------------------------------------------------------------------------
 
 
 def test_add_record_using_context_managment() -> None:
-    """Test the use of G2EngineGrpc in context."""
+    """Test the use of SzEngineGrpc in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel) as g2_engine:
+    with szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel) as sz_engine:
         data_source_code = "TEST"
         record_id = "2"
-        json_data = "{}"
-        load_id = "Test Load"
-        g2_engine.add_record(data_source_code, record_id, json_data, load_id)
+        record_definition = "{}"
+        flags = SzEngineFlags.SZ_WITHOUT_INFO
+        sz_engine.add_record(data_source_code, record_id, record_definition, flags)
 
 
 # -----------------------------------------------------------------------------
-# G2Engine post tests
+# SzEngine post tests
 # -----------------------------------------------------------------------------
 
 
 def test_destroy(
-    g2_engine: g2engine_grpc.G2EngineGrpc,
+    sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
-    """Test G2Engine().destroy()."""
-    g2_engine.destroy()
+    """Test SzEngine().destroy()."""
+    sz_engine.destroy()
 
 
 # -----------------------------------------------------------------------------
-# G2Engine fixtures
+# SzEngine fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="g2_config", scope="module")  # type: ignore[misc]
-def g2config_fixture() -> g2config_grpc.SzConfigGrpc:
+@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
+def szconfig_fixture() -> szconfig_grpc.SzConfigGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2config_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
+    result = szconfig_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
-@pytest.fixture(name="g2_configmgr", scope="module")  # type: ignore[misc]
-def g2configmgr_fixture() -> g2configmgr_grpc.SzConfigManagerGrpc:
+@pytest.fixture(name="sz_configmgr", scope="module")  # type: ignore[misc]
+def szconfigmanager_fixture() -> szconfigmanager_grpc.SzConfigManagerGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2configmgr_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = szconfigmanager_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 
-@pytest.fixture(name="g2_engine", scope="module")  # type: ignore[misc]
-def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
+@pytest.fixture(name="sz_engine", scope="module")  # type: ignore[misc]
+def szengine_fixture() -> szengine_grpc.SzEngineGrpc:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = g2engine_grpc.G2EngineGrpc(grpc_channel=grpc_channel)
+    result = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -2156,60 +1233,65 @@ def g2engine_fixture() -> g2engine_grpc.G2EngineGrpc:
 
 
 def add_records(
-    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
+    sz_engine: szengine_grpc.SzEngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
     """Add all of the records in the list."""
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        g2_engine.add_record(
+        sz_engine.add_record(
             record.get("DataSource", ""),
             record.get("Id", ""),
             record.get("Json", ""),
-            LOAD_ID,
+            flags,
         )
 
 
-def add_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+def add_records_truthset(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
     """Add all truth-set the records."""
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
-        for record in record_set.values():
-            g2_engine.add_record(
-                record.get("DataSource"), record.get("Id"), record.get("Json"), LOAD_ID
+        for redo_record in record_set.values():
+            sz_engine.add_record(
+                redo_record.get("DataSource"),
+                redo_record.get("Id"),
+                redo_record.get("Json"),
+                flags,
             )
-    while g2_engine.count_redo_records() > 0:
-        record = g2_engine.get_redo_record()
-        g2_engine.process(record)
+    while sz_engine.count_redo_records() > 0:
+        redo_record = sz_engine.get_redo_record()
+        sz_engine.process_redo_record(redo_record, flags)
 
 
 def delete_records(
-    g2_engine: g2engine_grpc.G2EngineGrpc, record_id_list: List[Tuple[str, str]]
+    sz_engine: szengine_grpc.SzEngineGrpc, record_id_list: List[Tuple[str, str]]
 ) -> None:
     """Delete all of the records in the list."""
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        g2_engine.delete_record(
-            record.get("DataSource", ""),
-            record.get("Id", ""),
-            LOAD_ID,
+        sz_engine.delete_record(
+            record.get("DataSource", ""), record.get("Id", ""), flags
         )
 
 
-def delete_records_truthset(g2_engine: g2engine_grpc.G2EngineGrpc) -> None:
+def delete_records_truthset(sz_engine: szengine_grpc.SzEngineGrpc) -> None:
     """Delete all truth-set the records."""
+    flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
-            g2_engine.delete_record(record.get("DataSource"), record.get("Id"), LOAD_ID)
+            sz_engine.delete_record(record.get("DataSource"), record.get("Id"), flags)
 
 
 def get_entity_id_from_record_id(
-    g2_engine: g2engine_grpc.G2EngineGrpc, data_source_code: str, record_id: str
+    sz_engine: szengine_grpc.SzEngineGrpc, data_source_code: str, record_id: str
 ) -> int:
     """Given a (datasource, record_id), return the entity ID."""
-    entity_json = g2_engine.get_entity_by_record_id(data_source_code, record_id)
+    entity_json = sz_engine.get_entity_by_record_id(data_source_code, record_id)
     entity = json.loads(entity_json)
     return int(entity.get("RESOLVED_ENTITY", {}).get("ENTITY_ID", 0))
 
@@ -2224,11 +1306,9 @@ DATA_SOURCES = {
     "WATCHLIST": TRUTHSET_WATCHLIST_RECORDS,
 }
 
-LOAD_ID = "Test Load"
-
 
 # -----------------------------------------------------------------------------
-# G2Engine schemas
+# SzEngine schemas
 # -----------------------------------------------------------------------------
 
 add_record_with_info_schema = {

@@ -50,7 +50,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
         # pylint: disable=W0613
 
         self.channel = grpc_channel
-        self.stub = szproduct_pb2_grpc.G2ProductStub(self.channel)
+        self.stub = szproduct_pb2_grpc.SzProductStub(self.channel)
 
     def __enter__(
         self,
@@ -72,30 +72,30 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
     # G2Product methods
     # -------------------------------------------------------------------------
 
-    def destroy(self, *args: Any, **kwargs: Any) -> None:
+    def destroy(self, **kwargs: Any) -> None:
         """Null function"""
 
-    def init(
+    def initialize(
         self,
-        module_name: str,
-        ini_params: Union[str, Dict[Any, Any]],
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
-        **kwargs: Any,
+        **kwargs: Any
     ) -> None:
         """Null function"""
 
-    def license(self, *args: Any, **kwargs: Any) -> str:
+    def get_license(self, **kwargs: Any) -> str:
         try:
-            request = szproduct_pb2.LicenseRequest()  # type: ignore[unused-ignore]
-            response = self.stub.License(request)
+            request = szproduct_pb2.GetLicenseRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetLicense(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def version(self, *args: Any, **kwargs: Any) -> str:
+    def get_version(self, **kwargs: Any) -> str:
         try:
-            request = szproduct_pb2.VersionRequest()  # type: ignore[unused-ignore]
-            response = self.stub.Version(request)
+            request = szproduct_pb2.GetVersionRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetVersion(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err

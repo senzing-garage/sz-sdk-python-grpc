@@ -17,7 +17,7 @@ from .szhelpers import new_exception
 
 # Metadata
 
-__all__ = ["G2DiagnosticGrpc"]
+__all__ = ["SzDiagnosticGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2023-12-16"
@@ -25,11 +25,11 @@ __updated__ = "2023-12-16"
 SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# G2DiagnosticGrpc class
+# SzDiagnosticGrpc class
 # -----------------------------------------------------------------------------
 
 
-class G2DiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
+class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
     """
     G2 diagnostic module access library over gRPC.
     """
@@ -84,13 +84,14 @@ class G2DiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
     def destroy(self, **kwargs: Any) -> None:
         """Null function"""
 
-    # def get_datastore_info(self, **kwargs: Any) -> str:
-    #     try:
-    #         request = szdiagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
-    #         response = self.stub.GetDBInfo(request)
-    #         return str(response.result)
-    #     except Exception as err:
-    #         raise new_exception(err) from err
+    def get_datastore_info(self, **kwargs: Any) -> str:
+        # try:
+        #     request = szdiagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
+        #     response = self.stub.GetDBInfo(request)
+        #     return str(response.result)
+        # except Exception as err:
+        #     raise new_exception(err) from err
+        return ""
 
     def get_feature(self, feature_id: int, **kwargs: Any) -> str:
         """TODO: Add get_feature()"""
