@@ -81,7 +81,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
     ) -> str:
         try:
             request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
-                config_handle=config_handle, data_source_code=data_source_code
+                configHandle=config_handle, dataSourceCode=data_source_code
             )
             response = self.stub.AddDataSource(request)
             return str(response.result)
@@ -90,7 +90,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
 
     def close_config(self, config_handle: int, **kwargs: Any) -> None:
         try:
-            request = szconfig_pb2.CloseConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.CloseConfigRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             self.stub.CloseConfig(request)
         except Exception as err:
             raise new_exception(err) from err
@@ -107,7 +107,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
         self, config_handle: int, data_source_code: str, **kwargs: Any
     ) -> None:
         try:
-            request = szconfig_pb2.DeleteDataSourceRequest(config_handle=config_handle, data_source_code=data_source_code)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.DeleteDataSourceRequest(configHandle=config_handle, dataSourceCode=data_source_code)  # type: ignore[unused-ignore]
             self.stub.DeleteDataSource(request)
         except Exception as err:
             raise new_exception(err) from err
@@ -117,7 +117,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
 
     def export_config(self, config_handle: int, **kwargs: Any) -> str:
         try:
-            request = szconfig_pb2.SaveRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.ExportConfigRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.ExportConfig(request)
             return str(response.result)
         except Exception as err:
@@ -125,7 +125,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
 
     def get_data_sources(self, config_handle: int, **kwargs: Any) -> str:
         try:
-            request = szconfig_pb2.ListDataSourcesRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.GetDataSourcesRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSources(request)
             return str(response.result)
         except Exception as err:
@@ -144,7 +144,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
         self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any
     ) -> int:
         try:
-            request = szconfig_pb2.LoadRequest(config_definition=as_str(config_definition))  # type: ignore[unused-ignore]
+            request = szconfig_pb2.ImportConfigRequest(configDefinition=as_str(config_definition))  # type: ignore[unused-ignore]
             response = self.stub.ImportConfig(request)
             return int(response.result)
         except Exception as err:

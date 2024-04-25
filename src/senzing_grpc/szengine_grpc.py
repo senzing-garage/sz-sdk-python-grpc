@@ -92,8 +92,8 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.AddRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
-                recordID=record_id,
-                jsonData=as_str(record_definition),
+                recordId=record_id,
+                recordDefinition=as_str(record_definition),
                 flags=flags,
             )
             self.stub.AddRecord(request)
@@ -129,7 +129,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
-                recordID=record_id,
+                recordId=record_id,
                 flags=flags,
             )
             response = self.stub.DeleteRecord(request)
@@ -147,7 +147,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> int:
         try:
-            request = szengine_pb2.ExportCSVEntityReportRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.ExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
                 csvColumnList=csv_column_list,
                 flags=flags,
             )
@@ -166,7 +166,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
             pass  # TODO: To disable pylint W0613
         try:
             request = szengine_pb2.StreamExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
-                csv_column_list=csv_column_list, flags=flags
+                csvColumnList=csv_column_list, flags=flags
             )
             for item in self.stub.StreamExportCsvEntityReport(request):
                 if item.result:
@@ -256,9 +256,10 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityList=as_str(entity_list),
-                maxDegree=max_degrees,
+                maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 maxEntities=max_entities,
+                flags=flags,
             )
             response = self.stub.FindNetworkByEntityId(request)
             return str(response.result)
@@ -280,6 +281,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 maxEntities=max_entities,
+                flags=flags,
             )
             response = self.stub.FindNetworkByRecordId(request)
             return str(response.result)
@@ -299,9 +301,12 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.FindPathByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityID1=start_entity_id,
-                entityID2=end_entity_id,
-                maxDegree=max_degrees,
+                startEntityId=start_entity_id,
+                endEntityId=end_entity_id,
+                maxDegrees=max_degrees,
+                exclusions=exclusions,
+                requiredDataSources=required_data_sources,
+                flags=flags,
             )
             response = self.stub.FindPathByEntityId(request)
             return str(response.result)
@@ -322,11 +327,14 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=start_data_source_code,
-                recordID1=start_record_id,
-                dataSourceCode2=end_record_id,
-                recordID2=end_record_id,
-                maxDegree=max_degrees,
+                startDataSourceCode=start_data_source_code,
+                startRecordId=start_record_id,
+                endDataSourceCode=end_data_source_code,
+                endRecordId=end_record_id,
+                maxDegrees=max_degrees,
+                exclusions=exclusions,
+                requiredDataSources=required_data_sources,
+                flags=flags,
             )
             response = self.stub.FindPathByRecordId(request)
             return str(response.result)
@@ -349,7 +357,8 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.GetEntityByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
+                entityId=entity_id,
+                flags=flags,
             )
             response = self.stub.GetEntityByEntityId(request)
             return str(response.result)
@@ -366,7 +375,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.GetEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
-                recordID=record_id,
+                recordId=record_id,
             )
             response = self.stub.GetEntityByRecordId(request)
             return str(response.result)
@@ -383,7 +392,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.GetRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
-                recordID=record_id,
+                recordId=record_id,
                 flags=flags,
             )
             response = self.stub.GetRecord(request)
@@ -424,6 +433,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordList=as_str(record_list),
+                flags=flags,
             )
             response = self.stub.GetVirtualEntityByRecordId(request)
             return str(response.result)
@@ -438,7 +448,8 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.HowEntityByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
+                entityId=entity_id,
+                flags=flags,
             )
             response = self.stub.HowEntityByEntityId(request)
             return str(response.result)
@@ -461,7 +472,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     def process_redo_record(self, redo_record: str, flags: int, **kwargs: Any) -> str:
         try:
             request = szengine_pb2.ProcessRedoRecordRequest(  # type: ignore[unused-ignore]
-                record=as_str(redo_record),
+                redoRecord=as_str(redo_record),
                 flags=flags,
             )
             response = self.stub.ProcessRedoRecord(request)
@@ -472,7 +483,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     def reevaluate_entity(self, entity_id: int, flags: int = 0, **kwargs: Any) -> str:
         try:
             request = szengine_pb2.ReevaluateEntityRequest(  # type: ignore[unused-ignore]
-                entityID=entity_id,
+                entityId=entity_id,
                 flags=flags,
             )
             response = self.stub.ReevaluateEntity(request)
@@ -486,7 +497,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.ReevaluateRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
-                recordID=record_id,
+                recordId=record_id,
                 flags=flags,
             )
             response = self.stub.ReevaluateRecord(request)
@@ -506,7 +517,9 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                jsonData=as_str(attributes),
+                attributes=as_str(attributes),
+                searchProfile=search_profile,
+                flags=flags,
             )
             response = self.stub.SearchByAttributes(request)
             return str(response.result)
@@ -522,8 +535,9 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
     ) -> str:
         try:
             request = szengine_pb2.WhyEntitiesRequest(  # type: ignore[unused-ignore]
-                entityID1=entity_id_1,
-                entityID2=entity_id_2,
+                entityId1=entity_id_1,
+                entityId2=entity_id_2,
+                flags=flags,
             )
             response = self.stub.WhyEntities(request)
             return str(response.result)
@@ -538,8 +552,17 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         # TODO: Implement after V3 is published.
-        self.fake_szengine(data_source_code, record_id)
-        return "string"
+
+        try:
+            request = szengine_pb2.WhyRecordInEntityRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordId=record_id,
+                flags=flags,
+            )
+            response = self.stub.WhyRecordInEntity(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def why_records(
         self,
@@ -553,9 +576,10 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         try:
             request = szengine_pb2.WhyRecordsRequest(  # type: ignore[unused-ignore]
                 dataSourceCode1=data_source_code_1,
-                recordID1=record_id_1,
+                recordId1=record_id_1,
                 dataSourceCode2=data_source_code_2,
-                recordID2=record_id_2,
+                recordId2=record_id_2,
+                flags=flags,
             )
             response = self.stub.WhyRecords(request)
             return str(response.result)

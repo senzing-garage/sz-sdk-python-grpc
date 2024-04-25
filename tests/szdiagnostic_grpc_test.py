@@ -69,7 +69,7 @@ def test_context_managment() -> None:
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
     with szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel) as sz_diagnostic:
-        actual = sz_diagnostic.get_db_info()
+        actual = sz_diagnostic.get_datastore_info()
         actual_json = json.loads(actual)
         assert schema(get_datastore_info_schema) == actual_json
 

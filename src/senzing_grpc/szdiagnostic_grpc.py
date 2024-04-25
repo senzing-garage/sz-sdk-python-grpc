@@ -75,7 +75,7 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
 
     def check_datastore_performance(self, seconds_to_run: int, **kwargs: Any) -> str:
         try:
-            request = szdiagnostic_pb2.CheckDBPerfRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.CheckDatabasePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckDatabasePerformance(request)
             return str(response.result)
         except Exception as err:

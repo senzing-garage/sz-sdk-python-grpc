@@ -81,8 +81,8 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
     ) -> int:
         try:
             request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
-                config_definition=as_str(config_definition),
-                config_comment=as_str(config_comment),
+                configDefinition=as_str(config_definition),
+                configComment=as_str(config_comment),
             )
             response = self.stub.AddConfig(request)
             return int(response.result)
@@ -94,7 +94,7 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
 
     def get_config(self, config_id: int, **kwargs: Any) -> str:
         try:
-            request = szconfigmanager_pb2.GetConfigRequest(configID=config_id)  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.GetConfigRequest(configId=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
             return str(response.result)
         except Exception as err:
@@ -110,9 +110,9 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
 
     def get_default_config_id(self, **kwargs: Any) -> int:
         try:
-            request = szconfigmanager_pb2.GetDefaultConfigIDRequest()  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.GetDefaultConfigIdRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetDefaultConfigId(request)
-            return int(response.configID)
+            return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
@@ -129,9 +129,9 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
         self, current_default_config_id: int, new_default_config_id: int, **kwargs: Any
     ) -> None:
         try:
-            request = szconfigmanager_pb2.ReplaceDefaultConfigIDRequest(  # type: ignore[unused-ignore]
-                oldConfigID=current_default_config_id,
-                newConfigID=new_default_config_id,
+            request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
+                currentDefaultConfigId=current_default_config_id,
+                newDefaultConfigId=new_default_config_id,
             )
             self.stub.ReplaceDefaultConfigId(request)
         except Exception as err:
@@ -139,8 +139,8 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
 
     def set_default_config_id(self, config_id: int, **kwargs: Any) -> None:
         try:
-            request = szconfigmanager_pb2.SetDefaultConfigIDRequest(  # type: ignore[unused-ignore]
-                configID=config_id,
+            request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
+                configId=config_id,
             )
             self.stub.SetDefaultConfigId(request)
         except Exception as err:
