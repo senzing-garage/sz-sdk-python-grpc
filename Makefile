@@ -28,7 +28,7 @@ PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 # Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
 
 LD_LIBRARY_PATH ?= /opt/senzing/g2/lib
-PYTHONPATH ?= $(MAKEFILE_DIRECTORY)/src
+PYTHONPATH ?= $(MAKEFILE_DIRECTORY)/src;$(MAKEFILE_DIRECTORY)/src/senzing_grpc;$(MAKEFILE_DIRECTORY)/src/senzing_grpc/pb2_grpc
 
 # Export environment variables.
 
