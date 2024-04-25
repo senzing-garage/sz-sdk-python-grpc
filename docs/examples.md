@@ -1,4 +1,4 @@
-# g2-sdk-python-grpc examples
+# sz-sdk-python-grpc examples
 
 ## Example TruthSet python
 

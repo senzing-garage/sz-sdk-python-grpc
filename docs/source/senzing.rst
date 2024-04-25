@@ -4,50 +4,50 @@ senzing package
 Submodules
 ----------
 
-senzing\_grpc.g2config\_grpc module
+senzing\_grpc.szconfig\_grpc module
 -----------------------------------
 
-.. automodule:: senzing_grpc.g2config_grpc
+.. automodule:: senzing_grpc.szconfig_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.g2configmgr\_grpc module
+senzing\_grpc.szconfigmanager\_grpc module
 --------------------------------------
 
-.. automodule:: senzing_grpc.g2configmgr_grpc
+.. automodule:: senzing_grpc.szconfigmanager_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.g2diagnostic\_grpc module
+senzing\_grpc.szdiagnostic\_grpc module
 ---------------------------------------
 
-.. automodule:: senzing_grpc.g2diagnostic_grpc
+.. automodule:: senzing_grpc.szdiagnostic_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.g2engine\_grpc module
+senzing\_grpc.szengine\_grpc module
 -----------------------------------
 
-.. automodule:: senzing_grpc.g2engine_grpc
+.. automodule:: senzing_grpc.szengine_grpc
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.g2helpers module
+senzing\_grpc.szhelpers module
 ------------------------------
 
-.. automodule:: senzing_grpc.g2helpers
+.. automodule:: senzing_grpc.szhelpers
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.g2product\_grpc module
+senzing\_grpc.szproduct\_grpc module
 ------------------------------------
 
-.. automodule:: senzing_grpc.g2product_grpc
+.. automodule:: senzing_grpc.szproduct_grpc
    :members:
    :undoc-members:
    :show-inheritance:

@@ -83,7 +83,7 @@ The variables are used throughout the installation procedure.
 
 ```console
 export GIT_ACCOUNT=senzing-garage
-export GIT_REPOSITORY=g2-sdk-python-grpc
+export GIT_REPOSITORY=sz-sdk-python-grpc
 ```
 
 Synthesize environment variables.

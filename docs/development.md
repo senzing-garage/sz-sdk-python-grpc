@@ -1,4 +1,4 @@
-# g2-sdk-python-grpc development
+# sz-sdk-python-grpc development
 
 The following instructions are used when modifying and building the Docker image.
 
@@ -21,7 +21,7 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
 
     ```console
     export GIT_ACCOUNT=senzing-garage
-    export GIT_REPOSITORY=g2-sdk-python-grpc
+    export GIT_REPOSITORY=sz-sdk-python-grpc
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```
@@ -62,7 +62,7 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
     ```
 
     Example return:
-    > senzing-grpc @ file:///home/senzing/senzing-garage.git/g2-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
+    > senzing-grpc @ file:///home/senzing/senzing-garage.git/sz-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
 
 1. Uninstall the `senzing-grpc` python package.
    Example:

@@ -9,7 +9,7 @@
 import os
 import sys
 
-project = "g2-sdk-python-grpc"
+project = "sz-sdk-python-grpc"
 copyright = "2023, senzing"
 author = "senzing"
 

@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-TODO: g2diagnostic_grpc.py
+TODO: szdiagnostic_grpc.py
 """
 
 # pylint: disable=E1101

@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-TODO: g2product_grpc.py
+TODO: szproduct_grpc.py
 """
 
 # pylint: disable=E1101

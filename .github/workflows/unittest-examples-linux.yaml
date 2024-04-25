@@ -3,7 +3,7 @@ name: unittest linux
 on: [push]
 
 env:
-  PYTHONPATH: /home/runner/work/g2-sdk-python-grpc/g2-sdk-python-grpc/src
+  PYTHONPATH: /home/runner/work/sz-sdk-python-grpc/sz-sdk-python-grpc/src
 
 jobs:
   pytest-linux:

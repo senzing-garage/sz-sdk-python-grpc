@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-TODO: g2configmgr_grpc.py
+TODO: szconfigmanager_grpc.py
 """
 
 # pylint: disable=E1101
@@ -14,7 +14,7 @@ from senzing_abstract import SzConfigManagerAbstract
 
 from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
 
-# from .g2exception import translate_exception
+# from .szexception import translate_exception
 from .szhelpers import as_str, new_exception
 
 # Metadata
