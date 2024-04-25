@@ -31,7 +31,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-b
 
 class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
     """
-    G2 diagnostic module access library over gRPC.
+    SzDiagnostic module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # G2Diagnostic methods
+    # SzDiagnostic methods
     # -------------------------------------------------------------------------
 
     def check_datastore_performance(self, seconds_to_run: int, **kwargs: Any) -> str:

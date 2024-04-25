@@ -36,11 +36,11 @@ The `sz-sdk-python-grpc` package implements the following
 [sz-sdk-python-abstract](https://github.com/senzing-garage/sz-sdk-python-abstract/tree/main/src/senzing_abstract)
 interfaces:
 
-1. [G2ConfigAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfig_abstract.py)
-1. [G2ConfigMgrAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfigmanager_abstract.py)
-1. [G2DiagnosticAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szdiagnostic_abstract.py)
-1. [G2EngineAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szengine_abstract.py)
-1. [G2ProductAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szproduct_abstract.py)
+1. [SzConfigAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfig_abstract.py)
+1. [SzConfigMgrAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfigmanager_abstract.py)
+1. [SzDiagnosticAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szdiagnostic_abstract.py)
+1. [SzEngineAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szengine_abstract.py)
+1. [SzProductAbstract](https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szproduct_abstract.py)
 
 Other implementations of the
 [sz-sdk-python-abstract](https://github.com/senzing-garage/sz-sdk-python-abstract/tree/main/src/senzing_abstract)
@@ -91,8 +91,8 @@ and access it using the `senzing_grpc` Python package.
 
     ```python
     import grpc
-    from senzing_grpc import G2ProductGrpc
-    sz_product = G2ProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    from senzing_grpc import SzProductGrpc
+    sz_product = SzProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
     print(sz_product.version())
     ```
 

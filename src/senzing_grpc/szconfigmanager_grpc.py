@@ -27,13 +27,13 @@ __updated__ = "2023-12-16"
 SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# G2ConfigMgrGrpc class
+# SzConfigManager class
 # -----------------------------------------------------------------------------
 
 
 class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
     """
-    G2 config-manager module access library over gRPC.
+    SzConfigManager module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # G2ConfigMgr methods
+    # SzConfigManager methods
     # -------------------------------------------------------------------------
 
     def add_config(

@@ -32,6 +32,7 @@ html_static_path = ["_static"]
 # -- Customization -----------------------------------------------------------
 
 sys.path.insert(0, os.path.abspath("../../src"))
+sys.path.insert(0, os.path.abspath("../../src/senzing_grpc/pb2_grpc"))
 
 extensions = [
     "autodocsumm",  # to generate tables of functions, attributes, methods, etc.

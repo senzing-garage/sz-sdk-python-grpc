@@ -13,7 +13,7 @@ senzing\_grpc.szconfig\_grpc module
    :show-inheritance:
 
 senzing\_grpc.szconfigmanager\_grpc module
---------------------------------------
+------------------------------------------
 
 .. automodule:: senzing_grpc.szconfigmanager_grpc
    :members:

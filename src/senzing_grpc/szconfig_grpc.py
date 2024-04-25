@@ -14,7 +14,7 @@ from senzing_abstract import SzConfigAbstract
 
 from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
 
-# from .szabstract.szconfig_abstract import G2ConfigAbstract
+# from .szabstract.szconfig_abstract import SzConfigAbstract
 from .szhelpers import as_str, new_exception
 
 # Metadata
@@ -27,13 +27,13 @@ __updated__ = "2023-12-16"
 SENZING_PRODUCT_ID = "5050"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# G2ConfigGrpc class
+# SzConfigGrpc class
 # -----------------------------------------------------------------------------
 
 
 class SzConfigGrpc(SzConfigAbstract):  # type: ignore
     """
-    G2 config module access library over gRPC.
+    SzConfig module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # G2Config methods
+    # SzConfig methods
     # -------------------------------------------------------------------------
 
     def add_data_source(

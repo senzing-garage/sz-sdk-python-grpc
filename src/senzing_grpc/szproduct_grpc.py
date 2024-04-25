@@ -25,13 +25,13 @@ __updated__ = "2023-12-16"
 SENZING_PRODUCT_ID = "5056"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# G2ProductGrpc class
+# SzProductGrpc class
 # -----------------------------------------------------------------------------
 
 
 class SzProductGrpc(SzProductAbstract):  # type: ignore
     """
-    G2 product module access library over gRPC.
+    SzProduct module access library over gRPC.
     """
 
     # -------------------------------------------------------------------------
@@ -69,7 +69,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # G2Product methods
+    # SzProduct methods
     # -------------------------------------------------------------------------
 
     def destroy(self, **kwargs: Any) -> None:
