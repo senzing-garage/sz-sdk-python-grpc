@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import szproduct_pb2 as szproduct__pb2
+from . import szproduct_pb2 as szproduct__pb2
 
 
 class SzProductStub(object):

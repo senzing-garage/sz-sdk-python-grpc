@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import szconfigmanager_pb2 as szconfigmanager__pb2
+from . import szconfigmanager_pb2 as szconfigmanager__pb2
 
 
 class SzConfigManagerStub(object):

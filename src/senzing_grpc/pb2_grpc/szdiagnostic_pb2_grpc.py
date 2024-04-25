@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import szdiagnostic_pb2 as szdiagnostic__pb2
+from . import szdiagnostic_pb2 as szdiagnostic__pb2
 
 
 class SzDiagnosticStub(object):

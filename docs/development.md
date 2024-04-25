@@ -70,3 +70,29 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
     ```console
     python3 -m pip uninstall senzing-grpc
     ```
+
+## Working with grpc and Protobuffer files
+
+After copying files from
+[sz-sdk-proto/go](https://github.com/senzing-garage/sz-sdk-proto/tree/main/go),
+an `import` statement must be modified in each of:
+
+- [szconfig_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfig_pb2_grpc.py)
+- [szconfigmanager_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfigmanager_pb2_grpc.py)
+- [szdiagnostic_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szdiagnostic_pb2_grpc.py)
+- [szengine_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szengine_pb2_grpc.py)
+- [szproduct_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szproduct_pb2_grpc.py)
+
+Example from [szconfig_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfig_pb2_grpc.py)
+
+Before:
+
+```python
+    import szconfig_pb2 as szconfig__pb2
+```
+
+After:
+
+```python
+    from . import szconfig_pb2 as szconfig__pb2
+```

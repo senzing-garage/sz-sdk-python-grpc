@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import szengine_pb2 as szengine__pb2
+from . import szengine_pb2 as szengine__pb2
 
 
 class SzEngineStub(object):
