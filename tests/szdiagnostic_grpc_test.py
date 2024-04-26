@@ -25,6 +25,9 @@ def test_check_datastore_performance(
     """Test SzDiagnostic().check_datastore_performance()."""
     seconds_to_run = 3
     actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
+
+    print(">>>> 1:", actual)
+
     actual_json = json.loads(actual)
     assert schema(check_datastore_performance_schema) == actual_json
 
@@ -49,6 +52,9 @@ def test_check_datastore_performance_bad_seconds_to_run_value(
 def test_get_datastore_info(sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc) -> None:
     """Test SzDiagnostic().get_datastore_info()."""
     actual = sz_diagnostic.get_datastore_info()
+
+    print(">>>> 2:", actual)
+
     actual_json = json.loads(actual)
     assert schema(get_datastore_info_schema) == actual_json
 
@@ -70,6 +76,9 @@ def test_context_managment() -> None:
     grpc_channel = grpc.insecure_channel(grpc_url)
     with szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel) as sz_diagnostic:
         actual = sz_diagnostic.get_datastore_info()
+
+        print(">>>> 3:", actual)
+
         actual_json = json.loads(actual)
         assert schema(get_datastore_info_schema) == actual_json
 

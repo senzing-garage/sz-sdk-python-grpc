@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12szdiagnostic.proto\x12\x0cszdiagnostic\"7\n\x1f\x43heckDatabasePerformanceRequest\x12\x14\n\x0csecondsToRun\x18\x01 \x01(\x05\"2\n CheckDatabasePerformanceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x18\n\x16PurgeRepositoryRequest\"\x19\n\x17PurgeRepositoryResponse2\xed\x01\n\x0cSzDiagnostic\x12{\n\x18\x43heckDatabasePerformance\x12-.szdiagnostic.CheckDatabasePerformanceRequest\x1a..szdiagnostic.CheckDatabasePerformanceResponse\"\x00\x12`\n\x0fPurgeRepository\x12$.szdiagnostic.PurgeRepositoryRequest\x1a%.szdiagnostic.PurgeRepositoryResponse\"\x00\x42s\n\'com.senzing.sz.engine.grpc.SzDiagnosticB\x11SzDiagnosticProtoZ5github.com/senzing-garage/sz-sdk-go-grpc/szdiagnosticb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12szdiagnostic.proto\x12\x0cszdiagnostic\"8\n CheckDatastorePerformanceRequest\x12\x14\n\x0csecondsToRun\x18\x01 \x01(\x05\"3\n!CheckDatastorePerformanceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x19\n\x17GetDatastoreInfoRequest\"*\n\x18GetDatastoreInfoResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x18\n\x16PurgeRepositoryRequest\"\x19\n\x17PurgeRepositoryResponse\"\'\n\x13ReinitializeRequest\x12\x10\n\x08\x63onfigId\x18\x01 \x01(\x03\"\x16\n\x14ReinitializeResponse2\xae\x03\n\x0cSzDiagnostic\x12~\n\x19\x43heckDatastorePerformance\x12..szdiagnostic.CheckDatastorePerformanceRequest\x1a/.szdiagnostic.CheckDatastorePerformanceResponse\"\x00\x12\x63\n\x10GetDatastoreInfo\x12%.szdiagnostic.GetDatastoreInfoRequest\x1a&.szdiagnostic.GetDatastoreInfoResponse\"\x00\x12`\n\x0fPurgeRepository\x12$.szdiagnostic.PurgeRepositoryRequest\x1a%.szdiagnostic.PurgeRepositoryResponse\"\x00\x12W\n\x0cReinitialize\x12!.szdiagnostic.ReinitializeRequest\x1a\".szdiagnostic.ReinitializeResponse\"\x00\x42s\n\'com.senzing.sz.engine.grpc.SzDiagnosticB\x11SzDiagnosticProtoZ5github.com/senzing-garage/sz-sdk-go-grpc/szdiagnosticb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,14 +22,22 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'szdiagnostic_pb2', _globals
 if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['DESCRIPTOR']._options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\'com.senzing.sz.engine.grpc.SzDiagnosticB\021SzDiagnosticProtoZ5github.com/senzing-garage/sz-sdk-go-grpc/szdiagnostic'
-  _globals['_CHECKDATABASEPERFORMANCEREQUEST']._serialized_start=36
-  _globals['_CHECKDATABASEPERFORMANCEREQUEST']._serialized_end=91
-  _globals['_CHECKDATABASEPERFORMANCERESPONSE']._serialized_start=93
-  _globals['_CHECKDATABASEPERFORMANCERESPONSE']._serialized_end=143
-  _globals['_PURGEREPOSITORYREQUEST']._serialized_start=145
-  _globals['_PURGEREPOSITORYREQUEST']._serialized_end=169
-  _globals['_PURGEREPOSITORYRESPONSE']._serialized_start=171
-  _globals['_PURGEREPOSITORYRESPONSE']._serialized_end=196
-  _globals['_SZDIAGNOSTIC']._serialized_start=199
-  _globals['_SZDIAGNOSTIC']._serialized_end=436
+  _globals['_CHECKDATASTOREPERFORMANCEREQUEST']._serialized_start=36
+  _globals['_CHECKDATASTOREPERFORMANCEREQUEST']._serialized_end=92
+  _globals['_CHECKDATASTOREPERFORMANCERESPONSE']._serialized_start=94
+  _globals['_CHECKDATASTOREPERFORMANCERESPONSE']._serialized_end=145
+  _globals['_GETDATASTOREINFOREQUEST']._serialized_start=147
+  _globals['_GETDATASTOREINFOREQUEST']._serialized_end=172
+  _globals['_GETDATASTOREINFORESPONSE']._serialized_start=174
+  _globals['_GETDATASTOREINFORESPONSE']._serialized_end=216
+  _globals['_PURGEREPOSITORYREQUEST']._serialized_start=218
+  _globals['_PURGEREPOSITORYREQUEST']._serialized_end=242
+  _globals['_PURGEREPOSITORYRESPONSE']._serialized_start=244
+  _globals['_PURGEREPOSITORYRESPONSE']._serialized_end=269
+  _globals['_REINITIALIZEREQUEST']._serialized_start=271
+  _globals['_REINITIALIZEREQUEST']._serialized_end=310
+  _globals['_REINITIALIZERESPONSE']._serialized_start=312
+  _globals['_REINITIALIZERESPONSE']._serialized_end=334
+  _globals['_SZDIAGNOSTIC']._serialized_start=337
+  _globals['_SZDIAGNOSTIC']._serialized_end=767
 # @@protoc_insertion_point(module_scope)

@@ -134,6 +134,11 @@ class SzEngineStub(object):
                 request_serializer=szengine__pb2.ReevaluateRecordRequest.SerializeToString,
                 response_deserializer=szengine__pb2.ReevaluateRecordResponse.FromString,
                 )
+        self.Reinitialize = channel.unary_unary(
+                '/szengine.SzEngine/Reinitialize',
+                request_serializer=szengine__pb2.ReinitializeRequest.SerializeToString,
+                response_deserializer=szengine__pb2.ReinitializeResponse.FromString,
+                )
         self.SearchByAttributes = channel.unary_unary(
                 '/szengine.SzEngine/SearchByAttributes',
                 request_serializer=szengine__pb2.SearchByAttributesRequest.SerializeToString,
@@ -313,6 +318,12 @@ class SzEngineServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Reinitialize(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SearchByAttributes(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -471,6 +482,11 @@ def add_SzEngineServicer_to_server(servicer, server):
                     servicer.ReevaluateRecord,
                     request_deserializer=szengine__pb2.ReevaluateRecordRequest.FromString,
                     response_serializer=szengine__pb2.ReevaluateRecordResponse.SerializeToString,
+            ),
+            'Reinitialize': grpc.unary_unary_rpc_method_handler(
+                    servicer.Reinitialize,
+                    request_deserializer=szengine__pb2.ReinitializeRequest.FromString,
+                    response_serializer=szengine__pb2.ReinitializeResponse.SerializeToString,
             ),
             'SearchByAttributes': grpc.unary_unary_rpc_method_handler(
                     servicer.SearchByAttributes,
@@ -917,6 +933,23 @@ class SzEngine(object):
         return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ReevaluateRecord',
             szengine__pb2.ReevaluateRecordRequest.SerializeToString,
             szengine__pb2.ReevaluateRecordResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Reinitialize(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/Reinitialize',
+            szengine__pb2.ReinitializeRequest.SerializeToString,
+            szengine__pb2.ReinitializeResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

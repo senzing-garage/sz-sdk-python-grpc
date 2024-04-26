@@ -75,8 +75,8 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
 
     def check_datastore_performance(self, seconds_to_run: int, **kwargs: Any) -> str:
         try:
-            request = szdiagnostic_pb2.CheckDatabasePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
-            response = self.stub.CheckDatabasePerformance(request)
+            request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
+            response = self.stub.CheckDatastorePerformance(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
@@ -85,13 +85,12 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
         """Null function"""
 
     def get_datastore_info(self, **kwargs: Any) -> str:
-        # try:
-        #     request = szdiagnostic_pb2.GetDBInfoRequest()  # type: ignore[unused-ignore]
-        #     response = self.stub.GetDBInfo(request)
-        #     return str(response.result)
-        # except Exception as err:
-        #     raise new_exception(err) from err
-        return ""
+        try:
+            request = szdiagnostic_pb2.GetDatastoreInfoRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetDatastoreInfo(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def get_feature(self, feature_id: int, **kwargs: Any) -> str:
         """TODO: Add get_feature()"""
@@ -111,4 +110,8 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
         """Null function"""
 
     def reinitialize(self, config_id: int, **kwargs: Any) -> None:
-        """Null function"""
+        try:
+            request = szdiagnostic_pb2.Reinitialize(configId=config_id)  # type: ignore[unused-ignore]
+            self.stub.Reinitialize(request)
+        except Exception as err:
+            raise new_exception(err) from err
