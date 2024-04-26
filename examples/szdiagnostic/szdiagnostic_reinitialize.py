@@ -4,18 +4,9 @@ import grpc
 
 from senzing_grpc import SzError, szconfigmanager_grpc, szdiagnostic_grpc
 
-ini_params_dict = {
-    "PIPELINE": {
-        "CONFIGPATH": "/etc/opt/senzing",
-        "RESOURCEPATH": "/opt/senzing/g2/resources",
-        "SUPPORTPATH": "/opt/senzing/data",
-    },
-    "SQL": {"CONNECTION": "sqlite3://na:na@/tmp/sqlite/G2C.db"},
-}
-MODULE_NAME = "Example"
+GRPC_URL = "localhost:8261"
 
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_configmanager = szconfigmanager_grpc.SzConfigManagerGrpc(
         grpc_channel=grpc_channel

@@ -5,9 +5,9 @@ import grpc
 from senzing_grpc import SzError, szconfig_grpc, szconfigmanager_grpc
 
 CONFIG_COMMENT = "Just an empty example"
+GRPC_URL = "localhost:8261"
 
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_config = szconfig_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     sz_configmanager = szconfigmanager_grpc.SzConfigManagerGrpc(

@@ -4,8 +4,9 @@ import grpc
 
 from senzing_grpc import SzError, szdiagnostic_grpc
 
+GRPC_URL = "localhost:8261"
+
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_diagnostic = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
     RESULT = sz_diagnostic.get_datastore_info()
