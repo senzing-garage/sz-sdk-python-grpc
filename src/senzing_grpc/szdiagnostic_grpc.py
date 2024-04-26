@@ -111,7 +111,7 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
 
     def reinitialize(self, config_id: int, **kwargs: Any) -> None:
         try:
-            request = szdiagnostic_pb2.Reinitialize(configId=config_id)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)
         except Exception as err:
             raise new_exception(err) from err
