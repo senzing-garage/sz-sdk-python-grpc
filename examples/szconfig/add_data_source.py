@@ -4,10 +4,10 @@ import grpc
 
 from senzing_grpc import SzError, szconfig_grpc
 
+GRPC_URL = "localhost:8261"
 data_source_code = "NAME_OF_DATASOURCE"
 
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_config = szconfig_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
     config_handle = sz_config.create_config()

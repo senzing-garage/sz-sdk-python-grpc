@@ -69,15 +69,6 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # Development methods - to be removed after initial development
-    # -------------------------------------------------------------------------
-
-    def fake_szengine(self, *args: Any, **kwargs: Any) -> None:
-        """TODO: Remove once SDK methods have been implemented."""
-        if len(args) + len(kwargs) > 2000:
-            print(self.noop)
-
-    # -------------------------------------------------------------------------
     # SzEngine methods
     # -------------------------------------------------------------------------
 
