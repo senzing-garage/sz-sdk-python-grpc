@@ -20,10 +20,10 @@ try:
 
     # Create a new config.
 
-    OLD_CONFIG_DEFINITION = sz_configmanager.get_config(current_default_config_id)
-    old_config_handle = sz_config.import_config(OLD_CONFIG_DEFINITION)
-    sz_config.add_data_source(old_config_handle, data_source_code)
-    NEW_CONFIG_DEFINITION = sz_config.export_config(old_config_handle)
+    CURRENT_CONFIG_DEFINITION = sz_configmanager.get_config(current_default_config_id)
+    current_config_handle = sz_config.import_config(CURRENT_CONFIG_DEFINITION)
+    sz_config.add_data_source(current_config_handle, data_source_code)
+    NEW_CONFIG_DEFINITION = sz_config.export_config(current_config_handle)
     new_default_config_id = sz_configmanager.add_config(
         NEW_CONFIG_DEFINITION, CONFIG_COMMENT
     )

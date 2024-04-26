@@ -79,7 +79,7 @@ def test_close_config_bad_config_handle_type(
         sz_config.close_config(bad_config_handle)  # type: ignore[arg-type]
 
 
-def test_create(sz_config: szconfig_grpc.SzConfigGrpc) -> None:
+def test_create_config(sz_config: szconfig_grpc.SzConfigGrpc) -> None:
     """Test SzConfig().create()."""
     config_handle = sz_config.create_config()
     assert isinstance(config_handle, int)
@@ -210,7 +210,7 @@ def test_export_config_bad_config_handle_type(
         sz_config.export_config(bad_config_handle)  # type: ignore[arg-type]
 
 
-def test_init_and_destroy(sz_config: szconfig_grpc.SzConfigGrpc) -> None:
+def test_initialize_and_destroy(sz_config: szconfig_grpc.SzConfigGrpc) -> None:
     """Test SzConfig().initialize() and SzConfig.destroy()."""
     instance_name = "Example"
     settings = "{}"
