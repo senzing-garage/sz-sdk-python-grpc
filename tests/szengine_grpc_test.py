@@ -1122,11 +1122,6 @@ def test_why_record_in_entity() -> None:
     # TODO: implement.
 
 
-def test_why_record_in_entity_v2() -> None:
-    """Test SzEngine().why_record_in_entity_v2()."""
-    # TODO: implement.
-
-
 def test_why_records(
     sz_engine: szengine_grpc.SzEngineGrpc,
 ) -> None:
