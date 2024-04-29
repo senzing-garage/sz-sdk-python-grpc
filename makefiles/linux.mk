@@ -41,6 +41,7 @@ setup-osarch-specific:
 		senzing/senzing-tools
 	@echo "senzing/senzing-tools server-grpc running in background."
 
+
 .PHONY: test-osarch-specific
 test-osarch-specific:
 	@echo "--- Unit tests -------------------------------------------------------"
@@ -54,6 +55,7 @@ test-osarch-specific:
 		examples/szdiagnostic/*.py \
 		examples/szengine/*.py \
 		examples/szproduct/*.py
+
 
 .PHONY: test-examples
 test-examples:
