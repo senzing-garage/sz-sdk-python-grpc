@@ -113,7 +113,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def destroy(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def export_config(self, config_handle: int, **kwargs: Any) -> str:
         try:
@@ -138,7 +138,7 @@ class SzConfigGrpc(SzConfigAbstract):  # type: ignore
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def import_config(
         self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any

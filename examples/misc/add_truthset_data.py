@@ -9,8 +9,9 @@ from senzing_truthset import (
 
 from senzing_grpc import SzEngineFlags, SzEngineGrpc, SzError
 
+GRPC_URL = "localhost:8261"
+
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_engine = SzEngineGrpc(grpc_channel=grpc_channel)
     record_sets = [

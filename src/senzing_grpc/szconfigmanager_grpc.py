@@ -90,7 +90,7 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def destroy(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def get_config(self, config_id: int, **kwargs: Any) -> str:
         try:
@@ -123,7 +123,7 @@ class SzConfigManagerGrpc(SzConfigManagerAbstract):  # type: ignore
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def replace_default_config_id(
         self, current_default_config_id: int, new_default_config_id: int, **kwargs: Any

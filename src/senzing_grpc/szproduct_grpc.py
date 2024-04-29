@@ -73,7 +73,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
     # -------------------------------------------------------------------------
 
     def destroy(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def initialize(
         self,
@@ -82,7 +82,7 @@ class SzProductGrpc(SzProductAbstract):  # type: ignore
         verbose_logging: int = 0,
         **kwargs: Any
     ) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def get_license(self, **kwargs: Any) -> str:
         try:

@@ -4,8 +4,8 @@ import grpc
 
 from senzing_grpc import SzError, szconfig_grpc
 
-GRPC_URL = "localhost:8261"
 data_source_code = "NAME_OF_DATASOURCE"
+GRPC_URL = "localhost:8261"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)

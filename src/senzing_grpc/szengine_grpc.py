@@ -129,7 +129,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def destroy(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def export_csv_entity_report(
         self,
@@ -456,10 +456,10 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
         verbose_logging: int = 0,
         **kwargs: Any,
     ) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def prime_engine(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def process_redo_record(self, redo_record: str, flags: int, **kwargs: Any) -> str:
         try:

@@ -82,7 +82,7 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def destroy(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def get_datastore_info(self, **kwargs: Any) -> str:
         try:
@@ -104,10 +104,10 @@ class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
         verbose_logging: int = 0,
         **kwargs: Any
     ) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def purge_repository(self, **kwargs: Any) -> None:
-        """Null function"""
+        """Null function in the sz-sdk-python-grpc implementation."""
 
     def reinitialize(self, config_id: int, **kwargs: Any) -> None:
         try:
