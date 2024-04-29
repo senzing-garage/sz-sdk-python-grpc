@@ -10,8 +10,8 @@ start_record_id = "1001"
 end_data_source_code = "CUSTOMERS"
 end_record_id = "1002"
 max_degrees = 2
-exclusions = {}
-required_data_sources = {}
+exclusions = ""
+required_data_sources = ""
 flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 
 try:

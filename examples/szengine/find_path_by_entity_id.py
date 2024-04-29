@@ -6,10 +6,10 @@ from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
 
 GRPC_URL = "localhost:8261"
 start_entity_id = 1
-end_entity_id = 2
+end_entity_id = 200001
 max_degrees = 2
-exclusions = {}
-required_data_sources = {}
+exclusions = ""
+required_data_sources = ""
 flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 
 try:

@@ -6,7 +6,7 @@ from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
 
 GRPC_URL = "localhost:8261"
 entity_id_1 = 1
-entity_id_2 = 2
+entity_id_2 = 200001
 flags = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS
 
 try:

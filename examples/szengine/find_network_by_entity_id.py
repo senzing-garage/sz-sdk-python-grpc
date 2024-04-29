@@ -8,7 +8,7 @@ GRPC_URL = "localhost:8261"
 entity_list = {
     "ENTITIES": [
         {"ENTITY_ID": 1},
-        {"ENTITY_ID": 2},
+        {"ENTITY_ID": 200001},
     ]
 }
 max_degrees = 2
