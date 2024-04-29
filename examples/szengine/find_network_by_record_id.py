@@ -8,7 +8,7 @@ GRPC_URL = "localhost:8261"
 record_list = {
     "RECORDS": [
         {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
-        {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"},
+        {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1009"},
     ]
 }
 max_degrees = 2
@@ -22,6 +22,6 @@ try:
     RESULT = sz_engine.find_network_by_record_id(
         record_list, max_degrees, build_out_degree, max_entities, flags
     )
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

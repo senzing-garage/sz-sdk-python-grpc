@@ -17,6 +17,6 @@ try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
     sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
     RESULT = sz_engine.get_virtual_entity_by_record_id(record_list, flags)
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

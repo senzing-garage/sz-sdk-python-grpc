@@ -22,6 +22,6 @@ try:
     RESULT = sz_engine.find_network_by_entity_id(
         entity_list, max_degrees, build_out_degree, max_entities, flags
     )
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

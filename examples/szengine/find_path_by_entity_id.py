@@ -23,6 +23,6 @@ try:
         required_data_sources,
         flags,
     )
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

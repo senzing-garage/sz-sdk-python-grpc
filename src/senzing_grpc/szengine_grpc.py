@@ -367,6 +367,7 @@ class SzEngineGrpc(SzEngineAbstract):  # type: ignore
             request = szengine_pb2.GetEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
                 recordId=record_id,
+                flags=flags,
             )
             response = self.stub.GetEntityByRecordId(request)
             return str(response.result)

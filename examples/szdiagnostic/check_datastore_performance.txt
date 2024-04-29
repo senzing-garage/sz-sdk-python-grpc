@@ -1,4 +1,4 @@
-// Just example numbers. Your mileage may vary.
+// Output has been formatted for easier reading.
 
 {
     "numRecordsInserted": 0,

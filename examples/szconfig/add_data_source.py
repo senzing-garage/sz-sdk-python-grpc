@@ -13,6 +13,6 @@ try:
     config_handle = sz_config.create_config()
     RESULT = sz_config.add_data_source(config_handle, data_source_code)
     sz_config.close_config(config_handle)
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

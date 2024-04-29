@@ -18,6 +18,6 @@ try:
             break
         RESULT += fragment
     sz_engine.close_export(export_handle)
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

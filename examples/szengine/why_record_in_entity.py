@@ -17,6 +17,6 @@ try:
         record_id,
         flags,
     )
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

@@ -8,7 +8,7 @@ GRPC_URL = "localhost:8261"
 start_data_source_code = "CUSTOMERS"
 start_record_id = "1001"
 end_data_source_code = "CUSTOMERS"
-end_record_id = "1002"
+end_record_id = "1009"
 max_degrees = 2
 exclusions = ""
 required_data_sources = ""
@@ -27,6 +27,6 @@ try:
         required_data_sources,
         flags,
     )
-    print(RESULT)
+    print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")
