@@ -15,40 +15,40 @@ class SzConfigStub(object):
             channel: A grpc.Channel.
         """
         self.AddDataSource = channel.unary_unary(
-                '/szconfig.SzConfig/AddDataSource',
-                request_serializer=szconfig__pb2.AddDataSourceRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.AddDataSourceResponse.FromString,
-                )
+            "/szconfig.SzConfig/AddDataSource",
+            request_serializer=szconfig__pb2.AddDataSourceRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.AddDataSourceResponse.FromString,
+        )
         self.CloseConfig = channel.unary_unary(
-                '/szconfig.SzConfig/CloseConfig',
-                request_serializer=szconfig__pb2.CloseConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.CloseConfigResponse.FromString,
-                )
+            "/szconfig.SzConfig/CloseConfig",
+            request_serializer=szconfig__pb2.CloseConfigRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.CloseConfigResponse.FromString,
+        )
         self.CreateConfig = channel.unary_unary(
-                '/szconfig.SzConfig/CreateConfig',
-                request_serializer=szconfig__pb2.CreateConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.CreateConfigResponse.FromString,
-                )
+            "/szconfig.SzConfig/CreateConfig",
+            request_serializer=szconfig__pb2.CreateConfigRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.CreateConfigResponse.FromString,
+        )
         self.DeleteDataSource = channel.unary_unary(
-                '/szconfig.SzConfig/DeleteDataSource',
-                request_serializer=szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.DeleteDataSourceResponse.FromString,
-                )
+            "/szconfig.SzConfig/DeleteDataSource",
+            request_serializer=szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.DeleteDataSourceResponse.FromString,
+        )
         self.ExportConfig = channel.unary_unary(
-                '/szconfig.SzConfig/ExportConfig',
-                request_serializer=szconfig__pb2.ExportConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.ExportConfigResponse.FromString,
-                )
+            "/szconfig.SzConfig/ExportConfig",
+            request_serializer=szconfig__pb2.ExportConfigRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.ExportConfigResponse.FromString,
+        )
         self.GetDataSources = channel.unary_unary(
-                '/szconfig.SzConfig/GetDataSources',
-                request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
-                )
+            "/szconfig.SzConfig/GetDataSources",
+            request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
+        )
         self.ImportConfig = channel.unary_unary(
-                '/szconfig.SzConfig/ImportConfig',
-                request_serializer=szconfig__pb2.ImportConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.ImportConfigResponse.FromString,
-                )
+            "/szconfig.SzConfig/ImportConfig",
+            request_serializer=szconfig__pb2.ImportConfigRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.ImportConfigResponse.FromString,
+        )
 
 
 class SzConfigServicer(object):
@@ -57,208 +57,293 @@ class SzConfigServicer(object):
     def AddDataSource(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CloseConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CreateConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DeleteDataSource(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ExportConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetDataSources(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ImportConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_SzConfigServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'AddDataSource': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddDataSource,
-                    request_deserializer=szconfig__pb2.AddDataSourceRequest.FromString,
-                    response_serializer=szconfig__pb2.AddDataSourceResponse.SerializeToString,
-            ),
-            'CloseConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.CloseConfig,
-                    request_deserializer=szconfig__pb2.CloseConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.CloseConfigResponse.SerializeToString,
-            ),
-            'CreateConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateConfig,
-                    request_deserializer=szconfig__pb2.CreateConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.CreateConfigResponse.SerializeToString,
-            ),
-            'DeleteDataSource': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteDataSource,
-                    request_deserializer=szconfig__pb2.DeleteDataSourceRequest.FromString,
-                    response_serializer=szconfig__pb2.DeleteDataSourceResponse.SerializeToString,
-            ),
-            'ExportConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExportConfig,
-                    request_deserializer=szconfig__pb2.ExportConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.ExportConfigResponse.SerializeToString,
-            ),
-            'GetDataSources': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetDataSources,
-                    request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
-                    response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
-            ),
-            'ImportConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.ImportConfig,
-                    request_deserializer=szconfig__pb2.ImportConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.ImportConfigResponse.SerializeToString,
-            ),
+        "AddDataSource": grpc.unary_unary_rpc_method_handler(
+            servicer.AddDataSource,
+            request_deserializer=szconfig__pb2.AddDataSourceRequest.FromString,
+            response_serializer=szconfig__pb2.AddDataSourceResponse.SerializeToString,
+        ),
+        "CloseConfig": grpc.unary_unary_rpc_method_handler(
+            servicer.CloseConfig,
+            request_deserializer=szconfig__pb2.CloseConfigRequest.FromString,
+            response_serializer=szconfig__pb2.CloseConfigResponse.SerializeToString,
+        ),
+        "CreateConfig": grpc.unary_unary_rpc_method_handler(
+            servicer.CreateConfig,
+            request_deserializer=szconfig__pb2.CreateConfigRequest.FromString,
+            response_serializer=szconfig__pb2.CreateConfigResponse.SerializeToString,
+        ),
+        "DeleteDataSource": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteDataSource,
+            request_deserializer=szconfig__pb2.DeleteDataSourceRequest.FromString,
+            response_serializer=szconfig__pb2.DeleteDataSourceResponse.SerializeToString,
+        ),
+        "ExportConfig": grpc.unary_unary_rpc_method_handler(
+            servicer.ExportConfig,
+            request_deserializer=szconfig__pb2.ExportConfigRequest.FromString,
+            response_serializer=szconfig__pb2.ExportConfigResponse.SerializeToString,
+        ),
+        "GetDataSources": grpc.unary_unary_rpc_method_handler(
+            servicer.GetDataSources,
+            request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
+            response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
+        ),
+        "ImportConfig": grpc.unary_unary_rpc_method_handler(
+            servicer.ImportConfig,
+            request_deserializer=szconfig__pb2.ImportConfigRequest.FromString,
+            response_serializer=szconfig__pb2.ImportConfigResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'szconfig.SzConfig', rpc_method_handlers)
+        "szconfig.SzConfig", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class SzConfig(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def AddDataSource(request,
+    def AddDataSource(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/AddDataSource',
+            "/szconfig.SzConfig/AddDataSource",
             szconfig__pb2.AddDataSourceRequest.SerializeToString,
             szconfig__pb2.AddDataSourceResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CloseConfig(request,
+    def CloseConfig(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/CloseConfig',
+            "/szconfig.SzConfig/CloseConfig",
             szconfig__pb2.CloseConfigRequest.SerializeToString,
             szconfig__pb2.CloseConfigResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CreateConfig(request,
+    def CreateConfig(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/CreateConfig',
+            "/szconfig.SzConfig/CreateConfig",
             szconfig__pb2.CreateConfigRequest.SerializeToString,
             szconfig__pb2.CreateConfigResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def DeleteDataSource(request,
+    def DeleteDataSource(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/DeleteDataSource',
+            "/szconfig.SzConfig/DeleteDataSource",
             szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
             szconfig__pb2.DeleteDataSourceResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ExportConfig(request,
+    def ExportConfig(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/ExportConfig',
+            "/szconfig.SzConfig/ExportConfig",
             szconfig__pb2.ExportConfigRequest.SerializeToString,
             szconfig__pb2.ExportConfigResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetDataSources(request,
+    def GetDataSources(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/GetDataSources',
+            "/szconfig.SzConfig/GetDataSources",
             szconfig__pb2.GetDataSourcesRequest.SerializeToString,
             szconfig__pb2.GetDataSourcesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ImportConfig(request,
+    def ImportConfig(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szconfig.SzConfig/ImportConfig',
+            "/szconfig.SzConfig/ImportConfig",
             szconfig__pb2.ImportConfigRequest.SerializeToString,
             szconfig__pb2.ImportConfigResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )

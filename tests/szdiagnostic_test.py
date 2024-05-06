@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 
 import grpc
 import pytest
@@ -58,7 +59,7 @@ def test_initialize_and_destroy(
 ) -> None:
     """Test SzDiagnostic().init() and SzDiagnostic.destroy()."""
     instance_name = "Example"
-    settings = {}
+    settings: Dict[str, str] = {}
     verbose_logging = SzEngineFlags.SZ_NO_LOGGING
     sz_diagnostic.initialize(instance_name, settings, verbose_logging)
     sz_diagnostic.destroy()

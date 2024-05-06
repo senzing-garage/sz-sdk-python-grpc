@@ -53,7 +53,6 @@ def get_senzing_error_code(error_text: str) -> int:
     except ValueError:
         print("ERROR: Could not parse error text '{error_text}'")
         result = 9999
-    assert isinstance(result, int)
     return result
 
 
@@ -76,7 +75,7 @@ def new_exception(initial_exception: Exception) -> Exception:
         try:
             details_dict = json.loads(details)
         except Exception:  # pylint: disable=W0718
-            pass
+            details_dict = {}
         errors_list = details_dict.get("errors", [])
         senzing_error_code = 0
         for an_error in errors_list:

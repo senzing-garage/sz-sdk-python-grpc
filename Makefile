@@ -85,7 +85,7 @@ test: test-osarch-specific
 
 .PHONY: bandit
 bandit:
-	@bandit $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:tools/*')
+	@bandit $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: coverage
@@ -94,17 +94,17 @@ coverage: coverage-osarch-specific
 
 .PHONY: black
 black:
-	@black $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:tools/*')
+	@black $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: flake8
 flake8:
-	@flake8 $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tools/*')
+	@flake8 $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: isort
 isort:
-	@isort $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tools/*')
+	@isort $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: mypy
@@ -119,7 +119,7 @@ pylint:
 
 .PHONY: pytest
 pytest:
-	@pytest --cov=src/senzing --cov-report=xml  $(shell git ls-files '*.py'  ':!:docs/source/*')
+	@pytest --cov=src/senzing --cov-report=xml  $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 # -----------------------------------------------------------------------------
 # Documentation

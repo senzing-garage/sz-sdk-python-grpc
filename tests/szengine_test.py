@@ -361,6 +361,7 @@ def test_find_interesting_entities_by_entity_id_bad_entity_id(
     sz_engine: SzEngine,
 ) -> None:
     """Test SzEngine().find_interesting_entities_by_entity_id()."""
+    _ = sz_engine
     # TODO: Uncomment after find_interesting_entities_by_entity_id is implemented.
     # bad_entity_id = 0
     # flags = SzEngineFlags.SZ_NO_FLAGS
@@ -392,6 +393,7 @@ def test_find_interesting_entities_by_record_id_bad_data_source_code(
     sz_engine: SzEngine,
 ) -> None:
     """Test SzEngine().find_interesting_entities_by_record_id()."""
+    _ = sz_engine
     # TODO: Uncomment after find_interesting_entities_by_entity_id is implemented.
     # bad_data_source_code = "XXXX"
     # record_id = "9999"
@@ -406,6 +408,7 @@ def test_find_interesting_entities_by_record_id_bad_record_id(
     sz_engine: SzEngine,
 ) -> None:
     """Test SzEngine().find_interesting_entities_by_record_id()."""
+    _ = sz_engine
     # TODO: Uncomment after find_interesting_entities_by_entity_id is implemented.
     # data_source_code = "CUSTOMERS"
     # bad_record_id = "9999"
@@ -1250,7 +1253,7 @@ def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> N
         )
 
 
-def add_records_truthset(sz_engine: SzEngine, do_redo=True) -> None:
+def add_records_truthset(sz_engine: SzEngine, do_redo: bool = True) -> None:
     """Add all truth-set the records."""
     flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():

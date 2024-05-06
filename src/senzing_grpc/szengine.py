@@ -153,6 +153,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> Iterable[str]:
+        """TODO: Add method docstring to export_csv_entity_report_iterator."""
         if len(kwargs) > 0:
             pass  # TODO: To disable pylint W0613
         try:
@@ -182,6 +183,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> Iterable[str]:
+        """TODO: Add method docstring to export_json_entity_report_iterator."""
         if len(kwargs) > 0:
             pass  # TODO: To disable pylint W0613
         try:
@@ -397,14 +399,6 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             request = szengine_pb2.GetRedoRecordRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetRedoRecord(request)
             return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def get_repository_last_modified_time(self, **kwargs: Any) -> int:
-        try:
-            request = szengine_pb2.GetRepositoryLastModifiedTimeResponse()  # type: ignore[unused-ignore]
-            response = self.stub.GetRepositoryLastModifiedTime(request)
-            return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
 

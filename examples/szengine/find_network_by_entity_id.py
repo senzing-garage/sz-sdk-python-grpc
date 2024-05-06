@@ -8,7 +8,7 @@ BUILD_OUT_DEGREE = 1
 ENTITY_LIST = {
     "ENTITIES": [
         {"ENTITY_ID": 1},
-        {"ENTITY_ID": 200001},
+        {"ENTITY_ID": 100004},
     ]
 }
 FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS

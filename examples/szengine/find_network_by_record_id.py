@@ -7,16 +7,14 @@ from senzing_grpc import SzEngine, SzEngineFlags, SzError
 BUILD_OUT_DEGREE = 1
 FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
+MAX_DEGREES = 2
+MAX_ENTITIES = 10
 RECORD_LIST = {
     "RECORDS": [
         {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
         {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1009"},
     ]
 }
-MAX_DEGREES = 2
-BUILD_OUT_DEGREE = 1
-MAX_ENTITIES = 10
-FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)

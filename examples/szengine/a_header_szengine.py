@@ -51,8 +51,8 @@ def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> N
 
 print("\n---- szengine --------------------------------------------------------\n")
 
-grpc_url = "localhost:8261"
-grpc_channel = grpc.insecure_channel(grpc_url)
-sz_engine = SzEngine(grpc_channel=grpc_channel)
+GRPC_URL = "localhost:8261"
+grpc_channel = grpc.insecure_channel(GRPC_URL)
+SZ_ENGINE = SzEngine(grpc_channel=grpc_channel)
 
-add_records(sz_engine, TEST_RECORDS)
+add_records(SZ_ENGINE, TEST_RECORDS)

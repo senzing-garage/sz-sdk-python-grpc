@@ -6,7 +6,7 @@ import grpc
 
 from senzing_grpc import SzConfig, SzConfigManager, SzError
 
-CONFIG_COMMENT = "Just an empty example"
+CONFIG_COMMENT = "Just an example"
 DATA_SOURCE_CODE = f"REPLACE_DEFAULT_CONFIG_ID_{time.time()}"
 GRPC_URL = "localhost:8261"
 

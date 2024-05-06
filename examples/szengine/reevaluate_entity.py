@@ -4,9 +4,9 @@ import grpc
 
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
-GRPC_URL = "localhost:8261"
 ENTITY_ID = 1
 FLAGS = SzEngineFlags.SZ_WITH_INFO
+GRPC_URL = "localhost:8261"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)

@@ -15,160 +15,160 @@ class SzEngineStub(object):
             channel: A grpc.Channel.
         """
         self.AddRecord = channel.unary_unary(
-                '/szengine.SzEngine/AddRecord',
-                request_serializer=szengine__pb2.AddRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.AddRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/AddRecord",
+            request_serializer=szengine__pb2.AddRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.AddRecordResponse.FromString,
+        )
         self.CloseExport = channel.unary_unary(
-                '/szengine.SzEngine/CloseExport',
-                request_serializer=szengine__pb2.CloseExportRequest.SerializeToString,
-                response_deserializer=szengine__pb2.CloseExportResponse.FromString,
-                )
+            "/szengine.SzEngine/CloseExport",
+            request_serializer=szengine__pb2.CloseExportRequest.SerializeToString,
+            response_deserializer=szengine__pb2.CloseExportResponse.FromString,
+        )
         self.CountRedoRecords = channel.unary_unary(
-                '/szengine.SzEngine/CountRedoRecords',
-                request_serializer=szengine__pb2.CountRedoRecordsRequest.SerializeToString,
-                response_deserializer=szengine__pb2.CountRedoRecordsResponse.FromString,
-                )
+            "/szengine.SzEngine/CountRedoRecords",
+            request_serializer=szengine__pb2.CountRedoRecordsRequest.SerializeToString,
+            response_deserializer=szengine__pb2.CountRedoRecordsResponse.FromString,
+        )
         self.DeleteRecord = channel.unary_unary(
-                '/szengine.SzEngine/DeleteRecord',
-                request_serializer=szengine__pb2.DeleteRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.DeleteRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/DeleteRecord",
+            request_serializer=szengine__pb2.DeleteRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.DeleteRecordResponse.FromString,
+        )
         self.ExportCsvEntityReport = channel.unary_unary(
-                '/szengine.SzEngine/ExportCsvEntityReport',
-                request_serializer=szengine__pb2.ExportCsvEntityReportRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ExportCsvEntityReportResponse.FromString,
-                )
+            "/szengine.SzEngine/ExportCsvEntityReport",
+            request_serializer=szengine__pb2.ExportCsvEntityReportRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ExportCsvEntityReportResponse.FromString,
+        )
         self.ExportJsonEntityReport = channel.unary_unary(
-                '/szengine.SzEngine/ExportJsonEntityReport',
-                request_serializer=szengine__pb2.ExportJsonEntityReportRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ExportJsonEntityReportResponse.FromString,
-                )
+            "/szengine.SzEngine/ExportJsonEntityReport",
+            request_serializer=szengine__pb2.ExportJsonEntityReportRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ExportJsonEntityReportResponse.FromString,
+        )
         self.FetchNext = channel.unary_unary(
-                '/szengine.SzEngine/FetchNext',
-                request_serializer=szengine__pb2.FetchNextRequest.SerializeToString,
-                response_deserializer=szengine__pb2.FetchNextResponse.FromString,
-                )
+            "/szengine.SzEngine/FetchNext",
+            request_serializer=szengine__pb2.FetchNextRequest.SerializeToString,
+            response_deserializer=szengine__pb2.FetchNextResponse.FromString,
+        )
         self.FindNetworkByEntityId = channel.unary_unary(
-                '/szengine.SzEngine/FindNetworkByEntityId',
-                request_serializer=szengine__pb2.FindNetworkByEntityIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.FindNetworkByEntityIdResponse.FromString,
-                )
+            "/szengine.SzEngine/FindNetworkByEntityId",
+            request_serializer=szengine__pb2.FindNetworkByEntityIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.FindNetworkByEntityIdResponse.FromString,
+        )
         self.FindNetworkByRecordId = channel.unary_unary(
-                '/szengine.SzEngine/FindNetworkByRecordId',
-                request_serializer=szengine__pb2.FindNetworkByRecordIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.FindNetworkByRecordIdResponse.FromString,
-                )
+            "/szengine.SzEngine/FindNetworkByRecordId",
+            request_serializer=szengine__pb2.FindNetworkByRecordIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.FindNetworkByRecordIdResponse.FromString,
+        )
         self.FindPathByEntityId = channel.unary_unary(
-                '/szengine.SzEngine/FindPathByEntityId',
-                request_serializer=szengine__pb2.FindPathByEntityIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.FindPathByEntityIdResponse.FromString,
-                )
+            "/szengine.SzEngine/FindPathByEntityId",
+            request_serializer=szengine__pb2.FindPathByEntityIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.FindPathByEntityIdResponse.FromString,
+        )
         self.FindPathByRecordId = channel.unary_unary(
-                '/szengine.SzEngine/FindPathByRecordId',
-                request_serializer=szengine__pb2.FindPathByRecordIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.FindPathByRecordIdResponse.FromString,
-                )
+            "/szengine.SzEngine/FindPathByRecordId",
+            request_serializer=szengine__pb2.FindPathByRecordIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.FindPathByRecordIdResponse.FromString,
+        )
         self.GetActiveConfigId = channel.unary_unary(
-                '/szengine.SzEngine/GetActiveConfigId',
-                request_serializer=szengine__pb2.GetActiveConfigIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetActiveConfigIdResponse.FromString,
-                )
+            "/szengine.SzEngine/GetActiveConfigId",
+            request_serializer=szengine__pb2.GetActiveConfigIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetActiveConfigIdResponse.FromString,
+        )
         self.GetEntityByEntityId = channel.unary_unary(
-                '/szengine.SzEngine/GetEntityByEntityId',
-                request_serializer=szengine__pb2.GetEntityByEntityIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetEntityByEntityIdResponse.FromString,
-                )
+            "/szengine.SzEngine/GetEntityByEntityId",
+            request_serializer=szengine__pb2.GetEntityByEntityIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetEntityByEntityIdResponse.FromString,
+        )
         self.GetEntityByRecordId = channel.unary_unary(
-                '/szengine.SzEngine/GetEntityByRecordId',
-                request_serializer=szengine__pb2.GetEntityByRecordIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetEntityByRecordIdResponse.FromString,
-                )
+            "/szengine.SzEngine/GetEntityByRecordId",
+            request_serializer=szengine__pb2.GetEntityByRecordIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetEntityByRecordIdResponse.FromString,
+        )
         self.GetRecord = channel.unary_unary(
-                '/szengine.SzEngine/GetRecord',
-                request_serializer=szengine__pb2.GetRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/GetRecord",
+            request_serializer=szengine__pb2.GetRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetRecordResponse.FromString,
+        )
         self.GetRedoRecord = channel.unary_unary(
-                '/szengine.SzEngine/GetRedoRecord',
-                request_serializer=szengine__pb2.GetRedoRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetRedoRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/GetRedoRecord",
+            request_serializer=szengine__pb2.GetRedoRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetRedoRecordResponse.FromString,
+        )
         self.GetRepositoryLastModifiedTime = channel.unary_unary(
-                '/szengine.SzEngine/GetRepositoryLastModifiedTime',
-                request_serializer=szengine__pb2.GetRepositoryLastModifiedTimeRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetRepositoryLastModifiedTimeResponse.FromString,
-                )
+            "/szengine.SzEngine/GetRepositoryLastModifiedTime",
+            request_serializer=szengine__pb2.GetRepositoryLastModifiedTimeRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetRepositoryLastModifiedTimeResponse.FromString,
+        )
         self.GetStats = channel.unary_unary(
-                '/szengine.SzEngine/GetStats',
-                request_serializer=szengine__pb2.GetStatsRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetStatsResponse.FromString,
-                )
+            "/szengine.SzEngine/GetStats",
+            request_serializer=szengine__pb2.GetStatsRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetStatsResponse.FromString,
+        )
         self.GetVirtualEntityByRecordId = channel.unary_unary(
-                '/szengine.SzEngine/GetVirtualEntityByRecordId',
-                request_serializer=szengine__pb2.GetVirtualEntityByRecordIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.GetVirtualEntityByRecordIdResponse.FromString,
-                )
+            "/szengine.SzEngine/GetVirtualEntityByRecordId",
+            request_serializer=szengine__pb2.GetVirtualEntityByRecordIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.GetVirtualEntityByRecordIdResponse.FromString,
+        )
         self.HowEntityByEntityId = channel.unary_unary(
-                '/szengine.SzEngine/HowEntityByEntityId',
-                request_serializer=szengine__pb2.HowEntityByEntityIdRequest.SerializeToString,
-                response_deserializer=szengine__pb2.HowEntityByEntityIdResponse.FromString,
-                )
+            "/szengine.SzEngine/HowEntityByEntityId",
+            request_serializer=szengine__pb2.HowEntityByEntityIdRequest.SerializeToString,
+            response_deserializer=szengine__pb2.HowEntityByEntityIdResponse.FromString,
+        )
         self.PrimeEngine = channel.unary_unary(
-                '/szengine.SzEngine/PrimeEngine',
-                request_serializer=szengine__pb2.PrimeEngineRequest.SerializeToString,
-                response_deserializer=szengine__pb2.PrimeEngineResponse.FromString,
-                )
+            "/szengine.SzEngine/PrimeEngine",
+            request_serializer=szengine__pb2.PrimeEngineRequest.SerializeToString,
+            response_deserializer=szengine__pb2.PrimeEngineResponse.FromString,
+        )
         self.ProcessRedoRecord = channel.unary_unary(
-                '/szengine.SzEngine/ProcessRedoRecord',
-                request_serializer=szengine__pb2.ProcessRedoRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ProcessRedoRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/ProcessRedoRecord",
+            request_serializer=szengine__pb2.ProcessRedoRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ProcessRedoRecordResponse.FromString,
+        )
         self.ReevaluateEntity = channel.unary_unary(
-                '/szengine.SzEngine/ReevaluateEntity',
-                request_serializer=szengine__pb2.ReevaluateEntityRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ReevaluateEntityResponse.FromString,
-                )
+            "/szengine.SzEngine/ReevaluateEntity",
+            request_serializer=szengine__pb2.ReevaluateEntityRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ReevaluateEntityResponse.FromString,
+        )
         self.ReevaluateRecord = channel.unary_unary(
-                '/szengine.SzEngine/ReevaluateRecord',
-                request_serializer=szengine__pb2.ReevaluateRecordRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ReevaluateRecordResponse.FromString,
-                )
+            "/szengine.SzEngine/ReevaluateRecord",
+            request_serializer=szengine__pb2.ReevaluateRecordRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ReevaluateRecordResponse.FromString,
+        )
         self.Reinitialize = channel.unary_unary(
-                '/szengine.SzEngine/Reinitialize',
-                request_serializer=szengine__pb2.ReinitializeRequest.SerializeToString,
-                response_deserializer=szengine__pb2.ReinitializeResponse.FromString,
-                )
+            "/szengine.SzEngine/Reinitialize",
+            request_serializer=szengine__pb2.ReinitializeRequest.SerializeToString,
+            response_deserializer=szengine__pb2.ReinitializeResponse.FromString,
+        )
         self.SearchByAttributes = channel.unary_unary(
-                '/szengine.SzEngine/SearchByAttributes',
-                request_serializer=szengine__pb2.SearchByAttributesRequest.SerializeToString,
-                response_deserializer=szengine__pb2.SearchByAttributesResponse.FromString,
-                )
+            "/szengine.SzEngine/SearchByAttributes",
+            request_serializer=szengine__pb2.SearchByAttributesRequest.SerializeToString,
+            response_deserializer=szengine__pb2.SearchByAttributesResponse.FromString,
+        )
         self.StreamExportCsvEntityReport = channel.unary_stream(
-                '/szengine.SzEngine/StreamExportCsvEntityReport',
-                request_serializer=szengine__pb2.StreamExportCsvEntityReportRequest.SerializeToString,
-                response_deserializer=szengine__pb2.StreamExportCsvEntityReportResponse.FromString,
-                )
+            "/szengine.SzEngine/StreamExportCsvEntityReport",
+            request_serializer=szengine__pb2.StreamExportCsvEntityReportRequest.SerializeToString,
+            response_deserializer=szengine__pb2.StreamExportCsvEntityReportResponse.FromString,
+        )
         self.StreamExportJsonEntityReport = channel.unary_stream(
-                '/szengine.SzEngine/StreamExportJsonEntityReport',
-                request_serializer=szengine__pb2.StreamExportJsonEntityReportRequest.SerializeToString,
-                response_deserializer=szengine__pb2.StreamExportJsonEntityReportResponse.FromString,
-                )
+            "/szengine.SzEngine/StreamExportJsonEntityReport",
+            request_serializer=szengine__pb2.StreamExportJsonEntityReportRequest.SerializeToString,
+            response_deserializer=szengine__pb2.StreamExportJsonEntityReportResponse.FromString,
+        )
         self.WhyEntities = channel.unary_unary(
-                '/szengine.SzEngine/WhyEntities',
-                request_serializer=szengine__pb2.WhyEntitiesRequest.SerializeToString,
-                response_deserializer=szengine__pb2.WhyEntitiesResponse.FromString,
-                )
+            "/szengine.SzEngine/WhyEntities",
+            request_serializer=szengine__pb2.WhyEntitiesRequest.SerializeToString,
+            response_deserializer=szengine__pb2.WhyEntitiesResponse.FromString,
+        )
         self.WhyRecordInEntity = channel.unary_unary(
-                '/szengine.SzEngine/WhyRecordInEntity',
-                request_serializer=szengine__pb2.WhyRecordInEntityRequest.SerializeToString,
-                response_deserializer=szengine__pb2.WhyRecordInEntityResponse.FromString,
-                )
+            "/szengine.SzEngine/WhyRecordInEntity",
+            request_serializer=szengine__pb2.WhyRecordInEntityRequest.SerializeToString,
+            response_deserializer=szengine__pb2.WhyRecordInEntityResponse.FromString,
+        )
         self.WhyRecords = channel.unary_unary(
-                '/szengine.SzEngine/WhyRecords',
-                request_serializer=szengine__pb2.WhyRecordsRequest.SerializeToString,
-                response_deserializer=szengine__pb2.WhyRecordsResponse.FromString,
-                )
+            "/szengine.SzEngine/WhyRecords",
+            request_serializer=szengine__pb2.WhyRecordsRequest.SerializeToString,
+            response_deserializer=szengine__pb2.WhyRecordsResponse.FromString,
+        )
 
 
 class SzEngineServicer(object):
@@ -177,880 +177,1253 @@ class SzEngineServicer(object):
     def AddRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CloseExport(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CountRedoRecords(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DeleteRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ExportCsvEntityReport(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ExportJsonEntityReport(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def FetchNext(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def FindNetworkByEntityId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def FindNetworkByRecordId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def FindPathByEntityId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def FindPathByRecordId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetActiveConfigId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetEntityByEntityId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetEntityByRecordId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetRedoRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetRepositoryLastModifiedTime(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetStats(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetVirtualEntityByRecordId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def HowEntityByEntityId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def PrimeEngine(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ProcessRedoRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ReevaluateEntity(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ReevaluateRecord(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def Reinitialize(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def SearchByAttributes(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def StreamExportCsvEntityReport(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def StreamExportJsonEntityReport(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def WhyEntities(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def WhyRecordInEntity(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def WhyRecords(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_SzEngineServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'AddRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddRecord,
-                    request_deserializer=szengine__pb2.AddRecordRequest.FromString,
-                    response_serializer=szengine__pb2.AddRecordResponse.SerializeToString,
-            ),
-            'CloseExport': grpc.unary_unary_rpc_method_handler(
-                    servicer.CloseExport,
-                    request_deserializer=szengine__pb2.CloseExportRequest.FromString,
-                    response_serializer=szengine__pb2.CloseExportResponse.SerializeToString,
-            ),
-            'CountRedoRecords': grpc.unary_unary_rpc_method_handler(
-                    servicer.CountRedoRecords,
-                    request_deserializer=szengine__pb2.CountRedoRecordsRequest.FromString,
-                    response_serializer=szengine__pb2.CountRedoRecordsResponse.SerializeToString,
-            ),
-            'DeleteRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteRecord,
-                    request_deserializer=szengine__pb2.DeleteRecordRequest.FromString,
-                    response_serializer=szengine__pb2.DeleteRecordResponse.SerializeToString,
-            ),
-            'ExportCsvEntityReport': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExportCsvEntityReport,
-                    request_deserializer=szengine__pb2.ExportCsvEntityReportRequest.FromString,
-                    response_serializer=szengine__pb2.ExportCsvEntityReportResponse.SerializeToString,
-            ),
-            'ExportJsonEntityReport': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExportJsonEntityReport,
-                    request_deserializer=szengine__pb2.ExportJsonEntityReportRequest.FromString,
-                    response_serializer=szengine__pb2.ExportJsonEntityReportResponse.SerializeToString,
-            ),
-            'FetchNext': grpc.unary_unary_rpc_method_handler(
-                    servicer.FetchNext,
-                    request_deserializer=szengine__pb2.FetchNextRequest.FromString,
-                    response_serializer=szengine__pb2.FetchNextResponse.SerializeToString,
-            ),
-            'FindNetworkByEntityId': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindNetworkByEntityId,
-                    request_deserializer=szengine__pb2.FindNetworkByEntityIdRequest.FromString,
-                    response_serializer=szengine__pb2.FindNetworkByEntityIdResponse.SerializeToString,
-            ),
-            'FindNetworkByRecordId': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindNetworkByRecordId,
-                    request_deserializer=szengine__pb2.FindNetworkByRecordIdRequest.FromString,
-                    response_serializer=szengine__pb2.FindNetworkByRecordIdResponse.SerializeToString,
-            ),
-            'FindPathByEntityId': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindPathByEntityId,
-                    request_deserializer=szengine__pb2.FindPathByEntityIdRequest.FromString,
-                    response_serializer=szengine__pb2.FindPathByEntityIdResponse.SerializeToString,
-            ),
-            'FindPathByRecordId': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindPathByRecordId,
-                    request_deserializer=szengine__pb2.FindPathByRecordIdRequest.FromString,
-                    response_serializer=szengine__pb2.FindPathByRecordIdResponse.SerializeToString,
-            ),
-            'GetActiveConfigId': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetActiveConfigId,
-                    request_deserializer=szengine__pb2.GetActiveConfigIdRequest.FromString,
-                    response_serializer=szengine__pb2.GetActiveConfigIdResponse.SerializeToString,
-            ),
-            'GetEntityByEntityId': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetEntityByEntityId,
-                    request_deserializer=szengine__pb2.GetEntityByEntityIdRequest.FromString,
-                    response_serializer=szengine__pb2.GetEntityByEntityIdResponse.SerializeToString,
-            ),
-            'GetEntityByRecordId': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetEntityByRecordId,
-                    request_deserializer=szengine__pb2.GetEntityByRecordIdRequest.FromString,
-                    response_serializer=szengine__pb2.GetEntityByRecordIdResponse.SerializeToString,
-            ),
-            'GetRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetRecord,
-                    request_deserializer=szengine__pb2.GetRecordRequest.FromString,
-                    response_serializer=szengine__pb2.GetRecordResponse.SerializeToString,
-            ),
-            'GetRedoRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetRedoRecord,
-                    request_deserializer=szengine__pb2.GetRedoRecordRequest.FromString,
-                    response_serializer=szengine__pb2.GetRedoRecordResponse.SerializeToString,
-            ),
-            'GetRepositoryLastModifiedTime': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetRepositoryLastModifiedTime,
-                    request_deserializer=szengine__pb2.GetRepositoryLastModifiedTimeRequest.FromString,
-                    response_serializer=szengine__pb2.GetRepositoryLastModifiedTimeResponse.SerializeToString,
-            ),
-            'GetStats': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetStats,
-                    request_deserializer=szengine__pb2.GetStatsRequest.FromString,
-                    response_serializer=szengine__pb2.GetStatsResponse.SerializeToString,
-            ),
-            'GetVirtualEntityByRecordId': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetVirtualEntityByRecordId,
-                    request_deserializer=szengine__pb2.GetVirtualEntityByRecordIdRequest.FromString,
-                    response_serializer=szengine__pb2.GetVirtualEntityByRecordIdResponse.SerializeToString,
-            ),
-            'HowEntityByEntityId': grpc.unary_unary_rpc_method_handler(
-                    servicer.HowEntityByEntityId,
-                    request_deserializer=szengine__pb2.HowEntityByEntityIdRequest.FromString,
-                    response_serializer=szengine__pb2.HowEntityByEntityIdResponse.SerializeToString,
-            ),
-            'PrimeEngine': grpc.unary_unary_rpc_method_handler(
-                    servicer.PrimeEngine,
-                    request_deserializer=szengine__pb2.PrimeEngineRequest.FromString,
-                    response_serializer=szengine__pb2.PrimeEngineResponse.SerializeToString,
-            ),
-            'ProcessRedoRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.ProcessRedoRecord,
-                    request_deserializer=szengine__pb2.ProcessRedoRecordRequest.FromString,
-                    response_serializer=szengine__pb2.ProcessRedoRecordResponse.SerializeToString,
-            ),
-            'ReevaluateEntity': grpc.unary_unary_rpc_method_handler(
-                    servicer.ReevaluateEntity,
-                    request_deserializer=szengine__pb2.ReevaluateEntityRequest.FromString,
-                    response_serializer=szengine__pb2.ReevaluateEntityResponse.SerializeToString,
-            ),
-            'ReevaluateRecord': grpc.unary_unary_rpc_method_handler(
-                    servicer.ReevaluateRecord,
-                    request_deserializer=szengine__pb2.ReevaluateRecordRequest.FromString,
-                    response_serializer=szengine__pb2.ReevaluateRecordResponse.SerializeToString,
-            ),
-            'Reinitialize': grpc.unary_unary_rpc_method_handler(
-                    servicer.Reinitialize,
-                    request_deserializer=szengine__pb2.ReinitializeRequest.FromString,
-                    response_serializer=szengine__pb2.ReinitializeResponse.SerializeToString,
-            ),
-            'SearchByAttributes': grpc.unary_unary_rpc_method_handler(
-                    servicer.SearchByAttributes,
-                    request_deserializer=szengine__pb2.SearchByAttributesRequest.FromString,
-                    response_serializer=szengine__pb2.SearchByAttributesResponse.SerializeToString,
-            ),
-            'StreamExportCsvEntityReport': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamExportCsvEntityReport,
-                    request_deserializer=szengine__pb2.StreamExportCsvEntityReportRequest.FromString,
-                    response_serializer=szengine__pb2.StreamExportCsvEntityReportResponse.SerializeToString,
-            ),
-            'StreamExportJsonEntityReport': grpc.unary_stream_rpc_method_handler(
-                    servicer.StreamExportJsonEntityReport,
-                    request_deserializer=szengine__pb2.StreamExportJsonEntityReportRequest.FromString,
-                    response_serializer=szengine__pb2.StreamExportJsonEntityReportResponse.SerializeToString,
-            ),
-            'WhyEntities': grpc.unary_unary_rpc_method_handler(
-                    servicer.WhyEntities,
-                    request_deserializer=szengine__pb2.WhyEntitiesRequest.FromString,
-                    response_serializer=szengine__pb2.WhyEntitiesResponse.SerializeToString,
-            ),
-            'WhyRecordInEntity': grpc.unary_unary_rpc_method_handler(
-                    servicer.WhyRecordInEntity,
-                    request_deserializer=szengine__pb2.WhyRecordInEntityRequest.FromString,
-                    response_serializer=szengine__pb2.WhyRecordInEntityResponse.SerializeToString,
-            ),
-            'WhyRecords': grpc.unary_unary_rpc_method_handler(
-                    servicer.WhyRecords,
-                    request_deserializer=szengine__pb2.WhyRecordsRequest.FromString,
-                    response_serializer=szengine__pb2.WhyRecordsResponse.SerializeToString,
-            ),
+        "AddRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.AddRecord,
+            request_deserializer=szengine__pb2.AddRecordRequest.FromString,
+            response_serializer=szengine__pb2.AddRecordResponse.SerializeToString,
+        ),
+        "CloseExport": grpc.unary_unary_rpc_method_handler(
+            servicer.CloseExport,
+            request_deserializer=szengine__pb2.CloseExportRequest.FromString,
+            response_serializer=szengine__pb2.CloseExportResponse.SerializeToString,
+        ),
+        "CountRedoRecords": grpc.unary_unary_rpc_method_handler(
+            servicer.CountRedoRecords,
+            request_deserializer=szengine__pb2.CountRedoRecordsRequest.FromString,
+            response_serializer=szengine__pb2.CountRedoRecordsResponse.SerializeToString,
+        ),
+        "DeleteRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteRecord,
+            request_deserializer=szengine__pb2.DeleteRecordRequest.FromString,
+            response_serializer=szengine__pb2.DeleteRecordResponse.SerializeToString,
+        ),
+        "ExportCsvEntityReport": grpc.unary_unary_rpc_method_handler(
+            servicer.ExportCsvEntityReport,
+            request_deserializer=szengine__pb2.ExportCsvEntityReportRequest.FromString,
+            response_serializer=szengine__pb2.ExportCsvEntityReportResponse.SerializeToString,
+        ),
+        "ExportJsonEntityReport": grpc.unary_unary_rpc_method_handler(
+            servicer.ExportJsonEntityReport,
+            request_deserializer=szengine__pb2.ExportJsonEntityReportRequest.FromString,
+            response_serializer=szengine__pb2.ExportJsonEntityReportResponse.SerializeToString,
+        ),
+        "FetchNext": grpc.unary_unary_rpc_method_handler(
+            servicer.FetchNext,
+            request_deserializer=szengine__pb2.FetchNextRequest.FromString,
+            response_serializer=szengine__pb2.FetchNextResponse.SerializeToString,
+        ),
+        "FindNetworkByEntityId": grpc.unary_unary_rpc_method_handler(
+            servicer.FindNetworkByEntityId,
+            request_deserializer=szengine__pb2.FindNetworkByEntityIdRequest.FromString,
+            response_serializer=szengine__pb2.FindNetworkByEntityIdResponse.SerializeToString,
+        ),
+        "FindNetworkByRecordId": grpc.unary_unary_rpc_method_handler(
+            servicer.FindNetworkByRecordId,
+            request_deserializer=szengine__pb2.FindNetworkByRecordIdRequest.FromString,
+            response_serializer=szengine__pb2.FindNetworkByRecordIdResponse.SerializeToString,
+        ),
+        "FindPathByEntityId": grpc.unary_unary_rpc_method_handler(
+            servicer.FindPathByEntityId,
+            request_deserializer=szengine__pb2.FindPathByEntityIdRequest.FromString,
+            response_serializer=szengine__pb2.FindPathByEntityIdResponse.SerializeToString,
+        ),
+        "FindPathByRecordId": grpc.unary_unary_rpc_method_handler(
+            servicer.FindPathByRecordId,
+            request_deserializer=szengine__pb2.FindPathByRecordIdRequest.FromString,
+            response_serializer=szengine__pb2.FindPathByRecordIdResponse.SerializeToString,
+        ),
+        "GetActiveConfigId": grpc.unary_unary_rpc_method_handler(
+            servicer.GetActiveConfigId,
+            request_deserializer=szengine__pb2.GetActiveConfigIdRequest.FromString,
+            response_serializer=szengine__pb2.GetActiveConfigIdResponse.SerializeToString,
+        ),
+        "GetEntityByEntityId": grpc.unary_unary_rpc_method_handler(
+            servicer.GetEntityByEntityId,
+            request_deserializer=szengine__pb2.GetEntityByEntityIdRequest.FromString,
+            response_serializer=szengine__pb2.GetEntityByEntityIdResponse.SerializeToString,
+        ),
+        "GetEntityByRecordId": grpc.unary_unary_rpc_method_handler(
+            servicer.GetEntityByRecordId,
+            request_deserializer=szengine__pb2.GetEntityByRecordIdRequest.FromString,
+            response_serializer=szengine__pb2.GetEntityByRecordIdResponse.SerializeToString,
+        ),
+        "GetRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.GetRecord,
+            request_deserializer=szengine__pb2.GetRecordRequest.FromString,
+            response_serializer=szengine__pb2.GetRecordResponse.SerializeToString,
+        ),
+        "GetRedoRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.GetRedoRecord,
+            request_deserializer=szengine__pb2.GetRedoRecordRequest.FromString,
+            response_serializer=szengine__pb2.GetRedoRecordResponse.SerializeToString,
+        ),
+        "GetRepositoryLastModifiedTime": grpc.unary_unary_rpc_method_handler(
+            servicer.GetRepositoryLastModifiedTime,
+            request_deserializer=szengine__pb2.GetRepositoryLastModifiedTimeRequest.FromString,
+            response_serializer=szengine__pb2.GetRepositoryLastModifiedTimeResponse.SerializeToString,
+        ),
+        "GetStats": grpc.unary_unary_rpc_method_handler(
+            servicer.GetStats,
+            request_deserializer=szengine__pb2.GetStatsRequest.FromString,
+            response_serializer=szengine__pb2.GetStatsResponse.SerializeToString,
+        ),
+        "GetVirtualEntityByRecordId": grpc.unary_unary_rpc_method_handler(
+            servicer.GetVirtualEntityByRecordId,
+            request_deserializer=szengine__pb2.GetVirtualEntityByRecordIdRequest.FromString,
+            response_serializer=szengine__pb2.GetVirtualEntityByRecordIdResponse.SerializeToString,
+        ),
+        "HowEntityByEntityId": grpc.unary_unary_rpc_method_handler(
+            servicer.HowEntityByEntityId,
+            request_deserializer=szengine__pb2.HowEntityByEntityIdRequest.FromString,
+            response_serializer=szengine__pb2.HowEntityByEntityIdResponse.SerializeToString,
+        ),
+        "PrimeEngine": grpc.unary_unary_rpc_method_handler(
+            servicer.PrimeEngine,
+            request_deserializer=szengine__pb2.PrimeEngineRequest.FromString,
+            response_serializer=szengine__pb2.PrimeEngineResponse.SerializeToString,
+        ),
+        "ProcessRedoRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.ProcessRedoRecord,
+            request_deserializer=szengine__pb2.ProcessRedoRecordRequest.FromString,
+            response_serializer=szengine__pb2.ProcessRedoRecordResponse.SerializeToString,
+        ),
+        "ReevaluateEntity": grpc.unary_unary_rpc_method_handler(
+            servicer.ReevaluateEntity,
+            request_deserializer=szengine__pb2.ReevaluateEntityRequest.FromString,
+            response_serializer=szengine__pb2.ReevaluateEntityResponse.SerializeToString,
+        ),
+        "ReevaluateRecord": grpc.unary_unary_rpc_method_handler(
+            servicer.ReevaluateRecord,
+            request_deserializer=szengine__pb2.ReevaluateRecordRequest.FromString,
+            response_serializer=szengine__pb2.ReevaluateRecordResponse.SerializeToString,
+        ),
+        "Reinitialize": grpc.unary_unary_rpc_method_handler(
+            servicer.Reinitialize,
+            request_deserializer=szengine__pb2.ReinitializeRequest.FromString,
+            response_serializer=szengine__pb2.ReinitializeResponse.SerializeToString,
+        ),
+        "SearchByAttributes": grpc.unary_unary_rpc_method_handler(
+            servicer.SearchByAttributes,
+            request_deserializer=szengine__pb2.SearchByAttributesRequest.FromString,
+            response_serializer=szengine__pb2.SearchByAttributesResponse.SerializeToString,
+        ),
+        "StreamExportCsvEntityReport": grpc.unary_stream_rpc_method_handler(
+            servicer.StreamExportCsvEntityReport,
+            request_deserializer=szengine__pb2.StreamExportCsvEntityReportRequest.FromString,
+            response_serializer=szengine__pb2.StreamExportCsvEntityReportResponse.SerializeToString,
+        ),
+        "StreamExportJsonEntityReport": grpc.unary_stream_rpc_method_handler(
+            servicer.StreamExportJsonEntityReport,
+            request_deserializer=szengine__pb2.StreamExportJsonEntityReportRequest.FromString,
+            response_serializer=szengine__pb2.StreamExportJsonEntityReportResponse.SerializeToString,
+        ),
+        "WhyEntities": grpc.unary_unary_rpc_method_handler(
+            servicer.WhyEntities,
+            request_deserializer=szengine__pb2.WhyEntitiesRequest.FromString,
+            response_serializer=szengine__pb2.WhyEntitiesResponse.SerializeToString,
+        ),
+        "WhyRecordInEntity": grpc.unary_unary_rpc_method_handler(
+            servicer.WhyRecordInEntity,
+            request_deserializer=szengine__pb2.WhyRecordInEntityRequest.FromString,
+            response_serializer=szengine__pb2.WhyRecordInEntityResponse.SerializeToString,
+        ),
+        "WhyRecords": grpc.unary_unary_rpc_method_handler(
+            servicer.WhyRecords,
+            request_deserializer=szengine__pb2.WhyRecordsRequest.FromString,
+            response_serializer=szengine__pb2.WhyRecordsResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'szengine.SzEngine', rpc_method_handlers)
+        "szengine.SzEngine", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class SzEngine(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def AddRecord(request,
+    def AddRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/AddRecord',
+            "/szengine.SzEngine/AddRecord",
             szengine__pb2.AddRecordRequest.SerializeToString,
             szengine__pb2.AddRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CloseExport(request,
+    def CloseExport(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/CloseExport',
+            "/szengine.SzEngine/CloseExport",
             szengine__pb2.CloseExportRequest.SerializeToString,
             szengine__pb2.CloseExportResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CountRedoRecords(request,
+    def CountRedoRecords(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/CountRedoRecords',
+            "/szengine.SzEngine/CountRedoRecords",
             szengine__pb2.CountRedoRecordsRequest.SerializeToString,
             szengine__pb2.CountRedoRecordsResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def DeleteRecord(request,
+    def DeleteRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/DeleteRecord',
+            "/szengine.SzEngine/DeleteRecord",
             szengine__pb2.DeleteRecordRequest.SerializeToString,
             szengine__pb2.DeleteRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ExportCsvEntityReport(request,
+    def ExportCsvEntityReport(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ExportCsvEntityReport',
+            "/szengine.SzEngine/ExportCsvEntityReport",
             szengine__pb2.ExportCsvEntityReportRequest.SerializeToString,
             szengine__pb2.ExportCsvEntityReportResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ExportJsonEntityReport(request,
+    def ExportJsonEntityReport(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ExportJsonEntityReport',
+            "/szengine.SzEngine/ExportJsonEntityReport",
             szengine__pb2.ExportJsonEntityReportRequest.SerializeToString,
             szengine__pb2.ExportJsonEntityReportResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def FetchNext(request,
+    def FetchNext(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/FetchNext',
+            "/szengine.SzEngine/FetchNext",
             szengine__pb2.FetchNextRequest.SerializeToString,
             szengine__pb2.FetchNextResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def FindNetworkByEntityId(request,
+    def FindNetworkByEntityId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/FindNetworkByEntityId',
+            "/szengine.SzEngine/FindNetworkByEntityId",
             szengine__pb2.FindNetworkByEntityIdRequest.SerializeToString,
             szengine__pb2.FindNetworkByEntityIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def FindNetworkByRecordId(request,
+    def FindNetworkByRecordId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/FindNetworkByRecordId',
+            "/szengine.SzEngine/FindNetworkByRecordId",
             szengine__pb2.FindNetworkByRecordIdRequest.SerializeToString,
             szengine__pb2.FindNetworkByRecordIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def FindPathByEntityId(request,
+    def FindPathByEntityId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/FindPathByEntityId',
+            "/szengine.SzEngine/FindPathByEntityId",
             szengine__pb2.FindPathByEntityIdRequest.SerializeToString,
             szengine__pb2.FindPathByEntityIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def FindPathByRecordId(request,
+    def FindPathByRecordId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/FindPathByRecordId',
+            "/szengine.SzEngine/FindPathByRecordId",
             szengine__pb2.FindPathByRecordIdRequest.SerializeToString,
             szengine__pb2.FindPathByRecordIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetActiveConfigId(request,
+    def GetActiveConfigId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetActiveConfigId',
+            "/szengine.SzEngine/GetActiveConfigId",
             szengine__pb2.GetActiveConfigIdRequest.SerializeToString,
             szengine__pb2.GetActiveConfigIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetEntityByEntityId(request,
+    def GetEntityByEntityId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetEntityByEntityId',
+            "/szengine.SzEngine/GetEntityByEntityId",
             szengine__pb2.GetEntityByEntityIdRequest.SerializeToString,
             szengine__pb2.GetEntityByEntityIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetEntityByRecordId(request,
+    def GetEntityByRecordId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetEntityByRecordId',
+            "/szengine.SzEngine/GetEntityByRecordId",
             szengine__pb2.GetEntityByRecordIdRequest.SerializeToString,
             szengine__pb2.GetEntityByRecordIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetRecord(request,
+    def GetRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetRecord',
+            "/szengine.SzEngine/GetRecord",
             szengine__pb2.GetRecordRequest.SerializeToString,
             szengine__pb2.GetRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetRedoRecord(request,
+    def GetRedoRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetRedoRecord',
+            "/szengine.SzEngine/GetRedoRecord",
             szengine__pb2.GetRedoRecordRequest.SerializeToString,
             szengine__pb2.GetRedoRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetRepositoryLastModifiedTime(request,
+    def GetRepositoryLastModifiedTime(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetRepositoryLastModifiedTime',
+            "/szengine.SzEngine/GetRepositoryLastModifiedTime",
             szengine__pb2.GetRepositoryLastModifiedTimeRequest.SerializeToString,
             szengine__pb2.GetRepositoryLastModifiedTimeResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetStats(request,
+    def GetStats(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetStats',
+            "/szengine.SzEngine/GetStats",
             szengine__pb2.GetStatsRequest.SerializeToString,
             szengine__pb2.GetStatsResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetVirtualEntityByRecordId(request,
+    def GetVirtualEntityByRecordId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/GetVirtualEntityByRecordId',
+            "/szengine.SzEngine/GetVirtualEntityByRecordId",
             szengine__pb2.GetVirtualEntityByRecordIdRequest.SerializeToString,
             szengine__pb2.GetVirtualEntityByRecordIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def HowEntityByEntityId(request,
+    def HowEntityByEntityId(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/HowEntityByEntityId',
+            "/szengine.SzEngine/HowEntityByEntityId",
             szengine__pb2.HowEntityByEntityIdRequest.SerializeToString,
             szengine__pb2.HowEntityByEntityIdResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def PrimeEngine(request,
+    def PrimeEngine(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/PrimeEngine',
+            "/szengine.SzEngine/PrimeEngine",
             szengine__pb2.PrimeEngineRequest.SerializeToString,
             szengine__pb2.PrimeEngineResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ProcessRedoRecord(request,
+    def ProcessRedoRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ProcessRedoRecord',
+            "/szengine.SzEngine/ProcessRedoRecord",
             szengine__pb2.ProcessRedoRecordRequest.SerializeToString,
             szengine__pb2.ProcessRedoRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ReevaluateEntity(request,
+    def ReevaluateEntity(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ReevaluateEntity',
+            "/szengine.SzEngine/ReevaluateEntity",
             szengine__pb2.ReevaluateEntityRequest.SerializeToString,
             szengine__pb2.ReevaluateEntityResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ReevaluateRecord(request,
+    def ReevaluateRecord(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/ReevaluateRecord',
+            "/szengine.SzEngine/ReevaluateRecord",
             szengine__pb2.ReevaluateRecordRequest.SerializeToString,
             szengine__pb2.ReevaluateRecordResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def Reinitialize(request,
+    def Reinitialize(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/Reinitialize',
+            "/szengine.SzEngine/Reinitialize",
             szengine__pb2.ReinitializeRequest.SerializeToString,
             szengine__pb2.ReinitializeResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def SearchByAttributes(request,
+    def SearchByAttributes(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/SearchByAttributes',
+            "/szengine.SzEngine/SearchByAttributes",
             szengine__pb2.SearchByAttributesRequest.SerializeToString,
             szengine__pb2.SearchByAttributesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def StreamExportCsvEntityReport(request,
+    def StreamExportCsvEntityReport(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/szengine.SzEngine/StreamExportCsvEntityReport',
+            "/szengine.SzEngine/StreamExportCsvEntityReport",
             szengine__pb2.StreamExportCsvEntityReportRequest.SerializeToString,
             szengine__pb2.StreamExportCsvEntityReportResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def StreamExportJsonEntityReport(request,
+    def StreamExportJsonEntityReport(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/szengine.SzEngine/StreamExportJsonEntityReport',
+            "/szengine.SzEngine/StreamExportJsonEntityReport",
             szengine__pb2.StreamExportJsonEntityReportRequest.SerializeToString,
             szengine__pb2.StreamExportJsonEntityReportResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def WhyEntities(request,
+    def WhyEntities(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/WhyEntities',
+            "/szengine.SzEngine/WhyEntities",
             szengine__pb2.WhyEntitiesRequest.SerializeToString,
             szengine__pb2.WhyEntitiesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def WhyRecordInEntity(request,
+    def WhyRecordInEntity(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/WhyRecordInEntity',
+            "/szengine.SzEngine/WhyRecordInEntity",
             szengine__pb2.WhyRecordInEntityRequest.SerializeToString,
             szengine__pb2.WhyRecordInEntityResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def WhyRecords(request,
+    def WhyRecords(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/szengine.SzEngine/WhyRecords',
+            "/szengine.SzEngine/WhyRecords",
             szengine__pb2.WhyRecordsRequest.SerializeToString,
             szengine__pb2.WhyRecordsResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )

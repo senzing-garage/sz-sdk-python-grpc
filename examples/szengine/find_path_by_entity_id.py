@@ -4,7 +4,7 @@ import grpc
 
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
-END_ENTITY_ID = 200001
+END_ENTITY_ID = 100004
 EXCLUSIONS = ""
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
