@@ -2,11 +2,12 @@
 
 import grpc
 
-from senzing_grpc import SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzError
+
+GRPC_URL = "localhost:8261"
 
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
 except SzError as err:
     print(f"\nError:\n{err}\n")

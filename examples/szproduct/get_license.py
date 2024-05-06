@@ -2,13 +2,13 @@
 
 import grpc
 
-from senzing_grpc import SzError, szproduct_grpc
+from senzing_grpc import SzError, SzProduct
 
 GRPC_URL = "localhost:8261"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_product = szproduct_grpc.SzProductGrpc(grpc_channel=grpc_channel)
+    sz_product = SzProduct(grpc_channel=grpc_channel)
     RESULT = sz_product.get_license()
     print(RESULT[:66], "...")
 except SzError as err:

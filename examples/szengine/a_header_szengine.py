@@ -9,7 +9,7 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzEngineFlags, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
@@ -18,7 +18,7 @@ DATA_SOURCES = {
 }
 
 
-test_records: List[Tuple[str, str]] = [
+TEST_RECORDS: List[Tuple[str, str]] = [
     ("CUSTOMERS", "1001"),
     ("CUSTOMERS", "1002"),
     ("CUSTOMERS", "1003"),
@@ -30,9 +30,7 @@ test_records: List[Tuple[str, str]] = [
 # -----------------------------------------------------------------------------
 
 
-def add_records(
-    sz_engine: szengine_grpc.SzEngineGrpc, record_id_list: List[Tuple[str, str]]
-) -> None:
+def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
     """Add all of the records in the list."""
     flags = SzEngineFlags.SZ_WITHOUT_INFO
     for record_identification in record_id_list:
@@ -55,6 +53,6 @@ print("\n---- szengine --------------------------------------------------------\
 
 grpc_url = "localhost:8261"
 grpc_channel = grpc.insecure_channel(grpc_url)
-sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+sz_engine = SzEngine(grpc_channel=grpc_channel)
 
-add_records(sz_engine, test_records)
+add_records(sz_engine, TEST_RECORDS)

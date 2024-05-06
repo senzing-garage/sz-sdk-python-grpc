@@ -2,16 +2,16 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+ENTITY_ID = 1
+FLAGS = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-entity_id = 1
-flags = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
-    RESULT = sz_engine.how_entity_by_entity_id(entity_id, flags)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    RESULT = sz_engine.how_entity_by_entity_id(ENTITY_ID, FLAGS)
     print(RESULT[:66], "...")
 except SzError as err:
     print(f"\nError:\n{err}\n")

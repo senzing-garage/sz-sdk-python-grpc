@@ -2,15 +2,15 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+FLAGS = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
-    export_handle = sz_engine.export_json_entity_report(flags)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    export_handle = sz_engine.export_json_entity_report(FLAGS)
     RESULT = ""
     while True:
         fragment = sz_engine.fetch_next(export_handle)

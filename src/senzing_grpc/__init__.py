@@ -16,31 +16,31 @@ from senzing_abstract import (
     SzUnrecoverableError,
 )
 
-from .szconfig_grpc import SzConfigGrpc
-from .szconfigmanager_grpc import SzConfigManagerGrpc
-from .szdiagnostic_grpc import SzDiagnosticGrpc
-from .szengine_grpc import SzEngineGrpc
-from .szproduct_grpc import SzProductGrpc
+from .szconfig import SzConfig
+from .szconfigmanager import SzConfigManager
+from .szdiagnostic import SzDiagnostic
+from .szengine import SzEngine
+from .szproduct import SzProduct
 
 __all__ = [
     "EXCEPTION_MAP",
     "SzBadInputError",
-    "SzConfigGrpc",
-    "SzConfigManagerGrpc",
+    "SzConfig",
+    "SzConfigManager",
     "SzConfigurationError",
     "SzDatabaseConnectionLostError",
     "SzDatabaseError",
-    "SzDiagnosticGrpc",
-    "SzEngineGrpc",
+    "SzDiagnostic",
+    "SzEngine",
+    "SzEngineFlags",
     "SzError",
     "SzLicenseError",
     "SzNotFoundError",
     "SzNotInitializedError",
-    "SzProductGrpc",
+    "SzProduct",
     "SzRetryableError",
     "SzRetryTimeoutExceededError",
     "SzUnhandledError",
     "SzUnknownDataSourceError",
     "SzUnrecoverableError",
-    "SzEngineFlags",
 ]

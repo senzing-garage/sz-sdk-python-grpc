@@ -2,26 +2,26 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+END_ENTITY_ID = 200001
+EXCLUSIONS = ""
+FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-start_entity_id = 1
-end_entity_id = 200001
-max_degrees = 2
-exclusions = ""
-required_data_sources = ""
-flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+MAX_DEGREES = 2
+REQUIRED_DATA_SOURCES = ""
+START_ENTITY_ID = 1
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     RESULT = sz_engine.find_path_by_entity_id(
-        start_entity_id,
-        end_entity_id,
-        max_degrees,
-        exclusions,
-        required_data_sources,
-        flags,
+        START_ENTITY_ID,
+        END_ENTITY_ID,
+        MAX_DEGREES,
+        EXCLUSIONS,
+        REQUIRED_DATA_SOURCES,
+        FLAGS,
     )
     print(RESULT[:66], "...")
 except SzError as err:

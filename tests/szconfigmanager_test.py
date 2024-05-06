@@ -1,16 +1,12 @@
 import json
+from typing import Any, Dict
 
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import (
-    SzConfigurationError,
-    SzEngineFlags,
-    szconfig_grpc,
-    szconfigmanager_grpc,
-)
+from senzing_grpc import SzConfig, SzConfigManager, SzConfigurationError, SzEngineFlags
 
 # -----------------------------------------------------------------------------
 # SzConfigManager testcases
@@ -21,170 +17,170 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = szconfigmanager_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, szconfigmanager_grpc.SzConfigManagerGrpc)
+    actual = SzConfigManager(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzConfigManager)
 
 
 def test_add_config(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
     config_definition = sz_config.export_config(config_handle)
     config_comment = "Test"
-    actual = sz_config_manager.add_config(config_definition, config_comment)
+    actual = sz_configmanager.add_config(config_definition, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
 def test_add_config_dict(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
     config_definition = sz_config.export_config(config_handle)
-    config_definition_dict = json.loads(config_definition)
+    config_definition_as_dict = json.loads(config_definition)
     config_comment = "Test"
-    actual = sz_config_manager.add_config(config_definition_dict, config_comment)
+    actual = sz_configmanager.add_config(config_definition_as_dict, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
 def test_add_config_bad_config_definition_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     bad_config_definition = 0
     config_comment = "Test"
     with pytest.raises(TypeError):
-        sz_config_manager.add_config(
+        sz_configmanager.add_config(
             bad_config_definition, config_comment  # type: ignore[arg-type]
         )
 
 
 def test_add_config_bad_config_definition_value(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     bad_config_definition = '{"just": "junk"}'
     config_comment = "Test"
-    actual = sz_config_manager.add_config(bad_config_definition, config_comment)
+    actual = sz_configmanager.add_config(bad_config_definition, config_comment)
     assert isinstance(actual, int)
     assert actual > 0
 
 
 def test_add_config_bad_config_comment_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
     config_definition = sz_config.export_config(config_handle)
     bad_config_comment = 0
     with pytest.raises(TypeError):
-        sz_config_manager.add_config(
+        sz_configmanager.add_config(
             config_definition, bad_config_comment  # type: ignore[arg-type]
         )
 
 
 def test_get_config(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    config_id = sz_config_manager.get_default_config_id()
-    actual = sz_config_manager.get_config(config_id)
-    actual_json = json.loads(actual)
-    assert schema(config_schema) == actual_json
+    config_id = sz_configmanager.get_default_config_id()
+    actual = sz_configmanager.get_config(config_id)
+    actual_as_dict = json.loads(actual)
+    assert schema(config_schema) == actual_as_dict
 
 
 def test_get_config_bad_config_id_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
-        sz_config_manager.get_config(bad_config_id)  # type: ignore[arg-type]
+        sz_configmanager.get_config(bad_config_id)  # type: ignore[arg-type]
 
 
 def test_get_config_bad_config_id_value(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = 1234
     with pytest.raises(SzConfigurationError):
-        sz_config_manager.get_config(bad_config_id)
+        sz_configmanager.get_config(bad_config_id)
 
 
 def test_get_config_list(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    actual = sz_config_manager.get_config_list()
-    actual_json = json.loads(actual)
-    assert schema(config_list_schema) == actual_json
+    actual = sz_configmanager.get_config_list()
+    actual_as_dict = json.loads(actual)
+    assert schema(config_list_schema) == actual_as_dict
 
 
 def test_get_default_config_id(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    actual = sz_config_manager.get_default_config_id()
+    actual = sz_configmanager.get_default_config_id()
     assert isinstance(actual, int)
 
 
 def test_replace_default_config_id(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    current_default_config_id = sz_config_manager.get_default_config_id()
+    current_default_config_id = sz_configmanager.get_default_config_id()
     config_handle = sz_config.create_config()
-    for data_source_code in TRUTHSET_DATASOURCES.keys():
+    for data_source_code in TRUTHSET_DATASOURCES:
         sz_config.add_data_source(config_handle, data_source_code)
     data_source_code = "REPLACE_DEFAULT_CONFIG_ID"
     sz_config.add_data_source(config_handle, data_source_code)
     config_definition = sz_config.export_config(config_handle)
     config_comment = "Test"
-    new_default_config_id = sz_config_manager.add_config(
+    new_default_config_id = sz_configmanager.add_config(
         config_definition, config_comment
     )
     assert current_default_config_id != new_default_config_id
-    sz_config_manager.replace_default_config_id(
+    sz_configmanager.replace_default_config_id(
         current_default_config_id, new_default_config_id
     )
-    actual = sz_config_manager.get_default_config_id()
+    actual = sz_configmanager.get_default_config_id()
     assert actual == new_default_config_id
 
 
 def test_replace_default_config_id_bad_new_default_config_id_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    current_default_config_id = sz_config_manager.get_default_config_id()
+    current_default_config_id = sz_configmanager.get_default_config_id()
     bad_new_default_config_id = "string"
     with pytest.raises(TypeError):
-        sz_config_manager.replace_default_config_id(
+        sz_configmanager.replace_default_config_id(
             current_default_config_id, bad_new_default_config_id  # type: ignore[arg-type]
         )
 
 
 def test_replace_default_config_id_bad_new_default_config_id_value(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    current_default_config_id = sz_config_manager.get_default_config_id()
+    current_default_config_id = sz_configmanager.get_default_config_id()
     bad_new_default_config_id = 1234
     with pytest.raises(SzConfigurationError):
-        sz_config_manager.replace_default_config_id(
+        sz_configmanager.replace_default_config_id(
             current_default_config_id, bad_new_default_config_id
         )
 
 
 def test_replace_default_config_id_bad_current_default_config_id_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = "string"
@@ -193,18 +189,18 @@ def test_replace_default_config_id_bad_current_default_config_id_type(
     sz_config.add_data_source(config_handle, data_source_code)
     config_definition = sz_config.export_config(config_handle)
     config_comment = "Test"
-    new_default_config_id = sz_config_manager.add_config(
+    new_default_config_id = sz_configmanager.add_config(
         config_definition, config_comment
     )
     with pytest.raises(TypeError):
-        sz_config_manager.replace_default_config_id(
+        sz_configmanager.replace_default_config_id(
             bad_current_default_config_id, new_default_config_id  # type: ignore[arg-type]
         )
 
 
 def test_replace_default_config_id_bad_current_default_config_id_value(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = 1234
@@ -213,84 +209,82 @@ def test_replace_default_config_id_bad_current_default_config_id_value(
     sz_config.add_data_source(config_handle, data_source_code)
     config_definition = sz_config.export_config(config_handle)
     config_comment = "Test"
-    new_default_config_id = sz_config_manager.add_config(
+    new_default_config_id = sz_configmanager.add_config(
         config_definition, config_comment
     )
     with pytest.raises(SzConfigurationError):
-        sz_config_manager.replace_default_config_id(
+        sz_configmanager.replace_default_config_id(
             bad_current_default_config_id, new_default_config_id
         )
 
 
 def test_set_default_config_id(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
-    sz_config: szconfig_grpc.SzConfigGrpc,
+    sz_configmanager: SzConfigManager,
+    sz_config: SzConfig,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    old_config_id = sz_config_manager.get_default_config_id()
+    old_config_id = sz_configmanager.get_default_config_id()
     config_handle = sz_config.create_config()
     data_source_code = "CUSTOMERS"
     sz_config.add_data_source(config_handle, data_source_code)
     config_definition = sz_config.export_config(config_handle)
     config_comment = "Test"
-    config_id = sz_config_manager.add_config(config_definition, config_comment)
+    config_id = sz_configmanager.add_config(config_definition, config_comment)
     assert old_config_id != config_id
-    sz_config_manager.set_default_config_id(config_id)
-    actual = sz_config_manager.get_default_config_id()
+    sz_configmanager.set_default_config_id(config_id)
+    actual = sz_configmanager.get_default_config_id()
     assert actual == config_id
 
 
 def test_set_default_config_id_bad_config_id_type(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
-        sz_config_manager.set_default_config_id(bad_config_id)  # type: ignore[arg-type]
+        sz_configmanager.set_default_config_id(bad_config_id)  # type: ignore[arg-type]
 
 
 def test_set_default_config_id_bad_config_id_value(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().set_default_config_id()."""
     bad_config_id = 1
     with pytest.raises(SzConfigurationError):
-        sz_config_manager.set_default_config_id(bad_config_id)
+        sz_configmanager.set_default_config_id(bad_config_id)
 
 
 def test_initialize_and_destroy(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
     settings = "{}"
     verbose_logging = SzEngineFlags.SZ_NO_LOGGING
-    sz_config_manager.initialize(instance_name, settings, verbose_logging)
-    sz_config_manager.destroy()
+    sz_configmanager.initialize(instance_name, settings, verbose_logging)
+    sz_configmanager.destroy()
 
 
 def test_initialize_and_destroy_again(
-    sz_config_manager: szconfigmanager_grpc.SzConfigManagerGrpc,
+    sz_configmanager: SzConfigManager,
 ) -> None:
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
-    settings = {}
+    settings: Dict[Any, Any] = {}
     verbose_logging = SzEngineFlags.SZ_NO_LOGGING
-    sz_config_manager.initialize(instance_name, settings, verbose_logging)
-    sz_config_manager.destroy()
+    sz_configmanager.initialize(instance_name, settings, verbose_logging)
+    sz_configmanager.destroy()
 
 
 def test_context_managment() -> None:
-    """Test the use of SzConfigManagerGrpc in context."""
+    """Test the use of SzConfigManager in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with szconfigmanager_grpc.SzConfigManagerGrpc(
-        grpc_channel=grpc_channel
-    ) as sz_configmanager:
+    with SzConfigManager(grpc_channel=grpc_channel) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
         actual = sz_configmanager.get_config(config_id)
-        actual_json = json.loads(actual)
-        assert schema(config_schema) == actual_json
+        actual_as_dict = json.loads(actual)
+        assert schema(config_schema) == actual_as_dict
 
 
 # -----------------------------------------------------------------------------
@@ -299,26 +293,26 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
-def szconfig_fixture() -> szconfig_grpc.SzConfigGrpc:
+def szconfig_fixture() -> SzConfig:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = szconfig_grpc.SzConfigGrpc(grpc_channel=grpc_channel)
+    result = SzConfig(grpc_channel=grpc_channel)
     return result
 
 
-@pytest.fixture(name="sz_config_manager", scope="module")  # type: ignore[misc]
-def szconfigmanager_fixture() -> szconfigmanager_grpc.SzConfigManagerGrpc:
+@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
+def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = szconfigmanager_grpc.SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = SzConfigManager(grpc_channel=grpc_channel)
     return result
 
 

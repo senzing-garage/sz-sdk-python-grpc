@@ -2,30 +2,30 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+END_DATA_SOURCE_CODE = "CUSTOMERS"
+END_RECORD_ID = "1009"
+EXCLUSIONS = ""
+FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-start_data_source_code = "CUSTOMERS"
-start_record_id = "1001"
-end_data_source_code = "CUSTOMERS"
-end_record_id = "1009"
-max_degrees = 2
-exclusions = ""
-required_data_sources = ""
-flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
+MAX_DEGREES = 2
+REQUIRED_DATA_SOURCES = ""
+START_DATA_SOURCE_CODE = "CUSTOMERS"
+START_RECORD_ID = "1001"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     RESULT = sz_engine.find_path_by_record_id(
-        start_data_source_code,
-        start_record_id,
-        end_data_source_code,
-        end_record_id,
-        max_degrees,
-        exclusions,
-        required_data_sources,
-        flags,
+        START_DATA_SOURCE_CODE,
+        START_RECORD_ID,
+        END_DATA_SOURCE_CODE,
+        END_RECORD_ID,
+        MAX_DEGREES,
+        EXCLUSIONS,
+        REQUIRED_DATA_SOURCES,
+        FLAGS,
     )
     print(RESULT[:66], "...")
 except SzError as err:

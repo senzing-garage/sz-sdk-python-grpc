@@ -17,7 +17,7 @@ from .szhelpers import new_exception
 
 # Metadata
 
-__all__ = ["SzDiagnosticGrpc"]
+__all__ = ["SzDiagnostic"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2023-12-16"
@@ -25,11 +25,11 @@ __updated__ = "2023-12-16"
 SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
 # -----------------------------------------------------------------------------
-# SzDiagnosticGrpc class
+# SzDiagnostic class
 # -----------------------------------------------------------------------------
 
 
-class SzDiagnosticGrpc(SzDiagnosticAbstract):  # type: ignore
+class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore
     """
     SzDiagnostic module access library over gRPC.
     """

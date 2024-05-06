@@ -18,8 +18,11 @@ SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@rm -rf $(TARGET_DIRECTORY) || true
-	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@rm -fr $(DIST_DIRECTORY) || true
+	@rm -f  $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/__pycache__ || true
+	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.xml || true
+	@rm -fr $(TARGET_DIRECTORY) || true
 
 
 .PHONY: dependencies-osarch-specific

@@ -91,8 +91,8 @@ and access it using the `senzing_grpc` Python package.
 
     ```python
     import grpc
-    from senzing_grpc import SzProductGrpc
-    sz_product = SzProductGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+    from senzing_grpc import SzProduct
+    sz_product = SzProduct(grpc_channel=grpc.insecure_channel("localhost:8261"))
     print(sz_product.version())
     ```
 

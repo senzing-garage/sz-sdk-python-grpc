@@ -7,13 +7,13 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzEngineFlags, SzEngineGrpc, SzError
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
 GRPC_URL = "localhost:8261"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     record_sets = [
         TRUTHSET_CUSTOMER_RECORDS,
         TRUTHSET_REFERENCE_RECORDS,

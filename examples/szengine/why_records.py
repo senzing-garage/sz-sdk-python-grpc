@@ -2,24 +2,24 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+DATA_SOURCE_CODE_1 = "CUSTOMERS"
+DATA_SOURCE_CODE_2 = "CUSTOMERS"
+FLAGS = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-data_source_code_1 = "CUSTOMERS"
-record_id_1 = "1001"
-data_source_code_2 = "CUSTOMERS"
-record_id_2 = "1002"
-flags = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS
+RECORD_ID_1 = "1001"
+RECORD_ID_2 = "1002"
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     RESULT = sz_engine.why_records(
-        data_source_code_1,
-        record_id_1,
-        data_source_code_2,
-        record_id_2,
-        flags,
+        DATA_SOURCE_CODE_1,
+        RECORD_ID_1,
+        DATA_SOURCE_CODE_2,
+        RECORD_ID_2,
+        FLAGS,
     )
     print(RESULT[:66], "...")
 except SzError as err:

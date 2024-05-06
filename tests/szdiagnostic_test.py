@@ -4,7 +4,7 @@ import grpc
 import pytest
 from pytest_schema import schema
 
-from senzing_grpc import SzEngineFlags, szdiagnostic_grpc
+from senzing_grpc import SzDiagnostic, SzEngineFlags
 
 # -----------------------------------------------------------------------------
 # SzDiagnostic testcases
@@ -15,22 +15,22 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, szdiagnostic_grpc.SzDiagnosticGrpc)
+    actual = SzDiagnostic(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzDiagnostic)
 
 
 def test_check_datastore_performance(
-    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+    sz_diagnostic: SzDiagnostic,
 ) -> None:
     """Test SzDiagnostic().check_datastore_performance()."""
     seconds_to_run = 3
     actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
-    actual_json = json.loads(actual)
-    assert schema(check_datastore_performance_schema) == actual_json
+    actual_as_dict = json.loads(actual)
+    assert schema(check_datastore_performance_schema) == actual_as_dict
 
 
 def test_check_datastore_performance_bad_seconds_to_run_type(
-    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+    sz_diagnostic: SzDiagnostic,
 ) -> None:
     """Test SzDiagnostic().check_datastore_performance()."""
     bad_seconds_to_run = "string"
@@ -39,22 +39,22 @@ def test_check_datastore_performance_bad_seconds_to_run_type(
 
 
 def test_check_datastore_performance_bad_seconds_to_run_value(
-    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+    sz_diagnostic: SzDiagnostic,
 ) -> None:
     """Test SzDiagnostic().check_datastore_performance()."""
     bad_seconds_to_run = -1
     sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
 
 
-def test_get_datastore_info(sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc) -> None:
+def test_get_datastore_info(sz_diagnostic: SzDiagnostic) -> None:
     """Test SzDiagnostic().get_datastore_info()."""
     actual = sz_diagnostic.get_datastore_info()
-    actual_json = json.loads(actual)
-    assert schema(get_datastore_info_schema) == actual_json
+    actual_as_dict = json.loads(actual)
+    assert schema(get_datastore_info_schema) == actual_as_dict
 
 
 def test_initialize_and_destroy(
-    sz_diagnostic: szdiagnostic_grpc.SzDiagnosticGrpc,
+    sz_diagnostic: SzDiagnostic,
 ) -> None:
     """Test SzDiagnostic().init() and SzDiagnostic.destroy()."""
     instance_name = "Example"
@@ -65,10 +65,10 @@ def test_initialize_and_destroy(
 
 
 def test_context_managment() -> None:
-    """Test the use of SzDiagnosticGrpc in context."""
+    """Test the use of SzDiagnostic in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel) as sz_diagnostic:
+    with SzDiagnostic(grpc_channel=grpc_channel) as sz_diagnostic:
         actual = sz_diagnostic.get_datastore_info()
         actual_json = json.loads(actual)
         assert schema(get_datastore_info_schema) == actual_json
@@ -80,14 +80,14 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="sz_diagnostic", scope="module")  # type: ignore[misc]
-def szdiagnostic_fixture() -> szdiagnostic_grpc.SzDiagnosticGrpc:
+def szdiagnostic_fixture() -> SzDiagnostic:
     """
     Single engine object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = szdiagnostic_grpc.SzDiagnosticGrpc(grpc_channel=grpc_channel)
+    result = SzDiagnostic(grpc_channel=grpc_channel)
     return result
 
 

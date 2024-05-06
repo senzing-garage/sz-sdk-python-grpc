@@ -2,25 +2,27 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+BUILD_OUT_DEGREE = 1
+FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
-record_list = {
+RECORD_LIST = {
     "RECORDS": [
         {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"},
         {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1009"},
     ]
 }
-max_degrees = 2
-build_out_degree = 1
-max_entities = 10
-flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+MAX_DEGREES = 2
+BUILD_OUT_DEGREE = 1
+MAX_ENTITIES = 10
+FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     RESULT = sz_engine.find_network_by_record_id(
-        record_list, max_degrees, build_out_degree, max_entities, flags
+        RECORD_LIST, MAX_DEGREES, BUILD_OUT_DEGREE, MAX_ENTITIES, FLAGS
     )
     print(RESULT[:66], "...")
 except SzError as err:

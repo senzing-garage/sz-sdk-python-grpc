@@ -2,25 +2,25 @@
 
 import grpc
 
-from senzing_grpc import SzEngineFlags, SzError, szengine_grpc
+from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
-GRPC_URL = "localhost:8261"
-entity_list = {
+BUILD_OUT_DEGREE = 1
+ENTITY_LIST = {
     "ENTITIES": [
         {"ENTITY_ID": 1},
         {"ENTITY_ID": 200001},
     ]
 }
-max_degrees = 2
-build_out_degree = 1
-max_entities = 10
-flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
+GRPC_URL = "localhost:8261"
+MAX_DEGREES = 2
+MAX_ENTITIES = 10
 
 try:
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = szengine_grpc.SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
     RESULT = sz_engine.find_network_by_entity_id(
-        entity_list, max_degrees, build_out_degree, max_entities, flags
+        ENTITY_LIST, MAX_DEGREES, BUILD_OUT_DEGREE, MAX_ENTITIES, FLAGS
     )
     print(RESULT[:66], "...")
 except SzError as err:
