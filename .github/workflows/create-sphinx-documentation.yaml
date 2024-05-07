@@ -1,6 +1,12 @@
 name: create sphinx documentation
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src'
+      - 'examples'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,7 +24,7 @@ jobs:
         run: |
           pip install sphinx sphinx_rtd_theme myst_parser autodocsumm sphinx-toolbox
 
-      - name: sphinx build
+      - name: Sphinx build
         run: |
           sphinx-build docs/source _build
 
