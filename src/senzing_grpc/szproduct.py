@@ -84,6 +84,9 @@ class SzProduct(SzProductAbstract):  # type: ignore
         **kwargs: Any
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = instance_name
+        _ = settings
+        _ = verbose_logging
         _ = kwargs
 
     def get_license(self, **kwargs: Any) -> str:

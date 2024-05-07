@@ -470,6 +470,9 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = instance_name
+        _ = settings
+        _ = verbose_logging
         _ = kwargs
 
     def prime_engine(self, **kwargs: Any) -> None:
