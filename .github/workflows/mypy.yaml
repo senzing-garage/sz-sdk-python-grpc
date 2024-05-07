@@ -30,4 +30,4 @@ jobs:
       - name: mypy testing
         run: |
           # shellcheck disable=SC2046
-          mypy --strict $(git ls-files '*.py' ':!:docs/source/*' ':!:tools/*')
+          mypy --strict $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')

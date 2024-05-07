@@ -30,4 +30,4 @@ jobs:
       - name: black testing
         run: |
           # shellcheck disable=SC2046
-          black --diff --check $(git ls-files '*.py' ':!:docs/source/*')
+          black --diff --check $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
