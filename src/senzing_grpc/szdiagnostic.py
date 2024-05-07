@@ -97,6 +97,7 @@ class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore
 
     def get_feature(self, feature_id: int, **kwargs: Any) -> str:
         """TODO: Add get_feature()"""
+        _ = feature_id
         _ = kwargs
         return ""
 
@@ -111,6 +112,7 @@ class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
         _ = settings
+        _ = config_id
         _ = verbose_logging
         _ = kwargs
 

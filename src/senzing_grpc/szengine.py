@@ -80,6 +80,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = 0,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.AddRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -94,6 +95,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def close_export(self, export_handle: int, **kwargs: Any) -> None:
+        _ = kwargs
         try:
             request = szengine_pb2.CloseExportRequest(  # type: ignore[unused-ignore]
                 responseHandle=export_handle,
@@ -103,6 +105,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def count_redo_records(self, **kwargs: Any) -> int:
+        _ = kwargs
         try:
             request = szengine_pb2.CountRedoRecordsRequest()  # type: ignore[unused-ignore]
             response = self.stub.CountRedoRecords(request)
@@ -214,6 +217,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def find_interesting_entities_by_entity_id(
         self, entity_id: int, flags: int = 0, **kwargs: Any
     ) -> str:
+        _ = entity_id
+        _ = flags
         _ = kwargs
         # TODO: Implement find_interesting_entities_by_entity_id
         # try:
@@ -230,6 +235,9 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def find_interesting_entities_by_record_id(
         self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
     ) -> str:
+        _ = data_source_code
+        _ = record_id
+        _ = flags
         _ = kwargs
         # TODO: Implement find_interesting_entities_by_record_id
         # try:
@@ -472,6 +480,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
         _ = settings
+        _ = config_id
         _ = verbose_logging
         _ = kwargs
 
