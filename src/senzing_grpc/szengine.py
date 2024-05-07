@@ -117,6 +117,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = 0,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -130,6 +131,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def export_csv_entity_report(
         self,
@@ -137,6 +139,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> int:
+        _ = kwargs
         try:
             request = szengine_pb2.ExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
                 csvColumnList=csv_column_list,
@@ -156,6 +159,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         """TODO: Add method docstring to export_csv_entity_report_iterator."""
         if len(kwargs) > 0:
             pass  # TODO: To disable pylint W0613
+        _ = kwargs
         try:
             request = szengine_pb2.StreamExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
                 csvColumnList=csv_column_list, flags=flags
@@ -169,6 +173,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def export_json_entity_report(
         self, flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS, **kwargs: Any
     ) -> int:
+        _ = kwargs
         try:
             request = szengine_pb2.ExportJsonEntityReportRequest(  # type: ignore[unused-ignore]
                 flags=flags,
@@ -184,8 +189,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> Iterable[str]:
         """TODO: Add method docstring to export_json_entity_report_iterator."""
-        if len(kwargs) > 0:
-            pass  # TODO: To disable pylint W0613
+        _ = kwargs
         try:
             request = szengine_pb2.StreamExportJsonEntityReportRequest(  # type: ignore[unused-ignore]
                 flags=flags
@@ -197,6 +201,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def fetch_next(self, export_handle: int, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.FetchNextRequest(  # type: ignore[unused-ignore]
                 responseHandle=export_handle,
@@ -209,6 +214,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def find_interesting_entities_by_entity_id(
         self, entity_id: int, flags: int = 0, **kwargs: Any
     ) -> str:
+        _ = kwargs
         # TODO: Implement find_interesting_entities_by_entity_id
         # try:
         #     request = szengine_pb2.FindInterestingEntitiesByEntityIDRequest(  # type: ignore[unused-ignore]
@@ -224,6 +230,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def find_interesting_entities_by_record_id(
         self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
     ) -> str:
+        _ = kwargs
         # TODO: Implement find_interesting_entities_by_record_id
         # try:
         #     request = szengine_pb2.FindInterestingEntitiesByRecordIDRequest(  # type: ignore[unused-ignore]
@@ -246,6 +253,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityList=as_str(entity_list),
@@ -268,6 +276,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordList=as_str(record_list),
@@ -292,6 +301,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.FindPathByEntityIdRequest(  # type: ignore[unused-ignore]
                 startEntityId=start_entity_id,
@@ -318,6 +328,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
                 startDataSourceCode=start_data_source_code,
@@ -335,6 +346,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def get_active_config_id(self, **kwargs: Any) -> int:
+        _ = kwargs
         try:
             request = szengine_pb2.GetActiveConfigIdRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetActiveConfigId(request)
@@ -348,6 +360,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetEntityByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityId=entity_id,
@@ -365,6 +378,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -383,6 +397,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -395,6 +410,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def get_redo_record(self, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetRedoRecordRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetRedoRecord(request)
@@ -403,6 +419,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def get_stats(self, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetStatsRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetStats(request)
@@ -416,6 +433,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordList=as_str(record_list),
@@ -432,6 +450,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.HowEntityByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityId=entity_id,
@@ -451,11 +470,14 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def prime_engine(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def process_redo_record(self, redo_record: str, flags: int, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.ProcessRedoRecordRequest(  # type: ignore[unused-ignore]
                 redoRecord=as_str(redo_record),
@@ -467,6 +489,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def reevaluate_entity(self, entity_id: int, flags: int = 0, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.ReevaluateEntityRequest(  # type: ignore[unused-ignore]
                 entityId=entity_id,
@@ -480,6 +503,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def reevaluate_record(
         self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.ReevaluateRecordRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -492,6 +516,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def reinitialize(self, config_id: int, **kwargs: Any) -> None:
+        _ = kwargs
         try:
             request = szengine_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)
@@ -505,6 +530,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
                 attributes=as_str(attributes),
@@ -523,6 +549,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_WHY_ENTITIES_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.WhyEntitiesRequest(  # type: ignore[unused-ignore]
                 entityId1=entity_id_1,
@@ -542,7 +569,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         # TODO: Implement after V3 is published.
-
+        _ = kwargs
         try:
             request = szengine_pb2.WhyRecordInEntityRequest(  # type: ignore[unused-ignore]
                 dataSourceCode=data_source_code,
@@ -563,6 +590,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         flags: int = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szengine_pb2.WhyRecordsRequest(  # type: ignore[unused-ignore]
                 dataSourceCode1=data_source_code_1,

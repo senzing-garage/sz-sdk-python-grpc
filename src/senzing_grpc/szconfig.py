@@ -79,6 +79,7 @@ class SzConfig(SzConfigAbstract):  # type: ignore
         data_source_code: str,
         **kwargs: Any,
     ) -> str:
+        _ = kwargs
         try:
             request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
                 configHandle=config_handle, dataSourceCode=data_source_code
@@ -89,6 +90,7 @@ class SzConfig(SzConfigAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def close_config(self, config_handle: int, **kwargs: Any) -> None:
+        _ = kwargs
         try:
             request = szconfig_pb2.CloseConfigRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             self.stub.CloseConfig(request)
@@ -96,6 +98,7 @@ class SzConfig(SzConfigAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def create_config(self, **kwargs: Any) -> int:
+        _ = kwargs
         try:
             request = szconfig_pb2.CreateConfigRequest()  # type: ignore[unused-ignore]
             response = self.stub.CreateConfig(request)
@@ -106,6 +109,7 @@ class SzConfig(SzConfigAbstract):  # type: ignore
     def delete_data_source(
         self, config_handle: int, data_source_code: str, **kwargs: Any
     ) -> None:
+        _ = kwargs
         try:
             request = szconfig_pb2.DeleteDataSourceRequest(configHandle=config_handle, dataSourceCode=data_source_code)  # type: ignore[unused-ignore]
             self.stub.DeleteDataSource(request)
@@ -114,8 +118,10 @@ class SzConfig(SzConfigAbstract):  # type: ignore
 
     def destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def export_config(self, config_handle: int, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szconfig_pb2.ExportConfigRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.ExportConfig(request)
@@ -124,6 +130,7 @@ class SzConfig(SzConfigAbstract):  # type: ignore
             raise new_exception(err) from err
 
     def get_data_sources(self, config_handle: int, **kwargs: Any) -> str:
+        _ = kwargs
         try:
             request = szconfig_pb2.GetDataSourcesRequest(configHandle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSources(request)
@@ -139,10 +146,12 @@ class SzConfig(SzConfigAbstract):  # type: ignore
         **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def import_config(
         self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any
     ) -> int:
+        _ = kwargs
         try:
             request = szconfig_pb2.ImportConfigRequest(configDefinition=as_str(config_definition))  # type: ignore[unused-ignore]
             response = self.stub.ImportConfig(request)
