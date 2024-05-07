@@ -21,10 +21,7 @@ def test_constructor() -> None:
     assert isinstance(actual, SzConfigManager)
 
 
-def test_add_config(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
-) -> None:
+def test_add_config(sz_configmanager: SzConfigManager, sz_config: SzConfig) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
     config_definition = sz_config.export_config(config_handle)
@@ -35,8 +32,7 @@ def test_add_config(
 
 
 def test_add_config_dict(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
@@ -72,8 +68,7 @@ def test_add_config_bad_config_definition_value(
 
 
 def test_add_config_bad_config_comment_type(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
@@ -85,9 +80,7 @@ def test_add_config_bad_config_comment_type(
         )
 
 
-def test_get_config(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_get_config(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     config_id = sz_configmanager.get_default_config_id()
     actual = sz_configmanager.get_config(config_id)
@@ -95,44 +88,35 @@ def test_get_config(
     assert schema(config_schema) == actual_as_dict
 
 
-def test_get_config_bad_config_id_type(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_get_config_bad_config_id_type(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
         sz_configmanager.get_config(bad_config_id)  # type: ignore[arg-type]
 
 
-def test_get_config_bad_config_id_value(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_get_config_bad_config_id_value(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = 1234
     with pytest.raises(SzConfigurationError):
         sz_configmanager.get_config(bad_config_id)
 
 
-def test_get_config_list(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_get_config_list(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     actual = sz_configmanager.get_config_list()
     actual_as_dict = json.loads(actual)
     assert schema(config_list_schema) == actual_as_dict
 
 
-def test_get_default_config_id(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_get_default_config_id(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     actual = sz_configmanager.get_default_config_id()
     assert isinstance(actual, int)
 
 
 def test_replace_default_config_id(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     current_default_config_id = sz_configmanager.get_default_config_id()
@@ -179,8 +163,7 @@ def test_replace_default_config_id_bad_new_default_config_id_value(
 
 
 def test_replace_default_config_id_bad_current_default_config_id_type(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = "string"
@@ -199,8 +182,7 @@ def test_replace_default_config_id_bad_current_default_config_id_type(
 
 
 def test_replace_default_config_id_bad_current_default_config_id_value(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = 1234
@@ -219,8 +201,7 @@ def test_replace_default_config_id_bad_current_default_config_id_value(
 
 
 def test_set_default_config_id(
-    sz_configmanager: SzConfigManager,
-    sz_config: SzConfig,
+    sz_configmanager: SzConfigManager, sz_config: SzConfig
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     old_config_id = sz_configmanager.get_default_config_id()
@@ -254,9 +235,7 @@ def test_set_default_config_id_bad_config_id_value(
         sz_configmanager.set_default_config_id(bad_config_id)
 
 
-def test_initialize_and_destroy(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_initialize_and_destroy(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
     settings = "{}"
@@ -265,9 +244,7 @@ def test_initialize_and_destroy(
     sz_configmanager.destroy()
 
 
-def test_initialize_and_destroy_again(
-    sz_configmanager: SzConfigManager,
-) -> None:
+def test_initialize_and_destroy_again(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
     settings: Dict[Any, Any] = {}
@@ -292,10 +269,10 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_config", scope="module")
 def szconfig_fixture() -> SzConfig:
     """
-    Single engine object to use for all tests.
+    Single szconfigmanager object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
@@ -304,7 +281,7 @@ def szconfig_fixture() -> SzConfig:
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_configmanager", scope="module")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single engine object to use for all tests.

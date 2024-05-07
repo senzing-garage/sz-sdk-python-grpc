@@ -20,9 +20,7 @@ def test_constructor() -> None:
     assert isinstance(actual, SzDiagnostic)
 
 
-def test_check_datastore_performance(
-    sz_diagnostic: SzDiagnostic,
-) -> None:
+def test_check_datastore_performance(sz_diagnostic: SzDiagnostic) -> None:
     """Test SzDiagnostic().check_datastore_performance()."""
     seconds_to_run = 3
     actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
@@ -54,9 +52,7 @@ def test_get_datastore_info(sz_diagnostic: SzDiagnostic) -> None:
     assert schema(get_datastore_info_schema) == actual_as_dict
 
 
-def test_initialize_and_destroy(
-    sz_diagnostic: SzDiagnostic,
-) -> None:
+def test_initialize_and_destroy(sz_diagnostic: SzDiagnostic) -> None:
     """Test SzDiagnostic().init() and SzDiagnostic.destroy()."""
     instance_name = "Example"
     settings: Dict[str, str] = {}
@@ -80,7 +76,7 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_diagnostic", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_diagnostic", scope="module")
 def szdiagnostic_fixture() -> SzDiagnostic:
     """
     Single engine object to use for all tests.

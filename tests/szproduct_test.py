@@ -24,16 +24,16 @@ def test_get_license(sz_product: SzProduct) -> None:
     """Test Senzing license."""
     actual = sz_product.get_license()
     assert isinstance(actual, str)
-    actual_json = json.loads(actual)
-    assert schema(get_license_schema) == actual_json
+    actual_as_dict = json.loads(actual)
+    assert schema(get_license_schema) == actual_as_dict
 
 
 def test_get_version(sz_product: SzProduct) -> None:
     """Test Senzing version."""
     actual = sz_product.get_version()
     assert isinstance(actual, str)
-    actual_json = json.loads(actual)
-    assert schema(get_version_schema) == actual_json
+    actual_as_dict = json.loads(actual)
+    assert schema(get_version_schema) == actual_as_dict
 
 
 def test_initialize_and_destroy(sz_product: SzProduct) -> None:
@@ -61,8 +61,8 @@ def test_context_managment() -> None:
     with SzProduct(grpc_channel=grpc_channel) as sz_product:
         actual = sz_product.get_license()
         assert isinstance(actual, str)
-        actual_json = json.loads(actual)
-        assert schema(get_license_schema) == actual_json
+        actual_as_dict = json.loads(actual)
+        assert schema(get_license_schema) == actual_as_dict
 
 
 # -----------------------------------------------------------------------------
