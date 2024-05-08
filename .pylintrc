@@ -8,5 +8,6 @@ disable=
     too-many-public-methods,
 ignore=
     __init__.py,
+    docs/source/conf.py
 notes=
     FIXME,

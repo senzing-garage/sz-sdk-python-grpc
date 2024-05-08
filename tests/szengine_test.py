@@ -224,10 +224,11 @@ def test_export_csv_entity_report_iterator(sz_engine: SzEngine) -> None:
 
     expected = [
         "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA",
-        '1,"",0,0,"",0,0,"TEST","1","{}"',
-        '4,"Robert Smith",0,0,"",0,0,"CUSTOMERS","1001","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1001"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Robert"",""DATE_OF_BIRTH"":""12/11/1978"",""ADDR_TYPE"":""MAILING"",""ADDR_LINE1"":""123 Main Street, Las Vegas NV 89132"",""PHONE_TYPE"":""HOME"",""PHONE_NUMBER"":""702-919-1300"",""EMAIL_ADDRESS"":""bsmith@work.com"",""DATE"":""1/2/18"",""STATUS"":""Active"",""AMOUNT"":""100""}"',
-        '4,"Robert Smith",0,1,"+NAME+DOB+PHONE",0,0,"CUSTOMERS","1002","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1002"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Bob"",""DATE_OF_BIRTH"":""11/12/1978"",""ADDR_TYPE"":""HOME"",""ADDR_LINE1"":""1515 Adela Lane"",""ADDR_CITY"":""Las Vegas"",""ADDR_STATE"":""NV"",""ADDR_POSTAL_CODE"":""89111"",""PHONE_TYPE"":""MOBILE"",""PHONE_NUMBER"":""702-919-1300"",""DATE"":""3/10/17"",""STATUS"":""Inactive"",""AMOUNT"":""200""}"',
-        '4,"Robert Smith",0,1,"+NAME+DOB+EMAIL",0,0,"CUSTOMERS","1003","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1003"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Bob"",""PRIMARY_NAME_MIDDLE"":""J"",""DATE_OF_BIRTH"":""12/11/1978"",""EMAIL_ADDRESS"":""bsmith@work.com"",""DATE"":""4/9/16"",""STATUS"":""Inactive"",""AMOUNT"":""300""}"',
+        '1,"Robert Smith",0,1,"+NAME+DOB+PHONE",0,0,"CUSTOMERS","1002","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1002"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Bob"",""DATE_OF_BIRTH"":""11/12/1978"",""ADDR_TYPE"":""HOME"",""ADDR_LINE1"":""1515 Adela Lane"",""ADDR_CITY"":""Las Vegas"",""ADDR_STATE"":""NV"",""ADDR_POSTAL_CODE"":""89111"",""PHONE_TYPE"":""MOBILE"",""PHONE_NUMBER"":""702-919-1300"",""DATE"":""3/10/17"",""STATUS"":""Inactive"",""AMOUNT"":""200""}"',
+        '1,"Robert Smith",0,1,"+NAME+DOB+EMAIL",0,0,"CUSTOMERS","1003","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1003"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Bob"",""PRIMARY_NAME_MIDDLE"":""J"",""DATE_OF_BIRTH"":""12/11/1978"",""EMAIL_ADDRESS"":""bsmith@work.com"",""DATE"":""4/9/16"",""STATUS"":""Inactive"",""AMOUNT"":""300""}"',
+        '1,"Robert Smith",0,1,"+NAME+DOB+PHONE+EMAIL",0,0,"CUSTOMERS","1001","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1001"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Smith"",""PRIMARY_NAME_FIRST"":""Robert"",""DATE_OF_BIRTH"":""12/11/1978"",""ADDR_TYPE"":""MAILING"",""ADDR_LINE1"":""123 Main Street, Las Vegas NV 89132"",""PHONE_TYPE"":""HOME"",""PHONE_NUMBER"":""702-919-1300"",""EMAIL_ADDRESS"":""bsmith@work.com"",""DATE"":""1/2/18"",""STATUS"":""Active"",""AMOUNT"":""100""}"',
+        '4,"Edward Kusha",0,0,"",0,0,"CUSTOMERS","1009","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1009"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Kusha"",""PRIMARY_NAME_FIRST"":""Edward"",""DATE_OF_BIRTH"":""3/1/1970"",""SSN_NUMBER"":""294-66-9999"",""ADDR_TYPE"":""HOME"",""ADDR_LINE1"":""1304 Poppy Hills Dr"",""ADDR_CITY"":""Blacklick"",""ADDR_STATE"":""OH"",""ADDR_POSTAL_CODE"":""43004"",""EMAIL_ADDRESS"":""Kusha123@hmail.com"",""DATE"":""1/7/18"",""STATUS"":""Active"",""AMOUNT"":""600""}"',
+        '100001,"",0,0,"",0,0,"TEST","1","{}"',
     ]
 
     csv_column_list = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA"
@@ -251,7 +252,8 @@ def test_export_csv_entity_report_iterator(sz_engine: SzEngine) -> None:
 
     expected = [
         "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA",
-        '1,"",0,0,"",0,0,"TEST","1","{}"',
+        '4,"Edward Kusha",0,0,"",0,0,"CUSTOMERS","1009","{""DATA_SOURCE"":""CUSTOMERS"",""RECORD_ID"":""1009"",""RECORD_TYPE"":""PERSON"",""PRIMARY_NAME_LAST"":""Kusha"",""PRIMARY_NAME_FIRST"":""Edward"",""DATE_OF_BIRTH"":""3/1/1970"",""SSN_NUMBER"":""294-66-9999"",""ADDR_TYPE"":""HOME"",""ADDR_LINE1"":""1304 Poppy Hills Dr"",""ADDR_CITY"":""Blacklick"",""ADDR_STATE"":""OH"",""ADDR_POSTAL_CODE"":""43004"",""EMAIL_ADDRESS"":""Kusha123@hmail.com"",""DATE"":""1/7/18"",""STATUS"":""Active"",""AMOUNT"":""600""}"',
+        '100001,"",0,0,"",0,0,"TEST","1","{}"',
     ]
 
     i = 0
@@ -295,7 +297,7 @@ def test_export_json_entity_report_iterator(sz_engine: SzEngine) -> None:
         i += 1
         actual_as_dict = json.loads(actual)
         assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
-    assert i == 2
+    assert i == 3
 
     delete_records(sz_engine, test_records)
 
@@ -306,7 +308,7 @@ def test_export_json_entity_report_iterator(sz_engine: SzEngine) -> None:
         i += 1
         actual_as_dict = json.loads(actual)
         assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
-    assert i == 1
+    assert i == 2
 
 
 def test_fetch_next() -> None:
@@ -1076,10 +1078,11 @@ def test_destroy(sz_engine: SzEngine) -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")
+@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
 def szconfig_fixture() -> SzConfig:
     """
-    Single config object to use for all tests.
+    Single szconfig object to use for all tests.
+    engine_vars is returned from conftest.py.
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
@@ -1087,10 +1090,10 @@ def szconfig_fixture() -> SzConfig:
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")
+@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
 def szconfigmanager_fixture() -> SzConfigManager:
     """
-    Single configmanager object to use for all tests.
+    Single szconfigmanager object to use for all tests.
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
@@ -1098,7 +1101,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     return result
 
 
-@pytest.fixture(name="sz_engine", scope="module")
+@pytest.fixture(name="sz_engine", scope="module")  # type: ignore[misc]
 def szengine_fixture() -> SzEngine:
     """
     Single szengine object to use for all tests.
