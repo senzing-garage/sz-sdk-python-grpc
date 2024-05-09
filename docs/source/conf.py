@@ -9,8 +9,8 @@
 import os
 import sys
 
-project = "g2-sdk-python-grpc"
-copyright = "2023, senzing"
+project = "sz-sdk-python-grpc"
+copyright = "2024, Senzing"
 author = "senzing"
 
 # -- General configuration ---------------------------------------------------
@@ -32,6 +32,7 @@ html_static_path = ["_static"]
 # -- Customization -----------------------------------------------------------
 
 sys.path.insert(0, os.path.abspath("../../src"))
+sys.path.insert(0, os.path.abspath("../../src/senzing_grpc/pb2_grpc"))
 
 extensions = [
     "autodocsumm",  # to generate tables of functions, attributes, methods, etc.

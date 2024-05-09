@@ -12,9 +12,17 @@ SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@docker rm --force senzing-tools-serve-grpc || true
-	@rm -rf $(TARGET_DIRECTORY) || true
-	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
+	@docker rm --force senzing-serve-grpc || true
+	@rm -fr $(DIST_DIRECTORY) || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/__pycache__ || true
+	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.xml || true
+	@rm -fr $(TARGET_DIRECTORY) || true
+
+
+.PHONY: coverage-osarch-specific
+coverage-osarch-specific:
+	@coverage html
+	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
 .PHONY: dependencies-osarch-specific
@@ -32,28 +40,29 @@ hello-world-osarch-specific:
 setup-osarch-specific:
 	@docker run \
 		--detach \
-		--env SENZING_TOOLS_COMMAND=serve-grpc \
 		--env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db \
 		--env SENZING_TOOLS_ENABLE_ALL=true \
-		--name senzing-tools-serve-grpc \
+		--name senzing-serve-grpc \
 		--publish 8261:8261 \
 		--rm \
-		senzing/senzing-tools
-	@echo "senzing/senzing-tools server-grpc running in background."
+		senzing/serve-grpc
+	@echo "senzing/serve-grpc running in background."
+
 
 .PHONY: test-osarch-specific
 test-osarch-specific:
 	@echo "--- Unit tests -------------------------------------------------------"
 	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc --cov-report xml:coverage.xml
-#	@echo "--- Test examples ----------------------------------------------------"
-#	@pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
+	# @echo "--- Test examples ----------------------------------------------------"
+	# @pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
 	@echo "--- Test examples using unittest -------------------------------------"
 	@python3 -m unittest \
-		examples/g2config/*.py \
-		examples/g2configmgr/*.py \
-		examples/g2diagnostic/*.py \
-		examples/g2engine/*.py \
-		examples/g2product/*.py
+		examples/szconfig/*.py \
+		examples/szconfigmanager/*.py \
+		examples/szdiagnostic/*.py \
+		examples/szengine/*.py \
+		examples/szproduct/*.py
+
 
 .PHONY: test-examples
 test-examples:

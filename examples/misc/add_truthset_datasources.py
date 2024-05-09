@@ -3,30 +3,30 @@
 import grpc
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import (
-    G2ConfigGrpc,
-    G2ConfigMgrGrpc,
-    G2DiagnosticGrpc,
-    G2EngineGrpc,
-    G2Exception,
-)
+from senzing_grpc import SzConfig, SzConfigManager, SzDiagnostic, SzEngine, SzError
+
+GRPC_URL = "localhost:8261"
 
 try:
-    GRPC_URL = "localhost:8261"
     grpc_channel = grpc.insecure_channel(GRPC_URL)
-    g2_config = G2ConfigGrpc(grpc_channel=grpc_channel)
-    g2_configmgr = G2ConfigMgrGrpc(grpc_channel=grpc_channel)
-    old_config_id = g2_configmgr.get_default_config_id()
-    OLD_JSON_CONFIG = g2_configmgr.get_config(old_config_id)
-    config_handle = g2_config.load(OLD_JSON_CONFIG)
-    for datasource in TRUTHSET_DATASOURCES.values():
-        g2_config.add_data_source(config_handle, datasource.get("Json", {}))
-    NEW_JSON_CONFIG = g2_config.save(config_handle)
-    new_config_id = g2_configmgr.add_config(NEW_JSON_CONFIG, "Add TruthSet datasources")
-    g2_configmgr.replace_default_config_id(old_config_id, new_config_id)
-    g2_engine = G2EngineGrpc(grpc_channel=grpc_channel)
-    g2_engine.reinit(new_config_id)
-    g2_diagnostic = G2DiagnosticGrpc(grpc_channel=grpc_channel)
-    g2_diagnostic.reinit(new_config_id)
-except G2Exception as err:
+    sz_config = SzConfig(grpc_channel=grpc_channel)
+    sz_configmanager = SzConfigManager(grpc_channel=grpc_channel)
+    sz_diagnostic = SzDiagnostic(grpc_channel=grpc_channel)
+    sz_engine = SzEngine(grpc_channel=grpc_channel)
+
+    current_default_config_id = sz_configmanager.get_default_config_id()
+    OLD_CONFIG_DEFINITION = sz_configmanager.get_config(current_default_config_id)
+    config_handle = sz_config.import_config(OLD_CONFIG_DEFINITION)
+    for data_source_code in TRUTHSET_DATASOURCES:
+        sz_config.add_data_source(config_handle, data_source_code)
+    NEW_CONFIG_DEFINITION = sz_config.export_config(config_handle)
+    new_default_config_id = sz_configmanager.add_config(
+        NEW_CONFIG_DEFINITION, "Add TruthSet datasources"
+    )
+    sz_configmanager.replace_default_config_id(
+        current_default_config_id, new_default_config_id
+    )
+    sz_engine.reinitialize(new_default_config_id)
+    sz_diagnostic.reinitialize(new_default_config_id)
+except SzError as err:
     print(f"\nError:\n{err}\n")

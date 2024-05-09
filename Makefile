@@ -83,9 +83,28 @@ publish-test: package
 test: test-osarch-specific
 
 
-.PHONY: pylint
-pylint:
-	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*'  ':!:src/senzing_grpc/pb2_grpc/*')
+.PHONY: bandit
+bandit:
+	@bandit $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:src/senzing_grpc/pb2_grpc/*')
+
+
+.PHONY: coverage
+coverage: coverage-osarch-specific
+
+
+.PHONY: black
+black:
+	@black $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:tests/*' ':!:src/senzing_grpc/pb2_grpc/*')
+
+
+.PHONY: flake8
+flake8:
+	@flake8 $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+
+
+.PHONY: isort
+isort:
+	@isort $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: mypy
@@ -93,9 +112,14 @@ mypy:
 	mypy --follow-imports skip --strict $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
+.PHONY: pylint
+pylint:
+	@pylint $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+
+
 .PHONY: pytest
 pytest:
-	@pytest --cov=src/senzing_grpc --cov-report=xml  tests
+	@pytest --cov=src/senzing_grpc --cov-report=xml  $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 # -----------------------------------------------------------------------------
 # Documentation
@@ -119,17 +143,12 @@ sphinx:
 .PHONY: view-sphinx
 view-sphinx: view-sphinx-osarch-specific
 
-
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
 
 .PHONY: clean
 clean: clean-osarch-specific
-	@rm -rf $(TARGET_DIRECTORY) || true
-	@rm -rf $(DIST_DIRECTORY) || true
-	@rm -rf $(MAKEFILE_DIRECTORY)/__pycache__ || true
-	@rm $(MAKEFILE_DIRECTORY)/coverage.xml || true
 
 
 .PHONY: help

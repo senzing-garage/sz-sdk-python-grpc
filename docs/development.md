@@ -1,6 +1,4 @@
-# g2-sdk-python-grpc development
-
-The following instructions are used when modifying and building the Docker image.
+# sz-sdk-python-grpc development
 
 ## Prerequisites for development
 
@@ -21,12 +19,112 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
 
     ```console
     export GIT_ACCOUNT=senzing-garage
-    export GIT_REPOSITORY=g2-sdk-python-grpc
+    export GIT_REPOSITORY=sz-sdk-python-grpc
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
     ```
 
 1. Using the environment variables values just set, follow steps in [clone-repository](https://github.com/senzing-garage/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
+
+## Install python test tools
+
+1. Individual tools
+
+    ```console
+    python3 -m pip install \
+        bandit \
+        coverage \
+        black \
+        flake8 \
+        mypy \
+        pylint \
+        pytest
+    ```
+
+1. [Sphinx](https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/sphinx.md) tools
+
+    ```console
+    python3 -m pip install \
+        sphinx \
+        sphinx-autodoc-typehints \
+        sphinx-gallery \
+        sphinx-jinja2-compat \
+        sphinx-prompt \
+        sphinx-rtd-theme \
+        sphinx-tabs \
+        sphinx-toolbox \
+        sphinxcontrib-applehelp \
+        sphinxcontrib-devhelp \
+        sphinxcontrib-htmlhelp \
+        sphinxcontrib-jquery \
+        sphinxcontrib-jsmath \
+        sphinxcontrib-qthelp \
+        sphinxcontrib-serializinghtml
+    ```
+
+## Running tests
+
+1. [Bandit]
+
+    ```console
+    clear; make clean setup bandit
+    ```
+
+1. [Black]
+
+    ```console
+    clear; make clean setup black
+    ```
+
+1. [Flake8]
+
+    ```console
+    clear; make clean setup flake8
+    ```
+
+1. [Isort]
+
+    ```console
+    clear; make clean setup isort
+    ```
+
+1. [Mypy]
+
+    ```console
+    clear; make clean setup mypy
+    ```
+
+1. [Pylint]
+
+    ```console
+    clear; make clean setup pylint
+    ```
+
+1. [Pytest] and [Coverage]
+
+    ```console
+    clear; make clean setup pytest coverage
+    ```
+
+1. Test
+
+    ```console
+    clear; make clean setup test
+    ```
+
+1. (Optional) Run all
+
+    ```console
+    clear
+    make clean setup bandit
+    make clean setup black
+    make clean setup flake8
+    make clean setup isort
+    make clean setup mypy
+    make clean setup pylint
+    make clean setup pytest coverage
+    make clean setup test
+    ```
 
 ## Working with Python wheel file
 
@@ -42,7 +140,7 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
    Example:
 
     ```console
-    python3 -m pip freeze | grep senzing_grpc
+    python3 -m pip freeze | grep -e senzing-grpc -e senzing_grpc
     ```
 
    Nothing is returned.
@@ -58,11 +156,11 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
    Example:
 
     ```console
-    python3 -m pip freeze | grep senzing_grpc
+    python3 -m pip freeze | grep -e senzing-grpc -e senzing_grpc
     ```
 
     Example return:
-    > senzing-grpc @ file:///home/senzing/senzing-garage.git/g2-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
+    > senzing-grpc @ file:///home/senzing/senzing-garage.git/sz-sdk-python-grpc/dist/senzing_grpc-0.0.1-py3-none-any.whl#sha256=2a4e5218d66d5be60ee31bfad5943e6611fc921f28a4326d9594ceceae7e0ac1
 
 1. Uninstall the `senzing-grpc` python package.
    Example:
@@ -70,3 +168,51 @@ see [Environment Variables](https://github.com/senzing-garage/knowledge-base/blo
     ```console
     python3 -m pip uninstall senzing-grpc
     ```
+
+## Working with grpc and Protobuffer files
+
+After copying files from
+[sz-sdk-proto/go](https://github.com/senzing-garage/sz-sdk-proto/tree/main/go),
+an `import` statement must be modified in each of:
+
+- [szconfig_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfig_pb2_grpc.py)
+- [szconfigmanager_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfigmanager_pb2_grpc.py)
+- [szdiagnostic_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szdiagnostic_pb2_grpc.py)
+- [szengine_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szengine_pb2_grpc.py)
+- [szproduct_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szproduct_pb2_grpc.py)
+
+Example from [szconfig_pb2_grpc.py](../src/senzing_grpc/pb2_grpc/szconfig_pb2_grpc.py)
+
+Before:
+
+```python
+    import szconfig_pb2 as szconfig__pb2
+```
+
+After:
+
+```python
+    from . import szconfig_pb2 as szconfig__pb2
+```
+
+## References
+
+1. [Bandit]
+1. [Black]
+1. [Coverage]
+1. [Flake8]
+1. [Isort]
+1. [Mypy]
+1. [Pylint]
+1. [Pytest]
+1. [Sphinx]
+
+[Bandit]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/bandit.md
+[Black]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/black.md
+[Coverage]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/coverage.md
+[Flake8]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/flake8.md
+[Isort]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/isort.md
+[Mypy]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/mypy.md
+[Pylint]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/pylint.md
+[Pytest]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/pytest.md
+[Sphinx]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/sphinx.md

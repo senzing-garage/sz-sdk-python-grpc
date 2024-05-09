@@ -2,10 +2,12 @@
 disable=
     duplicate-code,
     line-too-long,
+    missing-function-docstring,
     missing-module-docstring,
     too-many-arguments,
     too-many-public-methods,
 ignore=
     __init__.py,
+    docs/source/conf.py
 notes=
     FIXME,

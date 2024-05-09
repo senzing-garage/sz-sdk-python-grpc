@@ -1,7 +1,7 @@
-senzing
-=======
+senzing_grpc
+============
 
 .. toctree::
    :maxdepth: 4
 
-   senzing
+   senzing_grpc

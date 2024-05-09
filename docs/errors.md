@@ -1,1 +1,1 @@
-# g2-sdk-python-grpc errors
+# sz-sdk-python-grpc errors

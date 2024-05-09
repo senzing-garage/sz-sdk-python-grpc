@@ -1,0 +1,57 @@
+name: pytest windows
+
+on: [pull_request, workflow_dispatch]
+
+env:
+  PYTHONPATH: 'D:\a\sz-sdk-python-grpc\sz-sdk-python-grpc\src'
+
+permissions:
+  contents: read
+
+jobs:
+  pytest-windows:
+    name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        # python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.11"]
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Docker
+        uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
+      - name: gRPC service
+        run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
+      - name: Run pytest on tests
+        run: pytest tests/ --verbose --capture=no --cov=src/senzing_grpc
+
+      - name: rename coverage file
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}"
+        run: |
+          Rename-Item -Path.coverage -NewName "$env:COVERAGE_FILE"
+
+      - name: Store coverage file
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: .coverage.${{ matrix.python-version }}
+
+  coverage:
+    name: coverage
+    needs: pytest-windows
+    permissions:
+      pull-requests: write
+      contents: write
+    uses: senzing-factory/build-resources/.github/workflows/python-coverage-comment.yaml@v1
