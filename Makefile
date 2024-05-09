@@ -119,7 +119,7 @@ pylint:
 
 .PHONY: pytest
 pytest:
-	@pytest --cov=src/senzing --cov-report=xml  $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@pytest --cov=src/senzing_grpc --cov-report=xml  $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 # -----------------------------------------------------------------------------
 # Documentation
