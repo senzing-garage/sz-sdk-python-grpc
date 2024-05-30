@@ -2,6 +2,9 @@ name: build distribution
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   build-distribution:
     name: build distribution
