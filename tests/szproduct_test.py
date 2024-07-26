@@ -5,7 +5,7 @@ import grpc
 import pytest
 from pytest_schema import Regex, schema
 
-from senzing_grpc import SzEngineFlags, SzProduct
+from senzing_grpc import SZ_NO_LOGGING, SzProduct
 
 # -----------------------------------------------------------------------------
 # SzProduct testcases
@@ -40,7 +40,7 @@ def test_initialize_and_destroy(sz_product: SzProduct) -> None:
     """Test init/destroy cycle."""
     instance_name = "Example"
     settings: Dict[Any, Any] = {}
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_product.initialize(instance_name, settings, verbose_logging)
     sz_product.destroy()
 
@@ -49,7 +49,7 @@ def test_initialize_and_destroy_again(sz_product: SzProduct) -> None:
     """Test init/destroy cycle a second time."""
     instance_name = "Example"
     settings = "{}"
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_product.initialize(instance_name, settings, verbose_logging)
     sz_product.destroy()
 

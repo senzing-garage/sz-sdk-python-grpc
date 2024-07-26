@@ -15,6 +15,10 @@ from senzing_truthset import (
 )
 
 from senzing_grpc import (
+    SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION,
+    SZ_NO_FLAGS,
+    SZ_NO_LOGGING,
+    SZ_WITHOUT_INFO,
     SzBadInputError,
     SzConfig,
     SzConfigManager,
@@ -61,7 +65,7 @@ def test_add_record(sz_engine: SzEngine) -> None:
     data_source_code = "TEST"
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.add_record(data_source_code, record_id, record_definition, flags)
 
 
@@ -70,7 +74,7 @@ def test_add_record_bad_data_source_code_type(sz_engine: SzEngine) -> None:
     bad_data_source_code = 1
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     with pytest.raises(TypeError):
         sz_engine.add_record(
             bad_data_source_code, record_id, record_definition, flags  # type: ignore[arg-type]
@@ -82,8 +86,8 @@ def test_add_record_bad_data_source_code_value(sz_engine: SzEngine) -> None:
     bad_data_source_code = "DOESN'T EXIST"
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
-    with pytest.raises(SzUnknownDataSourceError):
+    flags = SZ_WITHOUT_INFO
+    with pytest.raises(SzConfigurationError):
         sz_engine.add_record(bad_data_source_code, record_id, record_definition, flags)
 
 
@@ -116,7 +120,7 @@ def test_add_record_with_info_bad_data_source_code_value(sz_engine: SzEngine) ->
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
     flags = SzEngineFlags.SZ_WITH_INFO
-    with pytest.raises(SzUnknownDataSourceError):
+    with pytest.raises(SzConfigurationError):
         _ = sz_engine.add_record(
             bad_data_source_code, record_id, record_definition, flags
         )
@@ -141,7 +145,7 @@ def test_delete_record(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     data_source_code = "CUSTOMERS"
     record_id = "1001"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.delete_record(data_source_code, record_id, flags)
 
 
@@ -149,7 +153,7 @@ def test_delete_record_bad_data_source_code(sz_engine: SzEngine) -> None:
     """Test SzEngine().delete_record()."""
     bad_data_source_code = "XXXX"
     record_id = "9999"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     with pytest.raises(SzConfigurationError):
         sz_engine.delete_record(bad_data_source_code, record_id, flags)
 
@@ -158,7 +162,7 @@ def test_delete_record_bad_record_id(sz_engine: SzEngine) -> None:
     """Test SzEngine().delete_record()."""
     data_source_code = "CUSTOMERS"
     bad_record_id = "9999"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.delete_record(data_source_code, bad_record_id, flags)
 
 
@@ -298,7 +302,7 @@ def test_find_interesting_entities_by_entity_id(sz_engine: SzEngine) -> None:
     ]
     add_records(sz_engine, test_records)
     entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
-    flags = SzEngineFlags.SZ_NO_FLAGS
+    flags = SZ_NO_FLAGS
     actual = sz_engine.find_interesting_entities_by_entity_id(entity_id, flags)
     delete_records(sz_engine, test_records)
     if len(actual) > 0:
@@ -326,7 +330,7 @@ def test_find_interesting_entities_by_record_id(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     data_source_code = "CUSTOMERS"
     record_id = "1001"
-    flags = SzEngineFlags.SZ_NO_FLAGS
+    flags = SZ_NO_FLAGS
     actual = sz_engine.find_interesting_entities_by_record_id(
         data_source_code, record_id, flags
     )
@@ -784,7 +788,7 @@ def test_reevaluate_entity(sz_engine: SzEngine) -> None:
     ]
     add_records(sz_engine, test_records)
     entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.reevaluate_entity(entity_id, flags)
     delete_records(sz_engine, test_records)
 
@@ -792,7 +796,7 @@ def test_reevaluate_entity(sz_engine: SzEngine) -> None:
 def test_reevaluate_entity_bad_entity_id(sz_engine: SzEngine) -> None:
     """Test SzEngine().get_entity_id_from_record_id()."""
     bad_entity_id = 0
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.reevaluate_entity(bad_entity_id, flags)
 
 
@@ -825,7 +829,7 @@ def test_reevaluate_record(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     data_source_code = "CUSTOMERS"
     record_id = "1001"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.reevaluate_record(data_source_code, record_id, flags)
     delete_records(sz_engine, test_records)
 
@@ -834,7 +838,7 @@ def test_reevaluate_record_bad_data_source_code(sz_engine: SzEngine) -> None:
     """Test SzEngine().reevaluate_record()."""
     bad_data_source_code = "XXXX"
     record_id = "9999"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     with pytest.raises(SzUnknownDataSourceError):
         sz_engine.reevaluate_record(bad_data_source_code, record_id, flags)
 
@@ -843,7 +847,7 @@ def test_reevaluate_record_bad_record_id(sz_engine: SzEngine) -> None:
     """Test SzEngine().reevaluate_record()."""
     data_source_code = "CUSTOMERS"
     bad_record_id = "9999"
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
 
     # TODO: Fix test after GDEV-3790
@@ -1003,7 +1007,7 @@ def test_add_record_using_context_managment() -> None:
         data_source_code = "TEST"
         record_id = "2"
         record_definition = "{}"
-        flags = SzEngineFlags.SZ_WITHOUT_INFO
+        flags = SZ_WITHOUT_INFO
         sz_engine.add_record(data_source_code, record_id, record_definition, flags)
 
 
@@ -1016,8 +1020,8 @@ def test_initialize(sz_engine: SzEngine) -> None:
     """Test SzEngine().initialize()."""
     instance_name = "Test"
     settings: Dict[str, str] = {}
-    config_id = SzEngineFlags.SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    config_id = SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION
+    verbose_logging = SZ_NO_LOGGING
     sz_engine.initialize(instance_name, settings, config_id, verbose_logging)
 
 
@@ -1095,7 +1099,7 @@ def szengine_fixture() -> SzEngine:
 
 def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
     """Add all of the records in the list."""
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]
@@ -1110,7 +1114,7 @@ def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> N
 
 def add_records_truthset(sz_engine: SzEngine, do_redo: bool = True) -> None:
     """Add all truth-set the records."""
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
             sz_engine.add_record(
@@ -1127,7 +1131,7 @@ def add_records_truthset(sz_engine: SzEngine, do_redo: bool = True) -> None:
 
 def delete_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
     """Delete all of the records in the list."""
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]
@@ -1139,7 +1143,7 @@ def delete_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -
 
 def delete_records_truthset(sz_engine: SzEngine) -> None:
     """Delete all truth-set the records."""
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
             sz_engine.delete_record(record.get("DataSource"), record.get("Id"), flags)

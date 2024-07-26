@@ -102,11 +102,11 @@ class SzConfigManager(SzConfigManagerAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_config_list(self, **kwargs: Any) -> str:
+    def get_configs(self, **kwargs: Any) -> str:
         _ = kwargs
         try:
-            request = szconfigmanager_pb2.GetConfigListRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetConfigList(request)
+            request = szconfigmanager_pb2.GetConfigsRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetConfigs(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err

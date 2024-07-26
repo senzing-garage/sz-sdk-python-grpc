@@ -4,9 +4,10 @@ from typing import Any, Dict
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
+from senzing_abstract import SZ_NO_LOGGING
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import SzConfig, SzConfigManager, SzConfigurationError, SzEngineFlags
+from senzing_grpc import SzConfig, SzConfigManager, SzConfigurationError
 
 # -----------------------------------------------------------------------------
 # SzConfigManager testcases
@@ -102,9 +103,9 @@ def test_get_config_bad_config_id_value(sz_configmanager: SzConfigManager) -> No
         sz_configmanager.get_config(bad_config_id)
 
 
-def test_get_config_list(sz_configmanager: SzConfigManager) -> None:
+def test_get_configs(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
-    actual = sz_configmanager.get_config_list()
+    actual = sz_configmanager.get_configs()
     actual_as_dict = json.loads(actual)
     assert schema(config_list_schema) == actual_as_dict
 
@@ -239,7 +240,7 @@ def test_initialize_and_destroy(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
     settings = "{}"
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_configmanager.initialize(instance_name, settings, verbose_logging)
     sz_configmanager.destroy()
 
@@ -248,7 +249,7 @@ def test_initialize_and_destroy_again(sz_configmanager: SzConfigManager) -> None
     """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
     instance_name = "Example"
     settings: Dict[Any, Any] = {}
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_configmanager.initialize(instance_name, settings, verbose_logging)
     sz_configmanager.destroy()
 

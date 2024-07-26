@@ -95,7 +95,7 @@ test: test-tests test-examples
 .PHONY: test-tests
 test-tests:
 	$(info --- Unit tests -----------------------------------------------------------------)
-	@pytest tests --verbose --capture=no --cov=src/senzing_abstract --cov-report xml:coverage.xml
+	@pytest tests --verbose --capture=no --cov=src --cov-report xml:coverage.xml
 
 
 .PHONY: test-examples

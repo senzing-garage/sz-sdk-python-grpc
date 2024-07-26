@@ -12,6 +12,7 @@ PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
+	@docker rm  --force senzing-serve-grpc 2> /dev/null || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/.coverage || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.xml || true
 	@rm -fr $(DIST_DIRECTORY) || true
@@ -45,6 +46,7 @@ setup-osarch-specific:
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
 		--rm \
+		--user root \
 		senzing/serve-grpc
 	$(info "senzing/serve-grpc running in background.")
 

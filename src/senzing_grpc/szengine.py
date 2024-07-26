@@ -98,7 +98,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         _ = kwargs
         try:
             request = szengine_pb2.CloseExportRequest(  # type: ignore[unused-ignore]
-                responseHandle=export_handle,
+                exportHandle=export_handle,
             )
             self.stub.CloseExport(request)
         except Exception as err:
@@ -207,7 +207,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         _ = kwargs
         try:
             request = szengine_pb2.FetchNextRequest(  # type: ignore[unused-ignore]
-                responseHandle=export_handle,
+                exportHandle=export_handle,
             )
             response = self.stub.FetchNext(request)
             return str(response.result)
@@ -254,20 +254,20 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def find_network_by_entity_id(
         self,
-        entity_list: Union[str, Dict[str, List[Dict[str, int]]]],
+        entity_ids: Union[str, Dict[str, List[Dict[str, int]]]],
         max_degrees: int,
         build_out_degree: int,
-        max_entities: int,
+        build_out_max_entities: int,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityList=as_str(entity_list),
+                entityIds=as_str(entity_ids),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
-                maxEntities=max_entities,
+                buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
             response = self.stub.FindNetworkByEntityId(request)
@@ -277,20 +277,20 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def find_network_by_record_id(
         self,
-        record_list: Union[str, Dict[str, List[Dict[str, str]]]],
+        record_keys: Union[str, Dict[str, List[Dict[str, str]]]],
         max_degrees: int,
         build_out_degree: int,
-        max_entities: int,
+        build_out_max_entities: int,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+                recordKeys=as_str(record_keys),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
-                maxEntities=max_entities,
+                buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
             response = self.stub.FindNetworkByRecordId(request)
@@ -304,7 +304,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         end_entity_id: int,
         max_degrees: int,
         # TODO Should accept both entity and record IDs in V4, test
-        exclusions: Union[str, Dict[Any, Any]] = "",
+        avoid_entity_ids: Union[str, Dict[Any, Any]] = "",
         required_data_sources: Union[str, Dict[Any, Any]] = "",
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -315,7 +315,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
                 startEntityId=start_entity_id,
                 endEntityId=end_entity_id,
                 maxDegrees=max_degrees,
-                exclusions=exclusions,
+                avoidEntityIds=avoid_entity_ids,
                 requiredDataSources=required_data_sources,
                 flags=flags,
             )
@@ -437,14 +437,14 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def get_virtual_entity_by_record_id(
         self,
-        record_list: Union[str, Dict[Any, Any]],
+        record_keys: Union[str, Dict[Any, Any]],
         flags: int = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+                recordKeys=as_str(record_keys),
                 flags=flags,
             )
             response = self.stub.GetVirtualEntityByRecordId(request)
