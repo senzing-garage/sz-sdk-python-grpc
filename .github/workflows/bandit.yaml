@@ -17,11 +17,13 @@ jobs:
         python-version: ["3.11"]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run Bandit Scan
         uses: lukehinds/bandit-action@new-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: "examples src"
+          path: "src examples"
           recursive: "true"

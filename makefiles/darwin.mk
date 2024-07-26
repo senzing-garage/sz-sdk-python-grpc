@@ -4,13 +4,9 @@
 # Variables
 # -----------------------------------------------------------------------------
 
-SENZING_DIR ?= /opt/senzing/g2
-SENZING_TOOLS_SENZING_DIRECTORY ?= $(SENZING_DIR)
-
-LD_LIBRARY_PATH := $(SENZING_TOOLS_SENZING_DIRECTORY)/lib:$(SENZING_TOOLS_SENZING_DIRECTORY)/lib/macos
+LD_LIBRARY_PATH ?= $(SENZING_TOOLS_SENZING_DIRECTORY)/lib:$(SENZING_TOOLS_SENZING_DIRECTORY)/lib/macos
 DYLD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
-
-SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
+PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 # OS specific targets
@@ -18,33 +14,38 @@ SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@rm -fr $(DIST_DIRECTORY) || true
-	@rm -fr $(MAKEFILE_DIRECTORY)/__pycache__ || true
+	@rm -f  $(MAKEFILE_DIRECTORY)/.coverage || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.xml || true
+	@rm -fr $(DIST_DIRECTORY) || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/.mypy_cache || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/.pytest_cache || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/dist || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/docs/build || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/htmlcov || true
 	@rm -fr $(TARGET_DIRECTORY) || true
+	@find . | grep -E "(/__pycache__$$|\.pyc$$|\.pyo$$)" | xargs rm -rf
 
 
-.PHONY: dependencies-osarch-specific
-dependencies-osarch-specific:
-	python3 -m pip install --upgrade pip
-	pip install psutil pytest pytest-cov pytest-schema
+.PHONY: coverage-osarch-specific
+coverage-osarch-specific:
+	@pytest --cov=src --cov-report=xml  $(shell git ls-files '*.py'   )
+	@coverage html
+	@open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
-	@echo "Hello World, from darwin."
+	$(info "Hello World, from darwin.")
 
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
+	$(info "No setup required.")
 
 
-.PHONY: test-osarch-specific
-test-osarch-specific:
-	@echo "--- Unit tests -------------------------------------------------------"
-	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc
-	@echo "--- Test examples ----------------------------------------------------"
-	@pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
+.PHONY: sphinx-osarch-specific
+sphinx-osarch-specific:
+	@cd docs; rm -rf build; make html
 
 
 .PHONY: view-sphinx-osarch-specific
@@ -57,4 +58,4 @@ view-sphinx-osarch-specific:
 
 .PHONY: only-darwin
 only-darwin:
-	@echo "Only darwin has this Makefile target."
+	$(info "Only darwin has this Makefile target.")
