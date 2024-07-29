@@ -263,14 +263,9 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
-
-        entity_list = []
-        for entity_id in entity_ids:
-            entity_list.append({"ENTITY_ID": entity_id})
-        entity_ids_json = json.dumps({"ENTITIES": entity_list})
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityIds=entity_ids_json,
+                entityIds=entity_ids_json(entity_ids),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
@@ -291,16 +286,9 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
-
-        record_key_list = []
-        for record_key in record_keys:
-            record_key_list.append(
-                {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
-            )
-        record_keys_json = json.dumps({"RECORDS": record_key_list})
         try:
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordKeys=record_keys_json,
+                recordKeys=record_keys_json(record_keys),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
@@ -323,30 +311,13 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
-
-        avoid_entity_ids_json = ""
-        if avoid_entity_ids:
-            avoid_entity_id_list = []
-            for avoid_entity_id in avoid_entity_ids:
-                avoid_entity_id_list.append({"ENTITY_ID": avoid_entity_id})
-            avoid_entity_ids_json = json.dumps({"ENTITIES": avoid_entity_id_list})
-
-        required_data_sources_json = ""
-        if required_data_sources:
-            required_data_sources_list = []
-            for required_data_source in required_data_sources:
-                required_data_sources_list.append(required_data_source)
-            required_data_sources_json = json.dumps(
-                {"DATA_SOURCES": required_data_sources_list}
-            )
-
         try:
             request = szengine_pb2.FindPathByEntityIdRequest(  # type: ignore[unused-ignore]
                 startEntityId=start_entity_id,
                 endEntityId=end_entity_id,
                 maxDegrees=max_degrees,
-                avoidEntityIds=avoid_entity_ids_json,
-                requiredDataSources=required_data_sources_json,
+                avoidEntityIds=avoid_entity_ids_json(avoid_entity_ids),
+                requiredDataSources=required_data_sources_json(required_data_sources),
                 flags=flags,
             )
             response = self.stub.FindPathByEntityId(request)
@@ -367,28 +338,6 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
-
-        avoid_record_keys_json = ""
-        if avoid_record_keys:
-            avoid_record_keys_list = []
-            for avoid_record_key in avoid_record_keys:
-                avoid_record_keys_list.append(
-                    {
-                        "DATA_SOURCE": avoid_record_key[0],
-                        "RECORD_ID": avoid_record_key[1],
-                    }
-                )
-            avoid_record_keys_json = json.dumps({"RECORDS": avoid_record_keys_list})
-
-        required_data_sources_json = ""
-        if required_data_sources:
-            required_data_sources_list = []
-            for required_data_source in required_data_sources:
-                required_data_sources_list.append(required_data_source)
-            required_data_sources_json = json.dumps(
-                {"DATA_SOURCES": required_data_sources_list}
-            )
-
         try:
             request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
                 startDataSourceCode=start_data_source_code,
@@ -396,8 +345,8 @@ class SzEngine(SzEngineAbstract):
                 endDataSourceCode=end_data_source_code,
                 endRecordId=end_record_id,
                 maxDegrees=max_degrees,
-                avoidRecordKeys=avoid_record_keys_json,
-                requiredDataSources=required_data_sources_json,
+                avoidRecordKeys=avoid_record_keys_json(avoid_record_keys),
+                requiredDataSources=required_data_sources_json(required_data_sources),
                 flags=flags,
             )
             response = self.stub.FindPathByRecordId(request)
@@ -494,16 +443,9 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
-
-        record_key_list = []
-        for record_key in record_keys:
-            record_key_list.append(
-                {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
-            )
-        record_keys_json = json.dumps({"RECORDS": record_key_list})
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordKeys=record_keys_json,
+                recordKeys=record_keys_json(record_keys),
                 flags=flags,
             )
             response = self.stub.GetVirtualEntityByRecordId(request)
@@ -674,3 +616,63 @@ class SzEngine(SzEngineAbstract):
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
+
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+
+def entity_ids_json(entity_ids: List[int]) -> str:
+    entity_list = []
+    for entity_id in entity_ids:
+        entity_list.append({"ENTITY_ID": entity_id})
+    return json.dumps({"ENTITIES": entity_list})
+
+
+def record_keys_json(record_keys: List[Tuple[str, str]]) -> str:
+    record_key_list = []
+    for record_key in record_keys:
+        record_key_list.append(
+            {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
+        )
+    return json.dumps({"RECORDS": record_key_list})
+
+
+def avoid_entity_ids_json(avoid_entity_ids: Optional[List[int]] = None) -> str:
+    result = ""
+    if avoid_entity_ids:
+        avoid_entity_id_list = []
+        for avoid_entity_id in avoid_entity_ids:
+            avoid_entity_id_list.append({"ENTITY_ID": avoid_entity_id})
+        result = json.dumps({"ENTITIES": avoid_entity_id_list})
+    return result
+
+
+def avoid_record_keys_json(
+    avoid_record_keys: Optional[List[Tuple[str, str]]] = None
+) -> str:
+    result = ""
+    if avoid_record_keys:
+        avoid_record_keys_list = []
+        for avoid_record_key in avoid_record_keys:
+            avoid_record_keys_list.append(
+                {
+                    "DATA_SOURCE": avoid_record_key[0],
+                    "RECORD_ID": avoid_record_key[1],
+                }
+            )
+        result = json.dumps({"RECORDS": avoid_record_keys_list})
+    return result
+
+
+def required_data_sources_json(
+    required_data_sources: Optional[List[str]] = None,
+) -> str:
+    result = ""
+    if required_data_sources:
+        required_data_sources_list = []
+        for required_data_source in required_data_sources:
+            required_data_sources_list.append(required_data_source)
+        result = json.dumps({"DATA_SOURCES": required_data_sources_list})
+    return result
