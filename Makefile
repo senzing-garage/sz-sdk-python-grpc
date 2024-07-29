@@ -174,7 +174,7 @@ print-make-variables:
 .PHONY: bandit
 bandit:
 	$(info --- bandit ---------------------------------------------------------------------)
-	@bandit $(shell git ls-files '*.py'  ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@bandit $(shell git ls-files '*.py' ':!:tests/*' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: black
