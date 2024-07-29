@@ -898,10 +898,12 @@ def test_search_by_attributes(sz_engine: SzEngine) -> None:
         ("CUSTOMERS", "1003"),
     ]
     add_records(sz_engine, test_records)
-    attributes = {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    attributes = json.dumps(
+        {"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"}
+    )
     search_profile = ""
     flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
-    actual = sz_engine.search_by_attributes(attributes, search_profile, flags)
+    actual = sz_engine.search_by_attributes(attributes, flags, search_profile)
     delete_records(sz_engine, test_records)
     if len(actual) > 0:
         actual_as_dict = json.loads(actual)
@@ -914,7 +916,7 @@ def test_search_by_attributes_bad_attributes(sz_engine: SzEngine) -> None:
     search_profile = ""
     flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
     with pytest.raises(SzBadInputError):
-        _ = sz_engine.search_by_attributes(bad_attributes, search_profile, flags)
+        _ = sz_engine.search_by_attributes(bad_attributes, flags, search_profile)
 
 
 def test_why_entities(sz_engine: SzEngine) -> None:

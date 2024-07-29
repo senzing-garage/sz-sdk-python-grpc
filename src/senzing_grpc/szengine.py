@@ -537,7 +537,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def search_by_attributes(
         self,
-        attributes: Union[str, Dict[Any, Any]],
+        attributes: str,
         flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
         search_profile: str = "",
         **kwargs: Any,
@@ -545,9 +545,9 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         _ = kwargs
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                attributes=as_str(attributes),
-                searchProfile=search_profile,
+                attributes=attributes,
                 flags=flags,
+                searchProfile=search_profile,
             )
             response = self.stub.SearchByAttributes(request)
             return str(response.result)
