@@ -118,7 +118,7 @@ docker-test:
 # -----------------------------------------------------------------------------
 
 .PHONY: coverage
-coverage: test coverage-osarch-specific
+coverage: coverage-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Documentation

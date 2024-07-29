@@ -27,8 +27,8 @@ clean-osarch-specific:
 
 .PHONY: coverage-osarch-specific
 coverage-osarch-specific:
-	@pytest --cov=src --cov-report=xml  $(shell git ls-files '*.py'   )
-	@coverage html
+	@pytest --cov=src --cov-report=xml --ignore=src/senzing_grpc/pb2_grpc/  $(shell git ls-files '*.py'  ':!:src/senzing_grpc/pb2_grpc/*')
+	@coverage html --omit=src/senzing_grpc/pb2_grpc/*
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 

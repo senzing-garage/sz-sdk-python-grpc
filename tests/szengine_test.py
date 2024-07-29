@@ -467,8 +467,8 @@ def test_find_path_by_entity_id(sz_engine: SzEngine) -> None:
     start_entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
     end_entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002")
     max_degrees = 1
-    avoid_entity_ids: List[int] = []
-    required_data_sources: List[str] = []
+    avoid_entity_ids: List[int] = [0]
+    required_data_sources: List[str] = ["CUSTOMERS"]
     flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
     actual = sz_engine.find_path_by_entity_id(
         start_entity_id,
@@ -488,8 +488,8 @@ def test_find_path_by_entity_id_bad_entity_ids(sz_engine: SzEngine) -> None:
     bad_start_entity_id = 0
     bad_end_entity_id = 1
     max_degrees = 1
-    avoid_entity_ids: List[int] = []
-    required_data_sources: List[str] = []
+    avoid_entity_ids: List[int] = [0]
+    required_data_sources: List[str] = ["CUSTOMERS"]
     flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
     max_degrees = 1
     with pytest.raises(SzNotFoundError):
@@ -515,8 +515,8 @@ def test_find_path_by_record_id(sz_engine: SzEngine) -> None:
     end_data_source_code = "CUSTOMERS"
     end_record_id = "1002"
     max_degrees = 1
-    avoid_record_keys: List[Tuple[str, str]] = []
-    required_data_sources: List[str] = []
+    avoid_record_keys: List[Tuple[str, str]] = [("CUSTOMERS", "0000")]
+    required_data_sources: List[str] = ["CUSTOMERS"]
     flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
     actual = sz_engine.find_path_by_record_id(
         start_data_source_code,
@@ -540,8 +540,8 @@ def test_find_path_by_record_id_bad_data_source_code(sz_engine: SzEngine) -> Non
     bad_end_data_source_code = "XXXX"
     end_record_id = "9998"
     max_degrees = 1
-    avoid_record_keys: List[Tuple[str, str]] = []
-    required_data_sources: List[str] = []
+    avoid_record_keys: List[Tuple[str, str]] = [("CUSTOMERS", "0000")]
+    required_data_sources: List[str] = ["CUSTOMERS"]
     flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
     with pytest.raises(SzConfigurationError):
         _ = sz_engine.find_path_by_record_id(
@@ -563,8 +563,8 @@ def test_find_path_by_record_id_bad_record_ids(sz_engine: SzEngine) -> None:
     end_data_source_code = "CUSTOMERS"
     bad_end_record_id = "9998"
     max_degrees = 1
-    avoid_record_keys: List[Tuple[str, str]] = []
-    required_data_sources: List[str] = []
+    avoid_record_keys: List[Tuple[str, str]] = [("CUSTOMERS", "0000")]
+    required_data_sources: List[str] = ["CUSTOMERS"]
     flags = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.find_path_by_record_id(
@@ -982,6 +982,14 @@ def test_add_record_using_context_managment() -> None:
         record_definition = "{}"
         flags = SZ_WITHOUT_INFO
         sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+
+
+def test_process_redo_record(sz_engine: SzEngine) -> None:
+    """Test SzEngine().prime_engine()."""
+    flags = SZ_WITHOUT_INFO
+    while sz_engine.count_redo_records() > 0:
+        redo_record = sz_engine.get_redo_record()
+        sz_engine.process_redo_record(redo_record, flags)
 
 
 # -----------------------------------------------------------------------------
