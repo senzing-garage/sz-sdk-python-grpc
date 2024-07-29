@@ -331,7 +331,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         end_data_source_code: str,
         end_record_id: str,
         max_degrees: int,
-        exclusions: Union[str, Dict[Any, Any]] = "",
+        avoid_record_keys: Union[str, Dict[Any, Any]] = "",
         required_data_sources: Union[str, Dict[Any, Any]] = "",
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
@@ -344,7 +344,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
                 endDataSourceCode=end_data_source_code,
                 endRecordId=end_record_id,
                 maxDegrees=max_degrees,
-                exclusions=exclusions,
+                avoidRecordKeys=avoid_record_keys,
                 requiredDataSources=required_data_sources,
                 flags=flags,
             )

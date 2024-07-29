@@ -318,7 +318,6 @@ export_config_schema = {
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_DFBOM": [
@@ -347,7 +346,6 @@ export_config_schema = {
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_DSRC": [
@@ -398,7 +396,6 @@ export_config_schema = {
                 Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_ERFRAG": [
@@ -548,7 +545,6 @@ export_config_schema = {
                 Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "SYS_OOM": [
