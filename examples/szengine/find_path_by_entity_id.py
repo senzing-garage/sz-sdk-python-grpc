@@ -4,12 +4,12 @@ import grpc
 
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+AVOID_ENTITY_IDS = []
 END_ENTITY_ID = 100004
-EXCLUSIONS = ""
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
 MAX_DEGREES = 2
-REQUIRED_DATA_SOURCES = ""
+REQUIRED_DATA_SOURCES = []
 START_ENTITY_ID = 1
 
 try:
@@ -19,7 +19,7 @@ try:
         START_ENTITY_ID,
         END_ENTITY_ID,
         MAX_DEGREES,
-        EXCLUSIONS,
+        AVOID_ENTITY_IDS,
         REQUIRED_DATA_SOURCES,
         FLAGS,
     )

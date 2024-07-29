@@ -8,7 +8,7 @@ TODO: szengine_grpc.py
 
 import json
 from types import TracebackType
-from typing import Any, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import grpc
 from senzing_abstract import SzEngineAbstract, SzEngineFlags
@@ -283,7 +283,7 @@ class SzEngine(SzEngineAbstract):
 
     def find_network_by_record_id(
         self,
-        record_keys: Union[str, Dict[str, List[Dict[str, str]]]],
+        record_keys: List[Tuple[str, str]],
         max_degrees: int,
         build_out_degree: int,
         build_out_max_entities: int,
@@ -291,9 +291,16 @@ class SzEngine(SzEngineAbstract):
         **kwargs: Any,
     ) -> str:
         _ = kwargs
+
+        record_key_list = []
+        for record_key in record_keys:
+            record_key_list.append(
+                {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
+            )
+        record_keys_json = json.dumps({"RECORDS": record_key_list})
         try:
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordKeys=as_str(record_keys),
+                recordKeys=record_keys_json,
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
@@ -310,19 +317,36 @@ class SzEngine(SzEngineAbstract):
         end_entity_id: int,
         max_degrees: int,
         # TODO Should accept both entity and record IDs in V4, test
-        avoid_entity_ids: Union[str, Dict[Any, Any]] = "",
-        required_data_sources: Union[str, Dict[Any, Any]] = "",
+        avoid_entity_ids: Optional[List[int]] = None,
+        required_data_sources: Optional[List[str]] = None,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
+
+        avoid_entity_ids_json = ""
+        if avoid_entity_ids:
+            avoid_entity_id_list = []
+            for avoid_entity_id in avoid_entity_ids:
+                avoid_entity_id_list.append({"ENTITY_ID": avoid_entity_id})
+            avoid_entity_ids_json = json.dumps({"ENTITIES": avoid_entity_id_list})
+
+        required_data_sources_json = ""
+        if required_data_sources:
+            required_data_sources_list = []
+            for required_data_source in required_data_sources:
+                required_data_sources_list.append(required_data_source)
+            required_data_sources_json = json.dumps(
+                {"DATA_SOURCES": required_data_sources_list}
+            )
+
         try:
             request = szengine_pb2.FindPathByEntityIdRequest(  # type: ignore[unused-ignore]
                 startEntityId=start_entity_id,
                 endEntityId=end_entity_id,
                 maxDegrees=max_degrees,
-                avoidEntityIds=avoid_entity_ids,
-                requiredDataSources=required_data_sources,
+                avoidEntityIds=avoid_entity_ids_json,
+                requiredDataSources=required_data_sources_json,
                 flags=flags,
             )
             response = self.stub.FindPathByEntityId(request)
@@ -337,12 +361,34 @@ class SzEngine(SzEngineAbstract):
         end_data_source_code: str,
         end_record_id: str,
         max_degrees: int,
-        avoid_record_keys: Union[str, Dict[Any, Any]] = "",
-        required_data_sources: Union[str, Dict[Any, Any]] = "",
+        avoid_record_keys: Optional[List[Tuple[str, str]]] = None,
+        required_data_sources: Optional[List[str]] = None,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
+
+        avoid_record_keys_json = ""
+        if avoid_record_keys:
+            avoid_record_keys_list = []
+            for avoid_record_key in avoid_record_keys:
+                avoid_record_keys_list.append(
+                    {
+                        "DATA_SOURCE": avoid_record_key[0],
+                        "RECORD_ID": avoid_record_key[1],
+                    }
+                )
+            avoid_record_keys_json = json.dumps({"RECORDS": avoid_record_keys_list})
+
+        required_data_sources_json = ""
+        if required_data_sources:
+            required_data_sources_list = []
+            for required_data_source in required_data_sources:
+                required_data_sources_list.append(required_data_source)
+            required_data_sources_json = json.dumps(
+                {"DATA_SOURCES": required_data_sources_list}
+            )
+
         try:
             request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
                 startDataSourceCode=start_data_source_code,
@@ -350,8 +396,8 @@ class SzEngine(SzEngineAbstract):
                 endDataSourceCode=end_data_source_code,
                 endRecordId=end_record_id,
                 maxDegrees=max_degrees,
-                avoidRecordKeys=avoid_record_keys,
-                requiredDataSources=required_data_sources,
+                avoidRecordKeys=avoid_record_keys_json,
+                requiredDataSources=required_data_sources_json,
                 flags=flags,
             )
             response = self.stub.FindPathByRecordId(request)
@@ -443,14 +489,21 @@ class SzEngine(SzEngineAbstract):
 
     def get_virtual_entity_by_record_id(
         self,
-        record_keys: Union[str, Dict[Any, Any]],
+        record_keys: List[Tuple[str, str]],
         flags: int = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
+
+        record_key_list = []
+        for record_key in record_keys:
+            record_key_list.append(
+                {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
+            )
+        record_keys_json = json.dumps({"RECORDS": record_key_list})
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordKeys=as_str(record_keys),
+                recordKeys=record_keys_json,
                 flags=flags,
             )
             response = self.stub.GetVirtualEntityByRecordId(request)
@@ -552,8 +605,8 @@ class SzEngine(SzEngineAbstract):
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
                 attributes=attributes,
-                flags=flags,
                 searchProfile=search_profile,
+                flags=flags,
             )
             response = self.stub.SearchByAttributes(request)
             return str(response.result)
