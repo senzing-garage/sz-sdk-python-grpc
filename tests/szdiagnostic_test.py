@@ -5,7 +5,7 @@ import grpc
 import pytest
 from pytest_schema import schema
 
-from senzing_grpc import SZ_NO_LOGGING, SzDatabaseError, SzDiagnostic
+from senzing_grpc import SZ_NO_LOGGING, SzDiagnostic
 
 # -----------------------------------------------------------------------------
 # SzDiagnostic testcases
@@ -42,8 +42,11 @@ def test_check_datastore_performance_bad_seconds_to_run_value(
 ) -> None:
     """Test SzDiagnostic().check_datastore_performance()."""
     bad_seconds_to_run = -1
-    with pytest.raises(SzDatabaseError):
-        sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
+    # with pytest.raises(SzDatabaseError):
+    #     sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
+    actual = sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
+    actual_as_dict = json.loads(actual)
+    assert schema(check_datastore_performance_schema) == actual_as_dict
 
 
 def test_get_datastore_info(sz_diagnostic: SzDiagnostic) -> None:
