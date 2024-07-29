@@ -1,15 +1,17 @@
 #! /usr/bin/env python3
 
+from typing import List
+
 import grpc
 
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
-AVOID_ENTITY_IDS = []
+AVOID_ENTITY_IDS: List[int] = []
 END_ENTITY_ID = 100004
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
 MAX_DEGREES = 2
-REQUIRED_DATA_SOURCES = []
+REQUIRED_DATA_SOURCES: List[str] = []
 START_ENTITY_ID = 1
 
 try:

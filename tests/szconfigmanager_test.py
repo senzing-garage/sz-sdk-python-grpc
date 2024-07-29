@@ -270,7 +270,7 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_config", scope="module")
 def szconfig_fixture() -> SzConfig:
     """
     Single szconfigmanager object to use for all tests.
@@ -282,7 +282,7 @@ def szconfig_fixture() -> SzConfig:
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_configmanager", scope="module")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single engine object to use for all tests.

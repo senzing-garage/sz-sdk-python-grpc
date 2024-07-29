@@ -31,7 +31,7 @@ SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzConfigManager(SzConfigManagerAbstract):  # type: ignore
+class SzConfigManager(SzConfigManagerAbstract):
     """
     SzConfigManager module access library over gRPC.
     """
