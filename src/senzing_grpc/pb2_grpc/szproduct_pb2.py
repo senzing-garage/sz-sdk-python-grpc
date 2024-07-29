@@ -7,29 +7,32 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fszproduct.proto\x12\tszproduct\"\x13\n\x11GetLicenseRequest\"$\n\x12GetLicenseResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x13\n\x11GetVersionRequest\"$\n\x12GetVersionResponse\x12\x0e\n\x06result\x18\x01 \x01(\t2\xa5\x01\n\tSzProduct\x12K\n\nGetLicense\x12\x1c.szproduct.GetLicenseRequest\x1a\x1d.szproduct.GetLicenseResponse\"\x00\x12K\n\nGetVersion\x12\x1c.szproduct.GetVersionRequest\x1a\x1d.szproduct.GetVersionResponse\"\x00\x42j\n$com.senzing.sz.engine.grpc.SzProductB\x0eSzProductProtoZ2github.com/senzing-garage/sz-sdk-go-grpc/szproductb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b'\n\x0fszproduct.proto\x12\tszproduct"\x13\n\x11GetLicenseRequest"$\n\x12GetLicenseResponse\x12\x0e\n\x06result\x18\x01 \x01(\t"\x13\n\x11GetVersionRequest"$\n\x12GetVersionResponse\x12\x0e\n\x06result\x18\x01 \x01(\t2\xa5\x01\n\tSzProduct\x12K\n\nGetLicense\x12\x1c.szproduct.GetLicenseRequest\x1a\x1d.szproduct.GetLicenseResponse"\x00\x12K\n\nGetVersion\x12\x1c.szproduct.GetVersionRequest\x1a\x1d.szproduct.GetVersionResponse"\x00\x42j\n$com.senzing.sz.engine.grpc.SzProductB\x0eSzProductProtoZ2github.com/senzing-garage/sz-sdk-go-grpc/szproductb\x06proto3'
+)
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'szproduct_pb2', _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "szproduct_pb2", _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-  _globals['DESCRIPTOR']._options = None
-  _globals['DESCRIPTOR']._serialized_options = b'\n$com.senzing.sz.engine.grpc.SzProductB\016SzProductProtoZ2github.com/senzing-garage/sz-sdk-go-grpc/szproduct'
-  _globals['_GETLICENSEREQUEST']._serialized_start=30
-  _globals['_GETLICENSEREQUEST']._serialized_end=49
-  _globals['_GETLICENSERESPONSE']._serialized_start=51
-  _globals['_GETLICENSERESPONSE']._serialized_end=87
-  _globals['_GETVERSIONREQUEST']._serialized_start=89
-  _globals['_GETVERSIONREQUEST']._serialized_end=108
-  _globals['_GETVERSIONRESPONSE']._serialized_start=110
-  _globals['_GETVERSIONRESPONSE']._serialized_end=146
-  _globals['_SZPRODUCT']._serialized_start=149
-  _globals['_SZPRODUCT']._serialized_end=314
+    _globals["DESCRIPTOR"]._options = None
+    _globals["DESCRIPTOR"]._serialized_options = (
+        b"\n$com.senzing.sz.engine.grpc.SzProductB\016SzProductProtoZ2github.com/senzing-garage/sz-sdk-go-grpc/szproduct"
+    )
+    _globals["_GETLICENSEREQUEST"]._serialized_start = 30
+    _globals["_GETLICENSEREQUEST"]._serialized_end = 49
+    _globals["_GETLICENSERESPONSE"]._serialized_start = 51
+    _globals["_GETLICENSERESPONSE"]._serialized_end = 87
+    _globals["_GETVERSIONREQUEST"]._serialized_start = 89
+    _globals["_GETVERSIONREQUEST"]._serialized_end = 108
+    _globals["_GETVERSIONRESPONSE"]._serialized_start = 110
+    _globals["_GETVERSIONRESPONSE"]._serialized_end = 146
+    _globals["_SZPRODUCT"]._serialized_start = 149
+    _globals["_SZPRODUCT"]._serialized_end = 314
 # @@protoc_insertion_point(module_scope)
