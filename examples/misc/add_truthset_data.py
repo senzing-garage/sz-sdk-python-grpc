@@ -7,7 +7,7 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzEngine, SzEngineFlags, SzError
+from senzing_grpc import SZ_WITHOUT_INFO, SzEngine, SzError
 
 GRPC_URL = "localhost:8261"
 
@@ -19,11 +19,11 @@ try:
         TRUTHSET_REFERENCE_RECORDS,
         TRUTHSET_WATCHLIST_RECORDS,
     ]
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    FLAGS = SZ_WITHOUT_INFO
     for record_set in record_sets:
         for record in record_set.values():
             sz_engine.add_record(
-                record.get("DataSource"), record.get("Id"), record.get("Json"), flags
+                record.get("DataSource"), record.get("Id"), record.get("Json"), FLAGS
             )
 except SzError as err:
     print(f"\nError:\n{err}\n")

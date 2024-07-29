@@ -538,8 +538,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
     def search_by_attributes(
         self,
         attributes: Union[str, Dict[Any, Any]],
-        search_profile: str = "",
         flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        search_profile: str = "",
         **kwargs: Any,
     ) -> str:
         _ = kwargs
