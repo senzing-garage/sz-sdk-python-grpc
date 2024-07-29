@@ -378,18 +378,19 @@ def test_find_network_by_entity_id(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     entity_id_1 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
     entity_id_2 = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002")
-    entity_list = {
-        "ENTITIES": [
-            {"ENTITY_ID": entity_id_1},
-            {"ENTITY_ID": entity_id_2},
-        ]
-    }
+    # entity_list = {
+    #     "ENTITIES": [
+    #         {"ENTITY_ID": entity_id_1},
+    #         {"ENTITY_ID": entity_id_2},
+    #     ]
+    # }
+    entity_ids = [entity_id_1, entity_id_2]
     max_degrees = 2
     build_out_degree = 1
-    max_entities = 10
+    build_out_max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     actual = sz_engine.find_network_by_entity_id(
-        entity_list, max_degrees, build_out_degree, max_entities, flags
+        entity_ids, max_degrees, build_out_degree, build_out_max_entities, flags
     )
     delete_records(sz_engine, test_records)
     actual_as_dict = json.loads(actual)

@@ -6,6 +6,7 @@ TODO: szengine_grpc.py
 
 # pylint: disable=E1101,C0302
 
+import json
 from types import TracebackType
 from typing import Any, Dict, Iterable, List, Optional, Type, Union
 
@@ -29,7 +30,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzEngine(SzEngineAbstract):  # type: ignore
+class SzEngine(SzEngineAbstract):
     """
     Sz engine module access library over gRPC.
     """
@@ -254,7 +255,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def find_network_by_entity_id(
         self,
-        entity_ids: Union[str, Dict[str, List[Dict[str, int]]]],
+        entity_ids: List[int],
         max_degrees: int,
         build_out_degree: int,
         build_out_max_entities: int,
@@ -262,9 +263,14 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         **kwargs: Any,
     ) -> str:
         _ = kwargs
+
+        entity_list = []
+        for entity_id in entity_ids:
+            entity_list.append({"ENTITY_ID": entity_id})
+        entity_ids_json = json.dumps({"ENTITIES": entity_list})
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityIds=as_str(entity_ids),
+                entityIds=entity_ids_json,
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
