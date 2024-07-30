@@ -1038,7 +1038,7 @@ def test_destroy(sz_engine: SzEngine) -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")
+@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
 def szconfig_fixture() -> SzConfig:
     """
     Single szconfig object to use for all tests.
@@ -1050,7 +1050,7 @@ def szconfig_fixture() -> SzConfig:
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")
+@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
 def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single szconfigmanager object to use for all tests.
@@ -1061,7 +1061,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     return result
 
 
-@pytest.fixture(name="sz_engine", scope="module")
+@pytest.fixture(name="sz_engine", scope="module")  # type: ignore[misc]
 def szengine_fixture() -> SzEngine:
     """
     Single szengine object to use for all tests.

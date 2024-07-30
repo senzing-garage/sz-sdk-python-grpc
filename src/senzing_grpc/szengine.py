@@ -21,7 +21,7 @@ from .szhelpers import as_str, new_exception
 __all__ = ["SzEngine"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2024-01-10"
+__updated__ = "2024-07-30"
 
 SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -30,7 +30,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzEngine(SzEngineAbstract):
+class SzEngine(SzEngineAbstract):  # type: ignore[misc]
     """
     Sz engine module access library over gRPC.
     """
