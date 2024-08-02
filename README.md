@@ -55,7 +55,7 @@ and access it using the `senzing_grpc` Python package.
     ```console
     docker run \
       --env SENZING_TOOLS_COMMAND=serve-grpc \
-      --env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db \
+      --env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@nowhere/tmp/sqlite/G2C.db \
       --env SENZING_TOOLS_ENABLE_ALL=true \
       --name senzing-tools-serve-grpc \
       --publish 8261:8261 \
