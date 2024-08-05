@@ -137,7 +137,7 @@ coverage: coverage-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: documentation
-documentation: sphinx view-sphinx
+documentation: documentation-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Package
