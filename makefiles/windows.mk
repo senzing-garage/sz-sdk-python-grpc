@@ -36,7 +36,6 @@ documentation-osarch-specific:
 	@explorer file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
 
 
-
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
 	$(info Hello World, from windows.)

@@ -37,6 +37,7 @@ documentation-osarch-specific:
 	@cd docs; rm -rf build; make html
 	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
 
+
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
 	$(info Hello World, from linux.)
@@ -50,7 +51,6 @@ setup-osarch-specific:
 		--env SENZING_TOOLS_ENABLE_ALL=true \
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
-		--user root \
 		--rm \
 		senzing/serve-grpc
 	$(info "senzing/serve-grpc running in background.")
@@ -77,8 +77,6 @@ test-examples-2:
 	@python3 -m unittest \
 		examples/misc/add_truthset_datasources.py \
 		examples/misc/add_truthset_data.py
-
-
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
