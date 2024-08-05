@@ -25,29 +25,26 @@ clean-osarch-specific:
 
 .PHONY: coverage-osarch-specific
 coverage-osarch-specific:
-	@pytest --cov=src --cov-report=xml  $(shell git ls-files '*.py'   )
+	@pytest --cov=src --cov-report=xml  $(shell git ls-files '*.py')
 	@coverage html
 	@explorer $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
+.PHONY: documentation-osarch-specific
+documentation-osarch-specific:
+	# @cd docs; rm -rf build; make html
+	@explorer file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
+
+
+
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
-	$(info "Hello World, from windows.")
+	$(info Hello World, from windows.)
 
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
-	$(info "No setup required.")
-
-
-.PHONY: sphinx-osarch-specific
-sphinx-osarch-specific:
-	# @cd docs; rm -rf build; make html
-
-
-.PHONY: view-sphinx-osarch-specific
-view-sphinx-osarch-specific:
-	@explorer file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
+	$(info No setup required.)
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
@@ -55,4 +52,4 @@ view-sphinx-osarch-specific:
 
 .PHONY: only-windows
 only-windows:
-	$(info "Only windows has this Makefile target.")
+	$(info Only windows has this Makefile target.)

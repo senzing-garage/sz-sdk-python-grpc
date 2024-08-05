@@ -32,9 +32,14 @@ coverage-osarch-specific:
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
+.PHONY: documentation-osarch-specific
+documentation-osarch-specific:
+	@cd docs; rm -rf build; make html
+	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
+
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
-	$(info "Hello World, from linux.")
+	$(info Hello World, from linux.)
 
 
 .PHONY: setup-osarch-specific
@@ -74,14 +79,6 @@ test-examples-2:
 		examples/misc/add_truthset_data.py
 
 
-.PHONY: sphinx-osarch-specific
-sphinx-osarch-specific:
-	@cd docs; rm -rf build; make html
-
-
-.PHONY: view-sphinx-osarch-specific
-view-sphinx-osarch-specific:
-	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
@@ -89,4 +86,4 @@ view-sphinx-osarch-specific:
 
 .PHONY: only-linux
 only-linux:
-	$(info "Only linux has this Makefile target.")
+	$(info Only linux has this Makefile target.)
