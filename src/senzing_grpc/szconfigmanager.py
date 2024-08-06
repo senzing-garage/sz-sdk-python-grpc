@@ -22,7 +22,7 @@ from .szhelpers import as_str, new_exception
 __all__ = ["SzConfigManager"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-12-16"
+__updated__ = "2024-07-30"
 
 SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -31,7 +31,7 @@ SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzConfigManager(SzConfigManagerAbstract):  # type: ignore
+class SzConfigManager(SzConfigManagerAbstract):  # type: ignore[misc]
     """
     SzConfigManager module access library over gRPC.
     """
@@ -102,11 +102,11 @@ class SzConfigManager(SzConfigManagerAbstract):  # type: ignore
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_config_list(self, **kwargs: Any) -> str:
+    def get_configs(self, **kwargs: Any) -> str:
         _ = kwargs
         try:
-            request = szconfigmanager_pb2.GetConfigListRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetConfigList(request)
+            request = szconfigmanager_pb2.GetConfigsRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetConfigs(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err

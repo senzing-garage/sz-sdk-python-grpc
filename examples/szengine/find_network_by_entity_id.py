@@ -5,12 +5,7 @@ import grpc
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
 BUILD_OUT_DEGREE = 1
-ENTITY_LIST = {
-    "ENTITIES": [
-        {"ENTITY_ID": 1},
-        {"ENTITY_ID": 100004},
-    ]
-}
+ENTITY_LIST = [1, 100004]
 FLAGS = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
 MAX_DEGREES = 2

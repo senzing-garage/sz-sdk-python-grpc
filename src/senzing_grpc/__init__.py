@@ -1,5 +1,14 @@
 from senzing_abstract import (
-    EXCEPTION_MAP,
+    ENGINE_EXCEPTION_MAP,
+    SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION,
+    SZ_NO_ATTRIBUTES,
+    SZ_NO_AVOIDANCES,
+    SZ_NO_FLAGS,
+    SZ_NO_LOGGING,
+    SZ_NO_REQUIRED_DATASOURCES,
+    SZ_NO_SEARCH_PROFILE,
+    SZ_VERBOSE_LOGGING,
+    SZ_WITHOUT_INFO,
     SzBadInputError,
     SzConfigurationError,
     SzDatabaseConnectionLostError,
@@ -23,7 +32,16 @@ from .szengine import SzEngine
 from .szproduct import SzProduct
 
 __all__ = [
-    "EXCEPTION_MAP",
+    "ENGINE_EXCEPTION_MAP",
+    "SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION",
+    "SZ_NO_ATTRIBUTES",
+    "SZ_NO_AVOIDANCES",
+    "SZ_NO_FLAGS",
+    "SZ_NO_LOGGING",
+    "SZ_NO_REQUIRED_DATASOURCES",
+    "SZ_NO_SEARCH_PROFILE",
+    "SZ_VERBOSE_LOGGING",
+    "SZ_WITHOUT_INFO",
     "SzBadInputError",
     "SzConfig",
     "SzConfigManager",

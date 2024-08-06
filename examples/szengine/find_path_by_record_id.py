@@ -1,16 +1,18 @@
 #! /usr/bin/env python3
 
+from typing import List, Tuple
+
 import grpc
 
 from senzing_grpc import SzEngine, SzEngineFlags, SzError
 
+AVOID_RECORD_KEYS: List[Tuple[str, str]] = []
 END_DATA_SOURCE_CODE = "CUSTOMERS"
 END_RECORD_ID = "1009"
-EXCLUSIONS = ""
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 GRPC_URL = "localhost:8261"
 MAX_DEGREES = 2
-REQUIRED_DATA_SOURCES = ""
+REQUIRED_DATA_SOURCES: List[str] = []
 START_DATA_SOURCE_CODE = "CUSTOMERS"
 START_RECORD_ID = "1001"
 
@@ -23,7 +25,7 @@ try:
         END_DATA_SOURCE_CODE,
         END_RECORD_ID,
         MAX_DEGREES,
-        EXCLUSIONS,
+        AVOID_RECORD_KEYS,
         REQUIRED_DATA_SOURCES,
         FLAGS,
     )

@@ -4,7 +4,7 @@
 # Variables
 # -----------------------------------------------------------------------------
 
-SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
+PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 # OS specific targets
@@ -12,45 +12,53 @@ SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@/tmp/sqlite/G2C.db
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@docker rm --force senzing-serve-grpc || true
-	@rm -fr $(DIST_DIRECTORY) || true
-	@rm -fr $(MAKEFILE_DIRECTORY)/__pycache__ || true
+	@docker rm  --force senzing-serve-grpc 2> /dev/null || true
+	@rm -f  $(MAKEFILE_DIRECTORY)/.coverage || true
 	@rm -f  $(MAKEFILE_DIRECTORY)/coverage.xml || true
+	@rm -fr $(DIST_DIRECTORY) || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/.mypy_cache || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/.pytest_cache || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/dist || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/docs/build || true
+	@rm -fr $(MAKEFILE_DIRECTORY)/htmlcov || true
 	@rm -fr $(TARGET_DIRECTORY) || true
+	@find . | grep -E "(/__pycache__$$|\.pyc$$|\.pyo$$)" | xargs rm -rf
 
 
 .PHONY: coverage-osarch-specific
+coverage-osarch-specific: export SENZING_LOG_LEVEL=TRACE
 coverage-osarch-specific:
-	@coverage html
+	@pytest --cov=src --cov-report=xml --ignore=src/senzing_grpc/pb2_grpc/  $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
+	@coverage html --omit=src/senzing_grpc/pb2_grpc/*
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
-.PHONY: dependencies-osarch-specific
-dependencies-osarch-specific:
-	python3 -m pip install --upgrade pip
-	pip install build psutil pytest pytest-cov pytest-schema virtualenv
+.PHONY: documentation-osarch-specific
+documentation-osarch-specific:
+	@cd docs; rm -rf build; make html
+	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
 
 
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
-	@echo "Hello World, from linux."
+	$(info Hello World, from linux.)
 
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
-	@docker run \
+	docker run \
 		--detach \
-		--env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db \
+		--env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@nowhere/tmp/sqlite/G2C.db \
 		--env SENZING_TOOLS_ENABLE_ALL=true \
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
 		--rm \
 		senzing/serve-grpc
-	@echo "senzing/serve-grpc running in background."
+	$(info "senzing/serve-grpc running in background.")
 
 
-.PHONY: test-osarch-specific
-test-osarch-specific:
+.PHONY: test-osarch-specific-2
+test-osarch-specific-2:
 	@echo "--- Unit tests -------------------------------------------------------"
 	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc --cov-report xml:coverage.xml
 	# @echo "--- Test examples ----------------------------------------------------"
@@ -64,17 +72,12 @@ test-osarch-specific:
 		examples/szproduct/*.py
 
 
-.PHONY: test-examples
-test-examples:
+.PHONY: test-examples-2
+test-examples-2:
 	@echo "--- Test examples using unittest -------------------------------------"
 	@python3 -m unittest \
 		examples/misc/add_truthset_datasources.py \
 		examples/misc/add_truthset_data.py
-
-
-.PHONY: view-sphinx-osarch-specific
-view-sphinx-osarch-specific:
-	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
@@ -82,4 +85,4 @@ view-sphinx-osarch-specific:
 
 .PHONY: only-linux
 only-linux:
-	@echo "Only linux has this Makefile target."
+	$(info Only linux has this Makefile target.)

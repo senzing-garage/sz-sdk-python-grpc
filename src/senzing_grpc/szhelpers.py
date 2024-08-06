@@ -6,7 +6,8 @@ import json
 from typing import Any, Dict, Union
 
 import grpc
-from senzing_abstract import EXCEPTION_MAP, SzError
+import grpc._channel
+from senzing_abstract import ENGINE_EXCEPTION_MAP, SzError
 
 # Metadata
 
@@ -49,9 +50,9 @@ def get_senzing_error_code(error_text: str) -> int:
         return 0
     exception_message_splits = error_text.split("|", 1)
     try:
-        result = int(exception_message_splits[0].strip().rstrip("EIW"))
+        result = int(exception_message_splits[0].strip().lstrip("SENZ"))
     except ValueError:
-        print("ERROR: Could not parse error text '{error_text}'")
+        print(f"ERROR: Could not parse error text '{error_text}'")
         result = 9999
     return result
 
@@ -68,7 +69,6 @@ def new_exception(initial_exception: Exception) -> Exception:
     """
 
     result = initial_exception
-
     if isinstance(initial_exception, grpc.RpcError):
         details = initial_exception.details()  # type: ignore[unused-ignore]
         details_dict = {}
@@ -76,14 +76,8 @@ def new_exception(initial_exception: Exception) -> Exception:
             details_dict = json.loads(details)
         except Exception:  # pylint: disable=W0718
             details_dict = {}
-        errors_list = details_dict.get("errors", [])
-        senzing_error_code = 0
-        for an_error in errors_list:
-            senzing_error_code = get_senzing_error_code(an_error)
-            if senzing_error_code > 0:
-                break
-
-        senzing_error_class = EXCEPTION_MAP.get(senzing_error_code, SzError)
+        errors_reason = details_dict.get("reason", "")
+        senzing_error_code = get_senzing_error_code(errors_reason)
+        senzing_error_class = ENGINE_EXCEPTION_MAP.get(senzing_error_code, SzError)
         result = senzing_error_class(details)
-
     return result

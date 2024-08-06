@@ -22,9 +22,9 @@ _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "szconfig_pb2", _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
     _globals["DESCRIPTOR"]._options = None
-    _globals[
-        "DESCRIPTOR"
-    ]._serialized_options = b"\n#com.senzing.sz.engine.grpc.SzConfigB\rSzConfigProtoZ1github.com/senzing-garage/sz-sdk-go-grpc/szconfig"
+    _globals["DESCRIPTOR"]._serialized_options = (
+        b"\n#com.senzing.sz.engine.grpc.SzConfigB\rSzConfigProtoZ1github.com/senzing-garage/sz-sdk-go-grpc/szconfig"
+    )
     _globals["_ADDDATASOURCEREQUEST"]._serialized_start = 28
     _globals["_ADDDATASOURCEREQUEST"]._serialized_end = 96
     _globals["_ADDDATASOURCERESPONSE"]._serialized_start = 98

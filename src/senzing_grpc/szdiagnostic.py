@@ -20,7 +20,7 @@ from .szhelpers import new_exception
 __all__ = ["SzDiagnostic"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-12-16"
+__updated__ = "2024-07-30"
 
 SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore
+class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore[misc]
     """
     SzDiagnostic module access library over gRPC.
     """

@@ -8,7 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2024-08-05
+
+### Changed in 0.2.0
+
+- Update to `template-python`
+- Update dependencies
+
+## [0.1.3] - 2024-07-29
+
 -
+
+### Changed in 0.1.3
+
+- Update method signatures
 
 ## [0.1.2] - 2024-05-09
 

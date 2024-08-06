@@ -6,8 +6,9 @@ TODO: szengine_grpc.py
 
 # pylint: disable=E1101,C0302
 
+import json
 from types import TracebackType
-from typing import Any, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import grpc
 from senzing_abstract import SzEngineAbstract, SzEngineFlags
@@ -20,7 +21,7 @@ from .szhelpers import as_str, new_exception
 __all__ = ["SzEngine"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2024-01-10"
+__updated__ = "2024-07-30"
 
 SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 
@@ -29,7 +30,7 @@ SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzEngine(SzEngineAbstract):  # type: ignore
+class SzEngine(SzEngineAbstract):  # type: ignore[misc]
     """
     Sz engine module access library over gRPC.
     """
@@ -98,7 +99,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         _ = kwargs
         try:
             request = szengine_pb2.CloseExportRequest(  # type: ignore[unused-ignore]
-                responseHandle=export_handle,
+                exportHandle=export_handle,
             )
             self.stub.CloseExport(request)
         except Exception as err:
@@ -207,7 +208,7 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         _ = kwargs
         try:
             request = szengine_pb2.FetchNextRequest(  # type: ignore[unused-ignore]
-                responseHandle=export_handle,
+                exportHandle=export_handle,
             )
             response = self.stub.FetchNext(request)
             return str(response.result)
@@ -254,20 +255,20 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def find_network_by_entity_id(
         self,
-        entity_list: Union[str, Dict[str, List[Dict[str, int]]]],
+        entity_ids: List[int],
         max_degrees: int,
         build_out_degree: int,
-        max_entities: int,
+        build_out_max_entities: int,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
-                entityList=as_str(entity_list),
+                entityIds=entity_ids_json(entity_ids),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
-                maxEntities=max_entities,
+                buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
             response = self.stub.FindNetworkByEntityId(request)
@@ -277,20 +278,20 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def find_network_by_record_id(
         self,
-        record_list: Union[str, Dict[str, List[Dict[str, str]]]],
+        record_keys: List[Tuple[str, str]],
         max_degrees: int,
         build_out_degree: int,
-        max_entities: int,
+        build_out_max_entities: int,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+                recordKeys=record_keys_json(record_keys),
                 maxDegrees=max_degrees,
                 buildOutDegree=build_out_degree,
-                maxEntities=max_entities,
+                buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
             response = self.stub.FindNetworkByRecordId(request)
@@ -304,8 +305,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         end_entity_id: int,
         max_degrees: int,
         # TODO Should accept both entity and record IDs in V4, test
-        exclusions: Union[str, Dict[Any, Any]] = "",
-        required_data_sources: Union[str, Dict[Any, Any]] = "",
+        avoid_entity_ids: Optional[List[int]] = None,
+        required_data_sources: Optional[List[str]] = None,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -315,8 +316,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
                 startEntityId=start_entity_id,
                 endEntityId=end_entity_id,
                 maxDegrees=max_degrees,
-                exclusions=exclusions,
-                requiredDataSources=required_data_sources,
+                avoidEntityIds=avoid_entity_ids_json(avoid_entity_ids),
+                requiredDataSources=required_data_sources_json(required_data_sources),
                 flags=flags,
             )
             response = self.stub.FindPathByEntityId(request)
@@ -331,8 +332,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
         end_data_source_code: str,
         end_record_id: str,
         max_degrees: int,
-        exclusions: Union[str, Dict[Any, Any]] = "",
-        required_data_sources: Union[str, Dict[Any, Any]] = "",
+        avoid_record_keys: Optional[List[Tuple[str, str]]] = None,
+        required_data_sources: Optional[List[str]] = None,
         flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
@@ -344,8 +345,8 @@ class SzEngine(SzEngineAbstract):  # type: ignore
                 endDataSourceCode=end_data_source_code,
                 endRecordId=end_record_id,
                 maxDegrees=max_degrees,
-                exclusions=exclusions,
-                requiredDataSources=required_data_sources,
+                avoidRecordKeys=avoid_record_keys_json(avoid_record_keys),
+                requiredDataSources=required_data_sources_json(required_data_sources),
                 flags=flags,
             )
             response = self.stub.FindPathByRecordId(request)
@@ -437,14 +438,14 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def get_virtual_entity_by_record_id(
         self,
-        record_list: Union[str, Dict[Any, Any]],
+        record_keys: List[Tuple[str, str]],
         flags: int = SzEngineFlags.SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.GetVirtualEntityByRecordIdRequest(  # type: ignore[unused-ignore]
-                recordList=as_str(record_list),
+                recordKeys=record_keys_json(record_keys),
                 flags=flags,
             )
             response = self.stub.GetVirtualEntityByRecordId(request)
@@ -537,15 +538,15 @@ class SzEngine(SzEngineAbstract):  # type: ignore
 
     def search_by_attributes(
         self,
-        attributes: Union[str, Dict[Any, Any]],
-        search_profile: str = "",
+        attributes: str,
         flags: int = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
+        search_profile: str = "",
         **kwargs: Any,
     ) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                attributes=as_str(attributes),
+                attributes=attributes,
                 searchProfile=search_profile,
                 flags=flags,
             )
@@ -615,3 +616,63 @@ class SzEngine(SzEngineAbstract):  # type: ignore
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
+
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+
+def entity_ids_json(entity_ids: List[int]) -> str:
+    entity_list = []
+    for entity_id in entity_ids:
+        entity_list.append({"ENTITY_ID": entity_id})
+    return json.dumps({"ENTITIES": entity_list})
+
+
+def record_keys_json(record_keys: List[Tuple[str, str]]) -> str:
+    record_key_list = []
+    for record_key in record_keys:
+        record_key_list.append(
+            {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
+        )
+    return json.dumps({"RECORDS": record_key_list})
+
+
+def avoid_entity_ids_json(avoid_entity_ids: Optional[List[int]] = None) -> str:
+    result = ""
+    if avoid_entity_ids:
+        avoid_entity_id_list = []
+        for avoid_entity_id in avoid_entity_ids:
+            avoid_entity_id_list.append({"ENTITY_ID": avoid_entity_id})
+        result = json.dumps({"ENTITIES": avoid_entity_id_list})
+    return result
+
+
+def avoid_record_keys_json(
+    avoid_record_keys: Optional[List[Tuple[str, str]]] = None
+) -> str:
+    result = ""
+    if avoid_record_keys:
+        avoid_record_keys_list = []
+        for avoid_record_key in avoid_record_keys:
+            avoid_record_keys_list.append(
+                {
+                    "DATA_SOURCE": avoid_record_key[0],
+                    "RECORD_ID": avoid_record_key[1],
+                }
+            )
+        result = json.dumps({"RECORDS": avoid_record_keys_list})
+    return result
+
+
+def required_data_sources_json(
+    required_data_sources: Optional[List[str]] = None,
+) -> str:
+    result = ""
+    if required_data_sources:
+        required_data_sources_list = []
+        for required_data_source in required_data_sources:
+            required_data_sources_list.append(required_data_source)
+        result = json.dumps({"DATA_SOURCES": required_data_sources_list})
+    return result

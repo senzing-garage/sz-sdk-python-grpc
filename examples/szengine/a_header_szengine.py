@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+"""
+Simply a header used in development.
+"""
+
 from typing import List, Tuple
 
 import grpc
@@ -9,7 +13,7 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzEngine, SzEngineFlags
+from senzing_grpc import SZ_WITHOUT_INFO, SzEngine
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
@@ -32,7 +36,7 @@ TEST_RECORDS: List[Tuple[str, str]] = [
 
 def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
     """Add all of the records in the list."""
-    flags = SzEngineFlags.SZ_WITHOUT_INFO
+    flags = SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]

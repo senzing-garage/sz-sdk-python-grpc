@@ -5,7 +5,7 @@ import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 
-from senzing_grpc import SzConfig, SzConfigurationError, SzEngineFlags
+from senzing_grpc import SZ_NO_LOGGING, SzConfig, SzConfigurationError
 
 # -----------------------------------------------------------------------------
 # SzConfig testcases
@@ -193,7 +193,7 @@ def test_initialize_and_destroy(sz_config: SzConfig) -> None:
     """Test SzConfig().initialize() and SzConfig.destroy()."""
     instance_name = "Example"
     settings = "{}"
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_config.initialize(instance_name, settings, verbose_logging)
     sz_config.destroy()
 
@@ -202,7 +202,7 @@ def test_initialize_and_destroy_dict(sz_config: SzConfig) -> None:
     """Test SzConfig().init() and SzConfig.destroy()."""
     instance_name = "Example"
     settings: Dict[Any, Any] = {}
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_config.initialize(instance_name, settings, verbose_logging)
     sz_config.destroy()
 
@@ -211,7 +211,7 @@ def test_initialize_and_destroy_again(sz_config: SzConfig) -> None:
     """Test SzConfig().init() and SzConfig.destroy()."""
     instance_name = "Example"
     settings = "{}"
-    verbose_logging = SzEngineFlags.SZ_NO_LOGGING
+    verbose_logging = SZ_NO_LOGGING
     sz_config.initialize(instance_name, settings, verbose_logging)
     sz_config.destroy()
 
@@ -318,7 +318,6 @@ export_config_schema = {
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_DFBOM": [
@@ -347,7 +346,6 @@ export_config_schema = {
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_DSRC": [
@@ -398,7 +396,6 @@ export_config_schema = {
                 Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "CFG_ERFRAG": [
@@ -548,7 +545,6 @@ export_config_schema = {
                 Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
-                "JAVA_CLASS_NAME": Or(str, None),
             },
         ],
         "SYS_OOM": [
