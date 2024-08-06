@@ -26,6 +26,7 @@ clean-osarch-specific:
 
 
 .PHONY: coverage-osarch-specific
+coverage-osarch-specific: export SENZING_LOG_LEVEL=TRACE
 coverage-osarch-specific:
 	@pytest --cov=src --cov-report=xml --ignore=src/senzing_grpc/pb2_grpc/  $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
 	@coverage html --omit=src/senzing_grpc/pb2_grpc/*
