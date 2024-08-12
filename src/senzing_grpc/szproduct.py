@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5056"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzProduct(SzProductAbstract):
+class SzProduct(SzProductAbstract):  # type: ignore[misc]
     """
     SzProduct module access library over gRPC.
     """
