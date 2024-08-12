@@ -19,12 +19,12 @@ from senzing_grpc import (
     SZ_NO_FLAGS,
     SZ_NO_LOGGING,
     SZ_WITHOUT_INFO,
-    SzBadInputError,
     SzConfig,
     SzConfigManager,
     SzConfigurationError,
     SzEngine,
     SzEngineFlags,
+    SzError,
     SzNotFoundError,
 )
 
@@ -887,7 +887,7 @@ def test_search_by_attributes_bad_attributes(sz_engine: SzEngine) -> None:
     bad_attributes = "{"
     search_profile = ""
     flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
-    with pytest.raises(SzBadInputError):
+    with pytest.raises(SzError):
         _ = sz_engine.search_by_attributes(bad_attributes, flags, search_profile)
 
 
