@@ -70,7 +70,7 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_product", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_product", scope="module")
 def szproduct_fixture() -> SzProduct:
     """
     Single engine object to use for all tests.

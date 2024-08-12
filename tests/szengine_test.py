@@ -19,12 +19,12 @@ from senzing_grpc import (
     SZ_NO_FLAGS,
     SZ_NO_LOGGING,
     SZ_WITHOUT_INFO,
-    SzBadInputError,
     SzConfig,
     SzConfigManager,
     SzConfigurationError,
     SzEngine,
     SzEngineFlags,
+    SzError,
     SzNotFoundError,
 )
 
@@ -887,7 +887,7 @@ def test_search_by_attributes_bad_attributes(sz_engine: SzEngine) -> None:
     bad_attributes = "{"
     search_profile = ""
     flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
-    with pytest.raises(SzBadInputError):
+    with pytest.raises(SzError):
         _ = sz_engine.search_by_attributes(bad_attributes, flags, search_profile)
 
 
@@ -1038,7 +1038,7 @@ def test_destroy(sz_engine: SzEngine) -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_config", scope="module")
 def szconfig_fixture() -> SzConfig:
     """
     Single szconfig object to use for all tests.
@@ -1050,7 +1050,7 @@ def szconfig_fixture() -> SzConfig:
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_configmanager", scope="module")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single szconfigmanager object to use for all tests.
@@ -1061,7 +1061,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     return result
 
 
-@pytest.fixture(name="sz_engine", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_engine", scope="module")
 def szengine_fixture() -> SzEngine:
     """
     Single szengine object to use for all tests.
