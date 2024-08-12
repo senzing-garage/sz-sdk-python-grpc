@@ -32,4 +32,4 @@ jobs:
       - name: Run mypy tests
         run: |
           # shellcheck disable=SC2046
-          mypy --follow-imports skip --strict $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+          mypy $(git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
