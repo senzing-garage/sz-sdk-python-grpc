@@ -80,7 +80,7 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_diagnostic", scope="module")  # type: ignore[misc]
+@pytest.fixture(name="sz_diagnostic", scope="module")
 def szdiagnostic_fixture() -> SzDiagnostic:
     """
     Single engine object to use for all tests.

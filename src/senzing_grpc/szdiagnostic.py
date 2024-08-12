@@ -29,7 +29,7 @@ SENZING_PRODUCT_ID = "5052"  # See https://github.com/senzing-garage/knowledge-b
 # -----------------------------------------------------------------------------
 
 
-class SzDiagnostic(SzDiagnosticAbstract):  # type: ignore[misc]
+class SzDiagnostic(SzDiagnosticAbstract):
     """
     SzDiagnostic module access library over gRPC.
     """
