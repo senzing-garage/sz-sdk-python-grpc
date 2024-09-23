@@ -24,6 +24,16 @@ def test_constructor() -> None:
     assert isinstance(actual, SzAbstractFactoryAbstract)
 
 
+def test_context() -> None:
+    """Test constructor."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with SzAbstractFactory(grpc_channel=grpc_channel) as actual:
+        assert isinstance(actual, SzAbstractFactoryAbstract)
+        sz_config = actual.create_sz_config()
+        assert isinstance(sz_config, SzConfigAbstract)
+
+
 def test_create_sz_config(szabstractfactory: SzAbstractFactory) -> None:
     """Test SzConfig().add_data_source()."""
     actual = szabstractfactory.create_sz_config()
