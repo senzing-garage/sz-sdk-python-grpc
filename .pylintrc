@@ -5,6 +5,7 @@ disable=
     missing-function-docstring,
     missing-module-docstring,
     too-many-arguments,
+    too-many-positional-arguments,
     too-many-public-methods,
 ignore=
     __init__.py,
