@@ -9,6 +9,5 @@ try:
         grpc_channel=grpc.insecure_channel("localhost:8261")
     )
     sz_configmanager = sz_abstract_factory.create_sz_configmanager()
-    config_id = sz_configmanager.get_default_config_id()
 except SzError as err:
     print(f"\nError:\n{err}\n")
