@@ -4,16 +4,17 @@ import json
 
 import grpc
 
-from senzing_grpc import SzEngine, SzEngineFlags, SzError
+from senzing_grpc import SzAbstractFactory, SzEngineFlags, SzError
 
 ATTRIBUTES = json.dumps({"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"})
 FLAGS = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
-GRPC_URL = "localhost:8261"
 SEARCH_PROFILE = ""
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(
+        grpc_channel=grpc.insecure_channel("localhost:8261")
+    )
+    sz_engine = sz_abstract_factory.create_sz_engine()
     RESULT = sz_engine.search_by_attributes(ATTRIBUTES, FLAGS, SEARCH_PROFILE)
     print(RESULT[:66], "...")
 except SzError as err:

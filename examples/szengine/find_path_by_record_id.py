@@ -4,21 +4,22 @@ from typing import List, Tuple
 
 import grpc
 
-from senzing_grpc import SzEngine, SzEngineFlags, SzError
+from senzing_grpc import SzAbstractFactory, SzEngineFlags, SzError
 
 AVOID_RECORD_KEYS: List[Tuple[str, str]] = []
 END_DATA_SOURCE_CODE = "CUSTOMERS"
 END_RECORD_ID = "1009"
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
-GRPC_URL = "localhost:8261"
 MAX_DEGREES = 2
 REQUIRED_DATA_SOURCES: List[str] = []
 START_DATA_SOURCE_CODE = "CUSTOMERS"
 START_RECORD_ID = "1001"
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(
+        grpc_channel=grpc.insecure_channel("localhost:8261")
+    )
+    sz_engine = sz_abstract_factory.create_sz_engine()
     RESULT = sz_engine.find_path_by_record_id(
         START_DATA_SOURCE_CODE,
         START_RECORD_ID,

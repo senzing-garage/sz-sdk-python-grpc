@@ -144,8 +144,7 @@ documentation: documentation-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: package
-package: clean
-	@python3 -m build
+package: clean package-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Publish

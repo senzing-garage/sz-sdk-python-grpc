@@ -2,14 +2,15 @@
 
 import grpc
 
-from senzing_grpc import SzConfig, SzError
+from senzing_grpc import SzAbstractFactory, SzError
 
 DATA_SOURCE_CODE = "TEST"
-GRPC_URL = "localhost:8261"
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_config = SzConfig(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(
+        grpc_channel=grpc.insecure_channel("localhost:8261")
+    )
+    sz_config = sz_abstract_factory.create_sz_config()
     config_handle = sz_config.create_config()
     sz_config.delete_data_source(config_handle, DATA_SOURCE_CODE)
     sz_config.close_config(config_handle)

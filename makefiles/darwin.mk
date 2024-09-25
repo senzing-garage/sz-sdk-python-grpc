@@ -45,6 +45,11 @@ hello-world-osarch-specific:
 	$(info Hello World, from darwin.)
 
 
+.PHONY: package-osarch-specific
+package-osarch-specific:
+	@python3 -m build
+
+
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
 	$(info No setup required.)

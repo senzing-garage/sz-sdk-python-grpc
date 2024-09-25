@@ -4,16 +4,17 @@ import time
 
 import grpc
 
-from senzing_grpc import SzConfig, SzConfigManager, SzError
+from senzing_grpc import SzAbstractFactory, SzError
 
 CONFIG_COMMENT = "Just an example"
 DATA_SOURCE_CODE = f"REPLACE_DEFAULT_CONFIG_ID_{time.time()}"
-GRPC_URL = "localhost:8261"
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_config = SzConfig(grpc_channel=grpc_channel)
-    sz_configmanager = SzConfigManager(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(
+        grpc_channel=grpc.insecure_channel("localhost:8261")
+    )
+    sz_config = sz_abstract_factory.create_sz_config()
+    sz_configmanager = sz_abstract_factory.create_sz_configmanager()
     current_default_config_id = sz_configmanager.get_default_config_id()
 
     # Create a new config.
