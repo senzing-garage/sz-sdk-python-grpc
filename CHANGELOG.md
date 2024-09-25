@@ -8,12 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2024-08-05
+## [0.2.0] - 2024-09-25
+
+### Added in 0.2.0
+
+- Added `szabstractfactory`
 
 ### Changed in 0.2.0
 
 - Update to `template-python`
 - Update dependencies
+- Update to latest gRPC Proto definitions
 
 ## [0.1.3] - 2024-07-29
 
