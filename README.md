@@ -23,6 +23,7 @@ that communicates with a [Senzing gRPC server].
 [![Python 3.11 Badge]][Python 3.11]
 [![PEP8 Badge]][PEP8]
 [![PyPI version Badge]][PyPi version]
+[![Downloads Badge]][Downloads]
 
 ## Overview
 
@@ -103,6 +104,8 @@ More can be seen in [Examples].
 
 [Development]: docs/development.md
 [DockerHub]: https://hub.docker.com/r/senzing/template-python
+[Downloads Badge]: https://static.pepy.tech/badge/senzing-grpc
+[Downloads]: https://pepy.tech/project/senzing-grpc
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
 [PEP8 Badge]: https://img.shields.io/badge/code%20style-pep8-orange.svg
