@@ -2,13 +2,13 @@
 
 import grpc
 
-from senzing_grpc import SzAbstractFactory, SzError
+from senzing_grpc import SzConfig, SzError
+
+GRPC_URL = "localhost:8261"
 
 try:
-    sz_abstract_factory = SzAbstractFactory(
-        grpc_channel=grpc.insecure_channel("localhost:8261")
-    )
-    sz_config = sz_abstract_factory.create_sz_config()
+    grpc_channel = grpc.insecure_channel(GRPC_URL)
+    sz_config = SzConfig(grpc_channel=grpc_channel)
 
     # Do work.
 
