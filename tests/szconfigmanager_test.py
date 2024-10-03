@@ -7,7 +7,12 @@ from pytest_schema import Optional, Or, schema
 from senzing_abstract import SZ_NO_LOGGING
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import SzConfig, SzConfigManager, SzConfigurationError
+from senzing_grpc import (
+    SzConfig,
+    SzConfigManager,
+    SzConfigurationError,
+    SzReplaceConflictError,
+)
 
 # -----------------------------------------------------------------------------
 # SzConfigManager testcases
@@ -195,7 +200,7 @@ def test_replace_default_config_id_bad_current_default_config_id_value(
     new_default_config_id = sz_configmanager.add_config(
         config_definition, config_comment
     )
-    with pytest.raises(SzConfigurationError):
+    with pytest.raises(SzReplaceConflictError):
         sz_configmanager.replace_default_config_id(
             bad_current_default_config_id, new_default_config_id
         )
