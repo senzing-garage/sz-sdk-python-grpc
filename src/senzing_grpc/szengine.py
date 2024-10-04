@@ -77,7 +77,7 @@ class SzEngine(SzEngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        record_definition: Union[str, Dict[Any, Any]],
+        record_definition: str,
         flags: int = 0,
         **kwargs: Any,
     ) -> str:
@@ -89,7 +89,6 @@ class SzEngine(SzEngineAbstract):
                 recordDefinition=as_str(record_definition),
                 flags=flags,
             )
-            self.stub.AddRecord(request)
             response = self.stub.AddRecord(request)
             return str(response.result)
         except Exception as err:
@@ -267,7 +266,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityIds=entity_ids_json(entity_ids),
                 maxDegrees=max_degrees,
-                buildOutDegree=build_out_degree,
+                buildOutDegrees=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
@@ -290,7 +289,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordKeys=record_keys_json(record_keys),
                 maxDegrees=max_degrees,
-                buildOutDegree=build_out_degree,
+                buildOutDegrees=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
@@ -484,6 +483,24 @@ class SzEngine(SzEngineAbstract):
         _ = config_id
         _ = verbose_logging
         _ = kwargs
+
+    def preprocess_record(
+        self,
+        record_definition: str,
+        flags: int = 0,
+        **kwargs: Any,
+    ) -> str:
+        _ = kwargs
+        try:
+            request = szengine_pb2.PreprocessRecordRequest(  # type: ignore[unused-ignore]
+                recordDefinition=as_str(record_definition),
+                flags=flags,
+            )
+            self.stub.PreprocessRecord(request)
+            response = self.stub.AddRecord(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def prime_engine(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
