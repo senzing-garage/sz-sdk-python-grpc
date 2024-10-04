@@ -266,7 +266,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityIds=entity_ids_json(entity_ids),
                 maxDegrees=max_degrees,
-                buildOutDegree=build_out_degree,
+                buildOutDegrees=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
@@ -289,7 +289,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordKeys=record_keys_json(record_keys),
                 maxDegrees=max_degrees,
-                buildOutDegree=build_out_degree,
+                buildOutDegrees=build_out_degree,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
