@@ -89,7 +89,6 @@ class SzEngine(SzEngineAbstract):
                 recordDefinition=as_str(record_definition),
                 flags=flags,
             )
-            self.stub.AddRecord(request)
             response = self.stub.AddRecord(request)
             return str(response.result)
         except Exception as err:
@@ -484,6 +483,24 @@ class SzEngine(SzEngineAbstract):
         _ = config_id
         _ = verbose_logging
         _ = kwargs
+
+    def preprocess_record(
+        self,
+        record_definition: Union[str, Dict[Any, Any]],
+        flags: int = 0,
+        **kwargs: Any,
+    ) -> str:
+        _ = kwargs
+        try:
+            request = szengine_pb2.PreProcessRecordRequest(  # type: ignore[unused-ignore]
+                recordDefinition=as_str(record_definition),
+                flags=flags,
+            )
+            self.stub.PreprocessRecord(request)
+            response = self.stub.AddRecord(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def prime_engine(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
