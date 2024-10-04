@@ -492,7 +492,7 @@ class SzEngine(SzEngineAbstract):
     ) -> str:
         _ = kwargs
         try:
-            request = szengine_pb2.PreProcessRecordRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.PreprocessRecordRequest(  # type: ignore[unused-ignore]
                 recordDefinition=as_str(record_definition),
                 flags=flags,
             )

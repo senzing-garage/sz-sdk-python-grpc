@@ -755,9 +755,18 @@ def test_how_entity_by_entity_id_bad_entity_id(sz_engine: SzEngine) -> None:
 
 def test_preprocess_record(sz_engine: SzEngine) -> None:
     """Test SzEngine().add_record()."""
+    record_definition: Dict[Any, Any] = DATA_SOURCES.get("CUSTOMERS", {}).get(
+        "1001", {}
+    )
+    with pytest.raises(SzBadInputError):
+        sz_engine.preprocess_record(json.dumps(record_definition))
+
+
+def test_preprocess_record_bad_empty_record(sz_engine: SzEngine) -> None:
+    """Test SzEngine().add_record()."""
     record_definition: Dict[Any, Any] = {}
-    flags = SZ_WITHOUT_INFO
-    sz_engine.preprocess_record(json.dumps(record_definition), flags)
+    with pytest.raises(SzBadInputError):
+        sz_engine.preprocess_record(json.dumps(record_definition))
 
 
 def test_prime_engine(sz_engine: SzEngine) -> None:
