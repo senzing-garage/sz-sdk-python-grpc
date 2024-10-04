@@ -77,7 +77,7 @@ class SzEngine(SzEngineAbstract):
         self,
         data_source_code: str,
         record_id: str,
-        record_definition: Union[str, Dict[Any, Any]],
+        record_definition: str,
         flags: int = 0,
         **kwargs: Any,
     ) -> str:
@@ -486,7 +486,7 @@ class SzEngine(SzEngineAbstract):
 
     def preprocess_record(
         self,
-        record_definition: Union[str, Dict[Any, Any]],
+        record_definition: str,
         flags: int = 0,
         **kwargs: Any,
     ) -> str:

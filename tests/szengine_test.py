@@ -65,7 +65,9 @@ def test_add_record(sz_engine: SzEngine) -> None:
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
     flags = SZ_WITHOUT_INFO
-    sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+    sz_engine.add_record(
+        data_source_code, record_id, json.dumps(record_definition), flags
+    )
 
 
 def test_add_record_bad_data_source_code_type(sz_engine: SzEngine) -> None:
@@ -87,7 +89,9 @@ def test_add_record_bad_data_source_code_value(sz_engine: SzEngine) -> None:
     record_definition: Dict[Any, Any] = {}
     flags = SZ_WITHOUT_INFO
     with pytest.raises(SzBadInputError):
-        sz_engine.add_record(bad_data_source_code, record_id, record_definition, flags)
+        sz_engine.add_record(
+            bad_data_source_code, record_id, json.dumps(record_definition), flags
+        )
 
 
 def test_add_record_with_info(sz_engine: SzEngine) -> None:
@@ -96,7 +100,9 @@ def test_add_record_with_info(sz_engine: SzEngine) -> None:
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
     flags = SzEngineFlags.SZ_WITH_INFO
-    actual = sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+    actual = sz_engine.add_record(
+        data_source_code, record_id, json.dumps(record_definition), flags
+    )
     actual_as_dict = json.loads(actual)
     assert schema(add_record_with_info_schema) == actual_as_dict
 
@@ -121,7 +127,7 @@ def test_add_record_with_info_bad_data_source_code_value(sz_engine: SzEngine) ->
     flags = SzEngineFlags.SZ_WITH_INFO
     with pytest.raises(SzBadInputError):
         _ = sz_engine.add_record(
-            bad_data_source_code, record_id, record_definition, flags
+            bad_data_source_code, record_id, json.dumps(record_definition), flags
         )
 
 
@@ -745,6 +751,13 @@ def test_how_entity_by_entity_id_bad_entity_id(sz_engine: SzEngine) -> None:
     flags = SzEngineFlags.SZ_HOW_ENTITY_DEFAULT_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.how_entity_by_entity_id(bad_entity_id, flags)
+
+
+def test_preprocess_record(sz_engine: SzEngine) -> None:
+    """Test SzEngine().add_record()."""
+    record_definition: Dict[Any, Any] = {}
+    flags = SZ_WITHOUT_INFO
+    sz_engine.preprocess_record(json.dumps(record_definition), flags)
 
 
 def test_prime_engine(sz_engine: SzEngine) -> None:
