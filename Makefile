@@ -29,9 +29,9 @@ PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 
 # Conditional assignment. ('?=')
 # Can be overridden with "export"
-# Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
+# Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/er/lib"
 
-LD_LIBRARY_PATH ?= /opt/senzing/g2/lib
+LD_LIBRARY_PATH ?= /opt/senzing/er/lib
 PYTHONPATH ?= $(MAKEFILE_DIRECTORY)/src
 
 # Export environment variables.
@@ -60,15 +60,22 @@ hello-world: hello-world-osarch-specific
 # Dependency management
 # -----------------------------------------------------------------------------
 
+.PHONY: venv
+venv: venv-osarch-specific
+
+
 .PHONY: dependencies-for-development
-dependencies-for-development:
-	@python3 -m pip install --upgrade pip
-	@python3 -m pip install --requirement development-requirements.txt
+dependencies-for-development: venv dependencies-for-development-osarch-specific
+	$(activate-venv); \
+		python3 -m pip install --upgrade pip; \
+		python3 -m pip install --requirement development-requirements.txt
 
 
 .PHONY: dependencies
-dependencies:
-	@python3 -m pip install --requirement requirements.txt
+dependencies: venv
+	$(activate-venv); \
+		python3 -m pip install --upgrade pip; \
+		python3 -m pip install --requirement requirements.txt
 
 # -----------------------------------------------------------------------------
 # Setup
@@ -123,7 +130,7 @@ test-examples:
 
 .PHONY: docker-test
 docker-test:
-	@docker-compose -f docker-compose.test.yml up
+	@$(activate-venv); docker-compose -f docker-compose.test.yaml up
 
 # -----------------------------------------------------------------------------
 # Coverage
@@ -152,7 +159,7 @@ package: clean package-osarch-specific
 
 .PHONY: publish-test
 publish-test: package
-	python3 -m twine upload --repository testpypi dist/*
+	$(activate-venv); python3 -m twine upload --repository testpypi dist/*
 
 # -----------------------------------------------------------------------------
 # Clean
@@ -176,7 +183,7 @@ help:
 print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
 		$(if $(filter-out environment% default automatic, \
-		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
+		$(origin $V)),$(info $V=$($V) ($(value $V)))))
 
 # -----------------------------------------------------------------------------
 # Specific programs
@@ -185,55 +192,55 @@ print-make-variables:
 .PHONY: bandit
 bandit:
 	$(info --- bandit ---------------------------------------------------------------------)
-	@bandit $(shell git ls-files '*.py' ':!:tests/*' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); bandit $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: black
 black:
 	$(info --- black ----------------------------------------------------------------------)
-	@black $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); black $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: flake8
 flake8:
 	$(info --- flake8 ---------------------------------------------------------------------)
-	@flake8 $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); flake8 $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: isort
 isort:
 	$(info --- isort ----------------------------------------------------------------------)
-	@isort $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); isort $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: mypy
 mypy:
 	$(info --- mypy -----------------------------------------------------------------------)
-	@mypy $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); mypy --strict $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: pydoc
 pydoc:
 	$(info --- pydoc ----------------------------------------------------------------------)
-	@python3 -m pydoc
+	@$(activate-venv); python3 -m pydoc
 
 
 .PHONY: pydoc-web
 pydoc-web:
 	$(info --- pydoc-web ------------------------------------------------------------------)
-	@python3 -m pydoc -p 8885
+	@$(activate-venv); python3 -m pydoc -p 8885
 
 
 .PHONY: pylint
 pylint:
 	$(info --- pylint ---------------------------------------------------------------------)
-	@pylint $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); pylint $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: pytest
 pytest:
 	$(info --- pytest ---------------------------------------------------------------------)
-	@pytest $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); pytest $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: sphinx

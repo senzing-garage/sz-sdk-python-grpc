@@ -6,7 +6,7 @@ When issues are opened,
 this action adds appropriate labels to the issue.
 (e.g. "triage", "customer-submission")
 
-- [Add Labels Standardized GitHub action]
+- [Add Labels Standardized GitHub Action]
   - Uses: [senzing-factory/build-resources/.../add-labels-to-issue.yaml]
 
 ## add-to-project-garage-dependabot.yaml
@@ -14,7 +14,7 @@ this action adds appropriate labels to the issue.
 When a Dependabot Pull Request (PR) is made against `main` branch,
 this action adds the PR to the "Garage" project board as "In Progress".
 
-- [Add to Project Garage Dependabot GitHub action]
+- [Add to Project Garage Dependabot GitHub Action]
   - Uses: [senzing-factory/build-resources/.../add-to-project-dependabot.yaml]
 
 ## add-to-project-garage.yaml
@@ -22,7 +22,7 @@ this action adds the PR to the "Garage" project board as "In Progress".
 When an issue is created,
 this action adds the issue to the "Garage" board as "Backlog".
 
-- [Add to Project Garage GitHub action]
+- [Add to Project Garage GitHub Action]
   - Uses: [senzing-factory/build-resources/.../add-to-project.yaml]
 
 ## bandit.yaml
@@ -46,7 +46,7 @@ When a Dependabot Pull Request (PR) is made against the `main` branch,
 this action determines if it should be automatically approved and merged into the `main` branch.
 Once this action occurs [move-pr-to-done-dependabot.yaml] moves the PR on the "Garage" project board to "Done".
 
-- [Dependabot Approve and Merge GitHub action]
+- [Dependabot Approve and Merge GitHub Action]
   - Uses: [senzing-factory/build-resources/.../dependabot-approve-and-merge.yaml]
 
 ## dependency-scan.yaml
@@ -64,9 +64,9 @@ this action runs [Fast Python Vulnerability Scanner] and [pip-audit].
 When a Pull Request is made against the `main` branch,
 this action verifies that the `Dockerfile` can be successfully built.
 
-*Note:* The Docker image is **not** pushed to [DockerHub].
+_Note:_ The Docker image is **not** pushed to [DockerHub].
 
-- [Docker Build Container GitHub action]
+- [Docker Build Container GitHub Action]
   - Uses: [senzing-factory/github-action-docker-buildx-build]
 
 ## docker-push-containers-to-dockerhub.yaml
@@ -74,7 +74,7 @@ this action verifies that the `Dockerfile` can be successfully built.
 After a [Semantic Version] release is created,
 this action builds Docker images on multiple architectures and pushes the Docker images to [DockerHub].
 
-- [Docker Push Containers to DockerHub GitHub action]
+- [Docker Push Containers to DockerHub GitHub Action]
   - Uses: [senzing-factory/github-action-docker-buildx-build]
 
 ## flake8.yaml
@@ -98,7 +98,7 @@ this action runs [isort] to sort the Python import statements
 When a change is committed to GitHub or a Pull Request is made against the `main` branch,
 this action runs [super-linter] to run multiple linters against the code.
 
-- [Lint Workflows GitHub action]
+- [Lint Workflows GitHub Action]
   - Configuration:
     - [.checkov.yaml]
     - [.jscpd.json]
@@ -110,7 +110,7 @@ this action runs [super-linter] to run multiple linters against the code.
 When a Pull Request is merged into the `main` branch,
 this action moves the PR on the "Garage" project board to "Done".
 
-- [Move PR to Done Dependabot GitHub action]
+- [Move PR to Done Dependabot GitHub Action]
   - Uses: [senzing-factory/build-resources/.../move-pr-to-done-dependabot.yaml]
 
 ## mypy.yaml
@@ -166,33 +166,33 @@ this action runs [pytest] on the Windows platform to perform unit tests and code
     - [pytest]
     - [actions/upload-artifact]
 
-[.checkov.yaml]:  ../linters/README.md#checkovyaml
+[.checkov.yaml]: ../linters/README.md#checkovyaml
 [.jscpd.json]: ../linters/README.md#jscpdjson
 [.yaml-lint.yml]: ../linters/README.md#yaml-lintyml
 [actions/checkout]: https://github.com/actions/checkout
 [actions/setup-python]: https://github.com/actions/setup-python
 [actions/upload-artifact]: https://github.com/actions/upload-artifact
-[Add Labels Standardized GitHub action]: add-labels-standardized.yaml
-[Add to Project Garage Dependabot GitHub action]: add-to-project-garage-dependabot.yaml
-[Add to Project Garage GitHub action]: add-to-project-garage.yaml
+[Add Labels Standardized GitHub Action]: add-labels-standardized.yaml
+[Add to Project Garage Dependabot GitHub Action]: add-to-project-garage-dependabot.yaml
+[Add to Project Garage GitHub Action]: add-to-project-garage.yaml
 [bandit.yaml]: bandit.yaml
 [Bandit]: https://bandit.readthedocs.io/en/latest/
 [black.yaml]: black.yaml
 [Black]: https://github.com/psf/black
-[Dependabot Approve and Merge GitHub action]: dependabot-approve-and-merge.yaml
+[Dependabot Approve and Merge GitHub Action]: dependabot-approve-and-merge.yaml
 [dependency-scan.yaml]: dependency-scan.yaml
-[Docker Build Container GitHub action]: docker-build-container.yaml
-[Docker Push Containers to DockerHub GitHub action]: docker-push-containers-to-dockerhub.yaml
-[DockerHub]: <https://hub.docker.com/>
+[Docker Build Container GitHub Action]: docker-build-container.yaml
+[Docker Push Containers to DockerHub GitHub Action]: docker-push-containers-to-dockerhub.yaml
+[DockerHub]: https://hub.docker.com/
 [Fast Python Vulnerability Scanner]: https://github.com/vanschelven/fpvs/
 [flake8.yaml]: flake8.yaml
 [flake8]: https://flake8.pycqa.org/en/latest/
 [isort.yaml]: isort.yaml
 [isort]: https://pycqa.github.io/isort/
 [isort/isort-action]: https://github.com/isort/isort-action
-[Lint Workflows GitHub action]: lint-workflows.yaml
+[Lint Workflows GitHub Action]: lint-workflows.yaml
 [lukehinds/bandit-action]: https://github.com/lukehinds/bandit-action
-[Move PR to Done Dependabot GitHub action]: move-pr-to-done-dependabot.yaml
+[Move PR to Done Dependabot GitHub Action]: move-pr-to-done-dependabot.yaml
 [move-pr-to-done-dependabot.yaml]: move-pr-to-done-dependabotyaml
 [mypy.yaml]: mypy.yaml
 [mypy]: https://mypy-lang.org/

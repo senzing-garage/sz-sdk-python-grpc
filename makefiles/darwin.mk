@@ -29,9 +29,13 @@ clean-osarch-specific:
 .PHONY: coverage-osarch-specific
 coverage-osarch-specific: export SENZING_LOG_LEVEL=TRACE
 coverage-osarch-specific:
-	@pytest --cov=src --cov-report=xml  $(shell git ls-files '*.py')
+	@pytest --cov=src --cov-report=xml $(shell git ls-files '*.py')
 	@coverage html
 	@open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
+
+
+.PHONY: dependencies-for-development-osarch-specific
+dependencies-for-development-osarch-specific:
 
 
 .PHONY: documentation-osarch-specific
@@ -53,6 +57,11 @@ package-osarch-specific:
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
 	$(info No setup required.)
+
+
+.PHONY: venv-osarch-specific
+venv-osarch-specific:
+	@python3 -m venv .venv
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
