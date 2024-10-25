@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-
 import grpc
 
 from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters, SzError

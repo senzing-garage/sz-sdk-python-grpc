@@ -26,11 +26,13 @@ try:
         TRUTHSET_REFERENCE_RECORDS,
         TRUTHSET_WATCHLIST_RECORDS,
     ]
-    FLAGS = SZ_WITHOUT_INFO
     for record_set in record_sets:
         for record in record_set.values():
             sz_engine.add_record(
-                record.get("DataSource"), record.get("Id"), record.get("Json"), FLAGS
+                record.get("DataSource"),
+                record.get("Id"),
+                record.get("Json"),
+                SZ_WITHOUT_INFO,
             )
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nError in {__file__}:\n{err}\n")
