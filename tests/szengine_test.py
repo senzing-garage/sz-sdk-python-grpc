@@ -55,7 +55,7 @@ def test_add_truthset_datasources(
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
     sz_engine = SzEngineGrpc(grpc_channel=grpc_channel)
-    sz_engine._reinitialize(config_id)
+    sz_engine._reinitialize(config_id)  # pylint: disable=W0212
 
 
 # -----------------------------------------------------------------------------

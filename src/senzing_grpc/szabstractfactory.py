@@ -118,7 +118,7 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
         _ = kwargs
 
         sz_diagonstic = SzDiagnostic(grpc_channel=self.channel)
-        sz_diagonstic._reinitialize(config_id=config_id)
+        sz_diagonstic._reinitialize(config_id=config_id)  # pylint: disable=W0212
 
         sz_engine = SzEngine(grpc_channel=self.channel)
-        sz_engine._reinitialize(config_id=config_id)
+        sz_engine._reinitialize(config_id=config_id)  # pylint: disable=W0212

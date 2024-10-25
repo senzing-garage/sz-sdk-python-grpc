@@ -39,12 +39,20 @@ profile = "black"
 src_paths = ["examples", "src", "tests"]
 
 [[tool.mypy.overrides]]
-module = "senzing_abstract.szengineflags.*"
-ignore_missing_imports = "true"
-warn_unused_ignores = "false"
+module = "senzing_grpc.*"
+disable_error_code = [
+    "attr-defined",
+    "no-untyped-call"
+]
+follow_imports = "skip"
+strict = "true"
 
 [[tool.mypy.overrides]]
 module = "pytest_schema.*"
+ignore_missing_imports = "true"
+
+[[tool.mypy.overrides]]
+module = "grpc.*"
 ignore_missing_imports = "true"
 
 [tool.pylint]
