@@ -132,7 +132,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
@@ -469,7 +469,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -545,7 +545,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
+    def _reinitialize(self, config_id: int, **kwargs: Any) -> None:
         _ = kwargs
         try:
             request = szengine_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]

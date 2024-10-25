@@ -114,13 +114,13 @@ test: test-tests test-examples
 .PHONY: test-tests
 test-tests:
 	$(info --- Unit tests -----------------------------------------------------------------)
-	@pytest tests --verbose --capture=no --cov=src --cov-report xml:coverage.xml
+	@$(activate-venv); pytest tests --verbose --capture=no --cov=src --cov-report xml:coverage.xml
 
 
 .PHONY: test-examples
 test-examples:
 	$(info --- Test examples --------------------------------------------------------------)
-	@python3 -m unittest \
+	@$(activate-venv); python3 -m unittest \
 		examples/szconfig/*.py \
 		examples/szconfigmanager/*.py \
 		examples/szdiagnostic/*.py \

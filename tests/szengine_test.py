@@ -9,6 +9,7 @@ import pytest
 from pytest_schema import Optional, Or, schema
 from senzing_truthset import (
     TRUTHSET_CUSTOMER_RECORDS,
+    TRUTHSET_DATASOURCES,
     TRUTHSET_REFERENCE_RECORDS,
     TRUTHSET_WATCHLIST_RECORDS,
 )
@@ -41,17 +42,20 @@ def test_constructor() -> None:
     assert isinstance(actual, SzEngine)
 
 
-# def test_add_truthset_datasources(
-#     sz_engine: SzEngine, sz_configmanager: SzConfigManager, sz_config: SzConfig
-# ) -> None:
-#     """Add needed datasources for tests."""
-#     config_handle = sz_config.create_config()
-#     for data_source_code in TRUTHSET_DATASOURCES:
-#         sz_config.add_data_source(config_handle, data_source_code)
-#     config_definition = sz_config.export_config(config_handle)
-#     config_id = sz_configmanager.add_config(config_definition, "Test")
-#     sz_configmanager.set_default_config_id(config_id)
-#     sz_engine.reinitialize(config_id)
+def test_add_truthset_datasources(
+    sz_engine: SzEngine, sz_configmanager: SzConfigManager, sz_config: SzConfig
+) -> None:
+    """Add needed datasources for tests."""
+    config_handle = sz_config.create_config()
+    for data_source_code in TRUTHSET_DATASOURCES:
+        sz_config.add_data_source(config_handle, data_source_code)
+    config_definition = sz_config.export_config(config_handle)
+    config_id = sz_configmanager.add_config(config_definition, "Test")
+    sz_configmanager.set_default_config_id(config_id)
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    sz_engine = SzEngineGrpc(grpc_channel=grpc_channel)
+    sz_engine._reinitialize(config_id)
 
 
 # -----------------------------------------------------------------------------

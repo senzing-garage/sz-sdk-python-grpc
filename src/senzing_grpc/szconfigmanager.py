@@ -90,7 +90,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
 
     def get_config(self, config_id: int, **kwargs: Any) -> str:
@@ -120,7 +120,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
