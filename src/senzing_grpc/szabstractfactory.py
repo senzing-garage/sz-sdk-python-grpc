@@ -7,7 +7,7 @@ TODO: szabstractfactory.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Dict, Type, TypedDict, Union
+from typing import Any, Type, TypedDict, Union
 
 import grpc
 from senzing_abstract import (

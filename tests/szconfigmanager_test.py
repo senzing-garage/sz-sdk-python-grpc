@@ -1,15 +1,15 @@
 import json
-from typing import Any, Dict
 
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing_abstract import SZ_NO_LOGGING
 from senzing_truthset import TRUTHSET_DATASOURCES
 
 from senzing_grpc import (
     SzConfig,
+    SzConfigGrpc,
     SzConfigManager,
+    SzConfigManagerGrpc,
     SzConfigurationError,
     SzReplaceConflictError,
 )
@@ -23,7 +23,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigManager(grpc_channel=grpc_channel)
+    actual = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzConfigManager)
 
 
@@ -241,29 +241,11 @@ def test_set_default_config_id_bad_config_id_value(
         sz_configmanager.set_default_config_id(bad_config_id)
 
 
-def test_initialize_and_destroy(sz_configmanager: SzConfigManager) -> None:
-    """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
-    instance_name = "Example"
-    settings = "{}"
-    verbose_logging = SZ_NO_LOGGING
-    sz_configmanager.initialize(instance_name, settings, verbose_logging)
-    sz_configmanager.destroy()
-
-
-def test_initialize_and_destroy_again(sz_configmanager: SzConfigManager) -> None:
-    """Test SzConfigManager().initialize() and SzConfigManager.destroy()."""
-    instance_name = "Example"
-    settings: Dict[Any, Any] = {}
-    verbose_logging = SZ_NO_LOGGING
-    sz_configmanager.initialize(instance_name, settings, verbose_logging)
-    sz_configmanager.destroy()
-
-
 def test_context_managment() -> None:
     """Test the use of SzConfigManager in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfigManager(grpc_channel=grpc_channel) as sz_configmanager:
+    with SzConfigManagerGrpc(grpc_channel=grpc_channel) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
         actual = sz_configmanager.get_config(config_id)
         actual_as_dict = json.loads(actual)
@@ -283,7 +265,7 @@ def szconfig_fixture() -> SzConfig:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfig(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -295,7 +277,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManager(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 

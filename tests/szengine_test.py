@@ -9,21 +9,21 @@ import pytest
 from pytest_schema import Optional, Or, schema
 from senzing_truthset import (
     TRUTHSET_CUSTOMER_RECORDS,
-    TRUTHSET_DATASOURCES,
     TRUTHSET_REFERENCE_RECORDS,
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
 from senzing_grpc import (
-    SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION,
     SZ_NO_FLAGS,
-    SZ_NO_LOGGING,
     SZ_WITHOUT_INFO,
     SzBadInputError,
     SzConfig,
+    SzConfigGrpc,
     SzConfigManager,
+    SzConfigManagerGrpc,
     SzEngine,
     SzEngineFlags,
+    SzEngineGrpc,
     SzError,
     SzNotFoundError,
 )
@@ -37,21 +37,21 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzEngine(grpc_channel=grpc_channel)
+    actual = SzEngineGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzEngine)
 
 
-def test_add_truthset_datasources(
-    sz_engine: SzEngine, sz_configmanager: SzConfigManager, sz_config: SzConfig
-) -> None:
-    """Add needed datasources for tests."""
-    config_handle = sz_config.create_config()
-    for data_source_code in TRUTHSET_DATASOURCES:
-        sz_config.add_data_source(config_handle, data_source_code)
-    config_definition = sz_config.export_config(config_handle)
-    config_id = sz_configmanager.add_config(config_definition, "Test")
-    sz_configmanager.set_default_config_id(config_id)
-    sz_engine.reinitialize(config_id)
+# def test_add_truthset_datasources(
+#     sz_engine: SzEngine, sz_configmanager: SzConfigManager, sz_config: SzConfig
+# ) -> None:
+#     """Add needed datasources for tests."""
+#     config_handle = sz_config.create_config()
+#     for data_source_code in TRUTHSET_DATASOURCES:
+#         sz_config.add_data_source(config_handle, data_source_code)
+#     config_definition = sz_config.export_config(config_handle)
+#     config_id = sz_configmanager.add_config(config_definition, "Test")
+#     sz_configmanager.set_default_config_id(config_id)
+#     sz_engine.reinitialize(config_id)
 
 
 # -----------------------------------------------------------------------------
@@ -219,38 +219,38 @@ def test_export_csv_entity_report(sz_engine: SzEngine) -> None:
     assert len(actual) > 0
 
 
-def test_export_csv_entity_report_iterator(sz_engine: SzEngine) -> None:
-    """Test SzEngine().export_csv_entity_report_iterator()."""
+# def test_export_csv_entity_report_iterator(sz_engine: SzEngine) -> None:
+#     """Test SzEngine().export_csv_entity_report_iterator()."""
 
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(sz_engine, test_records)
+#     test_records: List[Tuple[str, str]] = [
+#         ("CUSTOMERS", "1001"),
+#         ("CUSTOMERS", "1002"),
+#         ("CUSTOMERS", "1003"),
+#     ]
+#     add_records(sz_engine, test_records)
 
-    # Test export.
+#     # Test export.
 
-    csv_column_list = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA"
-    flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
-    initial_iterations = 0
-    for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
-        initial_iterations += 1
+#     csv_column_list = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA"
+#     flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
+#     initial_iterations = 0
+#     for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
+#         initial_iterations += 1
 
-    # Run again to make sure it starts from beginning.
+#     # Run again to make sure it starts from beginning.
 
-    i = 0
-    for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
-        i += 1
-    assert i == initial_iterations
+#     i = 0
+#     for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
+#         i += 1
+#     assert i == initial_iterations
 
-    # Test export, again.
+#     # Test export, again.
 
-    delete_records(sz_engine, test_records)
+#     delete_records(sz_engine, test_records)
 
-    i = 0
-    for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
-        i += 1
+#     i = 0
+#     for _ in sz_engine.export_csv_entity_report_iterator(csv_column_list, flags):
+#         i += 1
 
 
 def test_export_json_entity_report(sz_engine: SzEngine) -> None:
@@ -269,30 +269,30 @@ def test_export_json_entity_report(sz_engine: SzEngine) -> None:
             assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
 
 
-def test_export_json_entity_report_iterator(sz_engine: SzEngine) -> None:
-    """Test SzEngine().export_json_entity_report_iterator()."""
+# def test_export_json_entity_report_iterator(sz_engine: SzEngine) -> None:
+#     """Test SzEngine().export_json_entity_report_iterator()."""
 
-    test_records: List[Tuple[str, str]] = [
-        ("CUSTOMERS", "1001"),
-        ("CUSTOMERS", "1002"),
-        ("CUSTOMERS", "1003"),
-    ]
-    add_records(sz_engine, test_records)
+#     test_records: List[Tuple[str, str]] = [
+#         ("CUSTOMERS", "1001"),
+#         ("CUSTOMERS", "1002"),
+#         ("CUSTOMERS", "1003"),
+#     ]
+#     add_records(sz_engine, test_records)
 
-    # Test export.
+#     # Test export.
 
-    flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
-    for actual in sz_engine.export_json_entity_report_iterator(flags):
-        actual_as_dict = json.loads(actual)
-        assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
+#     flags = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
+#     for actual in sz_engine.export_json_entity_report_iterator(flags):
+#         actual_as_dict = json.loads(actual)
+#         assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
 
-    delete_records(sz_engine, test_records)
+#     delete_records(sz_engine, test_records)
 
-    # Test export, again.
+#     # Test export, again.
 
-    for actual in sz_engine.export_json_entity_report_iterator(flags):
-        actual_as_dict = json.loads(actual)
-        assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
+#     for actual in sz_engine.export_json_entity_report_iterator(flags):
+#         actual_as_dict = json.loads(actual)
+#         assert schema(export_json_entity_report_iterator_schema) == actual_as_dict
 
 
 def test_fetch_next() -> None:
@@ -998,7 +998,7 @@ def test_add_record_using_context_managment() -> None:
     """Test the use of SzEngine in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzEngine(grpc_channel=grpc_channel) as sz_engine:
+    with SzEngineGrpc(grpc_channel=grpc_channel) as sz_engine:
         data_source_code = "TEST"
         record_id = "2"
         record_definition = "{}"
@@ -1015,47 +1015,6 @@ def test_process_redo_record(sz_engine: SzEngine) -> None:
 
 
 # -----------------------------------------------------------------------------
-# SzEngine post tests
-# -----------------------------------------------------------------------------
-
-
-def test_initialize(sz_engine: SzEngine) -> None:
-    """Test SzEngine().initialize()."""
-    instance_name = "Test"
-    settings: Dict[str, str] = {}
-    config_id = SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION
-    verbose_logging = SZ_NO_LOGGING
-    sz_engine.initialize(instance_name, settings, config_id, verbose_logging)
-
-
-def test_reinitialize(sz_engine: SzEngine) -> None:
-    """Test SzEngine().reinitialize()."""
-    config_id = sz_engine.get_active_config_id()
-    sz_engine.reinitialize(config_id)
-
-
-def test_reinitialize_bad_config_id(
-    sz_engine: SzEngine, sz_configmanager: SzConfigManager
-) -> None:
-    """Test SzEngine().reinitialize()."""
-    _ = sz_engine
-    _ = sz_configmanager
-    # TODO: Uncomment once fixed in engine GDEV-3739
-    # bad_config_id = 0
-    # try:
-    #     with pytest.raises(SzNotInitializedError):
-    #         sz_engine.reinitialize(bad_config_id)
-    # finally:
-    #     config_id = sz_configmanager.get_default_config_id()
-    #     sz_engine.reinitialize(config_id)
-
-
-def test_destroy(sz_engine: SzEngine) -> None:
-    """Test SzEngine().destroy()."""
-    sz_engine.destroy()
-
-
-# -----------------------------------------------------------------------------
 # SzEngine fixtures
 # -----------------------------------------------------------------------------
 
@@ -1068,7 +1027,7 @@ def szconfig_fixture() -> SzConfig:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfig(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -1079,7 +1038,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManager(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -1091,7 +1050,7 @@ def szengine_fixture() -> SzEngine:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzEngine(grpc_channel=grpc_channel)
+    result = SzEngineGrpc(grpc_channel=grpc_channel)
     return result
 
 

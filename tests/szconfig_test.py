@@ -1,11 +1,10 @@
 import json
-from typing import Any, Dict
 
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 
-from senzing_grpc import SZ_NO_LOGGING, SzConfig, SzConfigurationError
+from senzing_grpc import SzConfig, SzConfigGrpc, SzConfigurationError
 
 # -----------------------------------------------------------------------------
 # SzConfig testcases
@@ -16,7 +15,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfig(grpc_channel=grpc_channel)
+    actual = SzConfigGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzConfig)
 
 
@@ -189,38 +188,11 @@ def test_export_config_bad_config_handle_type(sz_config: SzConfig) -> None:
         sz_config.export_config(bad_config_handle)  # type: ignore[arg-type]
 
 
-def test_initialize_and_destroy(sz_config: SzConfig) -> None:
-    """Test SzConfig().initialize() and SzConfig.destroy()."""
-    instance_name = "Example"
-    settings = "{}"
-    verbose_logging = SZ_NO_LOGGING
-    sz_config.initialize(instance_name, settings, verbose_logging)
-    sz_config.destroy()
-
-
-def test_initialize_and_destroy_dict(sz_config: SzConfig) -> None:
-    """Test SzConfig().init() and SzConfig.destroy()."""
-    instance_name = "Example"
-    settings: Dict[Any, Any] = {}
-    verbose_logging = SZ_NO_LOGGING
-    sz_config.initialize(instance_name, settings, verbose_logging)
-    sz_config.destroy()
-
-
-def test_initialize_and_destroy_again(sz_config: SzConfig) -> None:
-    """Test SzConfig().init() and SzConfig.destroy()."""
-    instance_name = "Example"
-    settings = "{}"
-    verbose_logging = SZ_NO_LOGGING
-    sz_config.initialize(instance_name, settings, verbose_logging)
-    sz_config.destroy()
-
-
 def test_context_managment() -> None:
     """Test the use of SzConfig in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfig(grpc_channel=grpc_channel) as sz_config:
+    with SzConfigGrpc(grpc_channel=grpc_channel) as sz_config:
         config_handle = sz_config.create_config()
         actual = sz_config.get_data_sources(config_handle)
         sz_config.close_config(config_handle)
@@ -242,7 +214,7 @@ def szconfig_fixture() -> SzConfig:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfig(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 

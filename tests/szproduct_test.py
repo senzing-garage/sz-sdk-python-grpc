@@ -1,11 +1,10 @@
 import json
-from typing import Any, Dict
 
 import grpc
 import pytest
 from pytest_schema import Regex, schema
 
-from senzing_grpc import SZ_NO_LOGGING, SzProduct
+from senzing_grpc import SzProduct, SzProductGrpc
 
 # -----------------------------------------------------------------------------
 # SzProduct testcases
@@ -16,7 +15,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzProduct(grpc_channel=grpc_channel)
+    actual = SzProductGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzProduct)
 
 
@@ -36,29 +35,11 @@ def test_get_version(sz_product: SzProduct) -> None:
     assert schema(get_version_schema) == actual_as_dict
 
 
-def test_initialize_and_destroy(sz_product: SzProduct) -> None:
-    """Test init/destroy cycle."""
-    instance_name = "Example"
-    settings: Dict[Any, Any] = {}
-    verbose_logging = SZ_NO_LOGGING
-    sz_product.initialize(instance_name, settings, verbose_logging)
-    sz_product.destroy()
-
-
-def test_initialize_and_destroy_again(sz_product: SzProduct) -> None:
-    """Test init/destroy cycle a second time."""
-    instance_name = "Example"
-    settings = "{}"
-    verbose_logging = SZ_NO_LOGGING
-    sz_product.initialize(instance_name, settings, verbose_logging)
-    sz_product.destroy()
-
-
 def test_context_managment() -> None:
     """Test the use of SzProduct in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzProduct(grpc_channel=grpc_channel) as sz_product:
+    with SzProductGrpc(grpc_channel=grpc_channel) as sz_product:
         actual = sz_product.get_license()
         assert isinstance(actual, str)
         actual_as_dict = json.loads(actual)
@@ -77,7 +58,7 @@ def szproduct_fixture() -> SzProduct:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzProduct(grpc_channel=grpc_channel)
+    result = SzProductGrpc(grpc_channel=grpc_channel)
     return result
 
 
