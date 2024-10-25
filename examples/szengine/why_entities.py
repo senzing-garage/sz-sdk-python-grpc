@@ -10,7 +10,7 @@ from senzing_grpc import (
 )
 
 ENTITY_ID_1 = 1
-ENTITY_ID_2 = 100004
+ENTITY_ID_2 = 35
 FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
