@@ -843,7 +843,6 @@ def test_reevaluate_record_bad_record_id(sz_engine: SzEngine) -> None:
     flags = SZ_WITHOUT_INFO
     sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
 
-
     # TODO: Fix test after GDEV-3790
     # with pytest.raises(SzNotFoundError):
     #     sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)

@@ -2,16 +2,14 @@
 
 import grpc
 
-from senzing_grpc import SzConfigManager, SzError
+from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters, SzError
 
-GRPC_URL = "localhost:8261"
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_configmanager = SzConfigManager(grpc_channel=grpc_channel)
-
-    # Do work.
-
-    sz_configmanager.destroy()
+    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_configmanager = sz_abstract_factory.create_sz_configmanager()
 except SzError as err:
     print(f"\nError:\n{err}\n")

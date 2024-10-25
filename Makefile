@@ -192,7 +192,7 @@ print-make-variables:
 .PHONY: bandit
 bandit:
 	$(info --- bandit ---------------------------------------------------------------------)
-	@$(activate-venv); bandit $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); bandit -c pyproject.toml $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: black

@@ -81,7 +81,7 @@ class SzProduct(SzProductAbstract):
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
