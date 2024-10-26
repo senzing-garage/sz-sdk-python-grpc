@@ -151,9 +151,7 @@ class SzConfig(SzConfigAbstract):
         _ = verbose_logging
         _ = kwargs
 
-    def import_config(
-        self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any
-    ) -> int:
+    def import_config(self, config_definition: str, **kwargs: Any) -> int:
         _ = kwargs
         try:
             request = szconfig_pb2.ImportConfigRequest(configDefinition=as_str(config_definition))  # type: ignore[unused-ignore]

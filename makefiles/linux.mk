@@ -70,8 +70,6 @@ setup-osarch-specific:
 test-osarch-specific-2:
 	$(info --- Unit tests -------------------------------------------------------)
 	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src/senzing_grpc --cov-report xml:coverage.xml
-	# $(info --- Unit tests -------------------------------------------------------)
-	# @$(activate-venv); pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
 	$(info --- Test examples using unittest -------------------------------------)
 	@$(activate-venv); python3 -m unittest \
 		examples/szconfig/*.py \

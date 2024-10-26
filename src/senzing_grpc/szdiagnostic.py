@@ -99,7 +99,12 @@ class SzDiagnostic(SzDiagnosticAbstract):
         """TODO: Add get_feature()"""
         _ = feature_id
         _ = kwargs
-        return ""
+        try:
+            request = szdiagnostic_pb2.GetFeatureRequest(featureId=feature_id)  # type: ignore[unused-ignore]
+            response = self.stub.GetFeature(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def _initialize(
         self,

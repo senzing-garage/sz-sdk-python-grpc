@@ -5,29 +5,18 @@ import pytest
 from pytest_schema import Optional, Or, schema
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import (
-    SzConfig,
-    SzConfigGrpc,
-    SzConfigManager,
-    SzConfigManagerGrpc,
-    SzConfigurationError,
-    SzReplaceConflictError,
-)
+from senzing_grpc import SzConfigGrpc as SzConfigTest
+from senzing_grpc import SzConfigManagerGrpc as SzConfigManagerTest
+from senzing_grpc import SzConfigurationError, SzReplaceConflictError
 
 # -----------------------------------------------------------------------------
-# SzConfigManager testcases
+# Testcases
 # -----------------------------------------------------------------------------
 
 
-def test_constructor() -> None:
-    """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigManagerGrpc(grpc_channel=grpc_channel)
-    assert isinstance(actual, SzConfigManager)
-
-
-def test_add_config(sz_configmanager: SzConfigManager, sz_config: SzConfig) -> None:
+def test_add_config(
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
+) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
     config_definition = sz_config.export_config(config_handle)
@@ -38,7 +27,7 @@ def test_add_config(sz_configmanager: SzConfigManager, sz_config: SzConfig) -> N
 
 
 def test_add_config_dict(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
@@ -51,7 +40,7 @@ def test_add_config_dict(
 
 
 def test_add_config_bad_config_definition_type(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     bad_config_definition = 0
@@ -63,7 +52,7 @@ def test_add_config_bad_config_definition_type(
 
 
 def test_add_config_bad_config_definition_value(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().add_config()."""
     bad_config_definition = '{"just": "junk"}'
@@ -74,7 +63,7 @@ def test_add_config_bad_config_definition_value(
 
 
 def test_add_config_bad_config_comment_type(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().add_config()."""
     config_handle = sz_config.create_config()
@@ -86,7 +75,7 @@ def test_add_config_bad_config_comment_type(
         )
 
 
-def test_get_config(sz_configmanager: SzConfigManager) -> None:
+def test_get_config(sz_configmanager: SzConfigManagerTest) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     config_id = sz_configmanager.get_default_config_id()
     actual = sz_configmanager.get_config(config_id)
@@ -94,35 +83,35 @@ def test_get_config(sz_configmanager: SzConfigManager) -> None:
     assert schema(config_schema) == actual_as_dict
 
 
-def test_get_config_bad_config_id_type(sz_configmanager: SzConfigManager) -> None:
+def test_get_config_bad_config_id_type(sz_configmanager: SzConfigManagerTest) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
         sz_configmanager.get_config(bad_config_id)  # type: ignore[arg-type]
 
 
-def test_get_config_bad_config_id_value(sz_configmanager: SzConfigManager) -> None:
+def test_get_config_bad_config_id_value(sz_configmanager: SzConfigManagerTest) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = 1234
     with pytest.raises(SzConfigurationError):
         sz_configmanager.get_config(bad_config_id)
 
 
-def test_get_configs(sz_configmanager: SzConfigManager) -> None:
+def test_get_configs(sz_configmanager: SzConfigManagerTest) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     actual = sz_configmanager.get_configs()
     actual_as_dict = json.loads(actual)
     assert schema(config_list_schema) == actual_as_dict
 
 
-def test_get_default_config_id(sz_configmanager: SzConfigManager) -> None:
+def test_get_default_config_id(sz_configmanager: SzConfigManagerTest) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     actual = sz_configmanager.get_default_config_id()
     assert isinstance(actual, int)
 
 
 def test_replace_default_config_id(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     current_default_config_id = sz_configmanager.get_default_config_id()
@@ -145,7 +134,7 @@ def test_replace_default_config_id(
 
 
 def test_replace_default_config_id_bad_new_default_config_id_type(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     current_default_config_id = sz_configmanager.get_default_config_id()
@@ -157,7 +146,7 @@ def test_replace_default_config_id_bad_new_default_config_id_type(
 
 
 def test_replace_default_config_id_bad_new_default_config_id_value(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     current_default_config_id = sz_configmanager.get_default_config_id()
@@ -169,7 +158,7 @@ def test_replace_default_config_id_bad_new_default_config_id_value(
 
 
 def test_replace_default_config_id_bad_current_default_config_id_type(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = "string"
@@ -188,7 +177,7 @@ def test_replace_default_config_id_bad_current_default_config_id_type(
 
 
 def test_replace_default_config_id_bad_current_default_config_id_value(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_current_default_config_id = 1234
@@ -207,7 +196,7 @@ def test_replace_default_config_id_bad_current_default_config_id_value(
 
 
 def test_set_default_config_id(
-    sz_configmanager: SzConfigManager, sz_config: SzConfig
+    sz_configmanager: SzConfigManagerTest, sz_config: SzConfigTest
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     old_config_id = sz_configmanager.get_default_config_id()
@@ -224,7 +213,7 @@ def test_set_default_config_id(
 
 
 def test_set_default_config_id_bad_config_id_type(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
@@ -233,7 +222,7 @@ def test_set_default_config_id_bad_config_id_type(
 
 
 def test_set_default_config_id_bad_config_id_value(
-    sz_configmanager: SzConfigManager,
+    sz_configmanager: SzConfigManagerTest,
 ) -> None:
     """Test SzConfigManager().set_default_config_id()."""
     bad_config_id = 1
@@ -241,11 +230,24 @@ def test_set_default_config_id_bad_config_id_value(
         sz_configmanager.set_default_config_id(bad_config_id)
 
 
-def test_context_managment() -> None:
-    """Test the use of SzConfigManager in context."""
+# -----------------------------------------------------------------------------
+# Unique testcases
+# -----------------------------------------------------------------------------
+
+
+def test_constructor() -> None:
+    """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfigManagerGrpc(grpc_channel=grpc_channel) as sz_configmanager:
+    actual = SzConfigManagerTest(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzConfigManagerTest)
+
+
+def test_context_managment() -> None:
+    """Test the use of SzConfigManagerTest in context."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    with SzConfigManagerTest(grpc_channel=grpc_channel) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
         actual = sz_configmanager.get_config(config_id)
         actual_as_dict = json.loads(actual)
@@ -253,36 +255,35 @@ def test_context_managment() -> None:
 
 
 # -----------------------------------------------------------------------------
-# SzConfigManager fixtures
+# Fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="module")
-def szconfig_fixture() -> SzConfig:
+@pytest.fixture(name="sz_config", scope="function")
+def szconfig_fixture() -> SzConfigTest:
     """
     Single szconfigmanager object to use for all tests.
     """
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigGrpc(grpc_channel=grpc_channel)
+    result = SzConfigTest(grpc_channel=grpc_channel)
     return result
 
 
-@pytest.fixture(name="sz_configmanager", scope="module")
-def szconfigmanager_fixture() -> SzConfigManager:
-    """
-    Single engine object to use for all tests.
-    """
+@pytest.fixture(name="sz_configmanager", scope="function")
+def szconfigmanager_fixture() -> SzConfigManagerTest:
+    """Single szconfigmanager object to use for all tests.
+    build_engine_vars is returned from conftest.pys"""
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = SzConfigManagerTest(grpc_channel=grpc_channel)
     return result
 
 
 # -----------------------------------------------------------------------------
-# SzConfigManager schemas
+# Schemas
 # -----------------------------------------------------------------------------
 
 
@@ -318,6 +319,7 @@ config_schema = {
                 "CFCALL_ID": int,
                 "FTYPE_ID": int,
                 "CFUNC_ID": int,
+                Optional("EXEC_ORDER"): int,
             },
         ],
         "CFG_CFRTN": [
@@ -339,6 +341,8 @@ config_schema = {
                 "CFUNC_ID": int,
                 "CFUNC_CODE": str,
                 "CFUNC_DESC": str,
+                Optional("FUNC_LIB"): str,
+                Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
@@ -357,6 +361,7 @@ config_schema = {
                 "DFCALL_ID": int,
                 "FTYPE_ID": int,
                 "DFUNC_ID": int,
+                Optional("EXEC_ORDER"): int,
             },
         ],
         "CFG_DFUNC": [
@@ -364,6 +369,8 @@ config_schema = {
                 "DFUNC_ID": int,
                 "DFUNC_CODE": str,
                 "DFUNC_DESC": str,
+                Optional("FUNC_LIB"): str,
+                Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "ANON_SUPPORT": str,
                 "LANGUAGE": Or(str, None),
@@ -374,10 +381,20 @@ config_schema = {
                 "DSRC_ID": int,
                 "DSRC_CODE": str,
                 "DSRC_DESC": str,
+                Optional("DSRC_RELY"): int,
                 "RETENTION_LEVEL": str,
+                Optional("CONVERSATIONAL"): str,
             },
         ],
         "CFG_DSRC_INTEREST": [],
+        Optional("CFG_ECLASS"): [
+            {
+                Optional("ECLASS_ID"): int,
+                "ECLASS_CODE": str,
+                "ECLASS_DESC": str,
+                "RESOLVE": str,
+            },
+        ],
         "CFG_EFBOM": [
             {
                 "EFCALL_ID": int,
@@ -403,6 +420,8 @@ config_schema = {
                 "EFUNC_ID": int,
                 "EFUNC_CODE": str,
                 "EFUNC_DESC": str,
+                Optional("FUNC_LIB"): str,
+                Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
             },
@@ -420,12 +439,22 @@ config_schema = {
             {
                 "ERRULE_ID": int,
                 "ERRULE_CODE": str,
+                Optional("ERRULE_DESC"): str,
                 "RESOLVE": str,
                 "RELATE": str,
+                Optional("REF_SCORE"): int,
                 "RTYPE_ID": int,
                 "QUAL_ERFRAG_CODE": str,
                 "DISQ_ERFRAG_CODE": Or(str, None),
                 "ERRULE_TIER": Or(int, None),
+            },
+        ],
+        Optional("CFG_ETYPE"): [
+            {
+                "ETYPE_ID": int,
+                "ETYPE_CODE": str,
+                "ETYPE_DESC": str,
+                Optional("ECLASS_ID"): int,
             },
         ],
         "CFG_FBOM": [
@@ -441,6 +470,7 @@ config_schema = {
         "CFG_FBOVR": [
             {
                 "FTYPE_ID": int,
+                Optional("ECLASS_ID"): int,
                 "UTYPE_CODE": str,
                 "FTYPE_FREQ": str,
                 "FTYPE_EXCL": str,
@@ -459,6 +489,7 @@ config_schema = {
                 Optional("FELEM_ID"): int,
                 "FELEM_CODE": str,
                 "FELEM_DESC": str,
+                Optional("TOKENIZE"): str,
                 "DATA_TYPE": str,
             },
         ],
@@ -474,6 +505,7 @@ config_schema = {
                 "PERSIST_HISTORY": str,
                 "USED_FOR_CAND": str,
                 "DERIVED": str,
+                Optional("DERIVATION"): Or(str, None),
                 "RTYPE_ID": int,
                 "ANONYMIZE": str,
                 "VERSION": int,
@@ -497,6 +529,14 @@ config_schema = {
                 "GPLAN_DESC": str,
             },
         ],
+        Optional("CFG_LENS"): [
+            {
+                Optional("LENS_ID"): int,
+                "LENS_CODE": str,
+                "LENS_DESC": str,
+            },
+        ],
+        Optional("CFG_LENSRL"): [],
         "CFG_RCLASS": [
             {
                 "RCLASS_ID": int,
@@ -511,6 +551,7 @@ config_schema = {
                 "RTYPE_CODE": str,
                 "RTYPE_DESC": str,
                 "RCLASS_ID": int,
+                Optional("REL_STRENGTH"): int,
                 "BREAK_RES": str,
             },
         ],
@@ -528,6 +569,8 @@ config_schema = {
                 "SFUNC_ID": int,
                 "SFUNC_CODE": str,
                 "SFUNC_DESC": str,
+                Optional("FUNC_LIB"): str,
+                Optional("FUNC_VER"): str,
                 "CONNECT_STR": str,
                 "LANGUAGE": Or(str, None),
             },
@@ -536,7 +579,11 @@ config_schema = {
             {
                 "OOM_TYPE": str,
                 "OOM_LEVEL": str,
+                Optional("LENS_ID"): int,
                 "FTYPE_ID": int,
+                Optional("LIB_FEAT_ID"): int,
+                Optional("FELEM_ID"): int,
+                Optional("LIB_FELEM_ID"): int,
                 "THRESH1_CNT": int,
                 "THRESH1_OOM": int,
                 "NEXT_THRESH": int,
