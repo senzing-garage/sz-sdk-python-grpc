@@ -186,6 +186,14 @@ def test_export_config_bad_config_handle_type(sz_config: SzConfigTest) -> None:
 # -----------------------------------------------------------------------------
 
 
+def test_constructor() -> None:
+    """Test constructor."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    actual = SzConfigTest(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzConfigTest)
+
+
 def test_context_managment() -> None:
     """Test the use of SzConfig in context."""
     grpc_url = "localhost:8261"
@@ -197,14 +205,6 @@ def test_context_managment() -> None:
         assert isinstance(actual, str)
         actual_as_dict = json.loads(actual)
         assert schema(get_data_sources_schema) == actual_as_dict
-
-
-def test_constructor() -> None:
-    """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigTest(grpc_channel=grpc_channel)
-    assert isinstance(actual, SzConfigTest)
 
 
 # -----------------------------------------------------------------------------

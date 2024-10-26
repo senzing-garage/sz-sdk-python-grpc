@@ -1057,13 +1057,6 @@ def test_why_records_bad_record_id(sz_engine: SzEngineTest) -> None:
 # -----------------------------------------------------------------------------
 
 
-def test_constructor() -> None:
-    """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzEngineTest(grpc_channel=grpc_channel)
-    assert isinstance(actual, SzEngineTest)
-
 
 def test_add_record_using_context_managment() -> None:
     """Test the use of SzEngine in context."""
@@ -1075,6 +1068,15 @@ def test_add_record_using_context_managment() -> None:
         record_definition = "{}"
         flags = SZ_WITHOUT_INFO
         sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+
+
+def test_constructor() -> None:
+    """Test constructor."""
+    grpc_url = "localhost:8261"
+    grpc_channel = grpc.insecure_channel(grpc_url)
+    actual = SzEngineTest(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzEngineTest)
+
 
 
 def test_process_redo_record(sz_engine: SzEngineTest) -> None:
