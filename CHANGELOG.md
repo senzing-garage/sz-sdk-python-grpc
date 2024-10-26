@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.0] - 2024-10-27
+
+### Added in 0.3.0
+
+- `SzAbstractFactory`
+- UKpdataed examples
+
 ## [0.2.3] - 2024-10-09
 
 ### Changed in 0.2.3

@@ -1057,7 +1057,6 @@ def test_why_records_bad_record_id(sz_engine: SzEngineTest) -> None:
 # -----------------------------------------------------------------------------
 
 
-
 def test_add_record_using_context_managment() -> None:
     """Test the use of SzEngine in context."""
     grpc_url = "localhost:8261"
@@ -1076,7 +1075,6 @@ def test_constructor() -> None:
     grpc_channel = grpc.insecure_channel(grpc_url)
     actual = SzEngineTest(grpc_channel=grpc_channel)
     assert isinstance(actual, SzEngineTest)
-
 
 
 def test_process_redo_record(sz_engine: SzEngineTest) -> None:
