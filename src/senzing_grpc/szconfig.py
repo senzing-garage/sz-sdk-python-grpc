@@ -116,7 +116,7 @@ class SzConfig(SzConfigAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
@@ -138,7 +138,7 @@ class SzConfig(SzConfigAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -151,9 +151,7 @@ class SzConfig(SzConfigAbstract):
         _ = verbose_logging
         _ = kwargs
 
-    def import_config(
-        self, config_definition: Union[str, Dict[Any, Any]], **kwargs: Any
-    ) -> int:
+    def import_config(self, config_definition: str, **kwargs: Any) -> int:
         _ = kwargs
         try:
             request = szconfig_pb2.ImportConfigRequest(configDefinition=as_str(config_definition))  # type: ignore[unused-ignore]

@@ -24,6 +24,8 @@ that communicates with a [Senzing gRPC server].
 [![PEP8 Badge]][PEP8]
 [![PyPI version Badge]][PyPi version]
 [![Downloads Badge]][Downloads]
+[![License Badge]][License]
+[![Coverage Badge]][Coverage]
 
 ## Overview
 
@@ -102,8 +104,10 @@ More can be seen in [Examples].
     1. [DockerHub]
 1. [sz-sdk-python-abstract package reference]
 
+[Coverage badge]: https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.message&url=https%3A%2F%2Fraw.githubusercontent.com%2Fsenzing-garage%2Fsz-sdk-python%2Fpython-coverage-comment-action-data%2Fendpoint.json
+[Coverage]: https://htmlpreview.github.io/?https://github.com/senzing-garage/sz-sdk-python-grpc/blob/python-coverage-comment-action-data/htmlcov/index.html
 [Development]: docs/development.md
-[DockerHub]: https://hub.docker.com/r/senzing/template-python
+[DockerHub]: https://hub.docker.com/r/senzing/sz-sdk-python-grpc
 [Downloads Badge]: https://static.pepy.tech/badge/senzing-grpc
 [Downloads]: https://pepy.tech/project/senzing-grpc
 [Errors]: docs/errors.md

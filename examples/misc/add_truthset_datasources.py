@@ -3,16 +3,18 @@
 import grpc
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import SzConfig, SzConfigManager, SzDiagnostic, SzEngine, SzError
+from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters, SzError
 
-GRPC_URL = "localhost:8261"
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_config = SzConfig(grpc_channel=grpc_channel)
-    sz_configmanager = SzConfigManager(grpc_channel=grpc_channel)
-    sz_diagnostic = SzDiagnostic(grpc_channel=grpc_channel)
-    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_config = sz_abstract_factory.create_sz_config()
+    sz_configmanager = sz_abstract_factory.create_sz_configmanager()
+    sz_diagnostic = sz_abstract_factory.create_sz_diagnostic()
+    sz_engine = sz_abstract_factory.create_sz_engine()
 
     current_default_config_id = sz_configmanager.get_default_config_id()
     OLD_CONFIG_DEFINITION = sz_configmanager.get_config(current_default_config_id)
@@ -26,7 +28,6 @@ try:
     sz_configmanager.replace_default_config_id(
         current_default_config_id, new_default_config_id
     )
-    sz_engine.reinitialize(new_default_config_id)
-    sz_diagnostic.reinitialize(new_default_config_id)
+    sz_abstract_factory.reinitialize(new_default_config_id)
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nError in {__file__}:\n{err}\n")

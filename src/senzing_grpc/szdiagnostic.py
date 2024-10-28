@@ -82,7 +82,7 @@ class SzDiagnostic(SzDiagnosticAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
@@ -99,15 +99,20 @@ class SzDiagnostic(SzDiagnosticAbstract):
         """TODO: Add get_feature()"""
         _ = feature_id
         _ = kwargs
-        return ""
+        try:
+            request = szdiagnostic_pb2.GetFeatureRequest(featureId=feature_id)  # type: ignore[unused-ignore]
+            response = self.stub.GetFeature(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
         config_id: Optional[int] = None,
         verbose_logging: int = 0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
@@ -120,7 +125,7 @@ class SzDiagnostic(SzDiagnosticAbstract):
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
-    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
+    def _reinitialize(self, config_id: int, **kwargs: Any) -> None:
         _ = kwargs
         try:
             request = szdiagnostic_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]

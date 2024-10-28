@@ -1,18 +1,91 @@
+from datetime import datetime
+
 import grpc
 import pytest
-from senzing_abstract import (
-    SzAbstractFactoryAbstract,
-    SzConfigAbstract,
-    SzConfigManagerAbstract,
-    SzDiagnosticAbstract,
-    SzEngineAbstract,
-    SzProductAbstract,
+
+from senzing_grpc import (
+    SzAbstractFactory,
+    SzAbstractFactoryParameters,
+    SzConfig,
+    SzConfigManager,
+    SzDiagnostic,
+    SzEngine,
+    SzProduct,
 )
 
-from senzing_grpc import SzAbstractFactory
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 # -----------------------------------------------------------------------------
-# SzAbstractFactory testcases
+# Testcases
+# -----------------------------------------------------------------------------
+
+
+def test_create_sz_config(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzConfig."""
+    actual = sz_abstract_factory.create_sz_config()
+    assert isinstance(actual, SzConfig)
+
+
+def test_create_sz_configmanager(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzConfigManager."""
+    actual = sz_abstract_factory.create_sz_configmanager()
+    assert isinstance(actual, SzConfigManager)
+
+
+def test_create_sz_diagnostic(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzDiagnostic."""
+    actual = sz_abstract_factory.create_sz_diagnostic()
+    assert isinstance(actual, SzDiagnostic)
+
+
+def test_create_sz_engine(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzEngine."""
+    actual = sz_abstract_factory.create_sz_engine()
+    assert isinstance(actual, SzEngine)
+
+
+def test_create_sz_product(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzProduct."""
+    actual = sz_abstract_factory.create_sz_product()
+    assert isinstance(actual, SzProduct)
+
+
+def test_reinitialize(sz_abstract_factory: SzAbstractFactory) -> None:
+    """Create SzConfig."""
+
+    datasources = [f"TEST_DATASOURCE_{datetime.now().timestamp()}"]
+
+    # Create Senzing objects.
+
+    sz_config = sz_abstract_factory.create_sz_config()
+    sz_configmanager = sz_abstract_factory.create_sz_configmanager()
+
+    # Get existing Senzing configuration.
+
+    old_config_id = sz_configmanager.get_default_config_id()
+    old_json_config = sz_configmanager.get_config(old_config_id)
+    config_handle = sz_config.import_config(old_json_config)
+
+    # Add DataSources to existing Senzing configuration.
+
+    for datasource in datasources:
+        sz_config.add_data_source(config_handle, datasource)
+
+    # Persist new Senzing configuration.
+
+    new_json_config = sz_config.export_config(config_handle)
+    new_config_id = sz_configmanager.add_config(new_json_config, "Add My datasources")
+    sz_configmanager.replace_default_config_id(old_config_id, new_config_id)
+
+    # Update other Senzing objects.
+
+    sz_abstract_factory.reinitialize(new_config_id)
+
+
+# -----------------------------------------------------------------------------
+# Unique testcases
 # -----------------------------------------------------------------------------
 
 
@@ -21,7 +94,7 @@ def test_constructor() -> None:
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
     actual = SzAbstractFactory(grpc_channel=grpc_channel)
-    assert isinstance(actual, SzAbstractFactoryAbstract)
+    assert isinstance(actual, SzAbstractFactory)
 
 
 def test_context() -> None:
@@ -29,52 +102,25 @@ def test_context() -> None:
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
     with SzAbstractFactory(grpc_channel=grpc_channel) as actual:
-        assert isinstance(actual, SzAbstractFactoryAbstract)
+        assert isinstance(actual, SzAbstractFactory)
         sz_config = actual.create_sz_config()
-        assert isinstance(sz_config, SzConfigAbstract)
-
-
-def test_create_sz_config(szabstractfactory: SzAbstractFactory) -> None:
-    """Test SzConfig().add_data_source()."""
-    actual = szabstractfactory.create_sz_config()
-    assert isinstance(actual, SzConfigAbstract)
-
-
-def test_create_sz_configmanager(szabstractfactory: SzAbstractFactory) -> None:
-    """Test SzConfig().add_data_source()."""
-    actual = szabstractfactory.create_sz_configmanager()
-    assert isinstance(actual, SzConfigManagerAbstract)
-
-
-def test_create_sz_diagnostic(szabstractfactory: SzAbstractFactory) -> None:
-    """Test SzConfig().add_data_source()."""
-    actual = szabstractfactory.create_sz_diagnostic()
-    assert isinstance(actual, SzDiagnosticAbstract)
-
-
-def test_create_sz_engine(szabstractfactory: SzAbstractFactory) -> None:
-    """Test SzConfig().add_data_source()."""
-    actual = szabstractfactory.create_sz_engine()
-    assert isinstance(actual, SzEngineAbstract)
-
-
-def test_create_sz_product(szabstractfactory: SzAbstractFactory) -> None:
-    """Test SzConfig().add_data_source()."""
-    actual = szabstractfactory.create_sz_product()
-    assert isinstance(actual, SzProductAbstract)
+        assert isinstance(sz_config, SzConfig)
 
 
 # -----------------------------------------------------------------------------
-# SzAbstractFactory fixtures
+# Fixtures
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="szabstractfactory", scope="module")
-def szabstractfactory_fixture() -> SzAbstractFactory:
+@pytest.fixture(name="sz_abstract_factory", scope="function")
+def sz_abstract_factory_fixture() -> SzAbstractFactory:
     """
     Single sz_abstractfactory object to use for all tests.
     """
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzAbstractFactory(grpc_channel=grpc_channel)
+    result = SzAbstractFactory(**FACTORY_PARAMETERS)
     return result
+
+
+# -----------------------------------------------------------------------------
+# Schemas
+# -----------------------------------------------------------------------------

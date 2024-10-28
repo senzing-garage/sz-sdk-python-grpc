@@ -132,7 +132,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
@@ -217,40 +217,31 @@ class SzEngine(SzEngineAbstract):
     def find_interesting_entities_by_entity_id(
         self, entity_id: int, flags: int = 0, **kwargs: Any
     ) -> str:
-        _ = entity_id
-        _ = flags
         _ = kwargs
-        # TODO: Implement find_interesting_entities_by_entity_id
-        # try:
-        #     request = szengine_pb2.FindInterestingEntitiesByEntityIDRequest(  # type: ignore[unused-ignore]
-        #         entityID=entity_id,
-        #         flags=flags,
-        #     )
-        #     response = self.stub.FindInterestingEntitiesByEntityId(request)
-        #     return str(response.result)
-        # except Exception as err:
-        #     raise new_exception(err) from err
-        return ""
+        try:
+            request = szengine_pb2.FindInterestingEntitiesByEntityIdRequest(  # type: ignore[unused-ignore]
+                entityId=entity_id,
+                flags=flags,
+            )
+            response = self.stub.FindInterestingEntitiesByEntityId(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def find_interesting_entities_by_record_id(
         self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
     ) -> str:
-        _ = data_source_code
-        _ = record_id
-        _ = flags
         _ = kwargs
-        # TODO: Implement find_interesting_entities_by_record_id
-        # try:
-        #     request = szengine_pb2.FindInterestingEntitiesByRecordIDRequest(  # type: ignore[unused-ignore]
-        #         dataSourceCode=data_source_code,
-        #         recordID=record_id,
-        #         flags=flags,
-        #     )
-        #     response = self.stub.FindInterestingEntitiesByRecordID(request)
-        #     return str(response.result)
-        # except Exception as err:
-        #     raise new_exception(err) from err
-        return ""
+        try:
+            request = szengine_pb2.FindInterestingEntitiesByRecordIdRequest(  # type: ignore[unused-ignore]
+                dataSourceCode=data_source_code,
+                recordId=record_id,
+                flags=flags,
+            )
+            response = self.stub.FindInterestingEntitiesByRecordId(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
 
     def find_network_by_entity_id(
         self,
@@ -469,7 +460,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -545,7 +536,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
+    def _reinitialize(self, config_id: int, **kwargs: Any) -> None:
         _ = kwargs
         try:
             request = szengine_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]

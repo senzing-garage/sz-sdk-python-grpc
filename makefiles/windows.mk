@@ -51,6 +51,11 @@ package-osarch-specific:
 setup-osarch-specific:
 	$(info No setup required.)
 
+
+.PHONY: venv-osarch-specific
+venv-osarch-specific:
+	@python -m venv .venv
+
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.
 # -----------------------------------------------------------------------------

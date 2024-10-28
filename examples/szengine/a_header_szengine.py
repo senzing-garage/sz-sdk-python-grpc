@@ -13,14 +13,21 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SZ_WITHOUT_INFO, SzEngine
+from senzing_grpc import (
+    SZ_WITHOUT_INFO,
+    SzAbstractFactory,
+    SzAbstractFactoryParameters,
+    SzEngine,
+)
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
     "REFERENCE": TRUTHSET_REFERENCE_RECORDS,
     "WATCHLIST": TRUTHSET_WATCHLIST_RECORDS,
 }
-
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 TEST_RECORDS: List[Tuple[str, str]] = [
     ("CUSTOMERS", "1001"),
@@ -34,14 +41,16 @@ TEST_RECORDS: List[Tuple[str, str]] = [
 # -----------------------------------------------------------------------------
 
 
-def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
+def add_records(
+    sz_engine_local: SzEngine, record_id_list: List[Tuple[str, str]]
+) -> None:
     """Add all of the records in the list."""
     flags = SZ_WITHOUT_INFO
     for record_identification in record_id_list:
         datasource = record_identification[0]
         record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        sz_engine.add_record(
+        sz_engine_local.add_record(
             record.get("DataSource", ""),
             record.get("Id", ""),
             record.get("Json", ""),
@@ -55,8 +64,6 @@ def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> N
 
 print("\n---- szengine --------------------------------------------------------\n")
 
-GRPC_URL = "localhost:8261"
-grpc_channel = grpc.insecure_channel(GRPC_URL)
-SZ_ENGINE = SzEngine(grpc_channel=grpc_channel)
-
-add_records(SZ_ENGINE, TEST_RECORDS)
+sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+sz_engine = sz_abstract_factory.create_sz_engine()
+add_records(sz_engine, TEST_RECORDS)

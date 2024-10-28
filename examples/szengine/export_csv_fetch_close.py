@@ -2,15 +2,21 @@
 
 import grpc
 
-from senzing_grpc import SzAbstractFactory, SzEngineFlags, SzError
+from senzing_grpc import (
+    SzAbstractFactory,
+    SzAbstractFactoryParameters,
+    SzEngineFlags,
+    SzError,
+)
 
-CSV_COLUMN_LIST = "RESOLVED_ENTITY_ID,RESOLVED_ENTITY_NAME,RELATED_ENTITY_ID,MATCH_LEVEL,MATCH_KEY,IS_DISCLOSED,IS_AMBIGUOUS,DATA_SOURCE,RECORD_ID,JSON_DATA"
+CSV_COLUMN_LIST = "RESOLVED_ENTITY_ID,RELATED_ENTITY_ID,RESOLVED_ENTITY_NAME,MATCH_LEVEL,MATCH_KEY,DATA_SOURCE,RECORD_ID"
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 FLAGS = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS
 
 try:
-    sz_abstract_factory = SzAbstractFactory(
-        grpc_channel=grpc.insecure_channel("localhost:8261")
-    )
+    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
     sz_engine = sz_abstract_factory.create_sz_engine()
     export_handle = sz_engine.export_csv_entity_report(CSV_COLUMN_LIST, FLAGS)
     RESULT = ""
@@ -20,6 +26,6 @@ try:
             break
         RESULT += FRAGMENT
     sz_engine.close_export(export_handle)
-    print(RESULT[:66], "...")
+    print(f"\nFile {__file__}:\n{RESULT}\n")
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nError in {__file__}:\n{err}\n")

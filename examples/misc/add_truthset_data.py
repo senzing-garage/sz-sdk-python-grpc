@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 
 import grpc
 from senzing_truthset import (
@@ -7,23 +7,32 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SZ_WITHOUT_INFO, SzEngine, SzError
+from senzing_grpc import (
+    SZ_WITHOUT_INFO,
+    SzAbstractFactory,
+    SzAbstractFactoryParameters,
+    SzError,
+)
 
-GRPC_URL = "localhost:8261"
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 try:
-    grpc_channel = grpc.insecure_channel(GRPC_URL)
-    sz_engine = SzEngine(grpc_channel=grpc_channel)
+    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_engine = sz_abstract_factory.create_sz_engine()
     record_sets = [
         TRUTHSET_CUSTOMER_RECORDS,
         TRUTHSET_REFERENCE_RECORDS,
         TRUTHSET_WATCHLIST_RECORDS,
     ]
-    FLAGS = SZ_WITHOUT_INFO
     for record_set in record_sets:
         for record in record_set.values():
             sz_engine.add_record(
-                record.get("DataSource"), record.get("Id"), record.get("Json"), FLAGS
+                record.get("DataSource"),
+                record.get("Id"),
+                record.get("Json"),
+                SZ_WITHOUT_INFO,
             )
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nError in {__file__}:\n{err}\n")

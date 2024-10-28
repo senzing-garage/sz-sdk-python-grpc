@@ -7,7 +7,7 @@ TODO: szabstractfactory.py
 # pylint: disable=E1101
 
 from types import TracebackType
-from typing import Any, Type, Union
+from typing import Any, Type, TypedDict, Union
 
 import grpc
 from senzing_abstract import (
@@ -30,7 +30,20 @@ from .szproduct import SzProduct
 __all__ = ["SzAbstractFactoryAbstract"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2024-09-23"
+__updated__ = "2024-10-24"
+
+
+# -----------------------------------------------------------------------------
+# SzAbstractFactoryParameters class
+# -----------------------------------------------------------------------------
+
+
+class SzAbstractFactoryParameters(TypedDict, total=False):
+    """
+    SzAbstractFactoryParameters is used to create a dictionary that can be unpacked when creating an SzAbstractFactory.
+    """
+
+    grpc_channel: grpc.Channel
 
 
 # -----------------------------------------------------------------------------
@@ -78,17 +91,31 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
     # SzAbstractFactory methods
     # -------------------------------------------------------------------------
 
-    def create_sz_config(self) -> SzConfigAbstract:
+    def create_sz_config(self, **kwargs: Any) -> SzConfigAbstract:
+        _ = kwargs
         return SzConfig(grpc_channel=self.channel)
 
-    def create_sz_configmanager(self) -> SzConfigManagerAbstract:
+    def create_sz_configmanager(self, **kwargs: Any) -> SzConfigManagerAbstract:
+        _ = kwargs
         return SzConfigManager(grpc_channel=self.channel)
 
-    def create_sz_diagnostic(self) -> SzDiagnosticAbstract:
+    def create_sz_diagnostic(self, **kwargs: Any) -> SzDiagnosticAbstract:
+        _ = kwargs
         return SzDiagnostic(grpc_channel=self.channel)
 
-    def create_sz_engine(self) -> SzEngineAbstract:
+    def create_sz_engine(self, **kwargs: Any) -> SzEngineAbstract:
+        _ = kwargs
         return SzEngine(grpc_channel=self.channel)
 
-    def create_sz_product(self) -> SzProductAbstract:
+    def create_sz_product(self, **kwargs: Any) -> SzProductAbstract:
+        _ = kwargs
         return SzProduct(grpc_channel=self.channel)
+
+    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
+        _ = kwargs
+
+        sz_diagonstic = SzDiagnostic(grpc_channel=self.channel)
+        sz_diagonstic._reinitialize(config_id=config_id)  # pylint: disable=W0212
+
+        sz_engine = SzEngine(grpc_channel=self.channel)
+        sz_engine._reinitialize(config_id=config_id)  # pylint: disable=W0212

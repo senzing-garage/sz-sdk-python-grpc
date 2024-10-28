@@ -72,16 +72,16 @@ class SzProduct(SzProductAbstract):
     # SzProduct methods
     # -------------------------------------------------------------------------
 
-    def destroy(self, **kwargs: Any) -> None:
+    def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
-    def initialize(
+    def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name

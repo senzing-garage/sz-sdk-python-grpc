@@ -4,3 +4,56 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+test = ["pytest", "coverage"]
+
+[tool.bandit]
+skips = ["B101"]
+
+[tool.flake8]
+extend-ignore = ["E203", "E501", "E704", "W503"]
+max-line-length = 88
+
+[tool.isort]
+profile = "black"
+skip_glob = ["src/senzing_grpc/pb2_grpc/*"]
+src_paths = ["examples", "src", "tests"]
+
+[[tool.mypy.overrides]]
+module = "senzing_grpc.*"
+disable_error_code = [
+    "attr-defined",
+    "no-untyped-call"
+]
+follow_imports = "skip"
+strict = "true"
+
+[[tool.mypy.overrides]]
+module = "pytest_schema.*"
+ignore_missing_imports = "true"
+
+[[tool.mypy.overrides]]
+module = "grpc.*"
+ignore_missing_imports = "true"
+
+[tool.pylint]
+ignored-argument-names = "args|kwargs"
+disable = [
+    "duplicate-code",
+    "line-too-long",
+    "missing-function-docstring",
+    "missing-module-docstring",
+    "too-many-arguments",
+    "too-many-positional-arguments",
+    "too-many-public-methods"
+]
+ignore = [
+    "__init__.py",
+    "docs/source/conf.py"
+]
+notes = [
+    "FIXME"
+]
+
+

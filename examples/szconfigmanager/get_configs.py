@@ -2,14 +2,16 @@
 
 import grpc
 
-from senzing_grpc import SzAbstractFactory, SzError
+from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters, SzError
+
+FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+}
 
 try:
-    sz_abstract_factory = SzAbstractFactory(
-        grpc_channel=grpc.insecure_channel("localhost:8261")
-    )
+    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
     sz_configmanager = sz_abstract_factory.create_sz_configmanager()
     CONFIG_LIST = sz_configmanager.get_configs()
-    print(CONFIG_LIST[:66], "...")
+    print(f"\nFile {__file__}:\n{CONFIG_LIST}\n")
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nError in {__file__}:\n{err}\n")
