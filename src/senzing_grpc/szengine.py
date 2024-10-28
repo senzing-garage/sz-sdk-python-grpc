@@ -247,9 +247,9 @@ class SzEngine(SzEngineAbstract):
         self,
         entity_ids: List[int],
         max_degrees: int,
-        build_out_degree: int,
+        build_out_degrees: int,
         build_out_max_entities: int,
-        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
@@ -257,7 +257,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByEntityIdRequest(  # type: ignore[unused-ignore]
                 entityIds=entity_ids_json(entity_ids),
                 maxDegrees=max_degrees,
-                buildOutDegrees=build_out_degree,
+                buildOutDegrees=build_out_degrees,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
@@ -270,9 +270,9 @@ class SzEngine(SzEngineAbstract):
         self,
         record_keys: List[Tuple[str, str]],
         max_degrees: int,
-        build_out_degree: int,
+        build_out_degrees: int,
         build_out_max_entities: int,
-        flags: int = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
@@ -280,7 +280,7 @@ class SzEngine(SzEngineAbstract):
             request = szengine_pb2.FindNetworkByRecordIdRequest(  # type: ignore[unused-ignore]
                 recordKeys=record_keys_json(record_keys),
                 maxDegrees=max_degrees,
-                buildOutDegrees=build_out_degree,
+                buildOutDegrees=build_out_degrees,
                 buildOutMaxEntities=build_out_max_entities,
                 flags=flags,
             )
