@@ -92,6 +92,7 @@ class SzConfigManager(SzConfigManagerAbstract):
 
     def _destroy(self, **kwargs: Any) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
+        _ = kwargs
 
     def get_config(self, config_id: int, **kwargs: Any) -> str:
         _ = kwargs

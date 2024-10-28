@@ -111,9 +111,6 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
         _ = kwargs
         return SzProduct(grpc_channel=self.channel)
 
-    def destroy(self, **kwargs: Any) -> None:
-        _ = kwargs
-
     def reinitialize(self, config_id: int, **kwargs: Any) -> None:
         _ = kwargs
 
