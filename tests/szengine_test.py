@@ -444,11 +444,11 @@ def test_find_network_by_entity_id(sz_engine: SzEngineTest) -> None:
         get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1002"),
     ]
     max_degrees = 2
-    build_out_degree = 1
+    build_out_degrees = 1
     build_out_max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     actual = sz_engine.find_network_by_entity_id(
-        entity_ids, max_degrees, build_out_degree, build_out_max_entities, flags
+        entity_ids, max_degrees, build_out_degrees, build_out_max_entities, flags
     )
     delete_records(sz_engine, test_records)
     actual_as_dict = json.loads(actual)
@@ -459,12 +459,12 @@ def test_find_network_by_entity_id_bad_entity_ids(sz_engine: SzEngineTest) -> No
     """Test SzEngine().find_network_by_entity_id()."""
     bad_entity_list = [0, 1]
     max_degrees = 2
-    build_out_degree = 1
+    build_out_degrees = 1
     max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.find_network_by_entity_id(
-            bad_entity_list, max_degrees, build_out_degree, max_entities, flags
+            bad_entity_list, max_degrees, build_out_degrees, max_entities, flags
         )
 
 
@@ -476,11 +476,11 @@ def test_find_network_by_record_id(sz_engine: SzEngineTest) -> None:
     ]
     add_records(sz_engine, record_list)
     max_degrees = 2
-    build_out_degree = 1
+    build_out_degrees = 1
     max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     actual = sz_engine.find_network_by_record_id(
-        record_list, max_degrees, build_out_degree, max_entities, flags
+        record_list, max_degrees, build_out_degrees, max_entities, flags
     )
     delete_records(sz_engine, record_list)
     actual_as_dict = json.loads(actual)
@@ -496,12 +496,12 @@ def test_find_network_by_record_id_bad_data_source_code(
         ("XXXX", "9998"),
     ]
     max_degrees = 2
-    build_out_degree = 1
+    build_out_degrees = 1
     max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     with pytest.raises(SzBadInputError):
         _ = sz_engine.find_network_by_record_id(
-            bad_record_list, max_degrees, build_out_degree, max_entities, flags
+            bad_record_list, max_degrees, build_out_degrees, max_entities, flags
         )
 
 
@@ -512,12 +512,12 @@ def test_find_network_by_record_id_bad_record_ids(sz_engine: SzEngineTest) -> No
         ("CUSTOMERS", "9998"),
     ]
     max_degrees = 2
-    build_out_degree = 1
+    build_out_degrees = 1
     max_entities = 10
     flags = SzEngineFlags.SZ_FIND_NETWORK_DEFAULT_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.find_network_by_record_id(
-            bad_record_list, max_degrees, build_out_degree, max_entities, flags
+            bad_record_list, max_degrees, build_out_degrees, max_entities, flags
         )
 
 
