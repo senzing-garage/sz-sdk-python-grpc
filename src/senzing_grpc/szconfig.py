@@ -82,7 +82,7 @@ class SzConfig(SzConfigAbstract):
         _ = kwargs
         try:
             request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
-                configHandle=config_handle, dataSourceCode=data_source_code
+                configHandle=config_handle, dataSourceCode=as_str(data_source_code)
             )
             response = self.stub.AddDataSource(request)
             return str(response.result)
@@ -111,7 +111,7 @@ class SzConfig(SzConfigAbstract):
     ) -> None:
         _ = kwargs
         try:
-            request = szconfig_pb2.DeleteDataSourceRequest(configHandle=config_handle, dataSourceCode=data_source_code)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.DeleteDataSourceRequest(configHandle=config_handle, dataSourceCode=as_str(data_source_code))  # type: ignore[unused-ignore]
             self.stub.DeleteDataSource(request)
         except Exception as err:
             raise new_exception(err) from err

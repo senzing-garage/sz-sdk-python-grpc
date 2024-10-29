@@ -84,8 +84,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.AddRecordRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 recordDefinition=as_str(record_definition),
                 flags=flags,
             )
@@ -123,8 +123,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.DeleteRecord(request)
@@ -145,7 +145,7 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.ExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
-                csvColumnList=csv_column_list,
+                csvColumnList=as_str(csv_column_list),
                 flags=flags,
             )
             response = self.stub.ExportCsvEntityReport(request)
@@ -165,7 +165,7 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.StreamExportCsvEntityReportRequest(  # type: ignore[unused-ignore]
-                csvColumnList=csv_column_list, flags=flags
+                csvColumnList=as_str(csv_column_list), flags=flags
             )
             for item in self.stub.StreamExportCsvEntityReport(request):
                 if item.result:
@@ -234,8 +234,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.FindInterestingEntitiesByRecordIdRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.FindInterestingEntitiesByRecordId(request)
@@ -330,10 +330,10 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.FindPathByRecordIdRequest(  # type: ignore[unused-ignore]
-                startDataSourceCode=start_data_source_code,
-                startRecordId=start_record_id,
-                endDataSourceCode=end_data_source_code,
-                endRecordId=end_record_id,
+                startDataSourceCode=as_str(start_data_source_code),
+                startRecordId=as_str(start_record_id),
+                endDataSourceCode=as_str(end_data_source_code),
+                endRecordId=as_str(end_record_id),
                 maxDegrees=max_degrees,
                 avoidRecordKeys=avoid_record_keys_json(avoid_record_keys),
                 requiredDataSources=required_data_sources_json(required_data_sources),
@@ -380,8 +380,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.GetEntityByRecordIdRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.GetEntityByRecordId(request)
@@ -399,8 +399,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.GetRecordRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.GetRecord(request)
@@ -478,7 +478,7 @@ class SzEngine(SzEngineAbstract):
     def preprocess_record(
         self,
         record_definition: str,
-        flags: int = 0,
+        flags: int = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS,
         **kwargs: Any,
     ) -> str:
         _ = kwargs
@@ -527,8 +527,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.ReevaluateRecordRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.ReevaluateRecord(request)
@@ -554,8 +554,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.SearchByAttributesRequest(  # type: ignore[unused-ignore]
-                attributes=attributes,
-                searchProfile=search_profile,
+                attributes=as_str(attributes),
+                searchProfile=as_str(search_profile),
                 flags=flags,
             )
             response = self.stub.SearchByAttributes(request)
@@ -593,8 +593,8 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.WhyRecordInEntityRequest(  # type: ignore[unused-ignore]
-                dataSourceCode=data_source_code,
-                recordId=record_id,
+                dataSourceCode=as_str(data_source_code),
+                recordId=as_str(record_id),
                 flags=flags,
             )
             response = self.stub.WhyRecordInEntity(request)
@@ -614,10 +614,10 @@ class SzEngine(SzEngineAbstract):
         _ = kwargs
         try:
             request = szengine_pb2.WhyRecordsRequest(  # type: ignore[unused-ignore]
-                dataSourceCode1=data_source_code_1,
-                recordId1=record_id_1,
-                dataSourceCode2=data_source_code_2,
-                recordId2=record_id_2,
+                dataSourceCode1=as_str(data_source_code_1),
+                recordId1=as_str(record_id_1),
+                dataSourceCode2=as_str(data_source_code_2),
+                recordId2=as_str(record_id_2),
                 flags=flags,
             )
             response = self.stub.WhyRecords(request)

@@ -75,7 +75,7 @@ class SzConfigManager(SzConfigManagerAbstract):
 
     def add_config(
         self,
-        config_definition: Union[str, Dict[Any, Any]],
+        config_definition: str,
         config_comment: str,
         **kwargs: Any,
     ) -> int:
