@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning].
 ### Changed in 0.3.2
 
 - Update dependencies
--
 
 ## [0.3.1] - 2024-10-28
 
