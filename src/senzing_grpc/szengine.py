@@ -23,7 +23,9 @@ __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2024-07-30"
 
-SENZING_PRODUCT_ID = "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+SENZING_PRODUCT_ID = (
+    "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+)
 
 # -----------------------------------------------------------------------------
 # SzEngine class
@@ -55,9 +57,7 @@ class SzEngine(SzEngineAbstract):
 
     def __enter__(
         self,
-    ) -> (
-        Any
-    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
+    ) -> Any:  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
         """Context Manager method."""
         return self
 
@@ -173,9 +173,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def export_json_entity_report(
-        self, flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS, **kwargs: Any
-    ) -> int:
+    def export_json_entity_report(self, flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS, **kwargs: Any) -> int:
         _ = kwargs
         try:
             request = szengine_pb2.ExportJsonEntityReportRequest(  # type: ignore[unused-ignore]
@@ -194,9 +192,7 @@ class SzEngine(SzEngineAbstract):
         """TODO: Add method docstring to export_json_entity_report_iterator."""
         _ = kwargs
         try:
-            request = szengine_pb2.StreamExportJsonEntityReportRequest(  # type: ignore[unused-ignore]
-                flags=flags
-            )
+            request = szengine_pb2.StreamExportJsonEntityReportRequest(flags=flags)  # type: ignore[unused-ignore]
             for item in self.stub.StreamExportJsonEntityReport(request):
                 if item.result:
                     yield item.result
@@ -214,9 +210,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_interesting_entities_by_entity_id(
-        self, entity_id: int, flags: int = 0, **kwargs: Any
-    ) -> str:
+    def find_interesting_entities_by_entity_id(self, entity_id: int, flags: int = 0, **kwargs: Any) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.FindInterestingEntitiesByEntityIdRequest(  # type: ignore[unused-ignore]
@@ -521,9 +515,7 @@ class SzEngine(SzEngineAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def reevaluate_record(
-        self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any
-    ) -> str:
+    def reevaluate_record(self, data_source_code: str, record_id: str, flags: int = 0, **kwargs: Any) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.ReevaluateRecordRequest(  # type: ignore[unused-ignore]
@@ -641,9 +633,7 @@ def entity_ids_json(entity_ids: List[int]) -> str:
 def record_keys_json(record_keys: List[Tuple[str, str]]) -> str:
     record_key_list = []
     for record_key in record_keys:
-        record_key_list.append(
-            {"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]}
-        )
+        record_key_list.append({"DATA_SOURCE": record_key[0], "RECORD_ID": record_key[1]})
     return json.dumps({"RECORDS": record_key_list})
 
 
@@ -657,9 +647,7 @@ def avoid_entity_ids_json(avoid_entity_ids: Optional[List[int]] = None) -> str:
     return result
 
 
-def avoid_record_keys_json(
-    avoid_record_keys: Optional[List[Tuple[str, str]]] = None
-) -> str:
+def avoid_record_keys_json(avoid_record_keys: Optional[List[Tuple[str, str]]] = None) -> str:
     result = ""
     if avoid_record_keys:
         avoid_record_keys_list = []
