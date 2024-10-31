@@ -24,7 +24,9 @@ __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2024-07-30"
 
-SENZING_PRODUCT_ID = "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+SENZING_PRODUCT_ID = (
+    "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+)
 
 # -----------------------------------------------------------------------------
 # SzConfigManager class
@@ -55,9 +57,7 @@ class SzConfigManager(SzConfigManagerAbstract):
 
     def __enter__(
         self,
-    ) -> (
-        Any
-    ):  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
+    ) -> Any:  # TODO: Replace "Any" with "Self" once python 3.11 is lowest supported python version.
         """Context Manager method."""
         return self
 
