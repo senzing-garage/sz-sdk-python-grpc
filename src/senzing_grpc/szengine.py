@@ -491,7 +491,7 @@ class SzEngine(SzEngineAbstract):
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = kwargs
 
-    def process_redo_record(self, redo_record: str, flags: int, **kwargs: Any) -> str:
+    def process_redo_record(self, redo_record: str, flags: int = 0, **kwargs: Any) -> str:
         _ = kwargs
         try:
             request = szengine_pb2.ProcessRedoRecordRequest(  # type: ignore[unused-ignore]

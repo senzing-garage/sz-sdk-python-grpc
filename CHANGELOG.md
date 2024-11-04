@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.3] - 2024-11-04
+
+### Changed in 0.3.4
+
+- Fix method signature
+
 ## [0.3.2] - 2024-10-29
 
 ### Changed in 0.3.2
