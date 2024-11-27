@@ -22,33 +22,33 @@ FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
 # -----------------------------------------------------------------------------
 
 
-def test_create_sz_config(sz_abstract_factory: SzAbstractFactory) -> None:
+def test_create_config(sz_abstract_factory: SzAbstractFactory) -> None:
     """Create SzConfig."""
-    actual = sz_abstract_factory.create_sz_config()
+    actual = sz_abstract_factory.create_config()
     assert isinstance(actual, SzConfig)
 
 
-def test_create_sz_configmanager(sz_abstract_factory: SzAbstractFactory) -> None:
+def test_create_configmanager(sz_abstract_factory: SzAbstractFactory) -> None:
     """Create SzConfigManager."""
-    actual = sz_abstract_factory.create_sz_configmanager()
+    actual = sz_abstract_factory.create_configmanager()
     assert isinstance(actual, SzConfigManager)
 
 
-def test_create_sz_diagnostic(sz_abstract_factory: SzAbstractFactory) -> None:
+def test_create_diagnostic(sz_abstract_factory: SzAbstractFactory) -> None:
     """Create SzDiagnostic."""
-    actual = sz_abstract_factory.create_sz_diagnostic()
+    actual = sz_abstract_factory.create_diagnostic()
     assert isinstance(actual, SzDiagnostic)
 
 
-def test_create_sz_engine(sz_abstract_factory: SzAbstractFactory) -> None:
+def test_create_engine(sz_abstract_factory: SzAbstractFactory) -> None:
     """Create SzEngine."""
-    actual = sz_abstract_factory.create_sz_engine()
+    actual = sz_abstract_factory.create_engine()
     assert isinstance(actual, SzEngine)
 
 
-def test_create_sz_product(sz_abstract_factory: SzAbstractFactory) -> None:
+def test_create_product(sz_abstract_factory: SzAbstractFactory) -> None:
     """Create SzProduct."""
-    actual = sz_abstract_factory.create_sz_product()
+    actual = sz_abstract_factory.create_product()
     assert isinstance(actual, SzProduct)
 
 
@@ -59,8 +59,8 @@ def test_reinitialize(sz_abstract_factory: SzAbstractFactory) -> None:
 
     # Create Senzing objects.
 
-    sz_config = sz_abstract_factory.create_sz_config()
-    sz_configmanager = sz_abstract_factory.create_sz_configmanager()
+    sz_config = sz_abstract_factory.create_config()
+    sz_configmanager = sz_abstract_factory.create_configmanager()
 
     # Get existing Senzing configuration.
 
@@ -103,7 +103,7 @@ def test_context() -> None:
     grpc_channel = grpc.insecure_channel(grpc_url)
     with SzAbstractFactory(grpc_channel=grpc_channel) as actual:
         assert isinstance(actual, SzAbstractFactory)
-        sz_config = actual.create_sz_config()
+        sz_config = actual.create_config()
         assert isinstance(sz_config, SzConfig)
 
 

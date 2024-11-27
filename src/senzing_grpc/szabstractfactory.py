@@ -89,23 +89,23 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
     # SzAbstractFactory methods
     # -------------------------------------------------------------------------
 
-    def create_sz_config(self, **kwargs: Any) -> SzConfigAbstract:
+    def create_config(self, **kwargs: Any) -> SzConfigAbstract:
         _ = kwargs
         return SzConfig(grpc_channel=self.channel)
 
-    def create_sz_configmanager(self, **kwargs: Any) -> SzConfigManagerAbstract:
+    def create_configmanager(self, **kwargs: Any) -> SzConfigManagerAbstract:
         _ = kwargs
         return SzConfigManager(grpc_channel=self.channel)
 
-    def create_sz_diagnostic(self, **kwargs: Any) -> SzDiagnosticAbstract:
+    def create_diagnostic(self, **kwargs: Any) -> SzDiagnosticAbstract:
         _ = kwargs
         return SzDiagnostic(grpc_channel=self.channel)
 
-    def create_sz_engine(self, **kwargs: Any) -> SzEngineAbstract:
+    def create_engine(self, **kwargs: Any) -> SzEngineAbstract:
         _ = kwargs
         return SzEngine(grpc_channel=self.channel)
 
-    def create_sz_product(self, **kwargs: Any) -> SzProductAbstract:
+    def create_product(self, **kwargs: Any) -> SzProductAbstract:
         _ = kwargs
         return SzProduct(grpc_channel=self.channel)
 

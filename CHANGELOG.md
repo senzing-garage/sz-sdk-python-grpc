@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-## [0.3.3] - 2024-11-04
+## [0.3.5] - 2024-11-26
+
+### Changed in 0.3.5
+
+- In SzFactoryAbstract change `create_sz_` to `create_`
+
+## [0.3.4] - 2024-11-04
 
 ### Changed in 0.3.4
 
