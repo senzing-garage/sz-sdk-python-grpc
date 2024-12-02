@@ -77,9 +77,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         self,
         config_definition: str,
         config_comment: str,
-        **kwargs: Any,
     ) -> int:
-        _ = kwargs
         try:
             request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
                 configDefinition=as_str(config_definition),
@@ -90,12 +88,10 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self, **kwargs: Any) -> None:
+    def _destroy(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
-        _ = kwargs
 
-    def get_config(self, config_id: int, **kwargs: Any) -> str:
-        _ = kwargs
+    def get_config(self, config_id: int) -> str:
         try:
             request = szconfigmanager_pb2.GetConfigRequest(configId=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
@@ -103,8 +99,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_configs(self, **kwargs: Any) -> str:
-        _ = kwargs
+    def get_configs(self) -> str:
         try:
             request = szconfigmanager_pb2.GetConfigsRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetConfigs(request)
@@ -112,8 +107,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_default_config_id(self, **kwargs: Any) -> int:
-        _ = kwargs
+    def get_default_config_id(self) -> int:
         try:
             request = szconfigmanager_pb2.GetDefaultConfigIdRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetDefaultConfigId(request)
@@ -126,18 +120,13 @@ class SzConfigManager(SzConfigManagerAbstract):
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
-        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
         _ = settings
         _ = verbose_logging
-        _ = kwargs
 
-    def replace_default_config_id(
-        self, current_default_config_id: int, new_default_config_id: int, **kwargs: Any
-    ) -> None:
-        _ = kwargs
+    def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
                 currentDefaultConfigId=current_default_config_id,
@@ -147,8 +136,7 @@ class SzConfigManager(SzConfigManagerAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def set_default_config_id(self, config_id: int, **kwargs: Any) -> None:
-        _ = kwargs
+    def set_default_config_id(self, config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
                 configId=config_id,

@@ -72,25 +72,21 @@ class SzProduct(SzProductAbstract):
     # SzProduct methods
     # -------------------------------------------------------------------------
 
-    def _destroy(self, **kwargs: Any) -> None:
+    def _destroy(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
-        _ = kwargs
 
     def _initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
         verbose_logging: int = 0,
-        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
         _ = settings
         _ = verbose_logging
-        _ = kwargs
 
-    def get_license(self, **kwargs: Any) -> str:
-        _ = kwargs
+    def get_license(self) -> str:
         try:
             request = szproduct_pb2.GetLicenseRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetLicense(request)
@@ -98,8 +94,7 @@ class SzProduct(SzProductAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_version(self, **kwargs: Any) -> str:
-        _ = kwargs
+    def get_version(self) -> str:
         try:
             request = szproduct_pb2.GetVersionRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetVersion(request)
