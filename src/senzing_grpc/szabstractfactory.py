@@ -89,29 +89,22 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
     # SzAbstractFactory methods
     # -------------------------------------------------------------------------
 
-    def create_config(self, **kwargs: Any) -> SzConfigAbstract:
-        _ = kwargs
+    def create_config(self) -> SzConfigAbstract:
         return SzConfig(grpc_channel=self.channel)
 
-    def create_configmanager(self, **kwargs: Any) -> SzConfigManagerAbstract:
-        _ = kwargs
+    def create_configmanager(self) -> SzConfigManagerAbstract:
         return SzConfigManager(grpc_channel=self.channel)
 
-    def create_diagnostic(self, **kwargs: Any) -> SzDiagnosticAbstract:
-        _ = kwargs
+    def create_diagnostic(self) -> SzDiagnosticAbstract:
         return SzDiagnostic(grpc_channel=self.channel)
 
-    def create_engine(self, **kwargs: Any) -> SzEngineAbstract:
-        _ = kwargs
+    def create_engine(self) -> SzEngineAbstract:
         return SzEngine(grpc_channel=self.channel)
 
-    def create_product(self, **kwargs: Any) -> SzProductAbstract:
-        _ = kwargs
+    def create_product(self) -> SzProductAbstract:
         return SzProduct(grpc_channel=self.channel)
 
-    def reinitialize(self, config_id: int, **kwargs: Any) -> None:
-        _ = kwargs
-
+    def reinitialize(self, config_id: int) -> None:
         sz_diagonstic = SzDiagnostic(grpc_channel=self.channel)
         sz_diagonstic._reinitialize(config_id=config_id)  # pylint: disable=W0212
 

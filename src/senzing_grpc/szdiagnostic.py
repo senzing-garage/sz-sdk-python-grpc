@@ -73,8 +73,7 @@ class SzDiagnostic(SzDiagnosticAbstract):
     # SzDiagnostic methods
     # -------------------------------------------------------------------------
 
-    def check_datastore_performance(self, seconds_to_run: int, **kwargs: Any) -> str:
-        _ = kwargs
+    def check_datastore_performance(self, seconds_to_run: int) -> str:
         try:
             request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckDatastorePerformance(request)
@@ -82,12 +81,10 @@ class SzDiagnostic(SzDiagnosticAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self, **kwargs: Any) -> None:
+    def _destroy(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
-        _ = kwargs
 
-    def get_datastore_info(self, **kwargs: Any) -> str:
-        _ = kwargs
+    def get_datastore_info(self) -> str:
         try:
             request = szdiagnostic_pb2.GetDatastoreInfoRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetDatastoreInfo(request)
@@ -95,10 +92,9 @@ class SzDiagnostic(SzDiagnosticAbstract):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_feature(self, feature_id: int, **kwargs: Any) -> str:
+    def get_feature(self, feature_id: int) -> str:
         """TODO: Add get_feature()"""
         _ = feature_id
-        _ = kwargs
         try:
             request = szdiagnostic_pb2.GetFeatureRequest(featureId=feature_id)  # type: ignore[unused-ignore]
             response = self.stub.GetFeature(request)
@@ -112,21 +108,17 @@ class SzDiagnostic(SzDiagnosticAbstract):
         settings: Union[str, Dict[Any, Any]],
         config_id: Optional[int] = None,
         verbose_logging: int = 0,
-        **kwargs: Any,
     ) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
         _ = instance_name
         _ = settings
         _ = config_id
         _ = verbose_logging
-        _ = kwargs
 
-    def purge_repository(self, **kwargs: Any) -> None:
+    def purge_repository(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
-        _ = kwargs
 
-    def _reinitialize(self, config_id: int, **kwargs: Any) -> None:
-        _ = kwargs
+    def _reinitialize(self, config_id: int) -> None:
         try:
             request = szdiagnostic_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)
