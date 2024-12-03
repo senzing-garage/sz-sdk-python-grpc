@@ -112,6 +112,7 @@ More can be seen in [Examples].
 [Downloads]: https://pepy.tech/project/senzing-grpc
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
+[License Badge]: https://img.shields.io/badge/License-Apache2-brightgreen.svg
 [PEP8 Badge]: https://img.shields.io/badge/code%20style-pep8-orange.svg
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [PyPI version Badge]: https://badge.fury.io/py/senzing-grpc.svg
