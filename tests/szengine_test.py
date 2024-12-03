@@ -788,10 +788,12 @@ def test_how_entity_by_entity_id_bad_entity_id(sz_engine: SzEngineTest) -> None:
 
 
 def test_preprocess_record(sz_engine: SzEngineTest) -> None:
-    """Test SzEngine().add_record()."""
-    record_definition: Dict[Any, Any] = DATA_SOURCES.get("CUSTOMERS", {}).get("1001", {})
-    with pytest.raises(SzBadInputError):
-        sz_engine.preprocess_record(json.dumps(record_definition))
+    """Test SzEngine().preprocess_record()."""
+    record_definition: str = DATA_SOURCES.get("CUSTOMERS", {}).get("1001", {}).get("Json", {})
+    flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+    actual = sz_engine.preprocess_record(record_definition, flags)
+    actual_as_dict = json.loads(actual)
+    assert schema(preprocess_record_schema) == actual_as_dict
 
 
 def test_preprocess_record_bad_empty_record(sz_engine: SzEngineTest) -> None:
