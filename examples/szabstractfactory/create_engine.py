@@ -10,6 +10,6 @@ FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
 
 try:
     sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
-    sz_configmanager = sz_abstract_factory.create_configmanager()
+    sz_engine = sz_abstract_factory.create_engine()
 except SzError as err:
-    print(f"\nError:\n{err}\n")
+    print(f"\nFile {__file__}:\nError:\n{err}\n")

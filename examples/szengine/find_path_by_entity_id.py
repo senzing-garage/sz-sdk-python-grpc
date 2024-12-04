@@ -12,7 +12,7 @@ from senzing_grpc import (
 )
 
 AVOID_ENTITY_IDS: List[int] = []
-END_ENTITY_ID = 35
+END_ENTITY_ID = 4
 FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
@@ -32,6 +32,6 @@ try:
         REQUIRED_DATA_SOURCES,
         FLAGS,
     )
-    print(f"\n{__file__}:\n{RESULT}\n")
+    print(f"\nFile {__file__}:\n{RESULT}\n")
 except SzError as err:
-    print(f"\nError in {__file__}:\n{err}\n")
+    print(f"\nFile {__file__}:\nError:\n{err}\n")
