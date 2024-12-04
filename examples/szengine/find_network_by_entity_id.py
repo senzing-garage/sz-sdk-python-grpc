@@ -10,7 +10,7 @@ from senzing_grpc import (
 )
 
 BUILD_OUT_DEGREES = 1
-ENTITY_LIST = [1, 35]
+ENTITY_LIST = [1, 4]
 FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }

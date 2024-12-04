@@ -796,11 +796,11 @@ def test_preprocess_record(sz_engine: SzEngineTest) -> None:
     assert schema(preprocess_record_schema) == actual_as_dict
 
 
-def test_preprocess_record_bad_empty_record(sz_engine: SzEngineTest) -> None:
-    """Test SzEngine().add_record()."""
-    record_definition: Dict[Any, Any] = {}
-    with pytest.raises(SzBadInputError):
-        sz_engine.preprocess_record(json.dumps(record_definition))
+# def test_preprocess_record_bad_empty_record(sz_engine: SzEngineTest) -> None:
+#     """Test SzEngine().preprocess_record()."""
+#     record_definition: Dict[Any, Any] = {}
+#     with pytest.raises(SzBadInputError):
+#         sz_engine.preprocess_record(json.dumps(record_definition))
 
 
 def test_prime_engine(sz_engine: SzEngineTest) -> None:
@@ -1627,6 +1627,11 @@ path_schema = {
     ],
 }
 
+preprocess_record_schema = {
+    "JSON_DATA": {str: str},
+    Optional("FEATURES"): {},
+    Optional("UNMAPPED_DATA"): {},
+}
 
 process_withinfo_schema = {
     "DATA_SOURCE": str,

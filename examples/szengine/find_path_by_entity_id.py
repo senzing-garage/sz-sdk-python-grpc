@@ -12,7 +12,7 @@ from senzing_grpc import (
 )
 
 AVOID_ENTITY_IDS: List[int] = []
-END_ENTITY_ID = 35
+END_ENTITY_ID = 4
 FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }

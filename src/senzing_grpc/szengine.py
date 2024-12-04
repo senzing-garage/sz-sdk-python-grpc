@@ -435,8 +435,7 @@ class SzEngine(SzEngineAbstract):
                 recordDefinition=as_str(record_definition),
                 flags=flags,
             )
-            self.stub.PreprocessRecord(request)
-            response = self.stub.AddRecord(request)
+            response = self.stub.PreprocessRecord(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
