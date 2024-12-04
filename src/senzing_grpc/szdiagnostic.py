@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Optional, Type, Union
 
 import grpc
-from senzing_abstract import SzDiagnosticAbstract
+from senzing import SzDiagnostic as SzDiagnosticAbstract
 
 from .pb2_grpc import szdiagnostic_pb2, szdiagnostic_pb2_grpc
 from .szhelpers import new_exception

@@ -11,7 +11,8 @@ from types import TracebackType
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import grpc
-from senzing_abstract import SzEngineAbstract, SzEngineFlags
+from senzing import SzEngine as SzEngineAbstract
+from senzing import SzEngineFlags
 
 from .pb2_grpc import szengine_pb2, szengine_pb2_grpc
 from .szhelpers import as_str, new_exception

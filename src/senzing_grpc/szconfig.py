@@ -10,11 +10,9 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing_abstract import SzConfigAbstract
+from senzing import SzConfig as SzConfigAbstract
 
 from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
-
-# from .szabstract.szconfig_abstract import SzConfigAbstract
 from .szhelpers import as_str, new_exception
 
 # Metadata

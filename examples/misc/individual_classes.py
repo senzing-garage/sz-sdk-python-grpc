@@ -1,10 +1,7 @@
 #! /usr/bin/env python3
 
 import grpc
-
-from senzing_grpc import (
-    SzAbstractFactory,
-    SzAbstractFactoryParameters,
+from senzing import (
     SzConfig,
     SzConfigManager,
     SzDiagnostic,
@@ -12,6 +9,8 @@ from senzing_grpc import (
     SzError,
     SzProduct,
 )
+
+from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters
 
 FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),

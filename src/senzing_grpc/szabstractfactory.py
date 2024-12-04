@@ -10,24 +10,18 @@ from types import TracebackType
 from typing import Any, Type, TypedDict, Union
 
 import grpc
-from senzing_abstract import (
-    SzAbstractFactoryAbstract,
-    SzConfigAbstract,
-    SzConfigManagerAbstract,
-    SzDiagnosticAbstract,
-    SzEngineAbstract,
-    SzProductAbstract,
-)
+from senzing import SzAbstractFactory as SzAbstractFactoryAbstract
+from senzing import SzConfig, SzConfigManager, SzDiagnostic, SzEngine, SzProduct
 
-from .szconfig import SzConfig
-from .szconfigmanager import SzConfigManager
-from .szdiagnostic import SzDiagnostic
-from .szengine import SzEngine
-from .szproduct import SzProduct
+from .szconfig import SzConfig as SzConfigGrpc
+from .szconfigmanager import SzConfigManager as SzConfigManagerGrpc
+from .szdiagnostic import SzDiagnostic as SzDiagnosticGrpc
+from .szengine import SzEngine as SzEngineGrpc
+from .szproduct import SzProduct as SzProductGrpc
 
 # Metadata
 
-__all__ = ["SzAbstractFactoryAbstract"]
+__all__ = ["SzAbstractFactory"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
 __updated__ = "2024-10-24"
@@ -89,24 +83,24 @@ class SzAbstractFactory(SzAbstractFactoryAbstract):
     # SzAbstractFactory methods
     # -------------------------------------------------------------------------
 
-    def create_config(self) -> SzConfigAbstract:
-        return SzConfig(grpc_channel=self.channel)
+    def create_config(self) -> SzConfig:
+        return SzConfigGrpc(grpc_channel=self.channel)
 
-    def create_configmanager(self) -> SzConfigManagerAbstract:
-        return SzConfigManager(grpc_channel=self.channel)
+    def create_configmanager(self) -> SzConfigManager:
+        return SzConfigManagerGrpc(grpc_channel=self.channel)
 
-    def create_diagnostic(self) -> SzDiagnosticAbstract:
-        return SzDiagnostic(grpc_channel=self.channel)
+    def create_diagnostic(self) -> SzDiagnostic:
+        return SzDiagnosticGrpc(grpc_channel=self.channel)
 
-    def create_engine(self) -> SzEngineAbstract:
-        return SzEngine(grpc_channel=self.channel)
+    def create_engine(self) -> SzEngine:
+        return SzEngineGrpc(grpc_channel=self.channel)
 
-    def create_product(self) -> SzProductAbstract:
-        return SzProduct(grpc_channel=self.channel)
+    def create_product(self) -> SzProduct:
+        return SzProductGrpc(grpc_channel=self.channel)
 
     def reinitialize(self, config_id: int) -> None:
-        sz_diagonstic = SzDiagnostic(grpc_channel=self.channel)
+        sz_diagonstic = SzDiagnosticGrpc(grpc_channel=self.channel)
         sz_diagonstic._reinitialize(config_id=config_id)  # pylint: disable=W0212
 
-        sz_engine = SzEngine(grpc_channel=self.channel)
+        sz_engine = SzEngineGrpc(grpc_channel=self.channel)
         sz_engine._reinitialize(config_id=config_id)  # pylint: disable=W0212

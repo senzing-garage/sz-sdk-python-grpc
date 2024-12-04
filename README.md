@@ -17,7 +17,7 @@ the recommendation is not to use it yet.
 ## Synopsis
 
 The Senzing `sz-sdk-python-grpc` package provides a Python Software Development Kit
-adhering to the abstract classes of [sz-sdk-python-abstract]
+adhering to the abstract classes of [sz-sdk-python]
 that communicates with a [Senzing gRPC server].
 
 [![Python 3.11 Badge]][Python 3.11]
@@ -32,15 +32,15 @@ that communicates with a [Senzing gRPC server].
 The Senzing `sz-sdk-python-grpc` packages enable Python programs to call Senzing library functions
 across a network to a [Senzing gRPC server].
 
-The `sz-sdk-python-grpc` package implements the following [sz-sdk-python-abstract] interfaces:
+The `sz-sdk-python-grpc` package implements the following [sz-sdk-python] interfaces:
 
-1. [SzConfigAbstract]
-1. [SzConfigMgrAbstract]
-1. [SzDiagnosticAbstract]
-1. [SzEngineAbstract]
-1. [SzProductAbstract]
+1. [SzConfig]
+1. [SzConfigMgr]
+1. [SzDiagnostic]
+1. [SzEngine]
+1. [SzProduct]
 
-Other implementations of the [sz-sdk-python-abstract] interface include:
+Other implementations of the [sz-sdk-python] interface include:
 
 - [sz-sdk-python] - for calling Senzing SDK APIs natively
 
@@ -102,7 +102,7 @@ More can be seen in [Examples].
 1. [Examples]
 1. Related artifacts:
     1. [DockerHub]
-1. [sz-sdk-python-abstract package reference]
+1. [sz-sdk-python package reference]
 
 [Coverage badge]: https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.message&url=https%3A%2F%2Fraw.githubusercontent.com%2Fsenzing-garage%2Fsz-sdk-python%2Fpython-coverage-comment-action-data%2Fendpoint.json
 [Coverage]: https://htmlpreview.github.io/?https://github.com/senzing-garage/sz-sdk-python-grpc/blob/python-coverage-comment-action-data/htmlcov/index.html
@@ -123,11 +123,5 @@ More can be seen in [Examples].
 [Senzing gRPC server]: https://github.com/senzing-garage/servegrpc
 [Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
 [Senzing]: https://senzing.com/
-[sz-sdk-python-abstract package reference]: https://hub.senzing.com/sz-sdk-python-abstract/
-[sz-sdk-python-abstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/tree/main/src/senzing_abstract
-[sz-sdk-python]: https://github.com/senzing-garage/sz-sdk-python
-[SzConfigAbstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfig_abstract.py
-[SzConfigMgrAbstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szconfigmanager_abstract.py
-[SzDiagnosticAbstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szdiagnostic_abstract.py
-[SzEngineAbstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szengine_abstract.py
-[SzProductAbstract]: https://github.com/senzing-garage/sz-sdk-python-abstract/blob/main/src/senzing_abstract/szproduct_abstract.py
+[sz-sdk-python package reference]: https://hub.senzing.com/sz-sdk-python/
+[sz-sdk-python]: https://github.com/senzing-garage/sz-sdk-python/tree/main/src/senzing
