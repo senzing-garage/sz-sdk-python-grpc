@@ -4,14 +4,14 @@ import grpc
 import pytest
 from pytest_schema import Regex, schema
 
-from senzing_grpc import SzProductGrpc as SzProductTest
+from senzing_grpc import SzProduct
 
 # -----------------------------------------------------------------------------
 # Testcases
 # -----------------------------------------------------------------------------
 
 
-def test_get_license(sz_product: SzProductTest) -> None:
+def test_get_license(sz_product: SzProduct) -> None:
     """Test Senzing license."""
     actual = sz_product.get_license()
     assert isinstance(actual, str)
@@ -19,7 +19,7 @@ def test_get_license(sz_product: SzProductTest) -> None:
     assert schema(get_license_schema) == actual_as_dict
 
 
-def test_get_version(sz_product: SzProductTest) -> None:
+def test_get_version(sz_product: SzProduct) -> None:
     """Test Senzing version."""
     actual = sz_product.get_version()
     assert isinstance(actual, str)
@@ -36,15 +36,15 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzProductTest(grpc_channel=grpc_channel)
-    assert isinstance(actual, SzProductTest)
+    actual = SzProduct(grpc_channel=grpc_channel)
+    assert isinstance(actual, SzProduct)
 
 
 def test_context_managment() -> None:
     """Test the use of SzProduct in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzProductTest(grpc_channel=grpc_channel) as sz_product:
+    with SzProduct(grpc_channel=grpc_channel) as sz_product:
         actual = sz_product.get_license()
         assert isinstance(actual, str)
         actual_as_dict = json.loads(actual)
@@ -57,13 +57,13 @@ def test_context_managment() -> None:
 
 
 @pytest.fixture(name="sz_product", scope="module")
-def szproduct_fixture() -> SzProductTest:
+def szproduct_fixture() -> SzProduct:
     """
     Single engine object to use for all tests.
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzProductTest(grpc_channel=grpc_channel)
+    result = SzProduct(grpc_channel=grpc_channel)
     return result
 
 

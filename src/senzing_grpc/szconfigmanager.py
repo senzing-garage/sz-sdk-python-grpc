@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing_abstract import SzConfigManagerAbstract
+from senzing import SzConfigManager as SzConfigManagerAbstract
 
 from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
 

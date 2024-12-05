@@ -7,7 +7,7 @@ from typing import Any, Dict, Union
 
 import grpc
 import grpc._channel
-from senzing_abstract import ENGINE_EXCEPTION_MAP, SzError
+from senzing import ENGINE_EXCEPTION_MAP, SzError
 
 # Metadata
 
