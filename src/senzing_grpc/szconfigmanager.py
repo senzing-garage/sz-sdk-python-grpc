@@ -19,10 +19,10 @@ from .szhelpers import as_str, new_exception
 
 # Metadata
 
-__all__ = ["SzConfigManager"]
+__all__ = ["SzConfigManagerGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2024-07-30"
+__updated__ = "2025-01-10"
 
 SENZING_PRODUCT_ID = (
     "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
@@ -33,7 +33,7 @@ SENZING_PRODUCT_ID = (
 # -----------------------------------------------------------------------------
 
 
-class SzConfigManager(SzConfigManagerAbstract):
+class SzConfigManagerGrpc(SzConfigManagerAbstract):
     """
     SzConfigManager module access library over gRPC.
     """

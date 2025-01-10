@@ -1,21 +1,17 @@
 #! /usr/bin/env python3
 
 import grpc
+from senzing import SzEngineFlags, SzError
 
-from senzing_grpc import (
-    SzAbstractFactory,
-    SzAbstractFactoryParameters,
-    SzEngineFlags,
-    SzError,
-)
+from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
 
-FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
 FLAGS = SzEngineFlags.SZ_WITH_INFO
 
 try:
-    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
     sz_engine = sz_abstract_factory.create_engine()
     while sz_engine.count_redo_records() > 0:
         REDO_RECORD = sz_engine.get_redo_record()

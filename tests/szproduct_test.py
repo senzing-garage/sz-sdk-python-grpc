@@ -3,8 +3,9 @@ import json
 import grpc
 import pytest
 from pytest_schema import Regex, schema
+from senzing import SzProduct
 
-from senzing_grpc import SzProduct
+from senzing_grpc import SzProductGrpc
 
 # -----------------------------------------------------------------------------
 # Testcases
@@ -36,7 +37,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzProduct(grpc_channel=grpc_channel)
+    actual = SzProductGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzProduct)
 
 
@@ -44,7 +45,7 @@ def test_context_managment() -> None:
     """Test the use of SzProduct in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzProduct(grpc_channel=grpc_channel) as sz_product:
+    with SzProductGrpc(grpc_channel=grpc_channel) as sz_product:
         actual = sz_product.get_license()
         assert isinstance(actual, str)
         actual_as_dict = json.loads(actual)
@@ -63,7 +64,7 @@ def szproduct_fixture() -> SzProduct:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzProduct(grpc_channel=grpc_channel)
+    result = SzProductGrpc(grpc_channel=grpc_channel)
     return result
 
 

@@ -13,7 +13,7 @@ from senzing import ENGINE_EXCEPTION_MAP, SzError
 
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2023-12-16"
+__updated__ = "2025-01-10"
 
 # -----------------------------------------------------------------------------
 # Helpers for working with parameters
