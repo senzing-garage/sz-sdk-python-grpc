@@ -1,12 +1,9 @@
-from .szabstractfactory import SzAbstractFactory as SzAbstractFactoryGrpc
-from .szabstractfactory import (
-    SzAbstractFactoryParameters as SzAbstractFactoryParametersGrpc,
-)
-from .szconfig import SzConfig as SzConfigGrpc
-from .szconfigmanager import SzConfigManager as SzConfigManagerGrpc
-from .szdiagnostic import SzDiagnostic as SzDiagnosticGrpc
-from .szengine import SzEngine as SzEngineGrpc
-from .szproduct import SzProduct as SzProductGrpc
+from .szabstractfactory import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
+from .szconfig import SzConfigGrpc
+from .szconfigmanager import SzConfigManagerGrpc
+from .szdiagnostic import SzDiagnosticGrpc
+from .szengine import SzEngineGrpc
+from .szproduct import SzProductGrpc
 
 __all__ = [
     "SzAbstractFactoryGrpc",

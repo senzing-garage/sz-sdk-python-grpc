@@ -10,21 +10,27 @@ from types import TracebackType
 from typing import Any, Type, TypedDict, Union
 
 import grpc
-from senzing import SzAbstractFactory as SzAbstractFactoryAbstract
-from senzing import SzConfig, SzConfigManager, SzDiagnostic, SzEngine, SzProduct
+from senzing import (
+    SzAbstractFactory,
+    SzConfig,
+    SzConfigManager,
+    SzDiagnostic,
+    SzEngine,
+    SzProduct,
+)
 
-from .szconfig import SzConfig as SzConfigGrpc
-from .szconfigmanager import SzConfigManager as SzConfigManagerGrpc
-from .szdiagnostic import SzDiagnostic as SzDiagnosticGrpc
-from .szengine import SzEngine as SzEngineGrpc
-from .szproduct import SzProduct as SzProductGrpc
+from .szconfig import SzConfigGrpc
+from .szconfigmanager import SzConfigManagerGrpc
+from .szdiagnostic import SzDiagnosticGrpc
+from .szengine import SzEngineGrpc
+from .szproduct import SzProductGrpc
 
 # Metadata
 
-__all__ = ["SzAbstractFactory"]
+__all__ = ["SzAbstractFactoryGrpc", "SzAbstractFactoryParametersGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2023-11-27"
-__updated__ = "2024-10-24"
+__updated__ = "2025-01-10"
 
 
 # -----------------------------------------------------------------------------
@@ -32,7 +38,7 @@ __updated__ = "2024-10-24"
 # -----------------------------------------------------------------------------
 
 
-class SzAbstractFactoryParameters(TypedDict, total=False):
+class SzAbstractFactoryParametersGrpc(TypedDict, total=False):
     """
     SzAbstractFactoryParameters is used to create a dictionary that can be unpacked when creating an SzAbstractFactory.
     """
@@ -45,7 +51,7 @@ class SzAbstractFactoryParameters(TypedDict, total=False):
 # -----------------------------------------------------------------------------
 
 
-class SzAbstractFactory(SzAbstractFactoryAbstract):
+class SzAbstractFactoryGrpc(SzAbstractFactory):
     """
     SzAbstractFactory module is a factory pattern for accessing Senzing over gRPC.
     """
