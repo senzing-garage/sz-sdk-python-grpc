@@ -1,69 +1,19 @@
-from senzing import (
-    ENGINE_EXCEPTION_MAP,
-    SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION,
-    SZ_NO_ATTRIBUTES,
-    SZ_NO_AVOIDANCES,
-    SZ_NO_FLAGS,
-    SZ_NO_LOGGING,
-    SZ_NO_REQUIRED_DATASOURCES,
-    SZ_NO_SEARCH_PROFILE,
-    SZ_VERBOSE_LOGGING,
-    SZ_WITHOUT_INFO,
-    SzBadInputError,
-    SzConfigurationError,
-    SzDatabaseConnectionLostError,
-    SzDatabaseError,
-    SzEngineFlags,
-    SzError,
-    SzLicenseError,
-    SzNotFoundError,
-    SzNotInitializedError,
-    SzReplaceConflictError,
-    SzRetryableError,
-    SzRetryTimeoutExceededError,
-    SzUnhandledError,
-    SzUnknownDataSourceError,
-    SzUnrecoverableError,
+from .szabstractfactory import SzAbstractFactory as SzAbstractFactoryGrpc
+from .szabstractfactory import (
+    SzAbstractFactoryParameters as SzAbstractFactoryParametersGrpc,
 )
-
-from .szabstractfactory import SzAbstractFactory, SzAbstractFactoryParameters
-from .szconfig import SzConfig
-from .szconfigmanager import SzConfigManager
-from .szdiagnostic import SzDiagnostic
-from .szengine import SzEngine
-from .szproduct import SzProduct
+from .szconfig import SzConfig as SzConfigGrpc
+from .szconfigmanager import SzConfigManager as SzConfigManagerGrpc
+from .szdiagnostic import SzDiagnostic as SzDiagnosticGrpc
+from .szengine import SzEngine as SzEngineGrpc
+from .szproduct import SzProduct as SzProductGrpc
 
 __all__ = [
-    "ENGINE_EXCEPTION_MAP",
-    "SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION",
-    "SZ_NO_ATTRIBUTES",
-    "SZ_NO_AVOIDANCES",
-    "SZ_NO_FLAGS",
-    "SZ_NO_LOGGING",
-    "SZ_NO_REQUIRED_DATASOURCES",
-    "SZ_NO_SEARCH_PROFILE",
-    "SZ_VERBOSE_LOGGING",
-    "SZ_WITHOUT_INFO",
-    "SzAbstractFactory",
-    "SzAbstractFactoryParameters",
-    "SzBadInputError",
-    "SzConfig",
-    "SzConfigManager",
-    "SzConfigurationError",
-    "SzDatabaseConnectionLostError",
-    "SzDatabaseError",
-    "SzDiagnostic",
-    "SzEngine",
-    "SzEngineFlags",
-    "SzError",
-    "SzLicenseError",
-    "SzNotFoundError",
-    "SzNotInitializedError",
-    "SzProduct",
-    "SzReplaceConflictError",
-    "SzRetryableError",
-    "SzRetryTimeoutExceededError",
-    "SzUnhandledError",
-    "SzUnknownDataSourceError",
-    "SzUnrecoverableError",
+    "SzAbstractFactoryGrpc",
+    "SzAbstractFactoryParametersGrpc",
+    "SzConfigGrpc",
+    "SzConfigManagerGrpc",
+    "SzDiagnosticGrpc",
+    "SzEngineGrpc",
+    "SzProductGrpc",
 ]

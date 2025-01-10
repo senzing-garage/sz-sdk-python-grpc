@@ -14,14 +14,14 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters
+from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
     "REFERENCE": TRUTHSET_REFERENCE_RECORDS,
     "WATCHLIST": TRUTHSET_WATCHLIST_RECORDS,
 }
-FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
 
@@ -58,6 +58,6 @@ def add_records(sz_engine_local: SzEngine, record_id_list: List[Tuple[str, str]]
 
 print("\n---- szengine --------------------------------------------------------\n")
 
-sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
 sz_engine = sz_abstract_factory.create_engine()
 add_records(sz_engine, TEST_RECORDS)

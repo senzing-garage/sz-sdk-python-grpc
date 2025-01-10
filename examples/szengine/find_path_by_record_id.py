@@ -3,18 +3,14 @@
 from typing import List, Tuple
 
 import grpc
+from senzing import SzEngineFlags, SzError
 
-from senzing_grpc import (
-    SzAbstractFactory,
-    SzAbstractFactoryParameters,
-    SzEngineFlags,
-    SzError,
-)
+from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
 
 AVOID_RECORD_KEYS: List[Tuple[str, str]] = []
 END_DATA_SOURCE_CODE = "CUSTOMERS"
 END_RECORD_ID = "1009"
-FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
@@ -24,7 +20,7 @@ START_DATA_SOURCE_CODE = "CUSTOMERS"
 START_RECORD_ID = "1001"
 
 try:
-    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
     sz_engine = sz_abstract_factory.create_engine()
     RESULT = sz_engine.find_path_by_record_id(
         START_DATA_SOURCE_CODE,

@@ -6,14 +6,7 @@ from typing import Any, Dict, List, Tuple
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing_truthset import (
-    TRUTHSET_CUSTOMER_RECORDS,
-    TRUTHSET_DATASOURCES,
-    TRUTHSET_REFERENCE_RECORDS,
-    TRUTHSET_WATCHLIST_RECORDS,
-)
-
-from senzing_grpc import (
+from senzing import (
     SZ_NO_FLAGS,
     SZ_WITHOUT_INFO,
     SzBadInputError,
@@ -25,6 +18,14 @@ from senzing_grpc import (
     SzNotFoundError,
     SzUnknownDataSourceError,
 )
+from senzing_truthset import (
+    TRUTHSET_CUSTOMER_RECORDS,
+    TRUTHSET_DATASOURCES,
+    TRUTHSET_REFERENCE_RECORDS,
+    TRUTHSET_WATCHLIST_RECORDS,
+)
+
+from senzing_grpc import SzConfigGrpc, SzConfigManagerGrpc, SzEngineGrpc
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
@@ -69,7 +70,7 @@ RECORD_STR_BAD = (
 
 
 def test_add_truthset_datasources(
-    sz_engine: SzEngine,
+    sz_engine: SzEngineGrpc,
     sz_configmanager: SzConfigManager,
     sz_config: SzConfig,
 ) -> None:
@@ -1033,7 +1034,7 @@ def test_add_record_using_context_managment() -> None:
     """Test the use of SzEngine in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzEngine(grpc_channel=grpc_channel) as sz_engine:
+    with SzEngineGrpc(grpc_channel=grpc_channel) as sz_engine:
         data_source_code = "TEST"
         record_id = "2"
         record_definition = "{}"
@@ -1045,7 +1046,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzEngine(grpc_channel=grpc_channel)
+    actual = SzEngineGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzEngine)
 
 
@@ -1191,7 +1192,7 @@ def szconfig_fixture() -> SzConfig:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfig(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -1202,7 +1203,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     """
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManager(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -1214,7 +1215,7 @@ def szengine_fixture() -> SzEngine:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzEngine(grpc_channel=grpc_channel)
+    result = SzEngineGrpc(grpc_channel=grpc_channel)
     return result
 
 

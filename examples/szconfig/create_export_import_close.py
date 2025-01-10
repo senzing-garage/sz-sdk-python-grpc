@@ -1,15 +1,16 @@
 #! /usr/bin/env python3
 
 import grpc
+from senzing import SzError
 
-from senzing_grpc import SzAbstractFactory, SzAbstractFactoryParameters, SzError
+from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
 
-FACTORY_PARAMETERS: SzAbstractFactoryParameters = {
+FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
     "grpc_channel": grpc.insecure_channel("localhost:8261"),
 }
 
 try:
-    sz_abstract_factory = SzAbstractFactory(**FACTORY_PARAMETERS)
+    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
     sz_config = sz_abstract_factory.create_config()
     config_handle_1 = sz_config.create_config()  # Create first in-memory.
     CONFIG_DEFINITION = sz_config.export_config(config_handle_1)  # Save in-memory to string.

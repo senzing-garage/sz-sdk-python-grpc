@@ -3,14 +3,15 @@ import json
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing_truthset import TRUTHSET_DATASOURCES
-
-from senzing_grpc import (
+from senzing import (
     SzConfig,
     SzConfigManager,
     SzConfigurationError,
     SzReplaceConflictError,
 )
+from senzing_truthset import TRUTHSET_DATASOURCES
+
+from senzing_grpc import SzConfigGrpc, SzConfigManagerGrpc
 
 # -----------------------------------------------------------------------------
 # Testcases
@@ -216,7 +217,7 @@ def test_constructor() -> None:
     """Test constructor."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigManager(grpc_channel=grpc_channel)
+    actual = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     assert isinstance(actual, SzConfigManager)
 
 
@@ -224,7 +225,7 @@ def test_context_managment() -> None:
     """Test the use of SzConfigManagerTest in context."""
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfigManager(grpc_channel=grpc_channel) as sz_configmanager:
+    with SzConfigManagerGrpc(grpc_channel=grpc_channel) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
         actual = sz_configmanager.get_config(config_id)
         actual_as_dict = json.loads(actual)
@@ -244,7 +245,7 @@ def szconfig_fixture() -> SzConfig:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfig(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=grpc_channel)
     return result
 
 
@@ -255,7 +256,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
 
     grpc_url = "localhost:8261"
     grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManager(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
     return result
 
 
