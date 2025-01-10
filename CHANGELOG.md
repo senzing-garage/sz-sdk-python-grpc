@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-01-10
+
+### Changed in 0.4.0
+
+- Rename class names.  Example: from `SzAbstractFactory` to `SzAbstractFactoryGrpc`
+
 ## [0.3.8] - 2024-12-04
 
 ### Added in 0.3.8
