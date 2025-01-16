@@ -10,30 +10,28 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing import SzConfigManager as SzConfigManagerAbstract
+from senzing import SzConfigManager
 
 from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
-
-# from .szexception import translate_exception
 from .szhelpers import as_str, new_exception
 
 # Metadata
 
 __all__ = ["SzConfigManagerGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
-__date__ = "2023-11-27"
-__updated__ = "2025-01-10"
+__date__ = "2025-01-10"
+__updated__ = "2025-01-16"
 
 SENZING_PRODUCT_ID = (
     "5051"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 )
 
 # -----------------------------------------------------------------------------
-# SzConfigManager class
+# SzConfigManagerGrpc class
 # -----------------------------------------------------------------------------
 
 
-class SzConfigManagerGrpc(SzConfigManagerAbstract):
+class SzConfigManagerGrpc(SzConfigManager):
     """
     SzConfigManager module access library over gRPC.
     """
