@@ -18,12 +18,12 @@
 | src/senzing\_grpc/pb2\_grpc/szproduct\_pb2\_grpc.py       |       38 |       15 |     61% |15-16, 19, 54-56, 60-62, 66-81, 99, 126 |
 | src/senzing\_grpc/szabstractfactory.py                    |       36 |        0 |    100% |           |
 | src/senzing\_grpc/szconfig.py                             |       70 |        5 |     93% |100-101, 136-138 |
-| src/senzing\_grpc/szconfigmanager.py                      |       63 |        7 |     89% |107-108, 115-116, 125-127 |
+| src/senzing\_grpc/szconfigmanager.py                      |       63 |        7 |     89% |105-106, 113-114, 123-125 |
 | src/senzing\_grpc/szdiagnostic.py                         |       53 |        8 |     85% |92-93, 113-116, 125-126 |
-| src/senzing\_grpc/szengine.py                             |      286 |       50 |     83% |102-103, 110-111, 145-146, 154-162, 171-172, 179-185, 194-195, 318-319, 333-334, 375-376, 383-384, 424-427, 441-442, 455-456, 466-467, 485-486, 529-538 |
+| src/senzing\_grpc/szengine.py                             |      285 |       50 |     82% |101-102, 109-110, 144-145, 153-161, 170-171, 178-184, 193-194, 317-318, 332-333, 374-375, 382-383, 423-426, 440-441, 454-455, 465-466, 484-485, 528-537 |
 | src/senzing\_grpc/szhelpers.py                            |       36 |        6 |     83% |50, 54-56, 77-78 |
 | src/senzing\_grpc/szproduct.py                            |       37 |        7 |     81% |85-87, 94-95, 102-103 |
-|                                                 **TOTAL** | **1404** |  **562** | **60%** |           |
+|                                                 **TOTAL** | **1403** |  **562** | **60%** |           |
 
 
 ## Setup coverage badge
