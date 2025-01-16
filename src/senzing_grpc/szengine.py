@@ -11,8 +11,7 @@ from types import TracebackType
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import grpc
-from senzing import SzEngine as SzEngineAbstract
-from senzing import SzEngineFlags
+from senzing import SzEngine, SzEngineFlags
 
 from .pb2_grpc import szengine_pb2, szengine_pb2_grpc
 from .szhelpers import as_str, new_exception
@@ -21,19 +20,19 @@ from .szhelpers import as_str, new_exception
 
 __all__ = ["SzEngineGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
-__date__ = "2023-11-27"
-__updated__ = "2025-01-10"
+__date__ = "2025-01-10"
+__updated__ = "2025-01-16"
 
 SENZING_PRODUCT_ID = (
     "5053"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 )
 
 # -----------------------------------------------------------------------------
-# SzEngine class
+# SzEngineGrpc class
 # -----------------------------------------------------------------------------
 
 
-class SzEngineGrpc(SzEngineAbstract):
+class SzEngineGrpc(SzEngine):
     """
     Sz engine module access library over gRPC.
     """

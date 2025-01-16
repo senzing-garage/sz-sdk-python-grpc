@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Dict, Optional, Type, Union
 
 import grpc
-from senzing import SzDiagnostic as SzDiagnosticAbstract
+from senzing import SzDiagnostic
 
 from .pb2_grpc import szdiagnostic_pb2, szdiagnostic_pb2_grpc
 from .szhelpers import new_exception
@@ -19,19 +19,19 @@ from .szhelpers import new_exception
 
 __all__ = ["SzDiagnosticGrpc"]
 __version__ = "0.0.1"  # See https://www.python.org/dev/peps/pep-0396/
-__date__ = "2023-11-27"
-__updated__ = "2025-01-10"
+__date__ = "2025-01-10"
+__updated__ = "2025-01-16"
 
 SENZING_PRODUCT_ID = (
     "5052"  # See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
 )
 
 # -----------------------------------------------------------------------------
-# SzDiagnostic class
+# SzDiagnosticGrpc class
 # -----------------------------------------------------------------------------
 
 
-class SzDiagnosticGrpc(SzDiagnosticAbstract):
+class SzDiagnosticGrpc(SzDiagnostic):
     """
     SzDiagnostic module access library over gRPC.
     """
