@@ -3,13 +3,10 @@
 import grpc
 from senzing import SzError
 
-from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
-
-FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
-    "grpc_channel": grpc.insecure_channel("localhost:8261"),
-}
+from senzing_grpc import SzAbstractFactoryGrpc
 
 try:
-    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
+    grpc_channel = grpc.insecure_channel("localhost:8261")
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
 except SzError as err:
     print(f"\nFile {__file__}:\nError:\n{err}\n")

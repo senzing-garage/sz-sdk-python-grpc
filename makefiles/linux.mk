@@ -30,17 +30,20 @@ coverage-osarch-specific: export SENZING_LOG_LEVEL=TRACE
 coverage-osarch-specific:
 	@$(activate-venv); pytest --cov=src --cov-report=xml --ignore=src/senzing_grpc/pb2_grpc/  $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
 	@$(activate-venv); coverage html --omit=src/senzing_grpc/pb2_grpc/*
-	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
+	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html 1>/dev/null 2>&1
 
 
 .PHONY: dependencies-for-development-osarch-specific
 dependencies-for-development-osarch-specific:
 
+.PHONY: dependencies-for-documentation-osarch-specific
+dependencies-for-documentation-osarch-specific:
+
 
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	@$(activate-venv); cd docs; rm -rf build; make html
-	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html
+	@xdg-open file://$(MAKEFILE_DIRECTORY)/docs/build/html/index.html  1>/dev/null 2>&1
 
 
 .PHONY: hello-world-osarch-specific
@@ -65,6 +68,29 @@ setup-osarch-specific:
 		senzing/serve-grpc
 	$(info "senzing/serve-grpc running in background.")
 
+
+.PHONY: test-osarch-specific
+test-osarch-specific:
+	$(info --- Unit tests -------------------------------------------------------)
+	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
+	$(info --- Test examples using pytest -------------------------------------)
+	@$(activate-venv); pytest examples/szconfig/ \
+		examples/szconfigmanager/ \
+		examples/szdiagnostic/ \
+		examples/szengine/ \
+		examples/szproduct/ \
+		examples/extras/ \
+		examples/misc/ \
+		--capture=no \
+		-o python_files=*.py \
+		--verbose; \
+		pytest_exit_code="$$?"; \
+		if [ "$$pytest_exit_code" -eq 5 ]; then \
+			printf '\nExit code from pytest was %s, this is expected testing the examples if there were no Python errors\n' "$$pytest_exit_code"; \
+			exit 0; \
+		else \
+			exit "$$pytest_exit_code"; \
+		fi
 
 .PHONY: test-osarch-specific-2
 test-osarch-specific-2:

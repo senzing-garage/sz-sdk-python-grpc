@@ -5,20 +5,18 @@ from typing import List
 import grpc
 from senzing import SzEngineFlags, SzError
 
-from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
+from senzing_grpc import SzAbstractFactoryGrpc
 
 AVOID_ENTITY_IDS: List[int] = []
 END_ENTITY_ID = 4
-FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
-    "grpc_channel": grpc.insecure_channel("localhost:8261"),
-}
 FLAGS = SzEngineFlags.SZ_FIND_PATH_DEFAULT_FLAGS
 MAX_DEGREES = 2
 REQUIRED_DATA_SOURCES: List[str] = []
 START_ENTITY_ID = 1
 
 try:
-    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
+    grpc_channel = grpc.insecure_channel("localhost:8261")
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_engine = sz_abstract_factory.create_engine()
     RESULT = sz_engine.find_path_by_entity_id(
         START_ENTITY_ID,

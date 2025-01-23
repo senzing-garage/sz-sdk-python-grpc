@@ -31,6 +31,12 @@ coverage-osarch-specific:
 	@explorer $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
+.PHONY: dependencies-osarch-specific
+dependencies-osarch-specific:
+	python3 -m pip install --upgrade pip
+	pip install psutil pytest pytest-cov pytest-schema
+
+
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	# @cd docs; rm -rf build; make html
@@ -50,6 +56,14 @@ package-osarch-specific:
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
 	$(info No setup required.)
+
+
+.PHONY: test-osarch-specific
+test-osarch-specific:
+	$(info --- Unit tests -------------------------------------------------------)
+	@pytest tests/ --verbose --capture=no --cov=src/senzing_core
+	$(info --- Test examples ----------------------------------------------------)
+	@pytest examples/ --verbose --capture=no --cov=src/senzing_core
 
 
 .PHONY: venv-osarch-specific
