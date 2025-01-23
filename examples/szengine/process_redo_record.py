@@ -14,6 +14,6 @@ try:
     while sz_engine.count_redo_records() > 0:
         REDO_RECORD = sz_engine.get_redo_record()
         RESULT = sz_engine.process_redo_record(REDO_RECORD, FLAGS)
-        print(f"\nFile {__file__}:\n{RESULT}\n")
+        print(f"\n{RESULT}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

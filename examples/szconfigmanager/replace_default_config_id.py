@@ -29,4 +29,4 @@ try:
 
     sz_configmanager.replace_default_config_id(current_default_config_id, new_default_config_id)
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

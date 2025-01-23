@@ -12,6 +12,6 @@ try:
     config_handle = sz_config.create_config()
     RESULT = sz_config.get_data_sources(config_handle)
     sz_config.close_config(config_handle)
-    print(f"\nFile {__file__}:\n{RESULT}\n")
+    print(f"\n{RESULT}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

@@ -15,4 +15,4 @@ try:
 
     sz_config.close_config(config_handle)
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

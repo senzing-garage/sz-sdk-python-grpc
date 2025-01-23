@@ -18,6 +18,6 @@ try:
         RECORD_ID,
         FLAGS,
     )
-    print(f"\nFile {__file__}:\n{RESULT}\n")
+    print(f"\n{RESULT}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

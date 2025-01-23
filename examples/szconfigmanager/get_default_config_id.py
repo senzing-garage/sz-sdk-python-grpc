@@ -10,6 +10,6 @@ try:
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_configmanager = sz_abstract_factory.create_configmanager()
     CONFIG_ID = sz_configmanager.get_default_config_id()
-    print(f"\nFile {__file__}:\n{CONFIG_ID}\n")
+    print(f"\n{CONFIG_ID}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

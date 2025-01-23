@@ -10,6 +10,6 @@ try:
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_diagnostic = sz_abstract_factory.create_diagnostic()
     RESULT = sz_diagnostic.get_datastore_info()
-    print(f"\nFile {__file__}:\n{RESULT}\n")
+    print(f"\n{RESULT}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

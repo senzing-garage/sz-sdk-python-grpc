@@ -70,7 +70,7 @@ RECORD_STR_BAD = (
 
 
 def test_add_truthset_datasources(
-    sz_engine: SzEngineGrpc,
+    sz_engine: SzEngine,
     sz_configmanager: SzConfigManager,
     sz_config: SzConfig,
 ) -> None:

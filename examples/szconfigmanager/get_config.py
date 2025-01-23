@@ -11,6 +11,6 @@ try:
     sz_configmanager = sz_abstract_factory.create_configmanager()
     config_id = sz_configmanager.get_default_config_id()
     CONFIG_DEFINITION = sz_configmanager.get_config(config_id)
-    print(f"\nFile {__file__}:\n{CONFIG_DEFINITION}\n")
+    print(f"\n{CONFIG_DEFINITION}\n")
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

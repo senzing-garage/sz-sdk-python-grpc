@@ -9,4 +9,4 @@ try:
     grpc_channel = grpc.insecure_channel("localhost:8261")
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

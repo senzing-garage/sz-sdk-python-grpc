@@ -61,4 +61,4 @@ try:
     try_sz_product(sz_product)
 
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")
