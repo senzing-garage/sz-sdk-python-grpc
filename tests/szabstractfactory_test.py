@@ -3,7 +3,7 @@ from datetime import datetime
 import grpc
 import pytest
 from senzing import (
-    SzAbstractFactory,
+	SzAbstractFactory,
     SzConfig,
     SzConfigManager,
     SzDiagnostic,
