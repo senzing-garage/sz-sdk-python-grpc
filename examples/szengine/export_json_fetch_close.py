@@ -12,13 +12,11 @@ try:
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_engine = sz_abstract_factory.create_engine()
     export_handle = sz_engine.export_json_entity_report(FLAGS)
-    RESULT = ""
     while True:
-        FRAGMENT = sz_engine.fetch_next(export_handle)
-        if len(FRAGMENT) == 0:
+        fragment = sz_engine.fetch_next(export_handle)
+        if not fragment:
             break
-        RESULT += FRAGMENT
+        print(fragment, end="")
     sz_engine.close_export(export_handle)
-    print(f"\n{RESULT}\n")
 except SzError as err:
     print(f"\nERROR: {err}\n")
