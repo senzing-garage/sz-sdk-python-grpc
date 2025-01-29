@@ -50,6 +50,7 @@ The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` Python package.
 
 1. Install the `senzing-grpc` Python package.
+
    Example:
 
     ```console
@@ -57,6 +58,7 @@ and access it using the `senzing_grpc` Python package.
     ```
 
 1. Run a Senzing gRPC service using Docker.
+
    Example:
 
     ```console
@@ -64,6 +66,7 @@ and access it using the `senzing_grpc` Python package.
     ```
 
 1. In a separate window, start an interactive Python session.
+
    Example:
 
     ```console
@@ -71,6 +74,7 @@ and access it using the `senzing_grpc` Python package.
     ```
 
 1. Paste the following into the interactive Python session.
+
    Example:
 
     ```python
