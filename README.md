@@ -97,8 +97,8 @@ More can be seen in [Examples].
 [Coverage]: https://htmlpreview.github.io/?https://github.com/senzing-garage/sz-sdk-python-grpc/blob/python-coverage-comment-action-data/htmlcov/index.html
 [Development]: docs/development.md
 [DockerHub]: https://hub.docker.com/r/senzing/sz-sdk-python-grpc
-[Downloads Badge]: https://static.pepy.tech/badge/sz-sdk-python-grpc
-[Downloads]: https://pepy.tech/project/sz-sdk-python-grpc
+[Downloads Badge]: https://static.pepy.tech/badge/senzing-grpc
+[Downloads]: https://pepy.tech/project/senzing-grpc
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
 [License Badge]: https://img.shields.io/badge/License-Apache2-brightgreen.svg
