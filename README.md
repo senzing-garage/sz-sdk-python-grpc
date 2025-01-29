@@ -60,8 +60,7 @@ and access it using the `senzing_grpc` Python package.
    Example:
 
     ```console
-
- docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
+    docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
     ```
 
 1. In a separate window, start an interactive Python session.
