@@ -16,7 +16,7 @@ the recommendation is not to use it yet.
 
 ## Synopsis
 
-The Senzing `sz-sdk-python-grpc` package provides a Python Software Development Kit
+The Senzing `sz-sdk-python-grpc` package provides a [Python] Software Development Kit
 adhering to the abstract classes of [sz-sdk-python]
 that communicates with a [Senzing gRPC server].
 
@@ -42,7 +42,7 @@ The `sz-sdk-python-grpc` package implements the following [sz-sdk-python] interf
 
 Other implementations of the [sz-sdk-python] interface include:
 
-- [sz-sdk-python] - for calling Senzing SDK APIs natively
+- [sz-sdk-python-core] - for calling Senzing SDK APIs natively
 
 ## Use
 
@@ -60,19 +60,8 @@ and access it using the `senzing_grpc` Python package.
    Example:
 
     ```console
-    docker run \
-      --env SENZING_TOOLS_COMMAND=serve-grpc \
-      --env SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@nowhere/tmp/sqlite/G2C.db \
-      --env SENZING_TOOLS_ENABLE_ALL=true \
-      --name senzing-tools-serve-grpc \
-      --publish 8261:8261 \
-      --pull always \
-      --rm \
-      senzing/senzing-tools
+	docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
     ```
-
-   **Note:** In this example, `SENZING_TOOLS_DATABASE_URL` specifies a file *inside* the container.
-   Thus the database is temporal and will be deleted when the container is killed.
 
 1. In a separate window, start an interactive Python session.
    Example:
@@ -90,7 +79,6 @@ and access it using the `senzing_grpc` Python package.
     sz_abstract_factory = SzAbstractFactory(grpc_channel=grpc.insecure_channel("localhost:8261"))
     sz_product = sz_abstract_factory.create_product()
     print(sz_product.get_version())
-
     ```
 
 More can be seen in [Examples].
@@ -113,12 +101,14 @@ More can be seen in [Examples].
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
 [License Badge]: https://img.shields.io/badge/License-Apache2-brightgreen.svg
+[License]: https://github.com/senzing-garage/sz-sdk-python-core/blob/main/LICENSE
 [PEP8 Badge]: https://img.shields.io/badge/code%20style-pep8-orange.svg
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [PyPI version Badge]: https://badge.fury.io/py/senzing-grpc.svg
 [PyPi version]: https://badge.fury.io/py/senzing-grpc
 [Python 3.11 Badge]: https://img.shields.io/badge/python-3.11-blue.svg
 [Python 3.11]: https://www.python.org/downloads/release/python-3110/
+[Python]: https://www.python.org/
 [Senzing Garage]: https://github.com/senzing-garage
 [Senzing gRPC server]: https://github.com/senzing-garage/servegrpc
 [Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
