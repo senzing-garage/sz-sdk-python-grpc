@@ -106,7 +106,7 @@ More can be seen in [Examples].
 [Python 3.11]: https://www.python.org/downloads/release/python-3110/
 [Python]: https://www.python.org/
 [Senzing Garage]: https://github.com/senzing-garage
-[Senzing gRPC server]: https://github.com/senzing-garage/servegrpc
+[Senzing gRPC server]: https://github.com/senzing-garage/serve-grpc
 [Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
 [Senzing]: https://senzing.com/
 [sz-sdk-python package reference]: https://hub.senzing.com/sz-sdk-python/
