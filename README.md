@@ -49,19 +49,19 @@ Other implementations of the [sz-sdk-python] interface include:
 The following example shows how to start a Senzing gRPC server Docker container
 and access it using the `senzing_grpc` Python package.
 
-1. Install the `senzing-grpc` Python package.
-
-    ```console
-    python3 -m pip install --upgrade senzing-grpc
-    ```
-
 1. Run a Senzing gRPC service using Docker.
 
     ```console
     docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
     ```
 
-1. In a separate window, start an interactive Python session.
+1. In a separate window, install the `senzing-grpc` Python package.
+
+    ```console
+    python3 -m pip install --upgrade senzing-grpc
+    ```
+
+1. Start an interactive Python session.
 
     ```console
     python3
