@@ -118,11 +118,11 @@
         ],
         "CFG_ERFRAG": [
             {
-                "ERFRAG_ID": 10,
-                "ERFRAG_CODE": "TRUSTED_ID",
-                "ERFRAG_DESC": "TRUSTED_ID",
-                "ERFRAG_SOURCE": "./SCORES/TRUSTED_ID[./FULL_SCORE=100]",
-                "ERFRAG_DEPENDS": null
+                "ERFRAG_ID": 11,
+                "ERFRAG_CODE": "SAME_NAME",
+                "ERFRAG_DESC": "SAME_NAME",
+                "ERFRAG_SOURCE": "./FRAGMENT[./GNR_SAME_NAME>0]",
+                "ERFRAG_DEPENDS": "301"
             }
         ],
         "CFG_ERRULE": [
@@ -159,8 +159,7 @@
         "CFG_FCLASS": [
             {
                 "FCLASS_ID": 1,
-                "FCLASS_CODE": "NAME",
-                "FCLASS_DESC": "Name"
+                "FCLASS_CODE": "NAME"
             }
         ],
         "CFG_FELEM": [
@@ -251,11 +250,14 @@
                 "NEXT_THRESH": 1000
             }
         ],
+        "SETTINGS": {
+            "METAPHONE_VERSION": 3
+        },
         "CONFIG_BASE_VERSION": {
             "VERSION": "4.0.0",
-            "BUILD_VERSION": "4.0.0.24103",
-            "BUILD_DATE": "2024-04-12",
-            "BUILD_NUMBER": "24103",
+            "BUILD_VERSION": "4.0.0.00000",
+            "BUILD_DATE": "2025-01-01",
+            "BUILD_NUMBER": "00000",
             "COMPATIBILITY_VERSION": {
                 "CONFIG_VERSION": "11"
             }

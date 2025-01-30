@@ -4,6 +4,11 @@
 
 include makefiles/osdetect.mk
 
+# Define newline for use
+define \n
+
+endef
+
 # -----------------------------------------------------------------------------
 # Variables
 # -----------------------------------------------------------------------------
@@ -68,6 +73,13 @@ dependencies-for-development: venv dependencies-for-development-osarch-specific
 		python3 -m pip install --requirement development-requirements.txt
 
 
+.PHONY: dependencies-for-documentation
+dependencies-for-documentation: venv dependencies-for-documentation-osarch-specific
+	$(activate-venv); \
+		python3 -m pip install --upgrade pip; \
+		python3 -m pip install --requirement documentation-requirements.txt
+
+
 .PHONY: dependencies
 dependencies: venv
 	$(activate-venv); \
@@ -105,24 +117,7 @@ docker-build: docker-build-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: test
-test: test-tests test-examples
-
-
-.PHONY: test-tests
-test-tests:
-	$(info --- Unit tests -----------------------------------------------------------------)
-	@$(activate-venv); pytest tests --verbose --capture=no --cov=src --cov-report xml:coverage.xml
-
-
-.PHONY: test-examples
-test-examples:
-	$(info --- Test examples --------------------------------------------------------------)
-	@$(activate-venv); python3 -m unittest \
-		examples/szconfig/*.py \
-		examples/szconfigmanager/*.py \
-		examples/szdiagnostic/*.py \
-		examples/szengine/*.py \
-		examples/szproduct/*.py
+test: test-osarch-specific
 
 
 .PHONY: docker-test
@@ -188,63 +183,74 @@ print-make-variables:
 
 .PHONY: bandit
 bandit:
+	$(info ${\n})
 	$(info --- bandit ---------------------------------------------------------------------)
 	@$(activate-venv); bandit -c pyproject.toml $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: black
 black:
+	$(info ${\n})
 	$(info --- black ----------------------------------------------------------------------)
 	@$(activate-venv); black $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: flake8
 flake8:
+	$(info ${\n})
 	$(info --- flake8 ---------------------------------------------------------------------)
 	@$(activate-venv); flake8 $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: isort
 isort:
+	$(info ${\n})
 	$(info --- isort ----------------------------------------------------------------------)
 	@$(activate-venv); isort $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: mypy
 mypy:
+	$(info ${\n})
 	$(info --- mypy -----------------------------------------------------------------------)
 	@$(activate-venv); mypy --strict $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: pydoc
 pydoc:
+	$(info ${\n})
 	$(info --- pydoc ----------------------------------------------------------------------)
 	@$(activate-venv); python3 -m pydoc
 
 
 .PHONY: pydoc-web
 pydoc-web:
+	$(info ${\n})
 	$(info --- pydoc-web ------------------------------------------------------------------)
 	@$(activate-venv); python3 -m pydoc -p 8885
 
 
 .PHONY: pylint
 pylint:
+	$(info ${\n})
 	$(info --- pylint ---------------------------------------------------------------------)
 	@$(activate-venv); pylint $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: pytest
 pytest:
+	$(info ${\n})
 	$(info --- pytest ---------------------------------------------------------------------)
 	@$(activate-venv); pytest $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: sphinx
 sphinx: sphinx-osarch-specific
+	$(info ${\n})
 	$(info --- sphinx ---------------------------------------------------------------------)
 
 
 .PHONY: view-sphinx
 view-sphinx: view-sphinx-osarch-specific
+	$(info ${\n})
 	$(info --- view-sphinx ----------------------------------------------------------------)

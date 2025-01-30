@@ -4,61 +4,66 @@ senzing package
 Submodules
 ----------
 
-senzing\_grpc.szabstractfactory module
---------------------------------------
+senzing_grpc.szabstractfactory module
+-------------------------------------
 
 .. automodule:: senzing_grpc.szabstractfactory
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.szconfig module
------------------------------
+senzing_grpc.szconfig module
+----------------------------
 
 .. automodule:: senzing_grpc.szconfig
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
-senzing\_grpc.szconfigmanager module
-------------------------------------
+senzing_grpc.szconfigmanager module
+-----------------------------------
 
 .. automodule:: senzing_grpc.szconfigmanager
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
-senzing\_grpc.szdiagnostic module
----------------------------------
+senzing_grpc.szdiagnostic module
+--------------------------------
 
 .. automodule:: senzing_grpc.szdiagnostic
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
-senzing\_grpc.szengine module
------------------------------
+senzing_grpc.szengine module
+----------------------------
 
 .. automodule:: senzing_grpc.szengine
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
-senzing\_grpc.szhelpers module
-------------------------------
+senzing_grpc.szhelpers module
+-----------------------------
 
 .. automodule:: senzing_grpc.szhelpers
    :members:
    :undoc-members:
    :show-inheritance:
 
-senzing\_grpc.szproduct module
-------------------------------
+senzing_grpc.szproduct module
+-----------------------------
 
 .. automodule:: senzing_grpc.szproduct
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 Module contents
 ---------------
@@ -67,3 +72,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:

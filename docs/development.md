@@ -63,6 +63,15 @@ Since the Senzing library is a prerequisite, it must be installed first.
 
    ```
 
+1. Install dependencies needed for documentation.
+   Example:
+
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make dependencies-for-documentation
+
+   ```
+
 ## Working with grpc and Protobuffer files
 
 After copying files from [sz-sdk-proto/example_generated_source_code/python],

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-01-29
+
+### Changed in 0.4.1
+
+- Sync with `sz-sdk-python-core`
+- Update examples
+
 ## [0.4.0] - 2025-01-10
 
 ### Changed in 0.4.0

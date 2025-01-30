@@ -11,11 +11,7 @@ from senzing import (
     SzProduct,
 )
 
-from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
-
-FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
-    "grpc_channel": grpc.insecure_channel("localhost:8261"),
-}
+from senzing_grpc import SzAbstractFactoryGrpc
 
 
 def try_sz_abstract_factory(sz_abstract_factory_local: SzAbstractFactory) -> None:
@@ -49,7 +45,8 @@ def try_sz_product(sz_product_local: SzProduct) -> None:
 
 
 try:
-    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
+    grpc_channel = grpc.insecure_channel("localhost:8261")
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_config = sz_abstract_factory.create_config()
     sz_configmanager = sz_abstract_factory.create_configmanager()
     sz_diagnostic = sz_abstract_factory.create_diagnostic()
@@ -64,4 +61,4 @@ try:
     try_sz_product(sz_product)
 
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

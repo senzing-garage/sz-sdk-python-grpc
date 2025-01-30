@@ -4,14 +4,11 @@ import grpc
 from senzing import SzError
 from senzing_truthset import TRUTHSET_DATASOURCES
 
-from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
-
-FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
-    "grpc_channel": grpc.insecure_channel("localhost:8261"),
-}
+from senzing_grpc import SzAbstractFactoryGrpc
 
 try:
-    sz_abstract_factory = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
+    grpc_channel = grpc.insecure_channel("localhost:8261")
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_config = sz_abstract_factory.create_config()
     sz_configmanager = sz_abstract_factory.create_configmanager()
     sz_diagnostic = sz_abstract_factory.create_diagnostic()
@@ -27,4 +24,4 @@ try:
     sz_configmanager.replace_default_config_id(current_default_config_id, new_default_config_id)
     sz_abstract_factory.reinitialize(new_default_config_id)
 except SzError as err:
-    print(f"\nFile {__file__}:\nError:\n{err}\n")
+    print(f"\nERROR: {err}\n")

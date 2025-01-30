@@ -58,6 +58,14 @@ setup-osarch-specific:
 	$(info No setup required.)
 
 
+.PHONY: test-osarch-specific
+test-osarch-specific:
+	$(info --- Unit tests -------------------------------------------------------)
+	@pytest tests/ --verbose --capture=no --cov=src/senzing_core
+	$(info --- Test examples ----------------------------------------------------)
+	@pytest examples/ --verbose --capture=no --cov=src/senzing_core
+
+
 .PHONY: venv-osarch-specific
 venv-osarch-specific:
 	@python3 -m venv .venv
