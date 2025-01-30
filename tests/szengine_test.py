@@ -95,7 +95,8 @@ def test_add_record(sz_engine: SzEngine) -> None:
     record_id = "1"
     record_definition: Dict[Any, Any] = {}
     flags = SZ_WITHOUT_INFO
-    sz_engine.add_record(data_source_code, record_id, json.dumps(record_definition), flags)
+    actual = sz_engine.add_record(data_source_code, record_id, json.dumps(record_definition), flags)
+    assert actual == ""
 
 
 def test_add_record_bad_data_source_code_type(sz_engine: SzEngine) -> None:
@@ -268,7 +269,8 @@ def test_delete_record(sz_engine: SzEngine) -> None:
     data_source_code = "CUSTOMERS"
     record_id = "1001"
     flags = SZ_WITHOUT_INFO
-    sz_engine.delete_record(data_source_code, record_id, flags)
+    actual = sz_engine.delete_record(data_source_code, record_id, flags)
+    assert actual == ""
 
 
 def test_delete_record_bad_data_source_code(sz_engine: SzEngine) -> None:
@@ -285,7 +287,8 @@ def test_delete_record_bad_record_id(sz_engine: SzEngine) -> None:
     data_source_code = "CUSTOMERS"
     bad_record_id = "9999"
     flags = SZ_WITHOUT_INFO
-    sz_engine.delete_record(data_source_code, bad_record_id, flags)
+    actual = sz_engine.delete_record(data_source_code, bad_record_id, flags)
+    assert actual == ""
 
 
 def test_delete_record_with_info(sz_engine: SzEngine) -> None:
@@ -823,15 +826,17 @@ def test_reevaluate_entity(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
     flags = SZ_WITHOUT_INFO
-    sz_engine.reevaluate_entity(entity_id, flags)
+    actual = sz_engine.reevaluate_entity(entity_id, flags)
     delete_records(sz_engine, test_records)
+    assert actual == ""
 
 
 def test_reevaluate_entity_bad_entity_id(sz_engine: SzEngine) -> None:
     """Test SzEngine().get_entity_id_from_record_id()."""
     bad_entity_id = 0
     flags = SZ_WITHOUT_INFO
-    sz_engine.reevaluate_entity(bad_entity_id, flags)
+    actual = sz_engine.reevaluate_entity(bad_entity_id, flags)
+    assert actual == ""
 
 
 def test_reevaluate_entity_with_info(sz_engine: SzEngine) -> None:
@@ -864,8 +869,9 @@ def test_reevaluate_record(sz_engine: SzEngine) -> None:
     data_source_code = "CUSTOMERS"
     record_id = "1001"
     flags = SZ_WITHOUT_INFO
-    sz_engine.reevaluate_record(data_source_code, record_id, flags)
+    actual = sz_engine.reevaluate_record(data_source_code, record_id, flags)
     delete_records(sz_engine, test_records)
+    assert actual == ""
 
 
 def test_reevaluate_record_bad_data_source_code(sz_engine: SzEngine) -> None:
@@ -882,7 +888,8 @@ def test_reevaluate_record_bad_record_id(sz_engine: SzEngine) -> None:
     data_source_code = "CUSTOMERS"
     bad_record_id = "9999"
     flags = SZ_WITHOUT_INFO
-    sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
+    actual = sz_engine.reevaluate_record(data_source_code, bad_record_id, flags)
+    assert actual == ""
 
 
 # TODO: Fix test after GDEV-3790
@@ -1039,7 +1046,8 @@ def test_add_record_using_context_managment() -> None:
         record_id = "2"
         record_definition = "{}"
         flags = SZ_WITHOUT_INFO
-        sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+        actual = sz_engine.add_record(data_source_code, record_id, record_definition, flags)
+        assert actual == ""
 
 
 def test_constructor() -> None:
@@ -1055,7 +1063,8 @@ def test_process_redo_record(sz_engine: SzEngine) -> None:
     flags = SZ_WITHOUT_INFO
     while sz_engine.count_redo_records() > 0:
         redo_record = sz_engine.get_redo_record()
-        sz_engine.process_redo_record(redo_record, flags)
+        actual = sz_engine.process_redo_record(redo_record, flags)
+        assert actual == ""
 
 
 # def test_export_csv_entity_report_iterator(sz_engine: SzEngineTest) -> None:
@@ -1129,12 +1138,13 @@ def add_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> N
         datasource = record_identification[0]
         record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        sz_engine.add_record(
+        actual = sz_engine.add_record(
             record.get("DataSource", ""),
             record.get("Id", ""),
             record.get("Json", ""),
             flags,
         )
+        assert actual == ""
 
 
 def add_records_truthset(sz_engine: SzEngine, do_redo: bool = True) -> None:
@@ -1142,16 +1152,18 @@ def add_records_truthset(sz_engine: SzEngine, do_redo: bool = True) -> None:
     flags = SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
-            sz_engine.add_record(
+            actual = sz_engine.add_record(
                 record.get("DataSource"),
                 record.get("Id"),
                 record.get("Json"),
                 flags,
             )
+            assert actual == ""
     if do_redo:
         while sz_engine.count_redo_records() > 0:
             redo_record = sz_engine.get_redo_record()
-            sz_engine.process_redo_record(redo_record, flags)
+            actual = sz_engine.process_redo_record(redo_record, flags)
+            assert actual == ""
 
 
 def delete_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -> None:
@@ -1161,7 +1173,8 @@ def delete_records(sz_engine: SzEngine, record_id_list: List[Tuple[str, str]]) -
         datasource = record_identification[0]
         record_id = record_identification[1]
         record = DATA_SOURCES.get(datasource, {}).get(record_id, {})
-        sz_engine.delete_record(record.get("DataSource", ""), record.get("Id", ""), flags)
+        actual = sz_engine.delete_record(record.get("DataSource", ""), record.get("Id", ""), flags)
+        assert actual == ""
 
 
 def delete_records_truthset(sz_engine: SzEngine) -> None:
@@ -1169,7 +1182,8 @@ def delete_records_truthset(sz_engine: SzEngine) -> None:
     flags = SZ_WITHOUT_INFO
     for record_set in DATA_SOURCES.values():
         for record in record_set.values():
-            sz_engine.delete_record(record.get("DataSource"), record.get("Id"), flags)
+            actual = sz_engine.delete_record(record.get("DataSource"), record.get("Id"), flags)
+            assert actual == ""
 
 
 def get_entity_id_from_record_id(sz_engine: SzEngine, data_source_code: str, record_id: str) -> int:
