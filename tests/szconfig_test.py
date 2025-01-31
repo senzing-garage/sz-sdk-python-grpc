@@ -3,7 +3,7 @@ import json
 import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing import SzBadInputError, SzConfig, SzConfigurationError
+from senzing import SzConfig, SzConfigurationError
 
 from senzing_grpc import SzConfigGrpc
 
@@ -47,7 +47,7 @@ def test_add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None
     config_handle = sz_config.create_config()
     bad_data_source_code = {"XXXX": "YYYY"}
     try:
-        with pytest.raises(SzBadInputError):
+        with pytest.raises(TypeError):
             sz_config.add_data_source(config_handle, bad_data_source_code)  # type: ignore[arg-type]
     finally:
         sz_config.close_config(config_handle)
@@ -99,7 +99,7 @@ def test_delete_data_source_bad_data_source_code_value(sz_config: SzConfig) -> N
     """Test SzConfig().delete_data_source()."""
     bad_data_source_code = {"XXXX": "YYYY"}
     config_handle = sz_config.create_config()
-    with pytest.raises(SzBadInputError):
+    with pytest.raises(TypeError):
         sz_config.delete_data_source(config_handle, bad_data_source_code)  # type: ignore[arg-type]
     sz_config.close_config(config_handle)
 
