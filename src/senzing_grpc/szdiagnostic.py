@@ -75,7 +75,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
 
     def check_datastore_performance(self, seconds_to_run: int) -> str:
         try:
-            request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(seconds_to_run=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckDatastorePerformance(request)
             return str(response.result)
         except Exception as err:
@@ -96,7 +96,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
         """TODO: Add get_feature()"""
         _ = feature_id
         try:
-            request = szdiagnostic_pb2.GetFeatureRequest(featureId=feature_id)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.GetFeatureRequest(feature_id=feature_id)  # type: ignore[unused-ignore]
             response = self.stub.GetFeature(request)
             return str(response.result)
         except Exception as err:
@@ -120,7 +120,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
 
     def _reinitialize(self, config_id: int) -> None:
         try:
-            request = szdiagnostic_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.ReinitializeRequest(config_id=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)
         except Exception as err:
             raise new_exception(err) from err
