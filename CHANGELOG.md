@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning].
 ### Changed in 0.4.4
 
 - Update Protobuf files
+-
 
 ## [0.4.3] - 2025-02-10
 
