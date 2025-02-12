@@ -78,8 +78,8 @@ class SzConfigManagerGrpc(SzConfigManager):
     ) -> int:
         try:
             request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
-                configDefinition=as_str(config_definition),
-                configComment=as_str(config_comment),
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
             )
             response = self.stub.AddConfig(request)
             return int(response.result)
@@ -91,7 +91,7 @@ class SzConfigManagerGrpc(SzConfigManager):
 
     def get_config(self, config_id: int) -> str:
         try:
-            request = szconfigmanager_pb2.GetConfigRequest(configId=config_id)  # type: ignore[unused-ignore]
+            request = szconfigmanager_pb2.GetConfigRequest(config_id=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
             return str(response.result)
         except Exception as err:
@@ -127,8 +127,8 @@ class SzConfigManagerGrpc(SzConfigManager):
     def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
-                currentDefaultConfigId=current_default_config_id,
-                newDefaultConfigId=new_default_config_id,
+                current_default_config_id=current_default_config_id,
+                new_default_config_id=new_default_config_id,
             )
             self.stub.ReplaceDefaultConfigId(request)
         except Exception as err:
@@ -137,7 +137,7 @@ class SzConfigManagerGrpc(SzConfigManager):
     def set_default_config_id(self, config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
-                configId=config_id,
+                config_id=config_id,
             )
             self.stub.SetDefaultConfigId(request)
         except Exception as err:

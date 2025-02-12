@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.4.4] - 2025-02-12
+
+### Changed in 0.4.4
+
+- Update Protobuf files
+
 ## [0.4.3] - 2025-02-10
 
 ### Changed in 0.4.3
