@@ -17,12 +17,12 @@
 | src/senzing\_grpc/pb2\_grpc/szproduct\_pb2.py             |       24 |       12 |     50% |     33-44 |
 | src/senzing\_grpc/pb2\_grpc/szproduct\_pb2\_grpc.py       |       38 |       15 |     61% |15-16, 19, 54-56, 60-62, 66-81, 99, 126 |
 | src/senzing\_grpc/szabstractfactory.py                    |       36 |        0 |    100% |           |
-| src/senzing\_grpc/szconfig.py                             |       70 |        5 |     93% |100-101, 136-138 |
-| src/senzing\_grpc/szconfigmanager.py                      |       63 |        7 |     89% |105-106, 113-114, 123-125 |
-| src/senzing\_grpc/szdiagnostic.py                         |       53 |        8 |     85% |92-93, 113-116, 125-126 |
-| src/senzing\_grpc/szengine.py                             |      285 |       50 |     82% |101-102, 109-110, 144-145, 153-161, 170-171, 178-184, 193-194, 317-318, 332-333, 374-375, 382-383, 423-426, 440-441, 454-455, 465-466, 484-485, 528-537 |
+| src/senzing\_grpc/szconfig.py                             |       70 |        5 |     93% |104-105, 140-142 |
+| src/senzing\_grpc/szconfigmanager.py                      |       63 |        7 |     89% |109-110, 117-118, 127-129 |
+| src/senzing\_grpc/szdiagnostic.py                         |       53 |        8 |     85% |96-97, 117-120, 129-130 |
+| src/senzing\_grpc/szengine.py                             |      285 |       50 |     82% |105-106, 113-114, 148-149, 157-165, 174-175, 182-188, 197-198, 321-322, 336-337, 378-379, 386-387, 427-430, 444-445, 458-459, 469-470, 488-489, 532-541 |
 | src/senzing\_grpc/szhelpers.py                            |       36 |        6 |     83% |50, 54-56, 77-78 |
-| src/senzing\_grpc/szproduct.py                            |       37 |        7 |     81% |85-87, 94-95, 102-103 |
+| src/senzing\_grpc/szproduct.py                            |       37 |        7 |     81% |89-91, 98-99, 106-107 |
 |                                                 **TOTAL** | **1413** |  **562** | **60%** |           |
 
 
