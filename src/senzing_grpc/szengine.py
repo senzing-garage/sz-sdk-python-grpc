@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szengine_grpc.py
+``senzing_grpc.szengine.SzEngineGrpc`` is a `gRPC`_ implementation
+of the `senzing.szengine.SzEngine`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szengine.SzEngine: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szengine
 """
 
 # pylint: disable=E1101,C0302
