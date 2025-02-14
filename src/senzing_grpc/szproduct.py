@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szproduct_grpc.py
+``senzing_grpc.szproduct.SzProductGrpc`` is a `gRPC`_ implementation
+of the `senzing.szproduct.SzProduct`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szproduct.SzProduct: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szproduct
 """
 
 # pylint: disable=E1101

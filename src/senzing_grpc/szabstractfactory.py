@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szabstractfactory.py
+``senzing_grpc.szabstractfactory.SzAbstractFactoryGrpc`` is a `gRPC`_ implementation
+of the `senzing.szabstractfactory.SzAbstractFactory`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szabstractfactory.SzAbstractFactory: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szabstractfactory
 """
 
 # pylint: disable=E1101
