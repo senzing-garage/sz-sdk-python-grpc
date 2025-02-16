@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szdiagnostic_grpc.py
+``senzing_grpc.szdiagnostic.SzDiagnosticGrpc`` is a `gRPC`_ implementation
+of the `senzing.szdiagnostic.SzDiagnostic`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szdiagnostic.SzDiagnostic: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szdiagnostic
 """
 
 # pylint: disable=E1101
