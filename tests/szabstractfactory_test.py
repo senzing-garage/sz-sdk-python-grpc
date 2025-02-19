@@ -122,5 +122,36 @@ def sz_abstract_factory_fixture() -> SzAbstractFactory:
 
 
 # -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+
+
+def get_grpc_channel() -> grpc.Channel:
+
+    # certFile, isSet := os.LookupEnv("SENZING_TOOLS_CA_CERTIFICATE_PATH")
+    # if isSet {
+    # 	pemServerCA, err := os.ReadFile(certFile)
+    # 	if err != nil {
+    # 		return result, err
+    # 	}
+    # 	certPool := x509.NewCertPool()
+    # 	if !certPool.AppendCertsFromPEM(pemServerCA) {
+    # 		return result, fmt.Errorf("failed to add server CA's certificate")
+    # 	}
+    # 	config := &tls.Config{
+    # 		RootCAs:    certPool,
+    # 		MinVersion: tls.VersionTLS12, // See https://pkg.go.dev/crypto/tls#pkg-constants
+    # 		MaxVersion: tls.VersionTLS13,
+    # 	}
+    # 	result = credentials.NewTLS(config)
+
+    x = grpc.
+
+    result = grpc.insecure_channel("localhost:8261")
+
+    return result
+
+
+# -----------------------------------------------------------------------------
 # Schemas
 # -----------------------------------------------------------------------------
