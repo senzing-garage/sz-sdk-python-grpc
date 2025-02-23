@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 import grpc
@@ -13,8 +14,10 @@ from senzing import (
 
 from senzing_grpc import SzAbstractFactoryGrpc, SzAbstractFactoryParametersGrpc
 
+from .helpers import get_grpc_channel
+
 FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
-    "grpc_channel": grpc.insecure_channel("localhost:8261"),
+    "grpc_channel": get_grpc_channel(),
 }
 
 # -----------------------------------------------------------------------------
@@ -91,17 +94,13 @@ def test_reinitialize(sz_abstract_factory: SzAbstractFactory) -> None:
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzAbstractFactoryGrpc(grpc_channel=grpc_channel)
+    actual = SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzAbstractFactory)
 
 
 def test_context() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzAbstractFactoryGrpc(grpc_channel=grpc_channel) as actual:
+    with SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel()) as actual:
         assert isinstance(actual, SzAbstractFactory)
         sz_config = actual.create_config()
         assert isinstance(sz_config, SzConfig)
@@ -118,37 +117,6 @@ def sz_abstract_factory_fixture() -> SzAbstractFactory:
     Single SzAbstractFactoryGrpc object to use for all tests.
     """
     result = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
-    return result
-
-
-# -----------------------------------------------------------------------------
-# Helpers
-# -----------------------------------------------------------------------------
-
-
-def get_grpc_channel() -> grpc.Channel:
-
-    # certFile, isSet := os.LookupEnv("SENZING_TOOLS_CA_CERTIFICATE_PATH")
-    # if isSet {
-    # 	pemServerCA, err := os.ReadFile(certFile)
-    # 	if err != nil {
-    # 		return result, err
-    # 	}
-    # 	certPool := x509.NewCertPool()
-    # 	if !certPool.AppendCertsFromPEM(pemServerCA) {
-    # 		return result, fmt.Errorf("failed to add server CA's certificate")
-    # 	}
-    # 	config := &tls.Config{
-    # 		RootCAs:    certPool,
-    # 		MinVersion: tls.VersionTLS12, // See https://pkg.go.dev/crypto/tls#pkg-constants
-    # 		MaxVersion: tls.VersionTLS13,
-    # 	}
-    # 	result = credentials.NewTLS(config)
-
-    x = grpc.
-
-    result = grpc.insecure_channel("localhost:8261")
-
     return result
 
 

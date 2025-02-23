@@ -13,6 +13,8 @@ from senzing_truthset import TRUTHSET_DATASOURCES
 
 from senzing_grpc import SzConfigGrpc, SzConfigManagerGrpc
 
+from .helpers import get_grpc_channel
+
 # -----------------------------------------------------------------------------
 # Testcases
 # -----------------------------------------------------------------------------
@@ -215,17 +217,13 @@ def test_set_default_config_id_bad_config_id_value(
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    actual = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzConfigManager)
 
 
 def test_context_managment() -> None:
     """Test the use of SzConfigManagerTest in context."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfigManagerGrpc(grpc_channel=grpc_channel) as sz_configmanager:
+    with SzConfigManagerGrpc(grpc_channel=get_grpc_channel()) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
         actual = sz_configmanager.get_config(config_id)
         actual_as_dict = json.loads(actual)
@@ -242,10 +240,7 @@ def szconfig_fixture() -> SzConfig:
     """
     Single szconfigmanager object to use for all tests.
     """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigGrpc(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
@@ -253,10 +248,7 @@ def szconfig_fixture() -> SzConfig:
 def szconfigmanager_fixture() -> SzConfigManager:
     """Single szconfigmanager object to use for all tests.
     build_engine_vars is returned from conftest.pys"""
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
     return result
 
 

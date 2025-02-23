@@ -7,6 +7,8 @@ from senzing import SzProduct
 
 from senzing_grpc import SzProductGrpc
 
+from .helpers import get_grpc_channel
+
 # -----------------------------------------------------------------------------
 # Testcases
 # -----------------------------------------------------------------------------
@@ -35,17 +37,13 @@ def test_get_version(sz_product: SzProduct) -> None:
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzProductGrpc(grpc_channel=grpc_channel)
+    actual = SzProductGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzProduct)
 
 
 def test_context_managment() -> None:
     """Test the use of SzProduct in context."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzProductGrpc(grpc_channel=grpc_channel) as sz_product:
+    with SzProductGrpc(grpc_channel=get_grpc_channel()) as sz_product:
         actual = sz_product.get_license()
         assert isinstance(actual, str)
         actual_as_dict = json.loads(actual)
@@ -62,9 +60,7 @@ def szproduct_fixture() -> SzProduct:
     """
     Single engine object to use for all tests.
     """
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzProductGrpc(grpc_channel=grpc_channel)
+    result = SzProductGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
