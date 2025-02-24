@@ -1,6 +1,5 @@
 import json
 
-import grpc
 import pytest
 from pytest_schema import Regex, schema
 from senzing import SzProduct

@@ -1,7 +1,5 @@
-import os
 from datetime import datetime
 
-import grpc
 import pytest
 from senzing import (
     SzAbstractFactory,

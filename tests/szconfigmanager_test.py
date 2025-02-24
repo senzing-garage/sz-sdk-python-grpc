@@ -1,6 +1,5 @@
 import json
 
-import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing import (

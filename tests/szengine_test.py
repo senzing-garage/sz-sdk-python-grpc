@@ -3,7 +3,6 @@
 import json
 from typing import Any, Dict, List, Tuple
 
-import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing import (

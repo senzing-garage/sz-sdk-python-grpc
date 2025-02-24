@@ -1,6 +1,5 @@
 import json
 
-import grpc
 import pytest
 from pytest_schema import schema
 from senzing import SzDiagnostic, SzEngine, SzError
