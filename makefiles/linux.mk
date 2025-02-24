@@ -95,6 +95,32 @@ test-osarch-specific:
 			exit "$$pytest_exit_code"; \
 		fi
 
+.PHONY: test-server-side-tls-osarch-specific
+test-server-side-tls-osarch-specific: export SENZING_TOOLS_CA_CERTIFICATE_PATH=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
+test-server-side-tls-osarch-specific:
+	$(info --- Unit tests -------------------------------------------------------)
+	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
+	$(info --- Test examples using pytest -------------------------------------)
+	@$(activate-venv); pytest \
+		examples/misc/ \
+		examples/extras/ \
+		examples/szabstractfactory/ \
+		examples/szconfig/ \
+		examples/szconfigmanager/ \
+		examples/szdiagnostic/ \
+		examples/szengine/ \
+		examples/szproduct/ \
+		--capture=no \
+		-o python_files=*.py \
+		--verbose; \
+		pytest_exit_code="$$?"; \
+		if [ "$$pytest_exit_code" -eq 5 ]; then \
+			printf '\nExit code from pytest was %s, this is expected testing the examples if there were no Python errors\n' "$$pytest_exit_code"; \
+			exit 0; \
+		else \
+			exit "$$pytest_exit_code"; \
+		fi
+
 .PHONY: test-osarch-specific-2
 test-osarch-specific-2:
 	$(info --- Unit tests -------------------------------------------------------)

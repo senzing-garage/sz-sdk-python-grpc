@@ -1,11 +1,12 @@
 import json
 
-import grpc
 import pytest
 from pytest_schema import schema
 from senzing import SzDiagnostic, SzEngine, SzError
 
 from senzing_grpc import SzDiagnosticGrpc, SzEngineGrpc
+
+from .helpers import get_grpc_channel
 
 # -----------------------------------------------------------------------------
 # Testcases
@@ -72,17 +73,13 @@ def test_get_feature_unknown_id(sz_diagnostic: SzDiagnostic) -> None:
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzDiagnosticGrpc(grpc_channel=grpc_channel)
+    actual = SzDiagnosticGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzDiagnostic)
 
 
 def test_context_managment() -> None:
     """Test the use of SzDiagnostic in context."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzDiagnosticGrpc(grpc_channel=grpc_channel) as sz_diagnostic:
+    with SzDiagnosticGrpc(grpc_channel=get_grpc_channel()) as sz_diagnostic:
         actual = sz_diagnostic.get_datastore_info()
         actual_json = json.loads(actual)
         assert schema(get_datastore_info_schema) == actual_json
@@ -98,10 +95,7 @@ def szdiagnostic_fixture() -> SzDiagnostic:
     """
     Single engine object to use for all tests.
     """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzDiagnosticGrpc(grpc_channel=grpc_channel)
+    result = SzDiagnosticGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
@@ -110,10 +104,7 @@ def szengine_fixture() -> SzEngine:
     """
     Single engine object to use for all tests.
     """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzEngineGrpc(grpc_channel=grpc_channel)
+    result = SzEngineGrpc(grpc_channel=get_grpc_channel())
     return result
 
 

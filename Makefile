@@ -120,6 +120,10 @@ docker-build: docker-build-osarch-specific
 test: test-osarch-specific
 
 
+.PHONY: test-server-side-tls
+test-server-side-tls: test-server-side-tls-osarch-specific
+
+
 .PHONY: docker-test
 docker-test:
 	@$(activate-venv); docker-compose -f docker-compose.test.yaml up
