@@ -3,7 +3,6 @@
 import json
 from typing import Any, Dict, List, Tuple
 
-import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing import (
@@ -26,6 +25,8 @@ from senzing_truthset import (
 )
 
 from senzing_grpc import SzConfigGrpc, SzConfigManagerGrpc, SzEngineGrpc
+
+from .helpers import get_grpc_channel
 
 DATA_SOURCES = {
     "CUSTOMERS": TRUTHSET_CUSTOMER_RECORDS,
@@ -1039,9 +1040,7 @@ def test_why_records_bad_record_id(sz_engine: SzEngine) -> None:
 
 def test_add_record_using_context_managment() -> None:
     """Test the use of SzEngine in context."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzEngineGrpc(grpc_channel=grpc_channel) as sz_engine:
+    with SzEngineGrpc(grpc_channel=get_grpc_channel()) as sz_engine:
         data_source_code = "TEST"
         record_id = "2"
         record_definition = "{}"
@@ -1052,9 +1051,7 @@ def test_add_record_using_context_managment() -> None:
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzEngineGrpc(grpc_channel=grpc_channel)
+    actual = SzEngineGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzEngine)
 
 
@@ -1204,9 +1201,7 @@ def szconfig_fixture() -> SzConfig:
     Single szconfig object to use for all tests.
     engine_vars is returned from conftest.py.
     """
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigGrpc(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
@@ -1215,9 +1210,7 @@ def szconfigmanager_fixture() -> SzConfigManager:
     """
     Single szconfigmanager object to use for all tests.
     """
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigManagerGrpc(grpc_channel=grpc_channel)
+    result = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
@@ -1226,10 +1219,7 @@ def szengine_fixture() -> SzEngine:
     """
     Single SzEngine object to use for all tests.
     """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzEngineGrpc(grpc_channel=grpc_channel)
+    result = SzEngineGrpc(grpc_channel=get_grpc_channel())
     return result
 
 
@@ -1238,8 +1228,6 @@ def szengine_fixture() -> SzEngine:
 # -----------------------------------------------------------------------------
 
 add_record_with_info_schema = {
-    "DATA_SOURCE": str,
-    "RECORD_ID": str,
     "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
     "INTERESTING_ENTITIES": {"ENTITIES": []},
 }

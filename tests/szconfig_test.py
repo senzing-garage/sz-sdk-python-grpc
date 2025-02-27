@@ -1,11 +1,12 @@
 import json
 
-import grpc
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing import SzConfig, SzConfigurationError
 
 from senzing_grpc import SzConfigGrpc
+
+from .helpers import get_grpc_channel
 
 # -----------------------------------------------------------------------------
 # Testcases
@@ -180,17 +181,13 @@ def test_export_config_bad_config_handle_type(sz_config: SzConfig) -> None:
 
 def test_constructor() -> None:
     """Test constructor."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    actual = SzConfigGrpc(grpc_channel=grpc_channel)
+    actual = SzConfigGrpc(grpc_channel=get_grpc_channel())
     assert isinstance(actual, SzConfig)
 
 
 def test_context_managment() -> None:
     """Test the use of SzConfig in context."""
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    with SzConfigGrpc(grpc_channel=grpc_channel) as sz_config:
+    with SzConfigGrpc(grpc_channel=get_grpc_channel()) as sz_config:
         config_handle = sz_config.create_config()
         actual = sz_config.get_data_sources(config_handle)
         sz_config.close_config(config_handle)
@@ -209,10 +206,7 @@ def szconfig_fixture() -> SzConfig:
     """
     Single szconfig object to use for all tests.
     """
-
-    grpc_url = "localhost:8261"
-    grpc_channel = grpc.insecure_channel(grpc_url)
-    result = SzConfigGrpc(grpc_channel=grpc_channel)
+    result = SzConfigGrpc(grpc_channel=get_grpc_channel())
     return result
 
 

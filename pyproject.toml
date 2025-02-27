@@ -24,7 +24,7 @@ skip_glob = ["src/senzing_grpc/pb2_grpc/*"]
 src_paths = ["examples", "src", "tests"]
 
 [[tool.mypy.overrides]]
-module = "senzing_abstract.szengineflags.*"
+module = "senzing.szengineflags.*"
 ignore_missing_imports = "true"
 warn_unused_ignores = "false"
 
