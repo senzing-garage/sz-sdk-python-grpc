@@ -3,7 +3,7 @@ name: pytest windows
 on: [pull_request, workflow_dispatch]
 
 env:
-  PYTHONPATH: ${{ github.workspace }}/src        
+  PYTHONPATH: ${{ github.workspace }}/src
 
 permissions:
   contents: read
