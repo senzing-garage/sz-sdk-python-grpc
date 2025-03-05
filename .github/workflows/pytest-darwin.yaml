@@ -56,10 +56,6 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
 
-      # - name: Install Docker
-      #   uses: docker-practice/actions-setup-docker@master
-      #   timeout-minutes: 12
-
       - name: Run gRPC service
         run: |
           docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
