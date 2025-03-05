@@ -3,7 +3,7 @@ name: pytest linux
 on: [push, pull_request]
 
 env:
-  PYTHONPATH: /home/runner/work/sz-sdk-python-grpc/sz-sdk-python-grpc/src
+  PYTHONPATH: ${{ github.workspace }}/src
 
 permissions:
   contents: read
@@ -54,7 +54,7 @@ jobs:
           source ./venv/bin/activate
           python -m pip install typing_extensions
 
-      - name: Run pytest on tests
+      - name: Run pytest
         run: |
           source ./venv/bin/activate
           pytest tests/ --verbose --capture=no --cov=src --cov-append

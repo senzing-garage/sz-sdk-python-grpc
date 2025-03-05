@@ -3,19 +3,18 @@ name: pytest windows
 on: [pull_request, workflow_dispatch]
 
 env:
-  PYTHONPATH: 'D:\a\sz-sdk-python-grpc\sz-sdk-python-grpc\src'
+  PYTHONPATH: ${{ github.workspace }}/src
 
 permissions:
   contents: read
 
 jobs:
   pytest-windows:
-    name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
-    runs-on: ${{ matrix.os }}
+    name: "pytest OS: windows-latest; Python ${{ matrix.python-version }}"
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
@@ -41,14 +40,20 @@ jobs:
           .\\venv\\Scripts\\activate
           python -m pip install typing_extensions
 
-      - name: Install Docker
-        uses: docker-practice/actions-setup-docker@master
-        timeout-minutes: 12
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: Run gRPC service
-        run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
+        run: |
+          docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
 
-      - name: Run pytest on tests
+      - name: Run pytest
         run: |
           .\\venv\\Scripts\\activate
           pytest tests/ --verbose --capture=no --cov=src
