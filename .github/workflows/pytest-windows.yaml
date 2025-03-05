@@ -2,6 +2,9 @@ name: pytest windows
 
 on: [pull_request, workflow_dispatch]
 
+env:
+  PYTHONPATH: ${{ github.workspace }}/src        
+
 permissions:
   contents: read
 
@@ -53,7 +56,6 @@ jobs:
       - name: Run pytest
         run: |
           .\\venv\\Scripts\\activate
-          $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\src"
           pytest tests/ --verbose --capture=no --cov=src
 
       - name: Rename coverage file
