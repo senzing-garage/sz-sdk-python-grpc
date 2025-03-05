@@ -44,7 +44,7 @@ jobs:
           SENZING_PATH="${HOME}/senzing"
           {
             echo "SENZING_PATH=${SENZING_PATH}"
-            echo "PYTHONPATH=/Users/runner/work/sz-sdk-python-core/sz-sdk-python-core/src"
+            echo "PYTHONPATH=${GITHUB_WORKSPACE}/src"
           } >> "$GITHUB_ENV"
 
       - name: Set up Docker

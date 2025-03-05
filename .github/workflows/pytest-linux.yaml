@@ -2,9 +2,6 @@ name: pytest linux
 
 on: [push, pull_request]
 
-env:
-  PYTHONPATH: /home/runner/work/sz-sdk-python-grpc/sz-sdk-python-grpc/src
-
 permissions:
   contents: read
 
@@ -53,6 +50,12 @@ jobs:
         run: |
           source ./venv/bin/activate
           python -m pip install typing_extensions
+
+      - name: Set environment variables
+        run: |
+          {
+            echo "PYTHONPATH=${GITHUB_WORKSPACE}/src"
+          } >> "$GITHUB_ENV"
 
       - name: Run pytest
         run: |
