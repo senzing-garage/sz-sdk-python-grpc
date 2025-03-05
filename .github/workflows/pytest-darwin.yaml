@@ -2,9 +2,6 @@ name: pytest darwin
 
 on: [pull_request, workflow_dispatch]
 
-env:
-  PYTHONPATH: /Users/runner/work/sz-sdk-python-grpc/sz-sdk-python-grpc/src
-
 permissions:
   contents: read
 
@@ -16,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        # 3.9 is unsupported on the darwin runner
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
@@ -43,14 +39,23 @@ jobs:
           source ./venv/bin/activate
           python -m pip install typing_extensions
 
+      - name: Set environment variables
+        run: |
+          SENZING_PATH="${HOME}/senzing"
+          {
+            echo "SENZING_PATH=${SENZING_PATH}"
+            echo "PYTHONPATH=/Users/runner/work/sz-sdk-python-core/sz-sdk-python-core/src"
+          } >> "$GITHUB_ENV"
+
       - name: Install Docker
         uses: docker-practice/actions-setup-docker@master
         timeout-minutes: 12
 
       - name: Run gRPC service
-        run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
+        run: |
+          docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
 
-      - name: Run pytest on tests
+      - name: Run pytest
         run: |
           source ./venv/bin/activate
           pytest tests/ --verbose --capture=no --cov=src

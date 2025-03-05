@@ -54,7 +54,7 @@ jobs:
           source ./venv/bin/activate
           python -m pip install typing_extensions
 
-      - name: Run pytest on tests
+      - name: Run pytest
         run: |
           source ./venv/bin/activate
           pytest tests/ --verbose --capture=no --cov=src --cov-append
