@@ -1229,7 +1229,6 @@ def szengine_fixture() -> SzEngine:
 
 add_record_with_info_schema = {
     "AFFECTED_ENTITIES": [{"ENTITY_ID": int}],
-    "INTERESTING_ENTITIES": {"ENTITIES": []},
 }
 
 export_json_entity_report_iterator_schema = {
