@@ -1,6 +1,6 @@
 name: pytest linux - server-side TLS
 
-on: [push, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 env:
   PYTHONPATH: ${{ github.workspace }}/src

@@ -1,6 +1,6 @@
 name: pytest linux - mutual TLS
 
-on: [push, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 env:
   PYTHONPATH: ${{ github.workspace }}/src
