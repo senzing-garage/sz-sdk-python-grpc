@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.1] - 2025-03-18
+
+### Changed in 0.5.1
+
+- Mutual TLS support
+
 ## [0.5.0] - 2025-02-24
 
 ### Changed in 0.5.0
