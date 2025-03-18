@@ -8,19 +8,19 @@ import grpc
 
 
 def get_grpc_channel() -> grpc.Channel:
-    ca_certificate_path = os.environ.get("SENZING_TOOLS_CA_CERTIFICATE_PATH")
+    ca_certificate_path = os.environ.get("SENZING_TOOLS_SERVER_CA_CERTIFICATE_PATH")
     if ca_certificate_path:
         with open(ca_certificate_path, "rb") as file:
             server_cert = file.read()
 
         client_cert = None
-        client_certificate_path = os.environ.get("SENZING_TOOLS_XXX")
+        client_certificate_path = os.environ.get("SENZING_TOOLS_CLIENT_CERTIFICATE_PATH")
         if client_certificate_path:
             with open(client_certificate_path, "rb") as file:
                 client_cert = file.read()
 
         client_key = None
-        client_key_path = os.environ.get("SENZING_TOOLS_XXX")
+        client_key_path = os.environ.get("SENZING_TOOLS_CLIENT_KEY_PATH")
         if client_key_path:
             with open(client_key_path, "rb") as file:
                 client_key = file.read()

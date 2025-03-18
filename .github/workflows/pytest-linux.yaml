@@ -18,21 +18,25 @@ jobs:
         os: [ubuntu-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
-    services:
-      servegrpc:
-        credentials:
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-        env:
-          SENZING_TOOLS_ENABLE_ALL: true
-        image: senzing/serve-grpc
-        options: --user 0
-        ports:
-          - 8261:8261
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Docker run
+        run: |
+          docker run \
+            --detach \
+            --env SENZING_TOOLS_ENABLE_ALL=true \
+            --name servegrpc \
+            --publish 8261:8261 \
+            --rm \
+            senzing/serve-grpc
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -48,8 +52,8 @@ jobs:
           python -m pip install --requirement requirements.txt
           python -m pip install psutil pytest pytest-cov pytest-schema
 
-      - if: matrix.python-version == '3.8' || matrix.python-version == '3.9' || matrix.python-version == '3.10'
-        name: Install python libraries for python 3.8, 3.9, and 3.10
+      - if: matrix.python-version == '3.9' || matrix.python-version == '3.10'
+        name: Install python libraries for python 3.9 and 3.10
         run: |
           source ./venv/bin/activate
           python -m pip install typing_extensions
