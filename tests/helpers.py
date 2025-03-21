@@ -18,6 +18,8 @@ def get_grpc_channel() -> grpc.Channel:
         with open(ca_certificate_file, "rb") as file:
             server_cert = file.read()
 
+        # Mutual TLS.
+
         client_cert = None
         client_certificate_file = os.environ.get("SENZING_TOOLS_CLIENT_CERTIFICATE_FILE")
         if client_certificate_file:
@@ -44,9 +46,6 @@ def get_grpc_channel() -> grpc.Channel:
                 else:
                     raise TypeError
 
-                # bob = serialization.
-                # client_key = client_key_bob.private_bytes_raw()  # type: ignore[union-attr]
-
         # Create client credentials.
 
         client_credentials = grpc.ssl_channel_credentials(
@@ -56,6 +55,7 @@ def get_grpc_channel() -> grpc.Channel:
         )
 
         # Create a secure channel
+
         result = grpc.secure_channel("0.0.0.0:8261", client_credentials)
 
     else:
