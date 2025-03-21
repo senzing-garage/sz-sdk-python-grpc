@@ -1,6 +1,7 @@
 import os
 
 import grpc
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
 # -----------------------------------------------------------------------------
 # Helpers
@@ -10,6 +11,9 @@ import grpc
 def get_grpc_channel() -> grpc.Channel:
     ca_certificate_path = os.environ.get("SENZING_TOOLS_SERVER_CA_CERTIFICATE_PATH")
     if ca_certificate_path:
+
+        # Server-side TLS.
+
         with open(ca_certificate_path, "rb") as file:
             server_cert = file.read()
 
@@ -24,6 +28,11 @@ def get_grpc_channel() -> grpc.Channel:
         if client_key_path:
             with open(client_key_path, "rb") as file:
                 client_key = file.read()
+
+            client_key_passphrase = os.environ.get("SENZING_TOOLS_CLIENT_KEY_PASSPHRASE")
+            if client_key_passphrase:
+                client_key_bob = load_pem_private_key(client_key, password=bytes(client_key_passphrase, "utf-8"))
+                client_key = client_key_bob.private_bytes_raw()  # type: ignore[union-attr]
 
         # Create client credentials.
 
