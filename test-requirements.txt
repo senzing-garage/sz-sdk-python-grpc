@@ -1,0 +1,8 @@
+cryptography==44.0.2
+mypy==1.15.0
+orjson==3.10.15
+psutil==7.0.0
+pylint==3.3.6
+pytest==9.3.5
+pytest-cov==6.0.0
+pytest-schema==0.1.2
