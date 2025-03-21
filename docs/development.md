@@ -127,6 +127,33 @@ Not applicable.
 
    ```
 
+### Test Server-Side TLS
+
+1. Run a gRPC server.
+   Either:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make clean setup-server-side-tls test-server-side-tls
+    ```
+
+### Test Mutual TLS
+
+1. Run a gRPC server.
+   Either:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make clean setup-mutual-tls test-mutual-tls
+    ```
+
+   Or:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make clean setup-mutual-tls test-mutual-tls-encrypted-key
+    ```
+
 ## Coverage
 
 Create a code coverage map.
@@ -273,4 +300,3 @@ Create a code coverage map.
 [szproduct_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szproduct_pb2_grpc.py
 [sz-sdk-proto/example_generated_source_code/python]: https://github.com/senzing-garage/sz-sdk-proto/tree/main/example_generated_source_code/python
 [Test PyPi]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/pypi.md#test-pypi
-

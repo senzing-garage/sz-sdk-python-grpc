@@ -61,7 +61,6 @@ package-osarch-specific:
 setup-osarch-specific:
 	@docker run \
 		--detach \
-		--env SENZING_TOOLS_DATABASE_URL="sqlite3://na:na@nowhere/tmp/sqlite/G2C.db?mode=memory&cache=shared" \
 		--env SENZING_TOOLS_ENABLE_ALL=true \
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
@@ -74,10 +73,10 @@ setup-osarch-specific:
 setup-mutual-tls-osarch-specific:
 	@docker run \
 		--detach \
-		--env SENZING_TOOLS_CLIENT_CA_CERTIFICATE_PATH=/testdata/certificates/certificate-authority/certificate.pem \
+		--env SENZING_TOOLS_CLIENT_CA_CERTIFICATE_FILE=/testdata/certificates/certificate-authority/certificate.pem \
 		--env SENZING_TOOLS_ENABLE_ALL=true \
-		--env SENZING_TOOLS_SERVER_CERTIFICATE_PATH=/testdata/certificates/server/certificate.pem \
-		--env SENZING_TOOLS_SERVER_KEY_PATH=/testdata/certificates/server/private_key.pem \
+		--env SENZING_TOOLS_SERVER_CERTIFICATE_FILE=/testdata/certificates/server/certificate.pem \
+		--env SENZING_TOOLS_SERVER_KEY_FILE=/testdata/certificates/server/private_key.pem \
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
 		--rm \
@@ -91,8 +90,8 @@ setup-server-side-tls-osarch-specific:
 	@docker run \
 		--detach \
 		--env SENZING_TOOLS_ENABLE_ALL=true \
-		--env SENZING_TOOLS_SERVER_CERTIFICATE_PATH=/testdata/certificates/server/certificate.pem \
-		--env SENZING_TOOLS_SERVER_KEY_PATH=/testdata/certificates/server/private_key.pem \
+		--env SENZING_TOOLS_SERVER_CERTIFICATE_FILE=/testdata/certificates/server/certificate.pem \
+		--env SENZING_TOOLS_SERVER_KEY_FILE=/testdata/certificates/server/private_key.pem \
 		--name senzing-serve-grpc \
 		--publish 8261:8261 \
 		--rm \
@@ -128,16 +127,26 @@ test-osarch-specific:
 
 
 .PHONY: test-mutual-tls-osarch-specific
-test-mutual-tls-osarch-specific: export SENZING_TOOLS_SERVER_CA_CERTIFICATE_PATH=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
-test-mutual-tls-osarch-specific: export SENZING_TOOLS_CLIENT_CERTIFICATE_PATH=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/certificate.pem
-test-mutual-tls-osarch-specific: export SENZING_TOOLS_CLIENT_KEY_PATH=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/private_key.pem
+test-mutual-tls-osarch-specific: export SENZING_TOOLS_SERVER_CA_CERTIFICATE_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
+test-mutual-tls-osarch-specific: export SENZING_TOOLS_CLIENT_CERTIFICATE_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/certificate.pem
+test-mutual-tls-osarch-specific: export SENZING_TOOLS_CLIENT_KEY_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/private_key.pem
 test-mutual-tls-osarch-specific:
 	$(info --- Unit tests -------------------------------------------------------)
 	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
 
 
+.PHONY: test-mutual-tls-encrypted-key-osarch-specific
+test-mutual-tls-encrypted-key-osarch-specific: export SENZING_TOOLS_SERVER_CA_CERTIFICATE_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
+test-mutual-tls-encrypted-key-osarch-specific: export SENZING_TOOLS_CLIENT_CERTIFICATE_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/certificate.pem
+test-mutual-tls-encrypted-key-osarch-specific: export SENZING_TOOLS_CLIENT_KEY_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/client/private_key_encrypted.pem
+test-mutual-tls-encrypted-key-osarch-specific: export SENZING_TOOLS_CLIENT_KEY_PASSPHRASE=Passw0rd
+test-mutual-tls-encrypted-key-osarch-specific:
+	$(info --- Unit tests -------------------------------------------------------)
+	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
+
+
 .PHONY: test-server-side-tls-osarch-specific
-test-server-side-tls-osarch-specific: export SENZING_TOOLS_SERVER_CA_CERTIFICATE_PATH=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
+test-server-side-tls-osarch-specific: export SENZING_TOOLS_SERVER_CA_CERTIFICATE_FILE=$(MAKEFILE_DIRECTORY)/testdata/certificates/certificate-authority/certificate.pem
 test-server-side-tls-osarch-specific:
 	$(info --- Unit tests -------------------------------------------------------)
 	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
