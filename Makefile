@@ -93,6 +93,14 @@ dependencies: venv
 .PHONY: setup
 setup: setup-osarch-specific
 
+
+.PHONY: setup-mutual-tls
+setup-mutual-tls: setup-mutual-tls-osarch-specific
+
+
+.PHONY: setup-server-side-tls
+setup-server-side-tls: setup-server-side-tls-osarch-specific
+
 # -----------------------------------------------------------------------------
 # Lint
 # -----------------------------------------------------------------------------
@@ -118,6 +126,14 @@ docker-build: docker-build-osarch-specific
 
 .PHONY: test
 test: test-osarch-specific
+
+
+.PHONY: test-mutual-tls
+test-mutual-tls: test-mutual-tls-osarch-specific
+
+
+.PHONY: test-mutual-tls-encrypted-key
+test-mutual-tls-encrypted-key: test-mutual-tls-encrypted-key-osarch-specific
 
 
 .PHONY: test-server-side-tls
