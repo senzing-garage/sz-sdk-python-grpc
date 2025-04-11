@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15szconfigmanager.proto\x12\x0fszconfigmanager\"E\n\x10\x41\x64\x64\x43onfigRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x16\n\x0e\x63onfig_comment\x18\x02 \x01(\t\"#\n\x11\x41\x64\x64\x43onfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\x03\"%\n\x10GetConfigRequest\x12\x11\n\tconfig_id\x18\x01 \x01(\x03\"#\n\x11GetConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x13\n\x11GetConfigsRequest\"$\n\x12GetConfigsResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x1b\n\x19GetDefaultConfigIdRequest\",\n\x1aGetDefaultConfigIdResponse\x12\x0e\n\x06result\x18\x01 \x01(\x03\"a\n\x1dReplaceDefaultConfigIdRequest\x12!\n\x19\x63urrent_default_config_id\x18\x01 \x01(\x03\x12\x1d\n\x15new_default_config_id\x18\x02 \x01(\x03\" \n\x1eReplaceDefaultConfigIdResponse\".\n\x19SetDefaultConfigIdRequest\x12\x11\n\tconfig_id\x18\x01 \x01(\x03\"\x1c\n\x1aSetDefaultConfigIdResponse2\xf5\x04\n\x0fSzConfigManager\x12T\n\tAddConfig\x12!.szconfigmanager.AddConfigRequest\x1a\".szconfigmanager.AddConfigResponse\"\x00\x12T\n\tGetConfig\x12!.szconfigmanager.GetConfigRequest\x1a\".szconfigmanager.GetConfigResponse\"\x00\x12W\n\nGetConfigs\x12\".szconfigmanager.GetConfigsRequest\x1a#.szconfigmanager.GetConfigsResponse\"\x00\x12o\n\x12GetDefaultConfigId\x12*.szconfigmanager.GetDefaultConfigIdRequest\x1a+.szconfigmanager.GetDefaultConfigIdResponse\"\x00\x12{\n\x16ReplaceDefaultConfigId\x12..szconfigmanager.ReplaceDefaultConfigIdRequest\x1a/.szconfigmanager.ReplaceDefaultConfigIdResponse\"\x00\x12o\n\x12SetDefaultConfigId\x12*.szconfigmanager.SetDefaultConfigIdRequest\x1a+.szconfigmanager.SetDefaultConfigIdResponse\"\x00\x42\x66\n\x14\x63om.senzing.sdk.grpcB\x14SzConfigManagerProtoZ8github.com/senzing-garage/sz-sdk-go-grpc/szconfigmanagerb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15szconfigmanager.proto\x12\x0fszconfigmanager\"%\n\x10GetConfigRequest\x12\x11\n\tconfig_id\x18\x01 \x01(\x03\"#\n\x11GetConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x13\n\x11GetConfigsRequest\"$\n\x12GetConfigsResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"\x1b\n\x19GetDefaultConfigIdRequest\",\n\x1aGetDefaultConfigIdResponse\x12\x0e\n\x06result\x18\x01 \x01(\x03\"\x1a\n\x18GetTemplateConfigRequest\"+\n\x19GetTemplateConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"J\n\x15RegisterConfigRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x16\n\x0e\x63onfig_comment\x18\x02 \x01(\t\"(\n\x16RegisterConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\x03\"a\n\x1dReplaceDefaultConfigIdRequest\x12!\n\x19\x63urrent_default_config_id\x18\x01 \x01(\x03\x12\x1d\n\x15new_default_config_id\x18\x02 \x01(\x03\" \n\x1eReplaceDefaultConfigIdResponse\"L\n\x17SetDefaultConfigRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x16\n\x0e\x63onfig_comment\x18\x02 \x01(\t\"*\n\x18SetDefaultConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\x03\".\n\x19SetDefaultConfigIdRequest\x12\x11\n\tconfig_id\x18\x01 \x01(\x03\"\x1c\n\x1aSetDefaultConfigIdResponse2\xdd\x06\n\x0fSzConfigManager\x12T\n\tGetConfig\x12!.szconfigmanager.GetConfigRequest\x1a\".szconfigmanager.GetConfigResponse\"\x00\x12W\n\nGetConfigs\x12\".szconfigmanager.GetConfigsRequest\x1a#.szconfigmanager.GetConfigsResponse\"\x00\x12o\n\x12GetDefaultConfigId\x12*.szconfigmanager.GetDefaultConfigIdRequest\x1a+.szconfigmanager.GetDefaultConfigIdResponse\"\x00\x12l\n\x11GetTemplateConfig\x12).szconfigmanager.GetTemplateConfigRequest\x1a*.szconfigmanager.GetTemplateConfigResponse\"\x00\x12\x63\n\x0eRegisterConfig\x12&.szconfigmanager.RegisterConfigRequest\x1a\'.szconfigmanager.RegisterConfigResponse\"\x00\x12{\n\x16ReplaceDefaultConfigId\x12..szconfigmanager.ReplaceDefaultConfigIdRequest\x1a/.szconfigmanager.ReplaceDefaultConfigIdResponse\"\x00\x12i\n\x10SetDefaultConfig\x12(.szconfigmanager.SetDefaultConfigRequest\x1a).szconfigmanager.SetDefaultConfigResponse\"\x00\x12o\n\x12SetDefaultConfigId\x12*.szconfigmanager.SetDefaultConfigIdRequest\x1a+.szconfigmanager.SetDefaultConfigIdResponse\"\x00\x42\x66\n\x14\x63om.senzing.sdk.grpcB\x14SzConfigManagerProtoZ8github.com/senzing-garage/sz-sdk-go-grpc/szconfigmanagerb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,30 +32,38 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'szconfigmanager_pb2', _glob
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\024com.senzing.sdk.grpcB\024SzConfigManagerProtoZ8github.com/senzing-garage/sz-sdk-go-grpc/szconfigmanager'
-  _globals['_ADDCONFIGREQUEST']._serialized_start=42
-  _globals['_ADDCONFIGREQUEST']._serialized_end=111
-  _globals['_ADDCONFIGRESPONSE']._serialized_start=113
-  _globals['_ADDCONFIGRESPONSE']._serialized_end=148
-  _globals['_GETCONFIGREQUEST']._serialized_start=150
-  _globals['_GETCONFIGREQUEST']._serialized_end=187
-  _globals['_GETCONFIGRESPONSE']._serialized_start=189
-  _globals['_GETCONFIGRESPONSE']._serialized_end=224
-  _globals['_GETCONFIGSREQUEST']._serialized_start=226
-  _globals['_GETCONFIGSREQUEST']._serialized_end=245
-  _globals['_GETCONFIGSRESPONSE']._serialized_start=247
-  _globals['_GETCONFIGSRESPONSE']._serialized_end=283
-  _globals['_GETDEFAULTCONFIGIDREQUEST']._serialized_start=285
-  _globals['_GETDEFAULTCONFIGIDREQUEST']._serialized_end=312
-  _globals['_GETDEFAULTCONFIGIDRESPONSE']._serialized_start=314
-  _globals['_GETDEFAULTCONFIGIDRESPONSE']._serialized_end=358
-  _globals['_REPLACEDEFAULTCONFIGIDREQUEST']._serialized_start=360
-  _globals['_REPLACEDEFAULTCONFIGIDREQUEST']._serialized_end=457
-  _globals['_REPLACEDEFAULTCONFIGIDRESPONSE']._serialized_start=459
-  _globals['_REPLACEDEFAULTCONFIGIDRESPONSE']._serialized_end=491
-  _globals['_SETDEFAULTCONFIGIDREQUEST']._serialized_start=493
-  _globals['_SETDEFAULTCONFIGIDREQUEST']._serialized_end=539
-  _globals['_SETDEFAULTCONFIGIDRESPONSE']._serialized_start=541
-  _globals['_SETDEFAULTCONFIGIDRESPONSE']._serialized_end=569
-  _globals['_SZCONFIGMANAGER']._serialized_start=572
-  _globals['_SZCONFIGMANAGER']._serialized_end=1201
+  _globals['_GETCONFIGREQUEST']._serialized_start=42
+  _globals['_GETCONFIGREQUEST']._serialized_end=79
+  _globals['_GETCONFIGRESPONSE']._serialized_start=81
+  _globals['_GETCONFIGRESPONSE']._serialized_end=116
+  _globals['_GETCONFIGSREQUEST']._serialized_start=118
+  _globals['_GETCONFIGSREQUEST']._serialized_end=137
+  _globals['_GETCONFIGSRESPONSE']._serialized_start=139
+  _globals['_GETCONFIGSRESPONSE']._serialized_end=175
+  _globals['_GETDEFAULTCONFIGIDREQUEST']._serialized_start=177
+  _globals['_GETDEFAULTCONFIGIDREQUEST']._serialized_end=204
+  _globals['_GETDEFAULTCONFIGIDRESPONSE']._serialized_start=206
+  _globals['_GETDEFAULTCONFIGIDRESPONSE']._serialized_end=250
+  _globals['_GETTEMPLATECONFIGREQUEST']._serialized_start=252
+  _globals['_GETTEMPLATECONFIGREQUEST']._serialized_end=278
+  _globals['_GETTEMPLATECONFIGRESPONSE']._serialized_start=280
+  _globals['_GETTEMPLATECONFIGRESPONSE']._serialized_end=323
+  _globals['_REGISTERCONFIGREQUEST']._serialized_start=325
+  _globals['_REGISTERCONFIGREQUEST']._serialized_end=399
+  _globals['_REGISTERCONFIGRESPONSE']._serialized_start=401
+  _globals['_REGISTERCONFIGRESPONSE']._serialized_end=441
+  _globals['_REPLACEDEFAULTCONFIGIDREQUEST']._serialized_start=443
+  _globals['_REPLACEDEFAULTCONFIGIDREQUEST']._serialized_end=540
+  _globals['_REPLACEDEFAULTCONFIGIDRESPONSE']._serialized_start=542
+  _globals['_REPLACEDEFAULTCONFIGIDRESPONSE']._serialized_end=574
+  _globals['_SETDEFAULTCONFIGREQUEST']._serialized_start=576
+  _globals['_SETDEFAULTCONFIGREQUEST']._serialized_end=652
+  _globals['_SETDEFAULTCONFIGRESPONSE']._serialized_start=654
+  _globals['_SETDEFAULTCONFIGRESPONSE']._serialized_end=696
+  _globals['_SETDEFAULTCONFIGIDREQUEST']._serialized_start=698
+  _globals['_SETDEFAULTCONFIGIDREQUEST']._serialized_end=744
+  _globals['_SETDEFAULTCONFIGIDRESPONSE']._serialized_start=746
+  _globals['_SETDEFAULTCONFIGIDRESPONSE']._serialized_end=774
+  _globals['_SZCONFIGMANAGER']._serialized_start=777
+  _globals['_SZCONFIGMANAGER']._serialized_end=1638
 # @@protoc_insertion_point(module_scope)
