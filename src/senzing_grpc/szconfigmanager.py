@@ -14,9 +14,10 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing import SzConfigManager
+from senzing import SzConfig, SzConfigManager
 
 from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
+from .szconfig import SzConfigGrpc
 from .szhelpers import as_str, new_exception
 
 # Metadata
@@ -75,26 +76,31 @@ class SzConfigManagerGrpc(SzConfigManager):
     # SzConfigManager methods
     # -------------------------------------------------------------------------
 
-    def add_config(
-        self,
-        config_definition: str,
-        config_comment: str,
-    ) -> int:
-        try:
-            request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
-                config_definition=as_str(config_definition),
-                config_comment=as_str(config_comment),
-            )
-            response = self.stub.AddConfig(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def get_config(self, config_id: int) -> str:
+    def create_config_from_config_id(self, config_id: int) -> SzConfig:
         try:
             request = szconfigmanager_pb2.GetConfigRequest(config_id=config_id)  # type: ignore[unused-ignore]
             response = self.stub.GetConfig(request)
-            return str(response.result)
+            config_definition = str(response.result)
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            return result
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def create_config_from_string(self, config_definition: str) -> SzConfig:
+        result = SzConfigGrpc(self.channel)
+        # result.verify_config_definition(config_definition)
+        result.import_config_definition(config_definition)
+        return result
+
+    def create_config_from_template(self) -> SzConfig:
+        try:
+            request = szconfigmanager_pb2.GetTemplateConfigRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetTemplateConfig(request)
+            config_definition = str(response.result)
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            return result
         except Exception as err:
             raise new_exception(err) from err
 
@@ -114,6 +120,21 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    def register_config(
+        self,
+        config_definition: str,
+        config_comment: str,
+    ) -> int:
+        try:
+            request = szconfigmanager_pb2.RegisterConfigRequest(  # type: ignore[unused-ignore]
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
+            )
+            response = self.stub.RegisterConfig(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
@@ -121,6 +142,17 @@ class SzConfigManagerGrpc(SzConfigManager):
                 new_default_config_id=new_default_config_id,
             )
             self.stub.ReplaceDefaultConfigId(request)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def set_default_config(self, config_definition: str, config_comment: str) -> int:
+        try:
+            request = szconfigmanager_pb2.SetDefaultConfigRequest(  # type: ignore[unused-ignore]
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
+            )
+            response = self.stub.SetDefaultConfigId(request)
+            return int(response.result)
         except Exception as err:
             raise new_exception(err) from err
 

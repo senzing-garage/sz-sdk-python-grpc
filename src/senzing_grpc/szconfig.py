@@ -17,7 +17,7 @@ import grpc
 from senzing import SzConfig
 
 from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
-from .szhelpers import as_str, new_exception
+from .szhelpers import new_exception
 
 # Metadata
 
@@ -56,6 +56,7 @@ class SzConfigGrpc(SzConfig):
 
         self.channel = grpc_channel
         self.stub = szconfig_pb2_grpc.SzConfigStub(self.channel)
+        self.config_definition = ""
 
     def __enter__(
         self,
@@ -81,31 +82,33 @@ class SzConfigGrpc(SzConfig):
     ) -> str:
         try:
             request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
-                config_handle=config_handle, data_source_code=data_source_code
+                config_definition=self.config_definition, data_source_code=data_source_code
             )
             response = self.stub.AddDataSource(request)
+            config_definition = response.config_definition
+            if len(config_definition) > 0:
+                self.config_definition = config_definition
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def delete_data_source(self, data_source_code: str) -> None:
+    def delete_data_source(self, data_source_code: str) -> str:
         try:
-            request = szconfig_pb2.DeleteDataSourceRequest(config_handle=config_handle, data_source_code=data_source_code)  # type: ignore[unused-ignore]
-            self.stub.DeleteDataSource(request)
+            request = szconfig_pb2.DeleteDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
+            response = self.stub.DeleteDataSource(request)
+            config_definition = response.config_definition
+            if len(config_definition) > 0:
+                self.config_definition = config_definition
+            return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
     def export(self) -> str:
-        try:
-            request = szconfig_pb2.ExportConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
-            response = self.stub.ExportConfig(request)
-            return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
+        return self.config_definition
 
     def get_data_sources(self) -> str:
         try:
-            request = szconfig_pb2.GetDataSourcesRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.GetDataSourcesRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSources(request)
             return str(response.result)
         except Exception as err:
@@ -118,6 +121,15 @@ class SzConfigGrpc(SzConfig):
     def _destroy(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
 
+    def import_config_definition(self, config_definition: str) -> int:
+        """
+        Set the internal JSON document.
+
+        Args:
+            config_definition (str): A Senzing configuration JSON document.
+        """
+        self.config_definition = config_definition
+
     def initialize(
         self,
         instance_name: str,
@@ -128,11 +140,3 @@ class SzConfigGrpc(SzConfig):
         _ = instance_name
         _ = settings
         _ = verbose_logging
-
-    def import_config(self, config_definition: str) -> int:
-        try:
-            request = szconfig_pb2.ImportConfigRequest(config_definition=as_str(config_definition))  # type: ignore[unused-ignore]
-            response = self.stub.ImportConfig(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
