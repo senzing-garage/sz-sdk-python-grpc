@@ -121,7 +121,7 @@ class SzConfigGrpc(SzConfig):
     def _destroy(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
 
-    def import_config_definition(self, config_definition: str) -> int:
+    def import_config_definition(self, config_definition: str) -> None:
         """
         Set the internal JSON document.
 
