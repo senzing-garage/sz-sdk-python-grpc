@@ -82,7 +82,7 @@ def test_add_truthset_datasources(
     config_definition = sz_config.export_config(config_handle)
     config_id = sz_configmanager.add_config(config_definition, "Test")
     sz_configmanager.set_default_config_id(config_id)
-    sz_engine._reinitialize(config_id)  # pylint: disable=W0212
+    sz_engine.reinitialize(config_id)  # pylint: disable=W0212
 
 
 # -----------------------------------------------------------------------------

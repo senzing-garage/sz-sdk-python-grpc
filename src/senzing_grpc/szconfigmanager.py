@@ -90,9 +90,6 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
     def get_config(self, config_id: int) -> str:
         try:
             request = szconfigmanager_pb2.GetConfigRequest(config_id=config_id)  # type: ignore[unused-ignore]
@@ -117,17 +114,6 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
-        self,
-        instance_name: str,
-        settings: Union[str, Dict[Any, Any]],
-        verbose_logging: int = 0,
-    ) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-        _ = instance_name
-        _ = settings
-        _ = verbose_logging
-
     def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
@@ -146,3 +132,21 @@ class SzConfigManagerGrpc(SzConfigManager):
             self.stub.SetDefaultConfigId(request)
         except Exception as err:
             raise new_exception(err) from err
+
+    # -------------------------------------------------------------------------
+    # Non-public SzConfigManagerCore methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
+        self,
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
+        verbose_logging: int = 0,
+    ) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+        _ = instance_name
+        _ = settings
+        _ = verbose_logging

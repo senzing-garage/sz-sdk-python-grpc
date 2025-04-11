@@ -72,12 +72,11 @@ class SzConfigGrpc(SzConfig):
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # SzConfig methods
+    # SzConfig interface methods
     # -------------------------------------------------------------------------
 
     def add_data_source(
         self,
-        config_handle: int,
         data_source_code: str,
     ) -> str:
         try:
@@ -89,32 +88,14 @@ class SzConfigGrpc(SzConfig):
         except Exception as err:
             raise new_exception(err) from err
 
-    def close_config(self, config_handle: int) -> None:
-        try:
-            request = szconfig_pb2.CloseConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
-            self.stub.CloseConfig(request)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def create_config(self) -> int:
-        try:
-            request = szconfig_pb2.CreateConfigRequest()  # type: ignore[unused-ignore]
-            response = self.stub.CreateConfig(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def delete_data_source(self, config_handle: int, data_source_code: str) -> None:
+    def delete_data_source(self, data_source_code: str) -> None:
         try:
             request = szconfig_pb2.DeleteDataSourceRequest(config_handle=config_handle, data_source_code=data_source_code)  # type: ignore[unused-ignore]
             self.stub.DeleteDataSource(request)
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def export_config(self, config_handle: int) -> str:
+    def export(self) -> str:
         try:
             request = szconfig_pb2.ExportConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.ExportConfig(request)
@@ -122,7 +103,7 @@ class SzConfigGrpc(SzConfig):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_data_sources(self, config_handle: int) -> str:
+    def get_data_sources(self) -> str:
         try:
             request = szconfig_pb2.GetDataSourcesRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSources(request)
@@ -130,7 +111,14 @@ class SzConfigGrpc(SzConfig):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
+    # -------------------------------------------------------------------------
+    # Non-public SzConfigCore methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
