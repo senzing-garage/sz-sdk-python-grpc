@@ -2,9 +2,9 @@ import json
 
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing import SzConfig
+from senzing import SzAbstractFactory, SzConfig, SzConfigManager
 
-from senzing_grpc import SzConfigGrpc
+from senzing_grpc import SzAbstractFactoryGrpc, SzConfigGrpc
 
 from .helpers import get_grpc_channel
 
@@ -15,6 +15,7 @@ from .helpers import get_grpc_channel
 
 def test_add_data_source(sz_config: SzConfig) -> None:
     """Test SzConfig().add_data_source()."""
+
     data_source_code = "NAME_OF_DATASOURCE"
     actual = sz_config.add_data_source(data_source_code)
     assert isinstance(actual, str)
@@ -88,13 +89,52 @@ def test_constructor() -> None:
 # -----------------------------------------------------------------------------
 
 
+def get_szabstractfactory() -> SzAbstractFactory:
+    """
+    Single SzAbstractFactory object to use for all tests.
+    """
+    return SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel())
+
+
+def get_szconfigmanager() -> SzConfigManager:
+    """
+    Single SzConfigManager object to use for all tests.
+    """
+    sz_abstractfactory = get_szabstractfactory()
+    return sz_abstractfactory.create_configmanager()
+
+
+def get_szconfig() -> SzConfig:
+    """
+    Single SzConfig object to use for all tests.
+    """
+    sz_configmanager = get_szconfigmanager()
+    return sz_configmanager.create_config_from_template()
+
+
+@pytest.fixture(name="sz_abstractfactory", scope="function")
+def szabstractfactory_fixture() -> SzAbstractFactory:
+    """
+    Single SzAbstractFactory object to use for all tests.
+    """
+    return get_szabstractfactory()
+
+
+@pytest.fixture(name="sz_configmanager", scope="function")
+def szconfigmanager_fixture() -> SzConfigManager:
+    """
+    Single SzConfigManager object to use for all tests.
+    """
+
+    return get_szconfigmanager()
+
+
 @pytest.fixture(name="sz_config", scope="function")
 def szconfig_fixture() -> SzConfig:
     """
-    Single szconfig object to use for all tests.
+    Single SzConfig object to use for all tests.
     """
-    result = SzConfigGrpc(grpc_channel=get_grpc_channel())
-    return result
+    return get_szconfig()
 
 
 # -----------------------------------------------------------------------------

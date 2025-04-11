@@ -151,7 +151,7 @@ class SzConfigManagerGrpc(SzConfigManager):
                 config_definition=as_str(config_definition),
                 config_comment=as_str(config_comment),
             )
-            response = self.stub.SetDefaultConfigId(request)
+            response = self.stub.SetDefaultConfig(request)
             return int(response.result)
         except Exception as err:
             raise new_exception(err) from err

@@ -130,6 +130,15 @@ class SzConfigGrpc(SzConfig):
         """
         self.config_definition = config_definition
 
+    def import_template(
+        self,
+    ) -> None:
+        """
+        Retrieves a Senzing configuration from the default template.
+        The default template is the Senzing configuration JSON document file,
+        g2config.json, located in the PIPELINE.RESOURCEPATH path.
+        """
+
     def initialize(
         self,
         instance_name: str,

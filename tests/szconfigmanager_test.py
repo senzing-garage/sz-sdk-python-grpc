@@ -28,14 +28,14 @@ def test_create_config_from_config_id(sz_configmanager: SzConfigManager) -> None
     assert schema(config_schema) == actual_as_dict
 
 
-def test_get_config_bad_config_id_type(sz_configmanager: SzConfigManager) -> None:
+def test_create_config_from_config_id_bad_config_id_type(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = "string"
     with pytest.raises(TypeError):
         sz_configmanager.create_config_from_config_id(bad_config_id)  # type: ignore[arg-type]
 
 
-def test_get_config_bad_config_id_value(sz_configmanager: SzConfigManager) -> None:
+def test_create_config_from_config_id_bad_config_id_value(sz_configmanager: SzConfigManager) -> None:
     """Test SzConfigManager().get_default_config_id()."""
     bad_config_id = 1234
     with pytest.raises(SzConfigurationError):
