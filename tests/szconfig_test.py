@@ -15,7 +15,6 @@ from .helpers import get_grpc_channel
 
 def test_add_data_source(sz_config: SzConfig) -> None:
     """Test SzConfig().add_data_source()."""
-
     data_source_code = "NAME_OF_DATASOURCE"
     actual = sz_config.add_data_source(data_source_code)
     assert isinstance(actual, str)
@@ -24,14 +23,15 @@ def test_add_data_source(sz_config: SzConfig) -> None:
 
 
 def test_add_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig().add_data_source()."""
+    """Test SzConfig().add_data_source_bad_data_source_code_type()."""
     bad_data_source_code = 0
     with pytest.raises(TypeError):
         sz_config.add_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig().add_data_source()."""
+    """Test SzConfig().add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
+    ()."""
     bad_data_source_code = {"XXXX": "YYYY"}
     with pytest.raises(TypeError):
         sz_config.add_data_source(bad_data_source_code)  # type: ignore[arg-type]
@@ -44,17 +44,25 @@ def test_delete_data_source(sz_config: SzConfig) -> None:
 
 
 def test_delete_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig().delete_data_source()."""
+    """Test SzConfig().delete_data_source_bad_data_source_code_type()."""
     bad_data_source_code = 0
     with pytest.raises(TypeError):
         sz_config.delete_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_delete_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig().delete_data_source()."""
+    """Test SzConfig().delete_data_source_bad_data_source_code_value()."""
     bad_data_source_code = {"XXXX": "YYYY"}
     with pytest.raises(TypeError):
         sz_config.delete_data_source(bad_data_source_code)  # type: ignore[arg-type]
+
+
+def test_export(sz_config: SzConfig) -> None:
+    """Test SzConfig().export()."""
+    actual = sz_config.export()
+    assert isinstance(actual, str)
+    actual_as_dict = json.loads(actual)
+    assert schema(export_config_schema) == actual_as_dict
 
 
 def test_get_data_sources(sz_config: SzConfig) -> None:
@@ -63,14 +71,6 @@ def test_get_data_sources(sz_config: SzConfig) -> None:
     assert isinstance(actual, str)
     actual_as_dict = json.loads(actual)
     assert schema(get_data_sources_schema) == actual_as_dict
-
-
-def test_export_config(sz_config: SzConfig) -> None:
-    """Test SzConfig().export_config()."""
-    actual = sz_config.export()
-    assert isinstance(actual, str)
-    actual_as_dict = json.loads(actual)
-    assert schema(export_config_schema) == actual_as_dict
 
 
 # -----------------------------------------------------------------------------
