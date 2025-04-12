@@ -17,7 +17,7 @@ import grpc
 from senzing import SzConfig
 
 from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
-from .szhelpers import as_str, new_exception
+from .szhelpers import new_exception
 
 # Metadata
 
@@ -56,6 +56,7 @@ class SzConfigGrpc(SzConfig):
 
         self.channel = grpc_channel
         self.stub = szconfig_pb2_grpc.SzConfigStub(self.channel)
+        self.config_definition = ""
 
     def __enter__(
         self,
@@ -72,65 +73,73 @@ class SzConfigGrpc(SzConfig):
         """Context Manager method."""
 
     # -------------------------------------------------------------------------
-    # SzConfig methods
+    # SzConfig interface methods
     # -------------------------------------------------------------------------
 
     def add_data_source(
         self,
-        config_handle: int,
         data_source_code: str,
     ) -> str:
         try:
             request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
-                config_handle=config_handle, data_source_code=data_source_code
+                config_definition=self.config_definition, data_source_code=data_source_code
             )
             response = self.stub.AddDataSource(request)
+            config_definition = response.config_definition
+            if len(config_definition) > 0:
+                self.config_definition = config_definition
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def close_config(self, config_handle: int) -> None:
+    def delete_data_source(self, data_source_code: str) -> str:
         try:
-            request = szconfig_pb2.CloseConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
-            self.stub.CloseConfig(request)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def create_config(self) -> int:
-        try:
-            request = szconfig_pb2.CreateConfigRequest()  # type: ignore[unused-ignore]
-            response = self.stub.CreateConfig(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def delete_data_source(self, config_handle: int, data_source_code: str) -> None:
-        try:
-            request = szconfig_pb2.DeleteDataSourceRequest(config_handle=config_handle, data_source_code=data_source_code)  # type: ignore[unused-ignore]
-            self.stub.DeleteDataSource(request)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def export_config(self, config_handle: int) -> str:
-        try:
-            request = szconfig_pb2.ExportConfigRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
-            response = self.stub.ExportConfig(request)
+            request = szconfig_pb2.DeleteDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
+            response = self.stub.DeleteDataSource(request)
+            config_definition = response.config_definition
+            if len(config_definition) > 0:
+                self.config_definition = config_definition
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_data_sources(self, config_handle: int) -> str:
+    def export(self) -> str:
+        return self.config_definition
+
+    def get_data_sources(self) -> str:
         try:
-            request = szconfig_pb2.GetDataSourcesRequest(config_handle=config_handle)  # type: ignore[unused-ignore]
+            request = szconfig_pb2.GetDataSourcesRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSources(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
+    # -------------------------------------------------------------------------
+    # Non-public SzConfigCore methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def import_config_definition(self, config_definition: str) -> None:
+        """
+        Set the internal JSON document.
+
+        Args:
+            config_definition (str): A Senzing configuration JSON document.
+        """
+        self.config_definition = config_definition
+
+    def import_template(
+        self,
+    ) -> None:
+        """
+        Retrieves a Senzing configuration from the default template.
+        The default template is the Senzing configuration JSON document file,
+        g2config.json, located in the PIPELINE.RESOURCEPATH path.
+        """
+
+    def initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -140,11 +149,3 @@ class SzConfigGrpc(SzConfig):
         _ = instance_name
         _ = settings
         _ = verbose_logging
-
-    def import_config(self, config_definition: str) -> int:
-        try:
-            request = szconfig_pb2.ImportConfigRequest(config_definition=as_str(config_definition))  # type: ignore[unused-ignore]
-            response = self.stub.ImportConfig(request)
-            return int(response.result)
-        except Exception as err:
-            raise new_exception(err) from err

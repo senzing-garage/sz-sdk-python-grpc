@@ -85,9 +85,6 @@ class SzDiagnosticGrpc(SzDiagnostic):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
     def get_datastore_info(self) -> str:
         try:
             request = szdiagnostic_pb2.GetDatastoreInfoRequest()  # type: ignore[unused-ignore]
@@ -106,7 +103,17 @@ class SzDiagnosticGrpc(SzDiagnostic):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
+    def purge_repository(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    # -------------------------------------------------------------------------
+    # Non-public SzDiagnostic methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -119,10 +126,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
         _ = config_id
         _ = verbose_logging
 
-    def purge_repository(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def _reinitialize(self, config_id: int) -> None:
+    def reinitialize(self, config_id: int) -> None:
         try:
             request = szdiagnostic_pb2.ReinitializeRequest(config_id=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)

@@ -8,6 +8,7 @@ from pytest_schema import Optional, Or, schema
 from senzing import (
     SZ_NO_FLAGS,
     SZ_WITHOUT_INFO,
+    SzAbstractFactory,
     SzBadInputError,
     SzConfig,
     SzConfigManager,
@@ -24,7 +25,7 @@ from senzing_truthset import (
     TRUTHSET_WATCHLIST_RECORDS,
 )
 
-from senzing_grpc import SzConfigGrpc, SzConfigManagerGrpc, SzEngineGrpc
+from senzing_grpc import SzAbstractFactoryGrpc, SzEngineGrpc
 
 from .helpers import get_grpc_channel
 
@@ -76,13 +77,14 @@ def test_add_truthset_datasources(
     sz_config: SzConfig,
 ) -> None:
     """Add needed datasources for tests."""
-    config_handle = sz_config.create_config()
     for data_source_code in TRUTHSET_DATASOURCES:
-        sz_config.add_data_source(config_handle, data_source_code)
-    config_definition = sz_config.export_config(config_handle)
-    config_id = sz_configmanager.add_config(config_definition, "Test")
+        sz_config.add_data_source(data_source_code)
+
+    config_definition = sz_config.export()
+
+    config_id = sz_configmanager.register_config(config_definition, "Test")
     sz_configmanager.set_default_config_id(config_id)
-    sz_engine._reinitialize(config_id)  # pylint: disable=W0212
+    sz_engine.reinitialize(config_id)  # pylint: disable=W0212
 
 
 # -----------------------------------------------------------------------------
@@ -1195,23 +1197,59 @@ def get_entity_id_from_record_id(sz_engine: SzEngine, data_source_code: str, rec
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_config", scope="function")
-def szconfig_fixture() -> SzConfig:
+def get_szabstractfactory() -> SzAbstractFactory:
     """
-    Single szconfig object to use for all tests.
-    engine_vars is returned from conftest.py.
+    SzAbstractFactory object to use for all tests.
     """
-    result = SzConfigGrpc(grpc_channel=get_grpc_channel())
-    return result
+    return SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel())
+
+
+def get_szconfigmanager() -> SzConfigManager:
+    """
+    SzConfigManager object to use for all tests.
+    """
+    sz_abstractfactory = get_szabstractfactory()
+    return sz_abstractfactory.create_configmanager()
+
+
+def get_szconfig() -> SzConfig:
+    """
+    SzConfig object to use for all tests.
+    """
+    sz_configmanager = get_szconfigmanager()
+    return sz_configmanager.create_config_from_template()
+
+
+def get_szengine() -> SzEngine:
+    """
+    SzConfigManager object to use for all tests.
+    """
+    sz_abstractfactory = get_szabstractfactory()
+    return sz_abstractfactory.create_engine()
+
+
+@pytest.fixture(name="sz_abstractfactory", scope="function")
+def szabstractfactory_fixture() -> SzAbstractFactory:
+    """
+    SzAbstractFactory object to use for all tests.
+    """
+    return get_szabstractfactory()
 
 
 @pytest.fixture(name="sz_configmanager", scope="function")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
-    Single szconfigmanager object to use for all tests.
+    SzConfigManager object to use for all tests.
     """
-    result = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
-    return result
+    return get_szconfigmanager()
+
+
+@pytest.fixture(name="sz_config", scope="function")
+def szconfig_fixture() -> SzConfig:
+    """
+    SzConfig object to use for all tests.
+    """
+    return get_szconfig()
 
 
 @pytest.fixture(name="sz_engine", scope="function")
@@ -1219,8 +1257,7 @@ def szengine_fixture() -> SzEngine:
     """
     Single SzEngine object to use for all tests.
     """
-    result = SzEngineGrpc(grpc_channel=get_grpc_channel())
-    return result
+    return get_szengine()
 
 
 # -----------------------------------------------------------------------------
