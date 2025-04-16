@@ -30,4 +30,4 @@ sphinxcontrib-serializinghtml==2.0.0
 sphinxext-remoteliteralinclude==0.5.0
 twine==6.1.0
 virtualenv==20.30.0
-wheel==0.45.1
+wheel==0.46.1

@@ -9,12 +9,12 @@ from senzing_grpc import SzProductGrpc
 from .helpers import get_grpc_channel
 
 # -----------------------------------------------------------------------------
-# Testcases
+# Test cases
 # -----------------------------------------------------------------------------
 
 
 def test_get_license(sz_product: SzProduct) -> None:
-    """Test Senzing license."""
+    """Test SzProduct.get_license()."""
     actual = sz_product.get_license()
     assert isinstance(actual, str)
     actual_as_dict = json.loads(actual)
@@ -22,11 +22,21 @@ def test_get_license(sz_product: SzProduct) -> None:
 
 
 def test_get_version(sz_product: SzProduct) -> None:
-    """Test Senzing version."""
+    """Test SzProduct.get_version()."""
     actual = sz_product.get_version()
     assert isinstance(actual, str)
     actual_as_dict = json.loads(actual)
     assert schema(get_version_schema) == actual_as_dict
+
+
+def test_help_1(sz_product: SzProduct) -> None:
+    """Test SzProduct.help()."""
+    sz_product.help()
+
+
+def test_help_2(sz_product: SzProduct) -> None:
+    """Test SzProduct.help(...)."""
+    sz_product.help("get_license")
 
 
 # -----------------------------------------------------------------------------

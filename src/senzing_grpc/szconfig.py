@@ -149,3 +149,14 @@ class SzConfigGrpc(SzConfig):
         _ = instance_name
         _ = settings
         _ = verbose_logging
+
+    def verify_config_definition(self, config_definition: str) -> bool:
+        """
+        Determine if configuration definition is valid.
+
+        Args:
+            config_definition (str): A Senzing configuration JSON document.
+        """
+        request = szconfig_pb2.VerifyConfigRequest(config_definition=config_definition)  # type: ignore[unused-ignore]
+        response = self.stub.VerifyConfig(request)
+        return bool(response.result)

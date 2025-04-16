@@ -88,10 +88,13 @@ class SzConfigManagerGrpc(SzConfigManager):
             raise new_exception(err) from err
 
     def create_config_from_string(self, config_definition: str) -> SzConfig:
-        result = SzConfigGrpc(self.channel)
-        # result.verify_config_definition(config_definition)
-        result.import_config_definition(config_definition)
-        return result
+        try:
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            result.verify_config_definition(config_definition)
+            return result
+        except Exception as err:
+            raise new_exception(err) from err
 
     def create_config_from_template(self) -> SzConfig:
         try:
