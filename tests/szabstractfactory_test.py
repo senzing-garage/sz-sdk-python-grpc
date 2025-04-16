@@ -18,42 +18,48 @@ FACTORY_PARAMETERS: SzAbstractFactoryParametersGrpc = {
 }
 
 # -----------------------------------------------------------------------------
-# Testcases
+# Test cases
 # -----------------------------------------------------------------------------
 
 
-def test_create_configmanager(sz_abstract_factory: SzAbstractFactory) -> None:
-    """Create SzConfigManager."""
-    actual = sz_abstract_factory.create_configmanager()
+def test_create_configmanager(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.create_configmanager()."""
+    actual = sz_abstractfactory.create_configmanager()
     assert isinstance(actual, SzConfigManager)
 
 
-def test_create_diagnostic(sz_abstract_factory: SzAbstractFactory) -> None:
-    """Create SzDiagnostic."""
-    actual = sz_abstract_factory.create_diagnostic()
+def test_create_diagnostic(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.create_diagnostic()."""
+    actual = sz_abstractfactory.create_diagnostic()
     assert isinstance(actual, SzDiagnostic)
 
 
-def test_create_engine(sz_abstract_factory: SzAbstractFactory) -> None:
-    """Create SzEngine."""
-    actual = sz_abstract_factory.create_engine()
+def test_create_engine(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.create_engine()."""
+    actual = sz_abstractfactory.create_engine()
     assert isinstance(actual, SzEngine)
 
 
-def test_create_product(sz_abstract_factory: SzAbstractFactory) -> None:
-    """Create SzProduct."""
-    actual = sz_abstract_factory.create_product()
+def test_create_product(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.create_product()."""
+    actual = sz_abstractfactory.create_product()
     assert isinstance(actual, SzProduct)
 
 
-def test_reinitialize(sz_abstract_factory: SzAbstractFactory) -> None:
-    """Create SzConfig."""
+def test_help_1(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.help()."""
+    sz_abstractfactory.help()
+
+
+def test_help_2(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.help(...)."""
+    sz_abstractfactory.help("create_configmanager")
 
     datasources = [f"TEST_DATASOURCE_{datetime.now().timestamp()}"]
 
     # Create Senzing objects.
 
-    sz_configmanager = sz_abstract_factory.create_configmanager()
+    sz_configmanager = sz_abstractfactory.create_configmanager()
     sz_config = sz_configmanager.create_config_from_template()
 
     # Add DataSources to Senzing configuration.
@@ -68,7 +74,7 @@ def test_reinitialize(sz_abstract_factory: SzAbstractFactory) -> None:
 
     # Update other Senzing objects.
 
-    sz_abstract_factory.reinitialize(config_id)
+    sz_abstractfactory.reinitialize(config_id)
 
 
 # -----------------------------------------------------------------------------
@@ -95,10 +101,10 @@ def test_context() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_abstract_factory", scope="function")
-def sz_abstract_factory_fixture() -> SzAbstractFactory:
+@pytest.fixture(name="sz_abstractfactory", scope="function")
+def szabstractfactory_fixture() -> SzAbstractFactory:
     """
-    Single SzAbstractFactoryGrpc object to use for all tests.
+    SzAbstractFactory object to use for all tests.
     """
     result = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
     return result

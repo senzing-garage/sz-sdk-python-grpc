@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eszconfig.proto\x12\x08szconfig\"K\n\x14\x41\x64\x64\x44\x61taSourceRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x18\n\x10\x64\x61ta_source_code\x18\x02 \x01(\t\"B\n\x15\x41\x64\x64\x44\x61taSourceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\x12\x19\n\x11\x63onfig_definition\x18\x02 \x01(\t\"N\n\x17\x44\x65leteDataSourceRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x18\n\x10\x64\x61ta_source_code\x18\x02 \x01(\t\"E\n\x18\x44\x65leteDataSourceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\x12\x19\n\x11\x63onfig_definition\x18\x02 \x01(\t\"2\n\x15GetDataSourcesRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\"(\n\x16GetDataSourcesResponse\x12\x0e\n\x06result\x18\x01 \x01(\t2\x92\x02\n\x08SzConfig\x12R\n\rAddDataSource\x12\x1e.szconfig.AddDataSourceRequest\x1a\x1f.szconfig.AddDataSourceResponse\"\x00\x12[\n\x10\x44\x65leteDataSource\x12!.szconfig.DeleteDataSourceRequest\x1a\".szconfig.DeleteDataSourceResponse\"\x00\x12U\n\x0eGetDataSources\x12\x1f.szconfig.GetDataSourcesRequest\x1a .szconfig.GetDataSourcesResponse\"\x00\x42X\n\x14\x63om.senzing.sdk.grpcB\rSzConfigProtoZ1github.com/senzing-garage/sz-sdk-go-grpc/szconfigb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eszconfig.proto\x12\x08szconfig\"K\n\x14\x41\x64\x64\x44\x61taSourceRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x18\n\x10\x64\x61ta_source_code\x18\x02 \x01(\t\"B\n\x15\x41\x64\x64\x44\x61taSourceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\x12\x19\n\x11\x63onfig_definition\x18\x02 \x01(\t\"N\n\x17\x44\x65leteDataSourceRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\x12\x18\n\x10\x64\x61ta_source_code\x18\x02 \x01(\t\"E\n\x18\x44\x65leteDataSourceResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\x12\x19\n\x11\x63onfig_definition\x18\x02 \x01(\t\"2\n\x15GetDataSourcesRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\"(\n\x16GetDataSourcesResponse\x12\x0e\n\x06result\x18\x01 \x01(\t\"0\n\x13VerifyConfigRequest\x12\x19\n\x11\x63onfig_definition\x18\x01 \x01(\t\"&\n\x14VerifyConfigResponse\x12\x0e\n\x06result\x18\x01 \x01(\x08\x32\xe3\x02\n\x08SzConfig\x12R\n\rAddDataSource\x12\x1e.szconfig.AddDataSourceRequest\x1a\x1f.szconfig.AddDataSourceResponse\"\x00\x12[\n\x10\x44\x65leteDataSource\x12!.szconfig.DeleteDataSourceRequest\x1a\".szconfig.DeleteDataSourceResponse\"\x00\x12U\n\x0eGetDataSources\x12\x1f.szconfig.GetDataSourcesRequest\x1a .szconfig.GetDataSourcesResponse\"\x00\x12O\n\x0cVerifyConfig\x12\x1d.szconfig.VerifyConfigRequest\x1a\x1e.szconfig.VerifyConfigResponse\"\x00\x42X\n\x14\x63om.senzing.sdk.grpcB\rSzConfigProtoZ1github.com/senzing-garage/sz-sdk-go-grpc/szconfigb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -44,6 +44,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETDATASOURCESREQUEST']._serialized_end=374
   _globals['_GETDATASOURCESRESPONSE']._serialized_start=376
   _globals['_GETDATASOURCESRESPONSE']._serialized_end=416
-  _globals['_SZCONFIG']._serialized_start=419
-  _globals['_SZCONFIG']._serialized_end=693
+  _globals['_VERIFYCONFIGREQUEST']._serialized_start=418
+  _globals['_VERIFYCONFIGREQUEST']._serialized_end=466
+  _globals['_VERIFYCONFIGRESPONSE']._serialized_start=468
+  _globals['_VERIFYCONFIGRESPONSE']._serialized_end=506
+  _globals['_SZCONFIG']._serialized_start=509
+  _globals['_SZCONFIG']._serialized_end=864
 # @@protoc_insertion_point(module_scope)

@@ -538,6 +538,25 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    def why_search(
+        self,
+        attributes: str,
+        entity_id: int,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
+        search_profile: str = "",
+    ) -> str:
+        try:
+            request = szengine_pb2.WhySearchRequest(  # type: ignore[unused-ignore]
+                attributes=as_str(attributes),
+                entity_id=entity_id,
+                search_profile=as_str(search_profile),
+                flags=flags,
+            )
+            response = self.stub.WhySearch(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
     # -------------------------------------------------------------------------
     # Non-public SzEngine methods
     # -------------------------------------------------------------------------

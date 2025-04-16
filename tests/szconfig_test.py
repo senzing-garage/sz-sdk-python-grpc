@@ -9,12 +9,12 @@ from senzing_grpc import SzAbstractFactoryGrpc, SzConfigGrpc
 from .helpers import get_grpc_channel
 
 # -----------------------------------------------------------------------------
-# Testcases
+# Test cases
 # -----------------------------------------------------------------------------
 
 
 def test_add_data_source(sz_config: SzConfig) -> None:
-    """Test SzConfig().add_data_source()."""
+    """Test SzConfig.add_data_source()."""
     data_source_code = "NAME_OF_DATASOURCE"
     actual = sz_config.add_data_source(data_source_code)
     assert isinstance(actual, str)
@@ -23,42 +23,41 @@ def test_add_data_source(sz_config: SzConfig) -> None:
 
 
 def test_add_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig().add_data_source_bad_data_source_code_type()."""
+    """Test SzConfig.add_data_source()."""
     bad_data_source_code = 0
     with pytest.raises(TypeError):
         sz_config.add_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig().add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    ()."""
+    """Test SzConfig.add_data_source()."""
     bad_data_source_code = {"XXXX": "YYYY"}
     with pytest.raises(TypeError):
         sz_config.add_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_delete_data_source(sz_config: SzConfig) -> None:
-    """Test SzConfig().delete_data_source()."""
+    """Test SzConfig.delete_data_source()."""
     data_source_code = "TEST"
     sz_config.delete_data_source(data_source_code)
 
 
 def test_delete_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig().delete_data_source_bad_data_source_code_type()."""
+    """Test SzConfig.delete_data_source()."""
     bad_data_source_code = 0
     with pytest.raises(TypeError):
         sz_config.delete_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_delete_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig().delete_data_source_bad_data_source_code_value()."""
+    """Test SzConfig.delete_data_source()."""
     bad_data_source_code = {"XXXX": "YYYY"}
     with pytest.raises(TypeError):
         sz_config.delete_data_source(bad_data_source_code)  # type: ignore[arg-type]
 
 
 def test_export(sz_config: SzConfig) -> None:
-    """Test SzConfig().export()."""
+    """Test SzConfig.export()."""
     actual = sz_config.export()
     assert isinstance(actual, str)
     actual_as_dict = json.loads(actual)
@@ -66,11 +65,21 @@ def test_export(sz_config: SzConfig) -> None:
 
 
 def test_get_data_sources(sz_config: SzConfig) -> None:
-    """Test SzConfig().get_data_sources()."""
+    """Test SzConfig.get_data_sources()."""
     actual = sz_config.get_data_sources()
     assert isinstance(actual, str)
     actual_as_dict = json.loads(actual)
     assert schema(get_data_sources_schema) == actual_as_dict
+
+
+def test_help_1(sz_config: SzConfig) -> None:
+    """Test SzConfig.help()."""
+    sz_config.help()
+
+
+def test_help_2(sz_config: SzConfig) -> None:
+    """Test SzConfig.help(...)."""
+    sz_config.help("add_data_source")
 
 
 # -----------------------------------------------------------------------------
@@ -115,7 +124,7 @@ def get_szconfig() -> SzConfig:
 @pytest.fixture(name="sz_abstractfactory", scope="function")
 def szabstractfactory_fixture() -> SzAbstractFactory:
     """
-    Single SzAbstractFactory object to use for all tests.
+    SzAbstractFactory object to use for all tests.
     """
     return get_szabstractfactory()
 
@@ -123,16 +132,15 @@ def szabstractfactory_fixture() -> SzAbstractFactory:
 @pytest.fixture(name="sz_configmanager", scope="function")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
-    Single SzConfigManager object to use for all tests.
+    SzConfigManager object to use for all tests.
     """
-
     return get_szconfigmanager()
 
 
 @pytest.fixture(name="sz_config", scope="function")
 def szconfig_fixture() -> SzConfig:
     """
-    Single SzConfig object to use for all tests.
+    SzConfig object to use for all tests.
     """
     return get_szconfig()
 

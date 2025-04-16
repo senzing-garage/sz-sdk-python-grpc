@@ -49,6 +49,11 @@ class SzConfigStub(object):
                 request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
                 response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
                 _registered_method=True)
+        self.VerifyConfig = channel.unary_unary(
+                '/szconfig.SzConfig/VerifyConfig',
+                request_serializer=szconfig__pb2.VerifyConfigRequest.SerializeToString,
+                response_deserializer=szconfig__pb2.VerifyConfigResponse.FromString,
+                _registered_method=True)
 
 
 class SzConfigServicer(object):
@@ -72,6 +77,12 @@ class SzConfigServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def VerifyConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SzConfigServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -89,6 +100,11 @@ def add_SzConfigServicer_to_server(servicer, server):
                     servicer.GetDataSources,
                     request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
                     response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
+            ),
+            'VerifyConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.VerifyConfig,
+                    request_deserializer=szconfig__pb2.VerifyConfigRequest.FromString,
+                    response_serializer=szconfig__pb2.VerifyConfigResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,6 +188,33 @@ class SzConfig(object):
             '/szconfig.SzConfig/GetDataSources',
             szconfig__pb2.GetDataSourcesRequest.SerializeToString,
             szconfig__pb2.GetDataSourcesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def VerifyConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/szconfig.SzConfig/VerifyConfig',
+            szconfig__pb2.VerifyConfigRequest.SerializeToString,
+            szconfig__pb2.VerifyConfigResponse.FromString,
             options,
             channel_credentials,
             insecure,
