@@ -1283,7 +1283,7 @@ def szconfig_fixture() -> SzConfig:
 @pytest.fixture(name="sz_engine", scope="function")
 def szengine_fixture() -> SzEngine:
     """
-    Single SzEngine object to use for all tests.
+    SzEngine object to use for all tests.
     """
     return get_szengine()
 

@@ -274,7 +274,7 @@ def test_context_managment() -> None:
 @pytest.fixture(name="sz_config", scope="function")
 def szconfig_fixture() -> SzConfig:
     """
-    Single szconfigmanager object to use for all tests.
+    SzConfig object to use for all tests.
     """
     result = SzConfigGrpc(grpc_channel=get_grpc_channel())
     return result
@@ -282,8 +282,7 @@ def szconfig_fixture() -> SzConfig:
 
 @pytest.fixture(name="sz_configmanager", scope="function")
 def szconfigmanager_fixture() -> SzConfigManager:
-    """Single szconfigmanager object to use for all tests.
-    build_engine_vars is returned from conftest.pys"""
+    """SzCconfigManager object to use for all tests.
     result = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
     return result
 

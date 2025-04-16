@@ -104,7 +104,7 @@ def test_context() -> None:
 @pytest.fixture(name="sz_abstractfactory", scope="function")
 def szabstractfactory_fixture() -> SzAbstractFactory:
     """
-    Single SzAbstractFactoryGrpc object to use for all tests.
+    SzAbstractFactory object to use for all tests.
     """
     result = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
     return result

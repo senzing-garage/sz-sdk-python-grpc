@@ -124,7 +124,7 @@ def get_szconfig() -> SzConfig:
 @pytest.fixture(name="sz_abstractfactory", scope="function")
 def szabstractfactory_fixture() -> SzAbstractFactory:
     """
-    Single SzAbstractFactory object to use for all tests.
+    SzAbstractFactory object to use for all tests.
     """
     return get_szabstractfactory()
 
@@ -132,16 +132,15 @@ def szabstractfactory_fixture() -> SzAbstractFactory:
 @pytest.fixture(name="sz_configmanager", scope="function")
 def szconfigmanager_fixture() -> SzConfigManager:
     """
-    Single SzConfigManager object to use for all tests.
+    SzConfigManager object to use for all tests.
     """
-
     return get_szconfigmanager()
 
 
 @pytest.fixture(name="sz_config", scope="function")
 def szconfig_fixture() -> SzConfig:
     """
-    Single SzConfig object to use for all tests.
+    SzConfig object to use for all tests.
     """
     return get_szconfig()
 

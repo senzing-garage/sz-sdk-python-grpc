@@ -103,7 +103,7 @@ def test_context_managment() -> None:
 @pytest.fixture(name="sz_diagnostic", scope="function")
 def szdiagnostic_fixture() -> SzDiagnostic:
     """
-    Single engine object to use for all tests.
+    SzDiagnostic object to use for all tests.
     """
     result = SzDiagnosticGrpc(grpc_channel=get_grpc_channel())
     return result
@@ -112,7 +112,7 @@ def szdiagnostic_fixture() -> SzDiagnostic:
 @pytest.fixture(name="sz_engine", scope="function")
 def szengine_fixture() -> SzEngine:
     """
-    Single engine object to use for all tests.
+    SzEngine object to use for all tests.
     """
     result = SzEngineGrpc(grpc_channel=get_grpc_channel())
     return result

@@ -64,10 +64,10 @@ def test_context_managment() -> None:
 # -----------------------------------------------------------------------------
 
 
-@pytest.fixture(name="sz_product", scope="module")
+@pytest.fixture(name="sz_product", scope="function")
 def szproduct_fixture() -> SzProduct:
     """
-    Single engine object to use for all tests.
+    SzProduct object to use for all tests.
     """
     result = SzProductGrpc(grpc_channel=get_grpc_channel())
     return result
