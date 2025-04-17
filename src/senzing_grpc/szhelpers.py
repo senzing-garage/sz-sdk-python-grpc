@@ -6,7 +6,6 @@ import json
 from typing import Any, Dict, Union
 
 import grpc
-import grpc._channel
 from senzing import ENGINE_EXCEPTION_MAP, SzError
 
 # Metadata
@@ -69,8 +68,20 @@ def new_exception(initial_exception: Exception) -> Exception:
     """
 
     result = initial_exception
+
     if isinstance(initial_exception, grpc.RpcError):
+
         details = initial_exception.details()  # type: ignore[unused-ignore]
+
+        # Find JSON string.
+
+        start_of_json = details.find("{")
+
+        if start_of_json > 0:
+            details = details[start_of_json:]
+
+        # Parse JSON.
+
         details_dict = {}
         try:
             details_dict = json.loads(details)
@@ -80,4 +91,5 @@ def new_exception(initial_exception: Exception) -> Exception:
         senzing_error_code = get_senzing_error_code(errors_reason)
         senzing_error_class = ENGINE_EXCEPTION_MAP.get(senzing_error_code, SzError)
         result = senzing_error_class(details)
+
     return result

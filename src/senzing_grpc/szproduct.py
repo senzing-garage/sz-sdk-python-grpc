@@ -76,20 +76,6 @@ class SzProductGrpc(SzProduct):
     # SzProduct methods
     # -------------------------------------------------------------------------
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def _initialize(
-        self,
-        instance_name: str,
-        settings: Union[str, Dict[Any, Any]],
-        verbose_logging: int = 0,
-    ) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-        _ = instance_name
-        _ = settings
-        _ = verbose_logging
-
     def get_license(self) -> str:
         try:
             request = szproduct_pb2.GetLicenseRequest()  # type: ignore[unused-ignore]
@@ -105,3 +91,21 @@ class SzProductGrpc(SzProduct):
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
+
+    # -------------------------------------------------------------------------
+    # Non-public SzProductCore methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
+        self,
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
+        verbose_logging: int = 0,
+    ) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+        _ = instance_name
+        _ = settings
+        _ = verbose_logging

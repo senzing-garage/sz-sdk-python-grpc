@@ -130,9 +130,6 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
     def export_csv_entity_report(
         self,
         csv_column_list: str,
@@ -416,19 +413,6 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
-        self,
-        instance_name: str,
-        settings: Union[str, Dict[Any, Any]],
-        config_id: Optional[int] = None,
-        verbose_logging: int = 0,
-    ) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-        _ = instance_name
-        _ = settings
-        _ = config_id
-        _ = verbose_logging
-
     def preprocess_record(
         self,
         record_definition: str,
@@ -478,13 +462,6 @@ class SzEngineGrpc(SzEngine):
             )
             response = self.stub.ReevaluateRecord(request)
             return str(response.result)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def _reinitialize(self, config_id: int) -> None:
-        try:
-            request = szengine_pb2.ReinitializeRequest(config_id=config_id)  # type: ignore[unused-ignore]
-            self.stub.Reinitialize(request)
         except Exception as err:
             raise new_exception(err) from err
 
@@ -558,6 +535,52 @@ class SzEngineGrpc(SzEngine):
             )
             response = self.stub.WhyRecords(request)
             return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def why_search(
+        self,
+        attributes: str,
+        entity_id: int,
+        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
+        search_profile: str = "",
+    ) -> str:
+        try:
+            request = szengine_pb2.WhySearchRequest(  # type: ignore[unused-ignore]
+                attributes=as_str(attributes),
+                entity_id=entity_id,
+                search_profile=as_str(search_profile),
+                flags=flags,
+            )
+            response = self.stub.WhySearch(request)
+            return str(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    # -------------------------------------------------------------------------
+    # Non-public SzEngine methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
+        self,
+        instance_name: str,
+        settings: Union[str, Dict[Any, Any]],
+        config_id: Optional[int] = None,
+        verbose_logging: int = 0,
+    ) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+        _ = instance_name
+        _ = settings
+        _ = config_id
+        _ = verbose_logging
+
+    def reinitialize(self, config_id: int) -> None:
+        try:
+            request = szengine_pb2.ReinitializeRequest(config_id=config_id)  # type: ignore[unused-ignore]
+            self.stub.Reinitialize(request)
         except Exception as err:
             raise new_exception(err) from err
 

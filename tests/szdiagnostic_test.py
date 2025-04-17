@@ -9,12 +9,12 @@ from senzing_grpc import SzDiagnosticGrpc, SzEngineGrpc
 from .helpers import get_grpc_channel
 
 # -----------------------------------------------------------------------------
-# Testcases
+# Test cases
 # -----------------------------------------------------------------------------
 
 
 def test_check_datastore_performance(sz_diagnostic: SzDiagnostic) -> None:
-    """Test SzDiagnostic().check_datastore_performance()."""
+    """Test SzDiagnostic.check_datastore_performance()."""
     seconds_to_run = 3
     actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
     actual_as_dict = json.loads(actual)
@@ -24,7 +24,7 @@ def test_check_datastore_performance(sz_diagnostic: SzDiagnostic) -> None:
 def test_check_datastore_performance_bad_seconds_to_run_type(
     sz_diagnostic: SzDiagnostic,
 ) -> None:
-    """Test SzDiagnostic().check_datastore_performance()."""
+    """Test SzDiagnostic.check_datastore_performance()."""
     bad_seconds_to_run = "string"
     with pytest.raises(TypeError):
         sz_diagnostic.check_datastore_performance(bad_seconds_to_run)  # type: ignore[arg-type]
@@ -33,7 +33,7 @@ def test_check_datastore_performance_bad_seconds_to_run_type(
 def test_check_datastore_performance_bad_seconds_to_run_value(
     sz_diagnostic: SzDiagnostic,
 ) -> None:
-    """Test SzDiagnostic().check_datastore_performance()."""
+    """Test SzDiagnostic.check_datastore_performance()."""
     bad_seconds_to_run = -1
     # with pytest.raises(SzDatabaseError):
     #     sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
@@ -43,14 +43,14 @@ def test_check_datastore_performance_bad_seconds_to_run_value(
 
 
 def test_get_datastore_info(sz_diagnostic: SzDiagnostic) -> None:
-    """Test SzDiagnostic().get_datastore_info()."""
+    """Test SzDiagnostic.get_datastore_info()."""
     actual = sz_diagnostic.get_datastore_info()
     actual_as_dict = json.loads(actual)
     assert schema(get_datastore_info_schema) == actual_as_dict
 
 
 def test_get_feature(sz_diagnostic: SzDiagnostic, sz_engine: SzEngine) -> None:
-    """# TODO"""
+    """Test SzDiagnostic.get_feature()."""
     data_source_code = "TEST"
     record_id = "1"
     record_definition: str = '{"NAME_FULL": "Joe Blogs", "DATE_OF_BIRTH": "07/07/1976"}'
@@ -61,9 +61,19 @@ def test_get_feature(sz_diagnostic: SzDiagnostic, sz_engine: SzEngine) -> None:
 
 
 def test_get_feature_unknown_id(sz_diagnostic: SzDiagnostic) -> None:
-    """# TODO"""
+    """Test SzDiagnostic.get_feature()."""
     with pytest.raises(SzError):
         _ = sz_diagnostic.get_feature(111111111111111111)
+
+
+def test_help_1(sz_diagnostic: SzDiagnostic) -> None:
+    """Test SzDiagnostic.help()."""
+    sz_diagnostic.help()
+
+
+def test_help_2(sz_diagnostic: SzDiagnostic) -> None:
+    """Test SzDiagnostic.help(...)."""
+    sz_diagnostic.help("check_datastore_performance")
 
 
 # -----------------------------------------------------------------------------
@@ -93,7 +103,7 @@ def test_context_managment() -> None:
 @pytest.fixture(name="sz_diagnostic", scope="function")
 def szdiagnostic_fixture() -> SzDiagnostic:
     """
-    Single engine object to use for all tests.
+    SzDiagnostic object to use for all tests.
     """
     result = SzDiagnosticGrpc(grpc_channel=get_grpc_channel())
     return result
@@ -102,7 +112,7 @@ def szdiagnostic_fixture() -> SzDiagnostic:
 @pytest.fixture(name="sz_engine", scope="function")
 def szengine_fixture() -> SzEngine:
     """
-    Single engine object to use for all tests.
+    SzEngine object to use for all tests.
     """
     result = SzEngineGrpc(grpc_channel=get_grpc_channel())
     return result

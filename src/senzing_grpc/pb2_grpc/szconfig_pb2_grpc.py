@@ -39,35 +39,20 @@ class SzConfigStub(object):
                 request_serializer=szconfig__pb2.AddDataSourceRequest.SerializeToString,
                 response_deserializer=szconfig__pb2.AddDataSourceResponse.FromString,
                 _registered_method=True)
-        self.CloseConfig = channel.unary_unary(
-                '/szconfig.SzConfig/CloseConfig',
-                request_serializer=szconfig__pb2.CloseConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.CloseConfigResponse.FromString,
-                _registered_method=True)
-        self.CreateConfig = channel.unary_unary(
-                '/szconfig.SzConfig/CreateConfig',
-                request_serializer=szconfig__pb2.CreateConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.CreateConfigResponse.FromString,
-                _registered_method=True)
         self.DeleteDataSource = channel.unary_unary(
                 '/szconfig.SzConfig/DeleteDataSource',
                 request_serializer=szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
                 response_deserializer=szconfig__pb2.DeleteDataSourceResponse.FromString,
-                _registered_method=True)
-        self.ExportConfig = channel.unary_unary(
-                '/szconfig.SzConfig/ExportConfig',
-                request_serializer=szconfig__pb2.ExportConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.ExportConfigResponse.FromString,
                 _registered_method=True)
         self.GetDataSources = channel.unary_unary(
                 '/szconfig.SzConfig/GetDataSources',
                 request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
                 response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
                 _registered_method=True)
-        self.ImportConfig = channel.unary_unary(
-                '/szconfig.SzConfig/ImportConfig',
-                request_serializer=szconfig__pb2.ImportConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.ImportConfigResponse.FromString,
+        self.VerifyConfig = channel.unary_unary(
+                '/szconfig.SzConfig/VerifyConfig',
+                request_serializer=szconfig__pb2.VerifyConfigRequest.SerializeToString,
+                response_deserializer=szconfig__pb2.VerifyConfigResponse.FromString,
                 _registered_method=True)
 
 
@@ -80,25 +65,7 @@ class SzConfigServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def CloseConfig(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def CreateConfig(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def DeleteDataSource(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ExportConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -110,7 +77,7 @@ class SzConfigServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ImportConfig(self, request, context):
+    def VerifyConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -124,35 +91,20 @@ def add_SzConfigServicer_to_server(servicer, server):
                     request_deserializer=szconfig__pb2.AddDataSourceRequest.FromString,
                     response_serializer=szconfig__pb2.AddDataSourceResponse.SerializeToString,
             ),
-            'CloseConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.CloseConfig,
-                    request_deserializer=szconfig__pb2.CloseConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.CloseConfigResponse.SerializeToString,
-            ),
-            'CreateConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateConfig,
-                    request_deserializer=szconfig__pb2.CreateConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.CreateConfigResponse.SerializeToString,
-            ),
             'DeleteDataSource': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteDataSource,
                     request_deserializer=szconfig__pb2.DeleteDataSourceRequest.FromString,
                     response_serializer=szconfig__pb2.DeleteDataSourceResponse.SerializeToString,
-            ),
-            'ExportConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExportConfig,
-                    request_deserializer=szconfig__pb2.ExportConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.ExportConfigResponse.SerializeToString,
             ),
             'GetDataSources': grpc.unary_unary_rpc_method_handler(
                     servicer.GetDataSources,
                     request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
                     response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
             ),
-            'ImportConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.ImportConfig,
-                    request_deserializer=szconfig__pb2.ImportConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.ImportConfigResponse.SerializeToString,
+            'VerifyConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.VerifyConfig,
+                    request_deserializer=szconfig__pb2.VerifyConfigRequest.FromString,
+                    response_serializer=szconfig__pb2.VerifyConfigResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -193,60 +145,6 @@ class SzConfig(object):
             _registered_method=True)
 
     @staticmethod
-    def CloseConfig(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/szconfig.SzConfig/CloseConfig',
-            szconfig__pb2.CloseConfigRequest.SerializeToString,
-            szconfig__pb2.CloseConfigResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def CreateConfig(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/szconfig.SzConfig/CreateConfig',
-            szconfig__pb2.CreateConfigRequest.SerializeToString,
-            szconfig__pb2.CreateConfigResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def DeleteDataSource(request,
             target,
             options=(),
@@ -263,33 +161,6 @@ class SzConfig(object):
             '/szconfig.SzConfig/DeleteDataSource',
             szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
             szconfig__pb2.DeleteDataSourceResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def ExportConfig(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/szconfig.SzConfig/ExportConfig',
-            szconfig__pb2.ExportConfigRequest.SerializeToString,
-            szconfig__pb2.ExportConfigResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -328,7 +199,7 @@ class SzConfig(object):
             _registered_method=True)
 
     @staticmethod
-    def ImportConfig(request,
+    def VerifyConfig(request,
             target,
             options=(),
             channel_credentials=None,
@@ -341,9 +212,9 @@ class SzConfig(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/szconfig.SzConfig/ImportConfig',
-            szconfig__pb2.ImportConfigRequest.SerializeToString,
-            szconfig__pb2.ImportConfigResponse.FromString,
+            '/szconfig.SzConfig/VerifyConfig',
+            szconfig__pb2.VerifyConfigRequest.SerializeToString,
+            szconfig__pb2.VerifyConfigResponse.FromString,
             options,
             channel_credentials,
             insecure,
