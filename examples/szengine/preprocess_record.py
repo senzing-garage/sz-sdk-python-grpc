@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import json
 
 import grpc
@@ -7,8 +5,8 @@ from senzing import SzEngineFlags, SzError
 
 from senzing_grpc import SzAbstractFactoryGrpc
 
-FLAGS = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
-RECORD_DEFINITION = json.dumps(
+flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+record_definition = json.dumps(
     {
         "RECORD_TYPE": "PERSON",
         "PRIMARY_NAME_LAST": "Smith",
@@ -24,11 +22,12 @@ RECORD_DEFINITION = json.dumps(
         "AMOUNT": "100",
     }
 )
+
 try:
     grpc_channel = grpc.insecure_channel("localhost:8261")
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_engine = sz_abstract_factory.create_engine()
-    RESULT = sz_engine.preprocess_record(RECORD_DEFINITION, FLAGS)
-    print(f"\n{RESULT}\n")
+    result = sz_engine.preprocess_record(record_definition, flags)
+    print(f"\n{result}\n")
 except SzError as err:
     print(f"\nERROR: {err}\n")
