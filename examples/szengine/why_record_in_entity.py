@@ -4,7 +4,7 @@ from senzing import SzEngineFlags, SzError
 from senzing_grpc import SzAbstractFactoryGrpc
 
 data_source_code = "CUSTOMERS"
-flags = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS
+flags = SzEngineFlags.SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS
 record_id = "1001"
 
 try:
