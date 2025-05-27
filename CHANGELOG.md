@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.6] - 2025-05-12
+
+### Removed in 0.5.6
+
+- Examples/misc flags_by_name and flags_by_value
+
+### Fixed in 0.5.6
+
+- Corrected flags for examples, why_record_in_entity.py and why_records.py
+
+## [0.5.5] - 2025-04-21
+
+### Changed in 0.5.5
+
+- Simplify and clean up examples
+
 ## [0.5.4] - 2025-04-16
 
 ### Added in 0.5.4

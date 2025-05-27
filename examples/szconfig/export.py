@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import grpc
 from senzing import SzError
 
@@ -10,7 +8,7 @@ try:
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_configmanager = sz_abstract_factory.create_configmanager()
     sz_config = sz_configmanager.create_config_from_template()
-    CONFIG_DEFINITION = sz_config.export()
-    print(f"\n{CONFIG_DEFINITION}\n")
+    config_definition = sz_config.export()
+    print(f"\n{config_definition}\n")
 except SzError as err:
     print(f"\nERROR: {err}\n")
