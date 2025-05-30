@@ -1,5 +1,5 @@
 cryptography==45.0.3
-mypy==1.15.0
+mypy==1.16.0
 orjson==3.10.18
 psutil==7.0.0
 pylint==3.3.7
