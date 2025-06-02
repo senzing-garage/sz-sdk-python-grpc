@@ -86,10 +86,23 @@ def new_exception(initial_exception: Exception) -> Exception:
         try:
             details_dict = json.loads(details)
         except Exception:  # pylint: disable=W0718
-            details_dict = {}
-        errors_reason = details_dict.get("reason", "")
+            return result
+
+        errors_reason = extract_reason(details_dict)
+
+        # errors_reason = details_dict.get("reason", "")
         senzing_error_code = get_senzing_error_code(errors_reason)
         senzing_error_class = ENGINE_EXCEPTION_MAP.get(senzing_error_code, SzError)
         result = senzing_error_class(details)
 
     return result
+
+
+def extract_reason(candidate_dict: Dict[Any, Any]) -> str:
+    if "reason" in candidate_dict:
+        return str(candidate_dict.get("reason"))
+    if "error" in candidate_dict:
+        next_dict = candidate_dict.get("error")
+        if isinstance(next_dict, dict):
+            return extract_reason(next_dict)
+    return ""

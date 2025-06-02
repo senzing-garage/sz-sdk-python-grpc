@@ -135,7 +135,7 @@ and this project adheres to [Semantic Versioning].
 ### Added in 0.3.0
 
 - `SzAbstractFactory`
-- UKpdataed examples
+- Updated examples
 
 ## [0.2.3] - 2024-10-09
 
@@ -148,7 +148,7 @@ and this project adheres to [Semantic Versioning].
 
 ### Added in 0.2.2
 
-- Added `sz_enzine.preprocess_record()`
+- Added `sz_engine.preprocess_record()`
 
 ### Changed in 0.2.2
 
