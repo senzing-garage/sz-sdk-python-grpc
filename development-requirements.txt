@@ -8,7 +8,7 @@ flake8==7.2.0
 fpvs==0.3.0
 isort==6.0.1
 mypy==1.16.0
-myst_parser==4.0.1
+myst-parser==4.0.1
 orjson==3.10.18
 psutil==7.0.0
 pylint-per-file-ignores==1.4.0
