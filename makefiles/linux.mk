@@ -102,7 +102,7 @@ setup-server-side-tls-osarch-specific:
 
 .PHONY: test-osarch-specific
 test-osarch-specific:
-	sleep 10
+	@sleep 10
 	$(info --- Unit tests -------------------------------------------------------)
 	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
 	$(info --- Test examples using pytest -------------------------------------)

@@ -73,13 +73,6 @@ dependencies-for-development: venv dependencies-for-development-osarch-specific
 		python3 -m pip install --requirement development-requirements.txt
 
 
-.PHONY: dependencies-for-documentation
-dependencies-for-documentation: venv dependencies-for-documentation-osarch-specific
-	$(activate-venv); \
-		python3 -m pip install --upgrade pip; \
-		python3 -m pip install --requirement documentation-requirements.txt
-
-
 .PHONY: dependencies
 dependencies: venv
 	$(activate-venv); \
@@ -118,7 +111,6 @@ docker-build: docker-build-osarch-specific
 # -----------------------------------------------------------------------------
 # Run
 # -----------------------------------------------------------------------------
-
 
 # -----------------------------------------------------------------------------
 # Test
@@ -210,6 +202,8 @@ bandit:
 
 .PHONY: bearer
 bearer:
+	$(info ${\n})
+	$(info --- bearer ---------------------------------------------------------------------)
 	@bearer scan --config-file .github/linters/bearer.yml .
 
 
@@ -222,6 +216,8 @@ black:
 
 .PHONY: cspell
 cspell:
+	$(info ${\n})
+	$(info --- cspell ---------------------------------------------------------------------)
 	@cspell lint --dot .
 
 
