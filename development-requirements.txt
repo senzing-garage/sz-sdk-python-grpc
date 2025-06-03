@@ -13,6 +13,7 @@ orjson==3.10.18
 psutil==7.0.0
 pylint-per-file-ignores==1.4.0
 pylint==3.3.7
+pytest==8.4.0
 pytest-cov==6.1.1
 pytest-schema==0.1.2
 pytest==8.4.0
@@ -23,7 +24,7 @@ sphinx-prompt
 sphinx-rtd-theme==3.0.2
 sphinx-tabs==3.4.7
 sphinx-toolbox==3.8.0
-sphinx==8.2.3
+sphinx
 sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-devhelp==2.0.0
 sphinxcontrib-htmlhelp==2.1.0
