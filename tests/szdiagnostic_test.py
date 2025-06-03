@@ -87,7 +87,7 @@ def test_constructor() -> None:
     assert isinstance(actual, SzDiagnostic)
 
 
-def test_context_managment() -> None:
+def test_context_management() -> None:
     """Test the use of SzDiagnostic in context."""
     with SzDiagnosticGrpc(grpc_channel=get_grpc_channel()) as sz_diagnostic:
         actual = sz_diagnostic.get_datastore_info()

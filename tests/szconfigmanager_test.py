@@ -256,7 +256,7 @@ def test_constructor() -> None:
     assert isinstance(actual, SzConfigManager)
 
 
-def test_context_managment() -> None:
+def test_context_management() -> None:
     """Test the use of SzConfigManagerTest in context."""
     with SzConfigManagerGrpc(grpc_channel=get_grpc_channel()) as sz_configmanager:
         config_id = sz_configmanager.get_default_config_id()
@@ -282,7 +282,7 @@ def szconfig_fixture() -> SzConfig:
 
 @pytest.fixture(name="sz_configmanager", scope="function")
 def szconfigmanager_fixture() -> SzConfigManager:
-    """SzCconfigManager object to use for all tests."""
+    """SzConfigManager object to use for all tests."""
     result = SzConfigManagerGrpc(grpc_channel=get_grpc_channel())
     return result
 

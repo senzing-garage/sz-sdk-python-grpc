@@ -1,9 +1,0 @@
-cryptography==45.0.3
-mypy==1.16.0
-orjson==3.10.18
-psutil==7.0.0
-pylint==3.3.7
-pylint-per-file-ignores==1.4.0
-pytest==8.3.5
-pytest-cov==6.1.1
-pytest-schema==0.1.2
