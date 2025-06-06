@@ -5,7 +5,7 @@ import warnings
 
 from . import szengine_pb2 as szengine__pb2
 
-GRPC_GENERATED_VERSION = '1.66.2'
+GRPC_GENERATED_VERSION = '1.70.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -198,6 +198,11 @@ class SzEngineStub(object):
                 '/szengine.SzEngine/WhyRecords',
                 request_serializer=szengine__pb2.WhyRecordsRequest.SerializeToString,
                 response_deserializer=szengine__pb2.WhyRecordsResponse.FromString,
+                _registered_method=True)
+        self.WhySearch = channel.unary_unary(
+                '/szengine.SzEngine/WhySearch',
+                request_serializer=szengine__pb2.WhySearchRequest.SerializeToString,
+                response_deserializer=szengine__pb2.WhySearchResponse.FromString,
                 _registered_method=True)
 
 
@@ -402,6 +407,12 @@ class SzEngineServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def WhySearch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SzEngineServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -569,6 +580,11 @@ def add_SzEngineServicer_to_server(servicer, server):
                     servicer.WhyRecords,
                     request_deserializer=szengine__pb2.WhyRecordsRequest.FromString,
                     response_serializer=szengine__pb2.WhyRecordsResponse.SerializeToString,
+            ),
+            'WhySearch': grpc.unary_unary_rpc_method_handler(
+                    servicer.WhySearch,
+                    request_deserializer=szengine__pb2.WhySearchRequest.FromString,
+                    response_serializer=szengine__pb2.WhySearchResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1462,6 +1478,33 @@ class SzEngine(object):
             '/szengine.SzEngine/WhyRecords',
             szengine__pb2.WhyRecordsRequest.SerializeToString,
             szengine__pb2.WhyRecordsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def WhySearch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/szengine.SzEngine/WhySearch',
+            szengine__pb2.WhySearchRequest.SerializeToString,
+            szengine__pb2.WhySearchResponse.FromString,
             options,
             channel_credentials,
             insecure,

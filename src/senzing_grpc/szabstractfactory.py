@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szabstractfactory.py
+``senzing_grpc.szabstractfactory.SzAbstractFactoryGrpc`` is a `gRPC`_ implementation
+of the `senzing.szabstractfactory.SzAbstractFactory`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szabstractfactory.SzAbstractFactory: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szabstractfactory
 """
 
 # pylint: disable=E1101
@@ -12,14 +16,12 @@ from typing import Any, Type, TypedDict, Union
 import grpc
 from senzing import (
     SzAbstractFactory,
-    SzConfig,
     SzConfigManager,
     SzDiagnostic,
     SzEngine,
     SzProduct,
 )
 
-from .szconfig import SzConfigGrpc
 from .szconfigmanager import SzConfigManagerGrpc
 from .szdiagnostic import SzDiagnosticGrpc
 from .szengine import SzEngineGrpc
@@ -89,9 +91,6 @@ class SzAbstractFactoryGrpc(SzAbstractFactory):
     # SzAbstractFactory methods
     # -------------------------------------------------------------------------
 
-    def create_config(self) -> SzConfig:
-        return SzConfigGrpc(grpc_channel=self.channel)
-
     def create_configmanager(self) -> SzConfigManager:
         return SzConfigManagerGrpc(grpc_channel=self.channel)
 
@@ -106,7 +105,7 @@ class SzAbstractFactoryGrpc(SzAbstractFactory):
 
     def reinitialize(self, config_id: int) -> None:
         sz_diagonstic = SzDiagnosticGrpc(grpc_channel=self.channel)
-        sz_diagonstic._reinitialize(config_id=config_id)  # pylint: disable=W0212
+        sz_diagonstic.reinitialize(config_id=config_id)  # pylint: disable=W0212
 
         sz_engine = SzEngineGrpc(grpc_channel=self.channel)
-        sz_engine._reinitialize(config_id=config_id)  # pylint: disable=W0212
+        sz_engine.reinitialize(config_id=config_id)  # pylint: disable=W0212

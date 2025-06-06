@@ -1,9 +1,14 @@
 name: pytest darwin
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "15 7 * * *"
+  workflow_dispatch:
 
 env:
-  PYTHONPATH: /Users/runner/work/sz-sdk-python-grpc/sz-sdk-python-grpc/src
+  PYTHONPATH: ${{ github.workspace }}/src
 
 permissions:
   contents: read
@@ -11,12 +16,13 @@ permissions:
 jobs:
   pytest-darwin:
     name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
+    outputs:
+      status: ${{ job.status }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest]
-        # 3.9 is unsupported on the darwin runner
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
@@ -34,8 +40,8 @@ jobs:
           source ./venv/bin/activate
           echo "PATH=${PATH}" >> "${GITHUB_ENV}"
           python -m pip install --upgrade pip
+          python -m pip install --requirement development-requirements.txt
           python -m pip install --requirement requirements.txt
-          python -m pip install psutil pytest pytest-cov pytest-schema
 
       - if: matrix.python-version == '3.10'
         name: Install python libraries for python 3.10
@@ -43,14 +49,20 @@ jobs:
           source ./venv/bin/activate
           python -m pip install typing_extensions
 
-      - name: Install Docker
-        uses: docker-practice/actions-setup-docker@master
-        timeout-minutes: 12
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: Run gRPC service
-        run: docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
+        run: |
+          docker run --detach --env SENZING_TOOLS_ENABLE_ALL --publish 8261:8261 senzing/serve-grpc:latest
 
-      - name: Run pytest on tests
+      - name: Run pytest
         run: |
           source ./venv/bin/activate
           pytest tests/ --verbose --capture=no --cov=src
@@ -74,3 +86,12 @@ jobs:
       pull-requests: write
       contents: write
     uses: senzing-factory/build-resources/.github/workflows/python-coverage-comment.yaml@v2
+
+  slack-notification:
+    needs: [pytest-darwin]
+    if: ${{ always() && contains(fromJSON('["failure", "cancelled"]'), needs.pytest-darwin.outputs.status ) && github.event_name == 'schedule' }}
+    secrets:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v2
+    with:
+      job-status: ${{ needs.pytest-darwin.outputs.status }}

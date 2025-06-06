@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szconfigmanager_grpc.py
+``senzing_grpc.szconfigmanager.SzConfigManagerGrpc`` is a `gRPC`_ implementation
+of the `senzing.szconfigmanager.SzConfigManager`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szconfigmanager.SzConfigManager: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szconfigmanager
 """
 
 # pylint: disable=E1101
@@ -10,9 +14,10 @@ from types import TracebackType
 from typing import Any, Dict, Type, Union
 
 import grpc
-from senzing import SzConfigManager
+from senzing import SzConfig, SzConfigManager
 
 from .pb2_grpc import szconfigmanager_pb2, szconfigmanager_pb2_grpc
+from .szconfig import SzConfigGrpc
 from .szhelpers import as_str, new_exception
 
 # Metadata
@@ -71,29 +76,34 @@ class SzConfigManagerGrpc(SzConfigManager):
     # SzConfigManager methods
     # -------------------------------------------------------------------------
 
-    def add_config(
-        self,
-        config_definition: str,
-        config_comment: str,
-    ) -> int:
+    def create_config_from_config_id(self, config_id: int) -> SzConfig:
         try:
-            request = szconfigmanager_pb2.AddConfigRequest(  # type: ignore[unused-ignore]
-                configDefinition=as_str(config_definition),
-                configComment=as_str(config_comment),
-            )
-            response = self.stub.AddConfig(request)
-            return int(response.result)
+            request = szconfigmanager_pb2.GetConfigRequest(config_id=config_id)  # type: ignore[unused-ignore]
+            response = self.stub.GetConfig(request)
+            config_definition = str(response.result)
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            return result
         except Exception as err:
             raise new_exception(err) from err
 
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def get_config(self, config_id: int) -> str:
+    def create_config_from_string(self, config_definition: str) -> SzConfig:
         try:
-            request = szconfigmanager_pb2.GetConfigRequest(configId=config_id)  # type: ignore[unused-ignore]
-            response = self.stub.GetConfig(request)
-            return str(response.result)
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            result.verify_config_definition(config_definition)
+            return result
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def create_config_from_template(self) -> SzConfig:
+        try:
+            request = szconfigmanager_pb2.GetTemplateConfigRequest()  # type: ignore[unused-ignore]
+            response = self.stub.GetTemplateConfig(request)
+            config_definition = str(response.result)
+            result = SzConfigGrpc(self.channel)
+            result.import_config_definition(config_definition)
+            return result
         except Exception as err:
             raise new_exception(err) from err
 
@@ -113,7 +123,59 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
+    def register_config(
+        self,
+        config_definition: str,
+        config_comment: str,
+    ) -> int:
+        try:
+            request = szconfigmanager_pb2.RegisterConfigRequest(  # type: ignore[unused-ignore]
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
+            )
+            response = self.stub.RegisterConfig(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
+        try:
+            request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
+                current_default_config_id=current_default_config_id,
+                new_default_config_id=new_default_config_id,
+            )
+            self.stub.ReplaceDefaultConfigId(request)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def set_default_config(self, config_definition: str, config_comment: str) -> int:
+        try:
+            request = szconfigmanager_pb2.SetDefaultConfigRequest(  # type: ignore[unused-ignore]
+                config_definition=as_str(config_definition),
+                config_comment=as_str(config_comment),
+            )
+            response = self.stub.SetDefaultConfig(request)
+            return int(response.result)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    def set_default_config_id(self, config_id: int) -> None:
+        try:
+            request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
+                config_id=config_id,
+            )
+            self.stub.SetDefaultConfigId(request)
+        except Exception as err:
+            raise new_exception(err) from err
+
+    # -------------------------------------------------------------------------
+    # Non-public SzConfigManagerCore methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -123,22 +185,3 @@ class SzConfigManagerGrpc(SzConfigManager):
         _ = instance_name
         _ = settings
         _ = verbose_logging
-
-    def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
-        try:
-            request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
-                currentDefaultConfigId=current_default_config_id,
-                newDefaultConfigId=new_default_config_id,
-            )
-            self.stub.ReplaceDefaultConfigId(request)
-        except Exception as err:
-            raise new_exception(err) from err
-
-    def set_default_config_id(self, config_id: int) -> None:
-        try:
-            request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
-                configId=config_id,
-            )
-            self.stub.SetDefaultConfigId(request)
-        except Exception as err:
-            raise new_exception(err) from err

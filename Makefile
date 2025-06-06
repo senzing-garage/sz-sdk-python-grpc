@@ -93,6 +93,14 @@ dependencies: venv
 .PHONY: setup
 setup: setup-osarch-specific
 
+
+.PHONY: setup-mutual-tls
+setup-mutual-tls: setup-mutual-tls-osarch-specific
+
+
+.PHONY: setup-server-side-tls
+setup-server-side-tls: setup-server-side-tls-osarch-specific
+
 # -----------------------------------------------------------------------------
 # Lint
 # -----------------------------------------------------------------------------
@@ -111,13 +119,24 @@ docker-build: docker-build-osarch-specific
 # Run
 # -----------------------------------------------------------------------------
 
-
 # -----------------------------------------------------------------------------
 # Test
 # -----------------------------------------------------------------------------
 
 .PHONY: test
 test: test-osarch-specific
+
+
+.PHONY: test-mutual-tls
+test-mutual-tls: test-mutual-tls-osarch-specific
+
+
+.PHONY: test-mutual-tls-encrypted-key
+test-mutual-tls-encrypted-key: test-mutual-tls-encrypted-key-osarch-specific
+
+
+.PHONY: test-server-side-tls
+test-server-side-tls: test-server-side-tls-osarch-specific
 
 
 .PHONY: docker-test
@@ -188,11 +207,25 @@ bandit:
 	@$(activate-venv); bandit -c pyproject.toml $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
+.PHONY: bearer
+bearer:
+	$(info ${\n})
+	$(info --- bearer ---------------------------------------------------------------------)
+	@$(activate-venv); @bearer scan --config-file .github/linters/bearer.yml .
+
+
 .PHONY: black
 black:
 	$(info ${\n})
 	$(info --- black ----------------------------------------------------------------------)
 	@$(activate-venv); black $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+
+
+.PHONY: cspell
+cspell:
+	$(info ${\n})
+	$(info --- cspell ---------------------------------------------------------------------)
+	@cspell lint --dot .
 
 
 .PHONY: flake8

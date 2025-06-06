@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.6] - 2025-05-12
+
+### Removed in 0.5.6
+
+- Examples/misc flags_by_name and flags_by_value
+
+### Fixed in 0.5.6
+
+- Corrected flags for examples, why_record_in_entity.py and why_records.py
+
+## [0.5.5] - 2025-04-21
+
+### Changed in 0.5.5
+
+- Simplify and clean up examples
+
+## [0.5.4] - 2025-04-16
+
+### Added in 0.5.4
+
+- `SzEngine.why_search`
+
+## [0.5.3] - 2025-04-11
+
+### Added in 0.5.3
+
+- Restructure `SzConfig` and `SzConfigManager`
+
+## [0.5.2] - 2025-03-21
+
+### Added in 0.5.2
+
+- TLS pass phrase support
+
+## [0.5.1] - 2025-03-18
+
+### Added in 0.5.1
+
+- Mutual TLS support
+
+## [0.5.0] - 2025-02-24
+
+### Added in 0.5.0
+
+- Server-side TLS support
+
+## [0.4.4] - 2025-02-12
+
+### Changed in 0.4.4
+
+- Update Protobuf files
+
+## [0.4.3] - 2025-02-10
+
+### Changed in 0.4.3
+
+- Update gRPC
+
 ## [0.4.2] - 2025-01-31
 
 ### Changed in 0.4.2

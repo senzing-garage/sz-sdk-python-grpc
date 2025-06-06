@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 
 """
-TODO: szdiagnostic_grpc.py
+``senzing_grpc.szdiagnostic.SzDiagnosticGrpc`` is a `gRPC`_ implementation
+of the `senzing.szdiagnostic.SzDiagnostic`_ interface.
+
+.. _gRPC: https://grpc.io
+.. _senzing.szdiagnostic.SzDiagnostic: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szdiagnostic
 """
 
 # pylint: disable=E1101
@@ -75,14 +79,11 @@ class SzDiagnosticGrpc(SzDiagnostic):
 
     def check_datastore_performance(self, seconds_to_run: int) -> str:
         try:
-            request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(secondsToRun=seconds_to_run)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.CheckDatastorePerformanceRequest(seconds_to_run=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckDatastorePerformance(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
-
-    def _destroy(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
 
     def get_datastore_info(self) -> str:
         try:
@@ -96,13 +97,23 @@ class SzDiagnosticGrpc(SzDiagnostic):
         """TODO: Add get_feature()"""
         _ = feature_id
         try:
-            request = szdiagnostic_pb2.GetFeatureRequest(featureId=feature_id)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.GetFeatureRequest(feature_id=feature_id)  # type: ignore[unused-ignore]
             response = self.stub.GetFeature(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
 
-    def _initialize(
+    def purge_repository(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    # -------------------------------------------------------------------------
+    # Non-public SzDiagnostic methods
+    # -------------------------------------------------------------------------
+
+    def _destroy(self) -> None:
+        """Null function in the sz-sdk-python-grpc implementation."""
+
+    def initialize(
         self,
         instance_name: str,
         settings: Union[str, Dict[Any, Any]],
@@ -115,12 +126,9 @@ class SzDiagnosticGrpc(SzDiagnostic):
         _ = config_id
         _ = verbose_logging
 
-    def purge_repository(self) -> None:
-        """Null function in the sz-sdk-python-grpc implementation."""
-
-    def _reinitialize(self, config_id: int) -> None:
+    def reinitialize(self, config_id: int) -> None:
         try:
-            request = szdiagnostic_pb2.ReinitializeRequest(configId=config_id)  # type: ignore[unused-ignore]
+            request = szdiagnostic_pb2.ReinitializeRequest(config_id=config_id)  # type: ignore[unused-ignore]
             self.stub.Reinitialize(request)
         except Exception as err:
             raise new_exception(err) from err

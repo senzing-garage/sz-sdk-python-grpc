@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import grpc
 from senzing import SZ_WITHOUT_INFO, SzError
 from senzing_truthset import (
