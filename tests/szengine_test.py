@@ -1076,7 +1076,7 @@ def test_why_search(sz_engine: SzEngine) -> None:
 # -----------------------------------------------------------------------------
 
 
-def test_add_record_using_context_managment() -> None:
+def test_add_record_using_context_management() -> None:
     """Test the use of SzEngine in context."""
     with SzEngineGrpc(grpc_channel=get_grpc_channel()) as sz_engine:
         data_source_code = "TEST"

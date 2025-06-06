@@ -50,7 +50,7 @@ def test_constructor() -> None:
     assert isinstance(actual, SzProduct)
 
 
-def test_context_managment() -> None:
+def test_context_management() -> None:
     """Test the use of SzProduct in context."""
     with SzProductGrpc(grpc_channel=get_grpc_channel()) as sz_product:
         actual = sz_product.get_license()
