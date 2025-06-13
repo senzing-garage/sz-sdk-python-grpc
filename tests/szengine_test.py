@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Tuple
 import pytest
 from pytest_schema import Optional, Or, schema
 from senzing import (
-    SZ_NO_FLAGS,
     SZ_WITHOUT_INFO,
     SzAbstractFactory,
     SzBadInputError,
@@ -369,7 +368,7 @@ def test_find_interesting_entities_by_entity_id(sz_engine: SzEngine) -> None:
     ]
     add_records(sz_engine, test_records)
     entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
-    flags = SZ_NO_FLAGS
+    flags = SzEngineFlags.SZ_NO_FLAGS
     actual = sz_engine.find_interesting_entities_by_entity_id(entity_id, flags)
     delete_records(sz_engine, test_records)
     if len(actual) > 0:
@@ -382,7 +381,7 @@ def test_find_interesting_entities_by_entity_id_bad_entity_id(
 ) -> None:
     """Test SzEngine.find_interesting_entities_by_entity_id()."""
     bad_entity_id = 0
-    flags = SZ_NO_FLAGS
+    flags = SzEngineFlags.SZ_NO_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.find_interesting_entities_by_entity_id(bad_entity_id, flags)
 
@@ -395,7 +394,7 @@ def test_find_interesting_entities_by_record_id(sz_engine: SzEngine) -> None:
     add_records(sz_engine, test_records)
     data_source_code = "CUSTOMERS"
     record_id = "1001"
-    flags = SZ_NO_FLAGS
+    flags = SzEngineFlags.SZ_NO_FLAGS
     actual = sz_engine.find_interesting_entities_by_record_id(data_source_code, record_id, flags)
     delete_records(sz_engine, test_records)
     if len(actual) > 0:
@@ -409,7 +408,7 @@ def test_find_interesting_entities_by_record_id_bad_data_source_code(
     """Test SzEngine.find_interesting_entities_by_record_id()."""
     bad_data_source_code = "XXXX"
     record_id = "9999"
-    flags = SZ_NO_FLAGS
+    flags = SzEngineFlags.SZ_NO_FLAGS
     with pytest.raises(SzUnknownDataSourceError):
         _ = sz_engine.find_interesting_entities_by_record_id(bad_data_source_code, record_id, flags)
 
@@ -420,7 +419,7 @@ def test_find_interesting_entities_by_record_id_bad_record_id(
     """Test SzEngine.find_interesting_entities_by_record_id()."""
     data_source_code = "CUSTOMERS"
     bad_record_id = "9999"
-    flags = SZ_NO_FLAGS
+    flags = SzEngineFlags.SZ_NO_FLAGS
     with pytest.raises(SzNotFoundError):
         _ = sz_engine.find_interesting_entities_by_record_id(data_source_code, bad_record_id, flags)
 
@@ -1701,9 +1700,7 @@ path_schema = {
 }
 
 preprocess_record_schema = {
-    "JSON_DATA": {str: str},
-    Optional("FEATURES"): {},
-    Optional("UNMAPPED_DATA"): {},
+    "FEATURES": {str: [{"ATTRIBUTES": {str: str}, "FEAT_DESC": str, "LIB_FEAT_ID": int, Optional("USAGE_TYPE"): str}]}
 }
 
 process_withinfo_schema = {
@@ -2001,19 +1998,54 @@ why_search_schema = {
                 "WHY_KEY": str,
                 "WHY_ERRULE_CODE": str,
                 "MATCH_LEVEL_CODE": str,
-                "CANDIDATE_KEYS": {},
-                "FEATURE_SCORES": {},
+                "CANDIDATE_KEYS": {str: [{"FEAT_ID": int, "FEAT_DESC": str}]},
+                "FEATURE_SCORES": {
+                    str: [
+                        {
+                            "INBOUND_FEAT_ID": int,
+                            "INBOUND_FEAT_DESC": str,
+                            "CANDIDATE_FEAT_ID": int,
+                            "CANDIDATE_FEAT_DESC": str,
+                            "SCORE": int,
+                            "ADDITIONAL_SCORES": {str: int},
+                            "SCORE_BUCKET": str,
+                            "SCORE_BEHAVIOR": str,
+                        }
+                    ]
+                },
                 "DISCLOSED_RELATIONS": {},
             },
+        }
+    ],
+    "SEARCH_REQUEST": {
+        "JSON_DATA": str,
+        "SEARCH_PROFILE": str,
+        "FEATURES": {
+            str: [
+                {
+                    "LIB_FEAT_ID": int,
+                    "FEAT_DESC": str,
+                    "USED_FOR_CAND": str,
+                    "USED_FOR_SCORING": str,
+                    "ENTITY_COUNT": int,
+                    "CANDIDATE_CAP_REACHED": str,
+                    "SCORING_CAP_REACHED": str,
+                }
+            ]
+        },
+    },
+    "SEARCH_STATISTICS": [
+        {
+            "CANDIDATE_KEYS": {
+                "FEATURE_TYPES": [{"FTYPE_CODE": str, "FOUND": int, "NOT_FOUND": int, "GENERIC": int}],
+                "SUMMARY": {"FOUND": int, "NOT_FOUND": int, "GENERIC": int},
+            }
         }
     ],
     "ENTITIES": [
         {
             "RESOLVED_ENTITY": {
                 "ENTITY_ID": int,
-                "ENTITY_NAME": str,
-                "FEATURES": {},
-                "RECORD_SUMMARY": [{"DATA_SOURCE": str, "RECORD_COUNT": int}],
             }
         }
     ],
