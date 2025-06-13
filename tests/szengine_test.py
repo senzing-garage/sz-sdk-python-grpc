@@ -811,7 +811,7 @@ def test_how_entity_by_entity_id_bad_entity_id(sz_engine: SzEngine) -> None:
 def test_preprocess_record(sz_engine: SzEngine) -> None:
     """Test SzEngine.preprocess_record()."""
     record_definition: str = DATA_SOURCES.get("CUSTOMERS", {}).get("1001", {}).get("Json", {})
-    flags = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS
+    flags = SzEngineFlags.SZ_PREPROCESS_RECORD_DEFAULT_FLAGS
     actual = sz_engine.preprocess_record(record_definition, flags)
     actual_as_dict = json.loads(actual)
     assert schema(preprocess_record_schema) == actual_as_dict
@@ -1062,7 +1062,7 @@ def test_why_search(sz_engine: SzEngine) -> None:
     attributes = json.dumps({"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"})
     entity_id = get_entity_id_from_record_id(sz_engine, "CUSTOMERS", "1001")
     search_profile = "SEARCH"
-    flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
+    flags = SzEngineFlags.SZ_WHY_SEARCH_DEFAULT_FLAGS
     actual = sz_engine.why_search(attributes, entity_id, flags, search_profile)
     delete_records(sz_engine, test_records)
     if len(actual) > 0:

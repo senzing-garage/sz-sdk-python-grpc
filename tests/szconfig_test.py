@@ -2,7 +2,7 @@ import json
 
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing import SzAbstractFactory, SzConfig, SzConfigManager
+from senzing import SzAbstractFactory, SzConfig, SzConfigManager, SzError
 
 from senzing_grpc import SzAbstractFactoryGrpc, SzConfigGrpc
 
@@ -39,7 +39,7 @@ def test_add_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None
 def test_add_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
     """Test SzConfig.add_data_source()."""
     bad_data_source_code = ""
-    with pytest.raises(TypeError):
+    with pytest.raises(SzError):
         sz_config.add_data_source(bad_data_source_code)
 
 
@@ -66,7 +66,7 @@ def test_delete_data_source_bad_data_source_code_value(sz_config: SzConfig) -> N
 def test_delete_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
     """Test SzConfig.delete_data_source()."""
     bad_data_source_code = ""
-    with pytest.raises(TypeError):
+    with pytest.raises(SzError):
         sz_config.delete_data_source(bad_data_source_code)
 
 
