@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.7] - 2025-06-13
+
+### Added in 0.5.7
+
+- New tests for szconfig
+
+### Changed in 0.5.7
+
+- Examples cleanup
+- Lowered sphinx-tabs version to 3.4.5 due to dependency issue with sphinx-toolbox currently
+- Some method definitions now use new default flags instead of integer values in szengine.py
+- SZ_NO_FLAGS is now defined in the abstract for szengineflags.py and no longer in constants.py
+
+### Fixed in 0.5.7
+
+- Change preprocess_record and example to use SZ_PREPROCESS_RECORD_DEFAULT_FLAGS
+
 ## [0.5.6] - 2025-05-12
 
 ### Removed in 0.5.6
