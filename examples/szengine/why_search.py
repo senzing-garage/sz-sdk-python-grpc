@@ -7,7 +7,7 @@ from senzing_grpc import SzAbstractFactoryGrpc
 
 attributes = json.dumps({"NAME_FULL": "BOB SMITH", "EMAIL_ADDRESS": "bsmith@work.com"})
 entity_id = 1
-flags = SzEngineFlags.SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS
+flags = SzEngineFlags.SZ_WHY_SEARCH_DEFAULT_FLAGS
 
 try:
     grpc_channel = grpc.insecure_channel("localhost:8261")

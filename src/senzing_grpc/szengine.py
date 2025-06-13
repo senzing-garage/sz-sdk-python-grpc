@@ -82,7 +82,7 @@ class SzEngineGrpc(SzEngine):
         data_source_code: str,
         record_id: str,
         record_definition: str,
-        flags: int = 0,
+        flags: int = SzEngineFlags.SZ_ADD_RECORD_DEFAULT_FLAGS,
     ) -> str:
         try:
             request = szengine_pb2.AddRecordRequest(  # type: ignore[unused-ignore]
@@ -117,7 +117,7 @@ class SzEngineGrpc(SzEngine):
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = 0,
+        flags: int = SzEngineFlags.SZ_DELETE_RECORD_DEFAULT_FLAGS,
     ) -> str:
         try:
             request = szengine_pb2.DeleteRecordRequest(  # type: ignore[unused-ignore]
@@ -194,7 +194,9 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_interesting_entities_by_entity_id(self, entity_id: int, flags: int = 0) -> str:
+    def find_interesting_entities_by_entity_id(
+        self, entity_id: int, flags: int = SzEngineFlags.SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS
+    ) -> str:
         try:
             request = szengine_pb2.FindInterestingEntitiesByEntityIdRequest(  # type: ignore[unused-ignore]
                 entity_id=entity_id,
@@ -205,7 +207,12 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def find_interesting_entities_by_record_id(self, data_source_code: str, record_id: str, flags: int = 0) -> str:
+    def find_interesting_entities_by_record_id(
+        self,
+        data_source_code: str,
+        record_id: str,
+        flags: int = SzEngineFlags.SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS,
+    ) -> str:
         try:
             request = szengine_pb2.FindInterestingEntitiesByRecordIdRequest(  # type: ignore[unused-ignore]
                 data_source_code=as_str(data_source_code),
@@ -416,7 +423,7 @@ class SzEngineGrpc(SzEngine):
     def preprocess_record(
         self,
         record_definition: str,
-        flags: int = SzEngineFlags.SZ_RECORD_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_PREPROCESS_RECORD_DEFAULT_FLAGS,
     ) -> str:
         try:
             request = szengine_pb2.PreprocessRecordRequest(  # type: ignore[unused-ignore]
@@ -442,7 +449,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def reevaluate_entity(self, entity_id: int, flags: int = 0) -> str:
+    def reevaluate_entity(self, entity_id: int, flags: int = SzEngineFlags.SZ_REEVALUATE_RECORD_DEFAULT_FLAGS) -> str:
         try:
             request = szengine_pb2.ReevaluateEntityRequest(  # type: ignore[unused-ignore]
                 entity_id=entity_id,
@@ -453,7 +460,9 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def reevaluate_record(self, data_source_code: str, record_id: str, flags: int = 0) -> str:
+    def reevaluate_record(
+        self, data_source_code: str, record_id: str, flags: int = SzEngineFlags.SZ_REEVALUATE_RECORD_DEFAULT_FLAGS
+    ) -> str:
         try:
             request = szengine_pb2.ReevaluateRecordRequest(  # type: ignore[unused-ignore]
                 data_source_code=as_str(data_source_code),
@@ -503,7 +512,7 @@ class SzEngineGrpc(SzEngine):
         self,
         data_source_code: str,
         record_id: str,
-        flags: int = SzEngineFlags.SZ_WHY_RECORDS_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS,
     ) -> str:
         # TODO: Implement after V3 is published.
         try:
@@ -542,7 +551,7 @@ class SzEngineGrpc(SzEngine):
         self,
         attributes: str,
         entity_id: int,
-        flags: int = SzEngineFlags.SZ_ENTITY_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_WHY_SEARCH_DEFAULT_FLAGS,
         search_profile: str = "",
     ) -> str:
         try:
