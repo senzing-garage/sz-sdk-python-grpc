@@ -109,8 +109,8 @@ class SzConfigManagerGrpc(SzConfigManager):
 
     def get_config_registry(self) -> str:
         try:
-            request = szconfigmanager_pb2.GetConfigsRequest()  # type: ignore[unused-ignore]
-            response = self.stub.GetConfigs(request)
+            request = szconfigmanager_pb2.GetConfigRegistry()  # type: ignore[unused-ignore]
+            response = self.stub.GetConfigRegistry(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
