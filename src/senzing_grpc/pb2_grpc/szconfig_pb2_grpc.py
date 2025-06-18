@@ -5,23 +5,24 @@ import warnings
 
 from . import szconfig_pb2 as szconfig__pb2
 
-GRPC_GENERATED_VERSION = '1.72.0'
+GRPC_GENERATED_VERSION = "1.73.0"
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
 try:
     from grpc._utilities import first_version_is_lower
+
     _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
 except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
     raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in szconfig_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+        f"The grpc package installed is at version {GRPC_VERSION},"
+        + f" but the generated code in szconfig_pb2_grpc.py depends on"
+        + f" grpcio>={GRPC_GENERATED_VERSION}."
+        + f" Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}"
+        + f" or downgrade your generated code using grpcio-tools<={GRPC_VERSION}."
     )
 
 
@@ -35,25 +36,29 @@ class SzConfigStub(object):
             channel: A grpc.Channel.
         """
         self.AddDataSource = channel.unary_unary(
-                '/szconfig.SzConfig/AddDataSource',
-                request_serializer=szconfig__pb2.AddDataSourceRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.AddDataSourceResponse.FromString,
-                _registered_method=True)
+            "/szconfig.SzConfig/AddDataSource",
+            request_serializer=szconfig__pb2.AddDataSourceRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.AddDataSourceResponse.FromString,
+            _registered_method=True,
+        )
         self.DeleteDataSource = channel.unary_unary(
-                '/szconfig.SzConfig/DeleteDataSource',
-                request_serializer=szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.DeleteDataSourceResponse.FromString,
-                _registered_method=True)
+            "/szconfig.SzConfig/DeleteDataSource",
+            request_serializer=szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.DeleteDataSourceResponse.FromString,
+            _registered_method=True,
+        )
         self.GetDataSources = channel.unary_unary(
-                '/szconfig.SzConfig/GetDataSources',
-                request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
-                _registered_method=True)
+            "/szconfig.SzConfig/GetDataSources",
+            request_serializer=szconfig__pb2.GetDataSourcesRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.GetDataSourcesResponse.FromString,
+            _registered_method=True,
+        )
         self.VerifyConfig = channel.unary_unary(
-                '/szconfig.SzConfig/VerifyConfig',
-                request_serializer=szconfig__pb2.VerifyConfigRequest.SerializeToString,
-                response_deserializer=szconfig__pb2.VerifyConfigResponse.FromString,
-                _registered_method=True)
+            "/szconfig.SzConfig/VerifyConfig",
+            request_serializer=szconfig__pb2.VerifyConfigRequest.SerializeToString,
+            response_deserializer=szconfig__pb2.VerifyConfigResponse.FromString,
+            _registered_method=True,
+        )
 
 
 class SzConfigServicer(object):
@@ -62,76 +67,77 @@ class SzConfigServicer(object):
     def AddDataSource(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DeleteDataSource(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetDataSources(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def VerifyConfig(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_SzConfigServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'AddDataSource': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddDataSource,
-                    request_deserializer=szconfig__pb2.AddDataSourceRequest.FromString,
-                    response_serializer=szconfig__pb2.AddDataSourceResponse.SerializeToString,
-            ),
-            'DeleteDataSource': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteDataSource,
-                    request_deserializer=szconfig__pb2.DeleteDataSourceRequest.FromString,
-                    response_serializer=szconfig__pb2.DeleteDataSourceResponse.SerializeToString,
-            ),
-            'GetDataSources': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetDataSources,
-                    request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
-                    response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
-            ),
-            'VerifyConfig': grpc.unary_unary_rpc_method_handler(
-                    servicer.VerifyConfig,
-                    request_deserializer=szconfig__pb2.VerifyConfigRequest.FromString,
-                    response_serializer=szconfig__pb2.VerifyConfigResponse.SerializeToString,
-            ),
+        "AddDataSource": grpc.unary_unary_rpc_method_handler(
+            servicer.AddDataSource,
+            request_deserializer=szconfig__pb2.AddDataSourceRequest.FromString,
+            response_serializer=szconfig__pb2.AddDataSourceResponse.SerializeToString,
+        ),
+        "DeleteDataSource": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteDataSource,
+            request_deserializer=szconfig__pb2.DeleteDataSourceRequest.FromString,
+            response_serializer=szconfig__pb2.DeleteDataSourceResponse.SerializeToString,
+        ),
+        "GetDataSources": grpc.unary_unary_rpc_method_handler(
+            servicer.GetDataSources,
+            request_deserializer=szconfig__pb2.GetDataSourcesRequest.FromString,
+            response_serializer=szconfig__pb2.GetDataSourcesResponse.SerializeToString,
+        ),
+        "VerifyConfig": grpc.unary_unary_rpc_method_handler(
+            servicer.VerifyConfig,
+            request_deserializer=szconfig__pb2.VerifyConfigRequest.FromString,
+            response_serializer=szconfig__pb2.VerifyConfigResponse.SerializeToString,
+        ),
     }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'szconfig.SzConfig', rpc_method_handlers)
+    generic_handler = grpc.method_handlers_generic_handler("szconfig.SzConfig", rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('szconfig.SzConfig', rpc_method_handlers)
+    server.add_registered_method_handlers("szconfig.SzConfig", rpc_method_handlers)
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class SzConfig(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def AddDataSource(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def AddDataSource(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/szconfig.SzConfig/AddDataSource',
+            "/szconfig.SzConfig/AddDataSource",
             szconfig__pb2.AddDataSourceRequest.SerializeToString,
             szconfig__pb2.AddDataSourceResponse.FromString,
             options,
@@ -142,23 +148,26 @@ class SzConfig(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def DeleteDataSource(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def DeleteDataSource(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/szconfig.SzConfig/DeleteDataSource',
+            "/szconfig.SzConfig/DeleteDataSource",
             szconfig__pb2.DeleteDataSourceRequest.SerializeToString,
             szconfig__pb2.DeleteDataSourceResponse.FromString,
             options,
@@ -169,23 +178,26 @@ class SzConfig(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def GetDataSources(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def GetDataSources(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/szconfig.SzConfig/GetDataSources',
+            "/szconfig.SzConfig/GetDataSources",
             szconfig__pb2.GetDataSourcesRequest.SerializeToString,
             szconfig__pb2.GetDataSourcesResponse.FromString,
             options,
@@ -196,23 +208,26 @@ class SzConfig(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def VerifyConfig(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def VerifyConfig(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/szconfig.SzConfig/VerifyConfig',
+            "/szconfig.SzConfig/VerifyConfig",
             szconfig__pb2.VerifyConfigRequest.SerializeToString,
             szconfig__pb2.VerifyConfigResponse.FromString,
             options,
@@ -223,4 +238,5 @@ class SzConfig(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
