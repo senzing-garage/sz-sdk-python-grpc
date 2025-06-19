@@ -29,6 +29,11 @@ ignore_missing_imports = "true"
 warn_unused_ignores = "false"
 
 [[tool.mypy.overrides]]
+module = "senzing_grpc_protobuf.*"
+ignore_missing_imports = "true"
+warn_unused_ignores = "false"
+
+[[tool.mypy.overrides]]
 module = "senzing_grpc.*"
 disable_error_code = [
     "attr-defined",
@@ -66,8 +71,8 @@ notes = [
     "FIXME"
 ]
 # NOTE - Ignore invalid-name only in examples for simplified code without pylint complaining variables in global scope
-#        aren't uppercase. 
+#        aren't uppercase.
 # NOTE - Paths are regular expressions
 per-file-ignores = """
     /examples/:invalid-name
-""" 
+"""
