@@ -16,8 +16,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import grpc
 from senzing import SzEngine, SzEngineFlags
+from senzing_grpc_protobuf import szengine_pb2, szengine_pb2_grpc
 
-from .pb2_grpc import szengine_pb2, szengine_pb2_grpc
 from .szhelpers import as_str, new_exception
 
 # Metadata
