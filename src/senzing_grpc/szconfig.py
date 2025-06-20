@@ -15,8 +15,8 @@ from typing import Any, Dict, Type, Union
 
 import grpc
 from senzing import SzConfig
+from senzing_grpc_protobuf import szconfig_pb2, szconfig_pb2_grpc
 
-from .pb2_grpc import szconfig_pb2, szconfig_pb2_grpc
 from .szhelpers import new_exception
 
 # Metadata

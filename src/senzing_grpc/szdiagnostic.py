@@ -15,8 +15,8 @@ from typing import Any, Dict, Optional, Type, Union
 
 import grpc
 from senzing import SzDiagnostic
+from senzing_grpc_protobuf import szdiagnostic_pb2, szdiagnostic_pb2_grpc
 
-from .pb2_grpc import szdiagnostic_pb2, szdiagnostic_pb2_grpc
 from .szhelpers import new_exception
 
 # Metadata
