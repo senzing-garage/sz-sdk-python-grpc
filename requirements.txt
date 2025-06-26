@@ -1,4 +1,4 @@
-grpcio==1.73.0
+grpcio==1.73.1
 protobuf==6.31.1
 senzing==0.2.16
 senzing_grpc_protobuf==0.0.2
