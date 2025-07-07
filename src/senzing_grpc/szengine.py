@@ -98,10 +98,10 @@ class SzEngineGrpc(SzEngine):
 
     def close_export(self, export_handle: int) -> None:
         try:
-            request = szengine_pb2.CloseExportRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.CloseExportReportRequest(  # type: ignore[unused-ignore]
                 export_handle=export_handle,
             )
-            self.stub.CloseExport(request)
+            self.stub.CloseExportReport(request)
         except Exception as err:
             raise new_exception(err) from err
 
@@ -426,11 +426,11 @@ class SzEngineGrpc(SzEngine):
         flags: int = SzEngineFlags.SZ_PREPROCESS_RECORD_DEFAULT_FLAGS,
     ) -> str:
         try:
-            request = szengine_pb2.PreprocessRecordRequest(  # type: ignore[unused-ignore]
+            request = szengine_pb2.GetRecordPreviewRequest(  # type: ignore[unused-ignore]
                 record_definition=as_str(record_definition),
                 flags=flags,
             )
-            response = self.stub.PreprocessRecord(request)
+            response = self.stub.GetRecordPreview(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err

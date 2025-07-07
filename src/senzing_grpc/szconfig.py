@@ -81,10 +81,10 @@ class SzConfigGrpc(SzConfig):
         data_source_code: str,
     ) -> str:
         try:
-            request = szconfig_pb2.AddDataSourceRequest(  # type: ignore[unused-ignore]
+            request = szconfig_pb2.RegisterDataSourceRequest(  # type: ignore[unused-ignore]
                 config_definition=self.config_definition, data_source_code=data_source_code
             )
-            response = self.stub.AddDataSource(request)
+            response = self.stub.RegisterDataSource(request)
             config_definition = response.config_definition
             if len(config_definition) > 0:
                 self.config_definition = config_definition
@@ -94,8 +94,8 @@ class SzConfigGrpc(SzConfig):
 
     def delete_data_source(self, data_source_code: str) -> str:
         try:
-            request = szconfig_pb2.DeleteDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
-            response = self.stub.DeleteDataSource(request)
+            request = szconfig_pb2.UnregisterDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
+            response = self.stub.UnregisterDataSource(request)
             config_definition = response.config_definition
             if len(config_definition) > 0:
                 self.config_definition = config_definition
@@ -108,8 +108,8 @@ class SzConfigGrpc(SzConfig):
 
     def get_data_sources(self) -> str:
         try:
-            request = szconfig_pb2.GetDataSourcesRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]
-            response = self.stub.GetDataSources(request)
+            request = szconfig_pb2.GetDataSourceRegistryRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]
+            response = self.stub.GetDataSourceRegistry(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
