@@ -430,7 +430,7 @@ class SzEngineGrpc(SzEngine):
                 record_definition=as_str(record_definition),
                 flags=flags,
             )
-            response = self.stub.GetRecordPreviewRecord(request)
+            response = self.stub.GetRecordPreview(request)
             return str(response.result)
         except Exception as err:
             raise new_exception(err) from err
