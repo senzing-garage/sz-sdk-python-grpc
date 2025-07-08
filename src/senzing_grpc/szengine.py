@@ -96,7 +96,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def close_export(self, export_handle: int) -> None:
+    def close_export_report(self, export_handle: int) -> None:
         try:
             request = szengine_pb2.CloseExportReportRequest(  # type: ignore[unused-ignore]
                 export_handle=export_handle,
@@ -420,10 +420,10 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
-    def preprocess_record(
+    def get_record_preview(
         self,
         record_definition: str,
-        flags: int = SzEngineFlags.SZ_PREPROCESS_RECORD_DEFAULT_FLAGS,
+        flags: int = SzEngineFlags.SZ_RECORD_PREVIEW_DEFAULT_FLAGS,
     ) -> str:
         try:
             request = szengine_pb2.GetRecordPreviewRequest(  # type: ignore[unused-ignore]

@@ -76,7 +76,7 @@ class SzConfigGrpc(SzConfig):
     # SzConfig interface methods
     # -------------------------------------------------------------------------
 
-    def add_data_source(
+    def register_data_source(
         self,
         data_source_code: str,
     ) -> str:
@@ -92,7 +92,7 @@ class SzConfigGrpc(SzConfig):
         except Exception as err:
             raise new_exception(err) from err
 
-    def delete_data_source(self, data_source_code: str) -> str:
+    def unregister_data_source(self, data_source_code: str) -> str:
         try:
             request = szconfig_pb2.UnregisterDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
             response = self.stub.UnregisterDataSource(request)
@@ -106,7 +106,7 @@ class SzConfigGrpc(SzConfig):
     def export(self) -> str:
         return self.config_definition
 
-    def get_data_sources(self) -> str:
+    def get_data_source_registry(self) -> str:
         try:
             request = szconfig_pb2.GetDataSourceRegistryRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]
             response = self.stub.GetDataSourceRegistry(request)

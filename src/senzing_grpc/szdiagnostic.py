@@ -77,7 +77,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
     # SzDiagnostic methods
     # -------------------------------------------------------------------------
 
-    def check_datastore_performance(self, seconds_to_run: int) -> str:
+    def check_repository_performance(self, seconds_to_run: int) -> str:
         try:
             request = szdiagnostic_pb2.CheckRepositoryPerformanceRequest(seconds_to_run=seconds_to_run)  # type: ignore[unused-ignore]
             response = self.stub.CheckRepositoryPerformance(request)
@@ -85,7 +85,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
         except Exception as err:
             raise new_exception(err) from err
 
-    def get_datastore_info(self) -> str:
+    def get_repository_info(self) -> str:
         try:
             request = szdiagnostic_pb2.GetRepositoryInfoRequest()  # type: ignore[unused-ignore]
             response = self.stub.GetRepositoryInfo(request)

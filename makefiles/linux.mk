@@ -28,8 +28,8 @@ clean-osarch-specific:
 .PHONY: coverage-osarch-specific
 coverage-osarch-specific: export SENZING_LOG_LEVEL=TRACE
 coverage-osarch-specific:
-	@$(activate-venv); pytest --cov=src --cov-report=xml --ignore=src/senzing_grpc/pb2_grpc/  $(shell git ls-files '*.py' ':!:src/senzing_grpc/pb2_grpc/*')
-	@$(activate-venv); coverage html --omit=src/senzing_grpc/pb2_grpc/*
+	@$(activate-venv); pytest --cov=src --cov-report=xml  tests/
+	@$(activate-venv); coverage html
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html 1>/dev/null 2>&1
 
 
@@ -66,6 +66,7 @@ setup-osarch-specific:
 		--publish 8261:8261 \
 		--rm \
 		senzing/serve-grpc
+	@sleep 10
 	$(info senzing/serve-grpc running in background.)
 
 
@@ -102,7 +103,6 @@ setup-server-side-tls-osarch-specific:
 
 .PHONY: test-osarch-specific
 test-osarch-specific:
-	@sleep 10
 	$(info --- Unit tests -------------------------------------------------------)
 	@$(activate-venv); pytest tests/ --verbose --capture=no --cov=src --cov-report xml:coverage.xml
 	$(info --- Test examples using pytest -------------------------------------)
