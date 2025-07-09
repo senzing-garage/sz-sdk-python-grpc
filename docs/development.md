@@ -72,31 +72,6 @@ Since the Senzing library is a prerequisite, it must be installed first.
 
    ```
 
-## Working with grpc and Protobuffer files
-
-After copying files from [sz-sdk-proto/example_generated_source_code/python],
-an `import` statement must be modified in each of:
-
-- [szconfig_pb2_grpc.py]
-- [szconfigmanager_pb2_grpc.py]
-- [szdiagnostic_pb2_grpc.py]
-- [szengine_pb2_grpc.py]
-- [szproduct_pb2_grpc.py]
-
-Example from [szconfig_pb2_grpc.py]:
-
-Before:
-
-```python
-    import szconfig_pb2 as szconfig__pb2
-```
-
-After:
-
-```python
-    from . import szconfig_pb2 as szconfig__pb2
-```
-
 ## Lint
 
 1. Run linting.
@@ -293,10 +268,4 @@ Create a code coverage map.
 [pytest]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/pytest.md
 [Python]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/python.md
 [sphinx]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/sphinx.md
-[szconfig_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szconfig_pb2_grpc.py
-[szconfigmanager_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szconfigmanager_pb2_grpc.py
-[szdiagnostic_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szdiagnostic_pb2_grpc.py
-[szengine_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szengine_pb2_grpc.py
-[szproduct_pb2_grpc.py]: ../src/senzing_grpc/pb2_grpc/szproduct_pb2_grpc.py
-[sz-sdk-proto/example_generated_source_code/python]: https://github.com/senzing-garage/sz-sdk-proto/tree/main/example_generated_source_code/python
 [Test PyPi]: https://github.com/senzing-garage/knowledge-base/blob/main/WHATIS/pypi.md#test-pypi
