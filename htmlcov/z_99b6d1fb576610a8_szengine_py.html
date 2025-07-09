@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_99b6d1fb576610a8_szhelpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.2">coverage.py v7.9.2</a>,
-            created at 2025-07-09 07:39 +0000
+            created at 2025-07-09 15:13 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -178,7 +178,7 @@
     <p class="run"><span class="n"><a id="t96" href="#t96">96</a></span><span class="t">        <span class="key">except</span> <span class="nam">Exception</span> <span class="key">as</span> <span class="nam">err</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t97" href="#t97">97</a></span><span class="t">            <span class="key">raise</span> <span class="nam">new_exception</span><span class="op">(</span><span class="nam">err</span><span class="op">)</span> <span class="key">from</span> <span class="nam">err</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t98" href="#t98">98</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t99" href="#t99">99</a></span><span class="t">    <span class="key">def</span> <span class="nam">close_export</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">export_handle</span><span class="op">:</span> <span class="nam">int</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t99" href="#t99">99</a></span><span class="t">    <span class="key">def</span> <span class="nam">close_export_report</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">export_handle</span><span class="op">:</span> <span class="nam">int</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t100" href="#t100">100</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t101" href="#t101">101</a></span><span class="t">            <span class="nam">request</span> <span class="op">=</span> <span class="nam">szengine_pb2</span><span class="op">.</span><span class="nam">CloseExportReportRequest</span><span class="op">(</span>  <span class="com"># type: ignore[unused-ignore]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t102" href="#t102">102</a></span><span class="t">                <span class="nam">export_handle</span><span class="op">=</span><span class="nam">export_handle</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -502,10 +502,10 @@
     <p class="run"><span class="n"><a id="t420" href="#t420">420</a></span><span class="t">        <span class="key">except</span> <span class="nam">Exception</span> <span class="key">as</span> <span class="nam">err</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t421" href="#t421">421</a></span><span class="t">            <span class="key">raise</span> <span class="nam">new_exception</span><span class="op">(</span><span class="nam">err</span><span class="op">)</span> <span class="key">from</span> <span class="nam">err</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t422" href="#t422">422</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t423" href="#t423">423</a></span><span class="t">    <span class="key">def</span> <span class="nam">preprocess_record</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t423" href="#t423">423</a></span><span class="t">    <span class="key">def</span> <span class="nam">get_record_preview</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t424" href="#t424">424</a></span><span class="t">        <span class="nam">self</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t425" href="#t425">425</a></span><span class="t">        <span class="nam">record_definition</span><span class="op">:</span> <span class="nam">str</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t426" href="#t426">426</a></span><span class="t">        <span class="nam">flags</span><span class="op">:</span> <span class="nam">int</span> <span class="op">=</span> <span class="nam">SzEngineFlags</span><span class="op">.</span><span class="nam">SZ_PREPROCESS_RECORD_DEFAULT_FLAGS</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t426" href="#t426">426</a></span><span class="t">        <span class="nam">flags</span><span class="op">:</span> <span class="nam">int</span> <span class="op">=</span> <span class="nam">SzEngineFlags</span><span class="op">.</span><span class="nam">SZ_RECORD_PREVIEW_DEFAULT_FLAGS</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t427" href="#t427">427</a></span><span class="t">    <span class="op">)</span> <span class="op">-></span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t428" href="#t428">428</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t429" href="#t429">429</a></span><span class="t">            <span class="nam">request</span> <span class="op">=</span> <span class="nam">szengine_pb2</span><span class="op">.</span><span class="nam">GetRecordPreviewRequest</span><span class="op">(</span>  <span class="com"># type: ignore[unused-ignore]</span>&nbsp;</span><span class="r"></span></p>
@@ -739,7 +739,7 @@
             <a class="nav" href="z_99b6d1fb576610a8_szhelpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.2">coverage.py v7.9.2</a>,
-            created at 2025-07-09 07:39 +0000
+            created at 2025-07-09 15:13 +0000
         </p>
     </div>
 </footer>
