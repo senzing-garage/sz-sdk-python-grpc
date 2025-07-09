@@ -8,7 +8,7 @@ try:
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_configmanager = sz_abstract_factory.create_configmanager()
     sz_config = sz_configmanager.create_config_from_template()
-    result = sz_config.get_data_sources()
+    result = sz_config.get_data_source_registry()
     print(f"\n{result}\n")
 except SzError as err:
     print(f"\nERROR: {err}\n")

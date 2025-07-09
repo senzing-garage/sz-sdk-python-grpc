@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.10] - 2025-07-09
+
+### Changed in 0.5.10
+
+- Change `SzConfig.add_data_source` to `SzConfig.register_data_source`
+- Change `SzConfig.delete_data_source` to `SzConfig.unregister_data_source`
+- Change `SzConfig.get_data_sources` to `SzConfig.get_data_source_registry`
+- Change `SzDiagnostic.check_datastore_performance` to `SzDiagnostic.check_repository_performance`
+- Change `SzDiagnostic.get_datastore_info` to `SzDiagnostic.get_repository_info`
+- Change `SzEngine.close_export` to `SzEngine.close_export_report`
+- Change `SzEngine.preprocess_record` to ``SzEngine.get_record_preview`
+
 ## [0.5.9] - 2025-07-07
 
 ### Changed in 0.5.9

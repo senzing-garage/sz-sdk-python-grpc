@@ -13,40 +13,40 @@ from .helpers import get_grpc_channel
 # -----------------------------------------------------------------------------
 
 
-def test_check_datastore_performance(sz_diagnostic: SzDiagnostic) -> None:
-    """Test SzDiagnostic.check_datastore_performance()."""
+def test_check_repository_performance(sz_diagnostic: SzDiagnostic) -> None:
+    """Test SzDiagnostic.check_repository_performance()."""
     seconds_to_run = 3
-    actual = sz_diagnostic.check_datastore_performance(seconds_to_run)
+    actual = sz_diagnostic.check_repository_performance(seconds_to_run)
     actual_as_dict = json.loads(actual)
-    assert schema(check_datastore_performance_schema) == actual_as_dict
+    assert schema(check_repository_performance_schema) == actual_as_dict
 
 
-def test_check_datastore_performance_bad_seconds_to_run_type(
+def test_check_repository_performance_bad_seconds_to_run_type(
     sz_diagnostic: SzDiagnostic,
 ) -> None:
-    """Test SzDiagnostic.check_datastore_performance()."""
+    """Test SzDiagnostic.check_repository_performance()."""
     bad_seconds_to_run = "string"
     with pytest.raises(TypeError):
-        sz_diagnostic.check_datastore_performance(bad_seconds_to_run)  # type: ignore[arg-type]
+        sz_diagnostic.check_repository_performance(bad_seconds_to_run)  # type: ignore[arg-type]
 
 
-def test_check_datastore_performance_bad_seconds_to_run_value(
+def test_check_repository_performance_bad_seconds_to_run_value(
     sz_diagnostic: SzDiagnostic,
 ) -> None:
-    """Test SzDiagnostic.check_datastore_performance()."""
+    """Test SzDiagnostic.check_repository_performance()."""
     bad_seconds_to_run = -1
     # with pytest.raises(SzDatabaseError):
-    #     sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
-    actual = sz_diagnostic.check_datastore_performance(bad_seconds_to_run)
+    #     sz_diagnostic.check_repository_performance(bad_seconds_to_run)
+    actual = sz_diagnostic.check_repository_performance(bad_seconds_to_run)
     actual_as_dict = json.loads(actual)
-    assert schema(check_datastore_performance_schema) == actual_as_dict
+    assert schema(check_repository_performance_schema) == actual_as_dict
 
 
-def test_get_datastore_info(sz_diagnostic: SzDiagnostic) -> None:
-    """Test SzDiagnostic.get_datastore_info()."""
-    actual = sz_diagnostic.get_datastore_info()
+def test_get_repository_info(sz_diagnostic: SzDiagnostic) -> None:
+    """Test SzDiagnostic.get_repository_info()."""
+    actual = sz_diagnostic.get_repository_info()
     actual_as_dict = json.loads(actual)
-    assert schema(get_datastore_info_schema) == actual_as_dict
+    assert schema(get_repository_info_schema) == actual_as_dict
 
 
 def test_get_feature(sz_diagnostic: SzDiagnostic, sz_engine: SzEngine) -> None:
@@ -73,7 +73,7 @@ def test_help_1(sz_diagnostic: SzDiagnostic) -> None:
 
 def test_help_2(sz_diagnostic: SzDiagnostic) -> None:
     """Test SzDiagnostic.help(...)."""
-    sz_diagnostic.help("check_datastore_performance")
+    sz_diagnostic.help("check_repository_performance")
 
 
 # -----------------------------------------------------------------------------
@@ -90,9 +90,9 @@ def test_constructor() -> None:
 def test_context_management() -> None:
     """Test the use of SzDiagnostic in context."""
     with SzDiagnosticGrpc(grpc_channel=get_grpc_channel()) as sz_diagnostic:
-        actual = sz_diagnostic.get_datastore_info()
+        actual = sz_diagnostic.get_repository_info()
         actual_json = json.loads(actual)
-        assert schema(get_datastore_info_schema) == actual_json
+        assert schema(get_repository_info_schema) == actual_json
 
 
 # -----------------------------------------------------------------------------
@@ -122,9 +122,9 @@ def szengine_fixture() -> SzEngine:
 # Schemas
 # -----------------------------------------------------------------------------
 
-check_datastore_performance_schema = {"numRecordsInserted": int, "insertTime": int}
+check_repository_performance_schema = {"numRecordsInserted": int, "insertTime": int}
 
-get_datastore_info_schema = {
+get_repository_info_schema = {
     "dataStores": [
         {
             "id": str,
