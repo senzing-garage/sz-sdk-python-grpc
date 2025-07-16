@@ -46,6 +46,11 @@ def test_create_product(sz_abstractfactory: SzAbstractFactory) -> None:
     assert isinstance(actual, SzProduct)
 
 
+def test_destroy(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.create_product()."""
+    sz_abstractfactory.destroy()
+
+
 def test_help_1(sz_abstractfactory: SzAbstractFactory) -> None:
     """Test SzAbstractFactory.help()."""
     sz_abstractfactory.help()
