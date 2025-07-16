@@ -5,14 +5,14 @@
 | Name                                   |    Stmts |     Miss |   Cover |   Missing |
 |--------------------------------------- | -------: | -------: | ------: | --------: |
 | src/senzing\_grpc/\_\_init\_\_.py      |        7 |        0 |    100% |           |
-| src/senzing\_grpc/szabstractfactory.py |       33 |        0 |    100% |           |
+| src/senzing\_grpc/szabstractfactory.py |       35 |        0 |    100% |           |
 | src/senzing\_grpc/szconfig.py          |       60 |        6 |     90% |65, 114-115, 149-151 |
 | src/senzing\_grpc/szconfigmanager.py   |       92 |        9 |     90% |107-108, 115-116, 123-124, 185-187 |
 | src/senzing\_grpc/szdiagnostic.py      |       53 |        8 |     85% |93-94, 124-127, 133-134 |
 | src/senzing\_grpc/szengine.py          |      292 |       52 |     82% |105-106, 113-114, 145-146, 154-162, 171-172, 179-185, 194-195, 325-326, 340-341, 382-383, 390-391, 435-436, 449-450, 460-461, 518-527, 566-567, 584-587, 593-594 |
 | src/senzing\_grpc/szhelpers.py         |       46 |        8 |     83% |49, 53-55, 81, 88-89, 108 |
 | src/senzing\_grpc/szproduct.py         |       37 |        7 |     81% |84-85, 92-93, 109-111 |
-|                              **TOTAL** |  **620** |   **90** | **85%** |           |
+|                              **TOTAL** |  **622** |   **90** | **86%** |           |
 
 
 ## Setup coverage badge
