@@ -103,6 +103,9 @@ class SzAbstractFactoryGrpc(SzAbstractFactory):
     def create_product(self) -> SzProduct:
         return SzProductGrpc(grpc_channel=self.channel)
 
+    def destroy(self) -> None:
+        pass
+
     def reinitialize(self, config_id: int) -> None:
         sz_diagnostic = SzDiagnosticGrpc(grpc_channel=self.channel)
         sz_diagnostic.reinitialize(config_id=config_id)  # pylint: disable=W0212
