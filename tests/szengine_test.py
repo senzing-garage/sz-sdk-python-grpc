@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 # pylint: disable=C0302
 
 import json

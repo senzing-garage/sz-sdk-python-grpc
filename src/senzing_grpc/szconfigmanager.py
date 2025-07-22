@@ -18,7 +18,7 @@ from senzing import SzConfig, SzConfigManager
 from senzing_grpc_protobuf import szconfigmanager_pb2, szconfigmanager_pb2_grpc
 
 from .szconfig import SzConfigGrpc
-from .szhelpers import as_str, new_exception
+from .szhelpers import as_str, catch_sdk_exceptions, new_exception
 
 # Metadata
 
@@ -76,6 +76,7 @@ class SzConfigManagerGrpc(SzConfigManager):
     # SzConfigManager methods
     # -------------------------------------------------------------------------
 
+    @catch_sdk_exceptions
     def create_config_from_config_id(self, config_id: int) -> SzConfig:
         try:
             request = szconfigmanager_pb2.GetConfigRequest(config_id=config_id)  # type: ignore[unused-ignore]
@@ -87,6 +88,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def create_config_from_string(self, config_definition: str) -> SzConfig:
         try:
             result = SzConfigGrpc(self.channel)
@@ -96,6 +98,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def create_config_from_template(self) -> SzConfig:
         try:
             request = szconfigmanager_pb2.GetTemplateConfigRequest()  # type: ignore[unused-ignore]
@@ -107,6 +110,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_config_registry(self) -> str:
         try:
             request = szconfigmanager_pb2.GetConfigRegistryRequest()  # type: ignore[unused-ignore]
@@ -115,6 +119,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_default_config_id(self) -> int:
         try:
             request = szconfigmanager_pb2.GetDefaultConfigIdRequest()  # type: ignore[unused-ignore]
@@ -123,6 +128,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def register_config(
         self,
         config_definition: str,
@@ -138,6 +144,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def replace_default_config_id(self, current_default_config_id: int, new_default_config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.ReplaceDefaultConfigIdRequest(  # type: ignore[unused-ignore]
@@ -148,6 +155,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def set_default_config(self, config_definition: str, config_comment: str) -> int:
         try:
             request = szconfigmanager_pb2.SetDefaultConfigRequest(  # type: ignore[unused-ignore]
@@ -159,6 +167,7 @@ class SzConfigManagerGrpc(SzConfigManager):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def set_default_config_id(self, config_id: int) -> None:
         try:
             request = szconfigmanager_pb2.SetDefaultConfigIdRequest(  # type: ignore[unused-ignore]
