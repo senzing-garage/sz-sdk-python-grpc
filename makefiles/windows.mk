@@ -50,7 +50,7 @@ hello-world-osarch-specific:
 
 .PHONY: package-osarch-specific
 package-osarch-specific:
-	@python3 -m build
+	@$(activate-venv); python3 -m build
 
 
 .PHONY: setup-osarch-specific

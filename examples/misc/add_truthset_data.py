@@ -8,15 +8,16 @@ from senzing_truthset import (
 
 from senzing_grpc import SzAbstractFactoryGrpc
 
+record_sets = [
+    TRUTHSET_CUSTOMER_RECORDS,
+    TRUTHSET_REFERENCE_RECORDS,
+    TRUTHSET_WATCHLIST_RECORDS,
+]
+
 try:
     grpc_channel = grpc.insecure_channel("localhost:8261")
     sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel)
     sz_engine = sz_abstract_factory.create_engine()
-    record_sets = [
-        TRUTHSET_CUSTOMER_RECORDS,
-        TRUTHSET_REFERENCE_RECORDS,
-        TRUTHSET_WATCHLIST_RECORDS,
-    ]
     for record_set in record_sets:
         for record in record_set.values():
             sz_engine.add_record(

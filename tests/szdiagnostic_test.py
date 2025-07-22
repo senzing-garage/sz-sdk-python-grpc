@@ -2,7 +2,7 @@ import json
 
 import pytest
 from pytest_schema import schema
-from senzing import SzDiagnostic, SzEngine, SzError
+from senzing import SzDiagnostic, SzEngine, SzError, SzSdkError
 
 from senzing_grpc import SzDiagnosticGrpc, SzEngineGrpc
 
@@ -26,7 +26,7 @@ def test_check_repository_performance_bad_seconds_to_run_type(
 ) -> None:
     """Test SzDiagnostic.check_repository_performance()."""
     bad_seconds_to_run = "string"
-    with pytest.raises(TypeError):
+    with pytest.raises(SzSdkError):
         sz_diagnostic.check_repository_performance(bad_seconds_to_run)  # type: ignore[arg-type]
 
 
