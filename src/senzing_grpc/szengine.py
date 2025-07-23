@@ -18,7 +18,7 @@ import grpc
 from senzing import SzEngine, SzEngineFlags
 from senzing_grpc_protobuf import szengine_pb2, szengine_pb2_grpc
 
-from .szhelpers import as_str, new_exception
+from .szhelpers import as_str, catch_sdk_exceptions, new_exception
 
 # Metadata
 
@@ -77,6 +77,7 @@ class SzEngineGrpc(SzEngine):
     # SzEngine methods
     # -------------------------------------------------------------------------
 
+    @catch_sdk_exceptions
     def add_record(
         self,
         data_source_code: str,
@@ -96,6 +97,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def close_export_report(self, export_handle: int) -> None:
         try:
             request = szengine_pb2.CloseExportReportRequest(  # type: ignore[unused-ignore]
@@ -105,6 +107,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def count_redo_records(self) -> int:
         try:
             request = szengine_pb2.CountRedoRecordsRequest()  # type: ignore[unused-ignore]
@@ -113,6 +116,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def delete_record(
         self,
         data_source_code: str,
@@ -130,6 +134,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def export_csv_entity_report(
         self,
         csv_column_list: str,
@@ -145,6 +150,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def export_csv_entity_report_iterator(
         self,
         csv_column_list: str,
@@ -161,6 +167,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def export_json_entity_report(self, flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS) -> int:
         try:
             request = szengine_pb2.ExportJsonEntityReportRequest(  # type: ignore[unused-ignore]
@@ -171,6 +178,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def export_json_entity_report_iterator(
         self,
         flags: int = SzEngineFlags.SZ_EXPORT_DEFAULT_FLAGS,
@@ -184,6 +192,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def fetch_next(self, export_handle: int) -> str:
         try:
             request = szengine_pb2.FetchNextRequest(  # type: ignore[unused-ignore]
@@ -194,6 +203,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_interesting_entities_by_entity_id(
         self, entity_id: int, flags: int = SzEngineFlags.SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS
     ) -> str:
@@ -207,6 +217,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_interesting_entities_by_record_id(
         self,
         data_source_code: str,
@@ -224,6 +235,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_network_by_entity_id(
         self,
         entity_ids: List[int],
@@ -245,6 +257,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_network_by_record_id(
         self,
         record_keys: List[Tuple[str, str]],
@@ -266,6 +279,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_path_by_entity_id(
         self,
         start_entity_id: int,
@@ -290,6 +304,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def find_path_by_record_id(
         self,
         start_data_source_code: str,
@@ -317,6 +332,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_active_config_id(self) -> int:
         try:
             request = szengine_pb2.GetActiveConfigIdRequest()  # type: ignore[unused-ignore]
@@ -325,6 +341,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_entity_by_entity_id(
         self,
         entity_id: int,
@@ -340,6 +357,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_entity_by_record_id(
         self,
         data_source_code: str,
@@ -357,6 +375,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_record(
         self,
         data_source_code: str,
@@ -374,6 +393,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_redo_record(self) -> str:
         try:
             request = szengine_pb2.GetRedoRecordRequest()  # type: ignore[unused-ignore]
@@ -382,6 +402,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_stats(self) -> str:
         try:
             request = szengine_pb2.GetStatsRequest()  # type: ignore[unused-ignore]
@@ -390,6 +411,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_virtual_entity_by_record_id(
         self,
         record_keys: List[Tuple[str, str]],
@@ -405,6 +427,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def how_entity_by_entity_id(
         self,
         entity_id: int,
@@ -420,6 +443,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_record_preview(
         self,
         record_definition: str,
@@ -435,9 +459,11 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def prime_engine(self) -> None:
         """Null function in the sz-sdk-python-grpc implementation."""
 
+    @catch_sdk_exceptions
     def process_redo_record(self, redo_record: str, flags: int = 0) -> str:
         try:
             request = szengine_pb2.ProcessRedoRecordRequest(  # type: ignore[unused-ignore]
@@ -449,6 +475,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def reevaluate_entity(self, entity_id: int, flags: int = SzEngineFlags.SZ_REEVALUATE_RECORD_DEFAULT_FLAGS) -> str:
         try:
             request = szengine_pb2.ReevaluateEntityRequest(  # type: ignore[unused-ignore]
@@ -460,6 +487,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def reevaluate_record(
         self, data_source_code: str, record_id: str, flags: int = SzEngineFlags.SZ_REEVALUATE_RECORD_DEFAULT_FLAGS
     ) -> str:
@@ -474,6 +502,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def search_by_attributes(
         self,
         attributes: str,
@@ -491,6 +520,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def why_entities(
         self,
         entity_id_1: int,
@@ -508,6 +538,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def why_record_in_entity(
         self,
         data_source_code: str,
@@ -526,6 +557,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def why_records(
         self,
         data_source_code_1: str,
@@ -547,6 +579,7 @@ class SzEngineGrpc(SzEngine):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def why_search(
         self,
         attributes: str,

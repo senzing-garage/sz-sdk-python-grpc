@@ -17,7 +17,7 @@ import grpc
 from senzing import SzConfig
 from senzing_grpc_protobuf import szconfig_pb2, szconfig_pb2_grpc
 
-from .szhelpers import new_exception
+from .szhelpers import catch_sdk_exceptions, new_exception
 
 # Metadata
 
@@ -76,6 +76,7 @@ class SzConfigGrpc(SzConfig):
     # SzConfig interface methods
     # -------------------------------------------------------------------------
 
+    @catch_sdk_exceptions
     def register_data_source(
         self,
         data_source_code: str,
@@ -92,6 +93,7 @@ class SzConfigGrpc(SzConfig):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def unregister_data_source(self, data_source_code: str) -> str:
         try:
             request = szconfig_pb2.UnregisterDataSourceRequest(config_definition=self.config_definition, data_source_code=data_source_code)  # type: ignore[unused-ignore]
@@ -106,6 +108,7 @@ class SzConfigGrpc(SzConfig):
     def export(self) -> str:
         return self.config_definition
 
+    @catch_sdk_exceptions
     def get_data_source_registry(self) -> str:
         try:
             request = szconfig_pb2.GetDataSourceRegistryRequest(config_definition=self.config_definition)  # type: ignore[unused-ignore]

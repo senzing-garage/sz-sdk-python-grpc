@@ -17,7 +17,7 @@ import grpc
 from senzing import SzDiagnostic
 from senzing_grpc_protobuf import szdiagnostic_pb2, szdiagnostic_pb2_grpc
 
-from .szhelpers import new_exception
+from .szhelpers import catch_sdk_exceptions, new_exception
 
 # Metadata
 
@@ -77,6 +77,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
     # SzDiagnostic methods
     # -------------------------------------------------------------------------
 
+    @catch_sdk_exceptions
     def check_repository_performance(self, seconds_to_run: int) -> str:
         try:
             request = szdiagnostic_pb2.CheckRepositoryPerformanceRequest(seconds_to_run=seconds_to_run)  # type: ignore[unused-ignore]
@@ -85,6 +86,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_repository_info(self) -> str:
         try:
             request = szdiagnostic_pb2.GetRepositoryInfoRequest()  # type: ignore[unused-ignore]
@@ -93,6 +95,7 @@ class SzDiagnosticGrpc(SzDiagnostic):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_feature(self, feature_id: int) -> str:
         """TODO: Add get_feature()"""
         _ = feature_id

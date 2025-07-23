@@ -17,7 +17,7 @@ import grpc
 from senzing import SzProduct
 from senzing_grpc_protobuf import szproduct_pb2, szproduct_pb2_grpc
 
-from .szhelpers import new_exception
+from .szhelpers import catch_sdk_exceptions, new_exception
 
 # Metadata
 
@@ -76,6 +76,7 @@ class SzProductGrpc(SzProduct):
     # SzProduct methods
     # -------------------------------------------------------------------------
 
+    @catch_sdk_exceptions
     def get_license(self) -> str:
         try:
             request = szproduct_pb2.GetLicenseRequest()  # type: ignore[unused-ignore]
@@ -84,6 +85,7 @@ class SzProductGrpc(SzProduct):
         except Exception as err:
             raise new_exception(err) from err
 
+    @catch_sdk_exceptions
     def get_version(self) -> str:
         try:
             request = szproduct_pb2.GetVersionRequest()  # type: ignore[unused-ignore]

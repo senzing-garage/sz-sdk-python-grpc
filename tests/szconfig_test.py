@@ -1,8 +1,11 @@
+#! /usr/bin/env python3
+
+
 import json
 
 import pytest
 from pytest_schema import Optional, Or, schema
-from senzing import SzAbstractFactory, SzConfig, SzConfigManager, SzError
+from senzing import SzAbstractFactory, SzConfig, SzConfigManager, SzError, SzSdkError
 
 from senzing_grpc import SzAbstractFactoryGrpc, SzConfigGrpc
 
@@ -11,63 +14,6 @@ from .helpers import get_grpc_channel
 # -----------------------------------------------------------------------------
 # Test cases
 # -----------------------------------------------------------------------------
-
-
-def test_register_data_source(sz_config: SzConfig) -> None:
-    """Test SzConfig.register_data_source()."""
-    data_source_code = "NAME_OF_DATASOURCE"
-    actual = sz_config.register_data_source(data_source_code)
-    assert isinstance(actual, str)
-    actual_as_dict = json.loads(actual)
-    assert schema(register_data_source_schema) == actual_as_dict
-
-
-def test_register_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig.register_data_source()."""
-    bad_data_source_code = 0
-    with pytest.raises(TypeError):
-        sz_config.register_data_source(bad_data_source_code)  # type: ignore[arg-type]
-
-
-def test_register_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig.register_data_source()."""
-    bad_data_source_code = {"XXXX": "YYYY"}
-    with pytest.raises(TypeError):
-        sz_config.register_data_source(bad_data_source_code)  # type: ignore[arg-type]
-
-
-def test_register_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig.register_data_source()."""
-    bad_data_source_code = ""
-    with pytest.raises(SzError):
-        sz_config.register_data_source(bad_data_source_code)
-
-
-def test_unregister_data_source(sz_config: SzConfig) -> None:
-    """Test SzConfig.unregister_data_source()."""
-    data_source_code = "TEST"
-    sz_config.unregister_data_source(data_source_code)
-
-
-def test_unregister_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
-    """Test SzConfig.unregister_data_source()."""
-    bad_data_source_code = 0
-    with pytest.raises(TypeError):
-        sz_config.unregister_data_source(bad_data_source_code)  # type: ignore[arg-type]
-
-
-def test_unregister_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig.unregister_data_source()."""
-    bad_data_source_code = {"XXXX": "YYYY"}
-    with pytest.raises(TypeError):
-        sz_config.unregister_data_source(bad_data_source_code)  # type: ignore[arg-type]
-
-
-def test_unregister_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
-    """Test SzConfig.unregister_data_source()."""
-    bad_data_source_code = ""
-    with pytest.raises(SzError):
-        sz_config.unregister_data_source(bad_data_source_code)
 
 
 def test_export(sz_config: SzConfig) -> None:
@@ -94,6 +40,63 @@ def test_help_1(sz_config: SzConfig) -> None:
 def test_help_2(sz_config: SzConfig) -> None:
     """Test SzConfig.help(...)."""
     sz_config.help("register_data_source")
+
+
+def test_register_data_source(sz_config: SzConfig) -> None:
+    """Test SzConfig.register_data_source()."""
+    data_source_code = "NAME_OF_DATASOURCE"
+    actual = sz_config.register_data_source(data_source_code)
+    assert isinstance(actual, str)
+    actual_as_dict = json.loads(actual)
+    assert schema(register_data_source_schema) == actual_as_dict
+
+
+def test_register_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
+    """Test SzConfig.register_data_source()."""
+    bad_data_source_code = 0
+    with pytest.raises(SzSdkError):
+        sz_config.register_data_source(bad_data_source_code)  # type: ignore[arg-type]
+
+
+def test_register_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
+    """Test SzConfig.register_data_source()."""
+    bad_data_source_code = {"XXXX": "YYYY"}
+    with pytest.raises(SzSdkError):
+        sz_config.register_data_source(bad_data_source_code)  # type: ignore[arg-type]
+
+
+def test_register_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
+    """Test SzConfig.register_data_source()."""
+    bad_data_source_code = ""
+    with pytest.raises(SzError):
+        sz_config.register_data_source(bad_data_source_code)
+
+
+def test_unregister_data_source(sz_config: SzConfig) -> None:
+    """Test SzConfig.unregister_data_source()."""
+    data_source_code = "TEST"
+    sz_config.unregister_data_source(data_source_code)
+
+
+def test_unregister_data_source_bad_data_source_code_type(sz_config: SzConfig) -> None:
+    """Test SzConfig.unregister_data_source()."""
+    bad_data_source_code = 0
+    with pytest.raises(SzSdkError):
+        sz_config.unregister_data_source(bad_data_source_code)  # type: ignore[arg-type]
+
+
+def test_unregister_data_source_bad_data_source_code_value(sz_config: SzConfig) -> None:
+    """Test SzConfig.unregister_data_source()."""
+    bad_data_source_code = {"XXXX": "YYYY"}
+    with pytest.raises(SzSdkError):
+        sz_config.unregister_data_source(bad_data_source_code)  # type: ignore[arg-type]
+
+
+def test_unregister_data_source_empty_data_source_code_value(sz_config: SzConfig) -> None:
+    """Test SzConfig.unregister_data_source()."""
+    bad_data_source_code = ""
+    with pytest.raises(SzError):
+        sz_config.unregister_data_source(bad_data_source_code)
 
 
 # -----------------------------------------------------------------------------

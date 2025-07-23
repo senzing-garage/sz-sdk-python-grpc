@@ -60,31 +60,84 @@ def test_help_2(sz_abstractfactory: SzAbstractFactory) -> None:
     """Test SzAbstractFactory.help(...)."""
     sz_abstractfactory.help("create_configmanager")
 
-    datasources = [f"TEST_DATASOURCE_{datetime.now().timestamp()}"]
+
+def test_reinitialize(sz_abstractfactory: SzAbstractFactory) -> None:
+    """Test SzAbstractFactory.reinitialize()."""
+
+    datasource = f"Test_Datasource_{datetime.now().timestamp()}"
+    config_comment = f"Test_config_{datetime.now().timestamp()}"
 
     # Create Senzing objects.
 
+    sz_diagnostic = sz_abstractfactory.create_diagnostic()
+    sz_engine = sz_abstractfactory.create_engine()
     sz_configmanager = sz_abstractfactory.create_configmanager()
-    sz_config = sz_configmanager.create_config_from_template()
+
+    # Use Senzing objects.
+
+    _ = sz_diagnostic.get_repository_info()
+    _ = sz_engine.add_record("TEST", "787B", '{"NAME_FULL":"Testy McTester"}')
+    old_active_config_id = sz_engine.get_active_config_id()
 
     # Add DataSources to Senzing configuration.
 
-    for datasource in datasources:
-        sz_config.register_data_source(datasource)
+    old_default_config_id = sz_configmanager.get_default_config_id()
+
+    assert old_active_config_id == old_default_config_id
+
+    sz_config = sz_configmanager.create_config_from_config_id(old_default_config_id)
+    sz_config.register_data_source(datasource)
 
     # Persist new Senzing configuration.
 
     config_definition = sz_config.export()
-    config_id = sz_configmanager.set_default_config(config_definition, "Add My datasources")
+    new_default_config_id = sz_configmanager.set_default_config(config_definition, config_comment)
 
-    # Update other Senzing objects.
+    assert old_active_config_id != new_default_config_id
 
-    sz_abstractfactory.reinitialize(config_id)
+    # Update Senzing objects.
+
+    sz_abstractfactory.reinitialize(new_default_config_id)
+
+    # Use Senzing objects.
+
+    _ = sz_diagnostic.get_repository_info()
+    new_active_config_id = sz_engine.get_active_config_id()
+
+    assert new_active_config_id == new_default_config_id
+
+
+# -----------------------------------------------------------------------------
+# candidates
+# -----------------------------------------------------------------------------
+
+
+# def test_create_same_settings(sz_abstractfactory: SzAbstractFactory) -> None:
+#     """Test SzAbstractFactoryGrpc with the same settings."""
+#     sz_abstractfactory_2 = SzAbstractFactoryGrpc(**FACTORY_PARAMETERS)
+#     assert sz_abstractfactory is sz_abstractfactory_2
+
+
+# def test_create_with_different_settings(sz_abstractfactory: SzAbstractFactory) -> None:
+#     """Test SzAbstractFactoryCore with different settings."""
+#     _ = sz_abstractfactory
+#     factory_parameters: SzAbstractFactoryParametersGrpc = {
+#         "grpc_channel": grpc.insecure_channel("localhost:8261"),
+#     }
+#     with pytest.raises(SzSdkError):
+#         SzAbstractFactoryGrpc(**factory_parameters)
 
 
 # -----------------------------------------------------------------------------
 # Unique testcases
 # -----------------------------------------------------------------------------
+
+
+def test_close_factory() -> None:
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel())
+    _ = sz_abstract_factory.create_engine()
+    sz_abstract_factory.destroy()
+    _ = sz_abstract_factory.create_engine()
 
 
 def test_constructor() -> None:
