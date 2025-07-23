@@ -68,42 +68,43 @@ def test_reinitialize(sz_abstractfactory: SzAbstractFactory) -> None:
     config_comment = f"Test_config_{datetime.now().timestamp()}"
 
     # Create Senzing objects.
+
     sz_diagnostic = sz_abstractfactory.create_diagnostic()
     sz_engine = sz_abstractfactory.create_engine()
     sz_configmanager = sz_abstractfactory.create_configmanager()
-    current_config_id = sz_configmanager.get_default_config_id()
-    sz_config = sz_configmanager.create_config_from_config_id(current_config_id)
 
-    # Use engines.
+    # Use Senzing objects.
 
     _ = sz_diagnostic.get_repository_info()
     _ = sz_engine.add_record("TEST", "787B", '{"NAME_FULL":"Testy McTester"}')
-    old_config_id = sz_engine.get_active_config_id()
+    old_active_config_id = sz_engine.get_active_config_id()
 
     # Add DataSources to Senzing configuration.
 
+    old_default_config_id = sz_configmanager.get_default_config_id()
+
+    assert old_active_config_id == old_default_config_id
+
+    sz_config = sz_configmanager.create_config_from_config_id(old_default_config_id)
     sz_config.register_data_source(datasource)
 
     # Persist new Senzing configuration.
 
     config_definition = sz_config.export()
-    new_config_id = sz_configmanager.set_default_config(config_definition, config_comment)
+    new_default_config_id = sz_configmanager.set_default_config(config_definition, config_comment)
 
-    assert old_config_id != new_config_id
+    assert old_active_config_id != new_default_config_id
 
     # Update Senzing objects.
 
-    sz_abstractfactory.reinitialize(new_config_id)
+    sz_abstractfactory.reinitialize(new_default_config_id)
 
-    # Use engines.
+    # Use Senzing objects.
 
     _ = sz_diagnostic.get_repository_info()
-    # _ = sz_engine.add_record(datasource, "767B", '{"NAME_FULL":"McTester Testy"}')
-    # _ = sz_engine.delete_record(datasource, "767B")
+    new_active_config_id = sz_engine.get_active_config_id()
 
-    active_config_id = sz_engine.get_active_config_id()
-
-    assert active_config_id == new_config_id
+    assert new_active_config_id == new_default_config_id
 
 
 # -----------------------------------------------------------------------------
@@ -130,6 +131,13 @@ def test_reinitialize(sz_abstractfactory: SzAbstractFactory) -> None:
 # -----------------------------------------------------------------------------
 # Unique testcases
 # -----------------------------------------------------------------------------
+
+
+def test_close_factory() -> None:
+    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=get_grpc_channel())
+    _ = sz_abstract_factory.create_engine()
+    sz_abstract_factory.destroy()
+    _ = sz_abstract_factory.create_engine()
 
 
 def test_constructor() -> None:

@@ -37,6 +37,10 @@ coverage-osarch-specific:
 dependencies-for-development-osarch-specific:
 
 
+.PHONY: dependencies-for-documentation-osarch-specific
+dependencies-for-documentation-osarch-specific:
+
+
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	@$(activate-venv); cd docs; rm -rf build; make html

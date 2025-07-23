@@ -31,6 +31,14 @@ coverage-osarch-specific:
 	@explorer $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
+.PHONY: dependencies-for-development-osarch-specific
+dependencies-for-development-osarch-specific:
+
+
+.PHONY: dependencies-for-documentation-osarch-specific
+dependencies-for-documentation-osarch-specific:
+
+
 .PHONY: dependencies-osarch-specific
 dependencies-osarch-specific:
 	python3 -m pip install --upgrade pip
