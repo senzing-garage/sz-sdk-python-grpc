@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>senzing_grpc.szengine &mdash; sz-sdk-python-grpc  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            sz-sdk-python-grpc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../senzing_grpc.html">senzing_grpc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sz-sdk-python-grpc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">senzing_grpc.szengine</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for senzing_grpc.szengine</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">``senzing_grpc.szengine.SzEngineGrpc`` is a `gRPC`_ implementation</span>
+<span class="sd">of the `senzing.szengine.SzEngine`_ interface.</span>
+
+<span class="sd">.. _gRPC: https://grpc.io</span>
+<span class="sd">.. _senzing.szengine.SzEngine: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szengine</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pylint: disable=E1101,C0302</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">grpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">senzing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SzEngine</span><span class="p">,</span> <span class="n">SzEngineFlags</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">senzing_grpc_protobuf</span><span class="w"> </span><span class="kn">import</span> <span class="n">szengine_pb2</span><span class="p">,</span> <span class="n">szengine_pb2_grpc</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.szhelpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_str</span><span class="p">,</span> <span class="n">catch_sdk_exceptions</span><span class="p">,</span> <span class="n">new_exception</span>
+
+<span class="c1"># Metadata</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SzEngineGrpc&quot;</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>  <span class="c1"># See https://www.python.org/dev/peps/pep-0396/</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;2025-01-10&quot;</span>
+<span class="n">__updated__</span> <span class="o">=</span> <span class="s2">&quot;2025-01-16&quot;</span>
+
+<span class="n">SENZING_PRODUCT_ID</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;5053&quot;</span>  <span class="c1"># See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md</span>
+<span class="p">)</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># SzEngineGrpc class</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="SzEngineGrpc">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SzEngineGrpc</span><span class="p">(</span><span class="n">SzEngine</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sz engine module access library over gRPC.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># Python dunder/magic methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">grpc_channel</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        For return value of -&gt; None, see https://peps.python.org/pep-0484/#the-meaning-of-annotations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">grpc_channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="n">szengine_pb2_grpc</span><span class="o">.</span><span class="n">SzEngineStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noop</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># TODO: Replace &quot;Any&quot; with &quot;Self&quot; once python 3.11 is lowest supported python version.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context Manager method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exc_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">exc_val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">exc_tb</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context Manager method.&quot;&quot;&quot;</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># SzEngine methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="SzEngineGrpc.add_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.add_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_record</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_ADD_RECORD_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">AddRecordRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">record_definition</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_definition</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">AddRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.close_export_report">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.close_export_report">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close_export_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_handle</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">CloseExportReportRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">export_handle</span><span class="o">=</span><span class="n">export_handle</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">CloseExportReport</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.count_redo_records">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.count_redo_records">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_redo_records</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">CountRedoRecordsRequest</span><span class="p">()</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">CountRedoRecords</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.delete_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.delete_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_record</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_DELETE_RECORD_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">DeleteRecordRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">DeleteRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.export_csv_entity_report">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.export_csv_entity_report">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_csv_entity_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">csv_column_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_EXPORT_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ExportCsvEntityReportRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">csv_column_list</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">csv_column_list</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ExportCsvEntityReport</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.export_csv_entity_report_iterator">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.export_csv_entity_report_iterator">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_csv_entity_report_iterator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">csv_column_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_EXPORT_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;TODO: Add method docstring to export_csv_entity_report_iterator.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">StreamExportCsvEntityReportRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">csv_column_list</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">csv_column_list</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">flags</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">StreamExportCsvEntityReport</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">result</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">item</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.export_json_entity_report">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.export_json_entity_report">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_json_entity_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_EXPORT_DEFAULT_FLAGS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ExportJsonEntityReportRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ExportJsonEntityReport</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.export_json_entity_report_iterator">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.export_json_entity_report_iterator">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_json_entity_report_iterator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_EXPORT_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;TODO: Add method docstring to export_json_entity_report_iterator.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">StreamExportJsonEntityReportRequest</span><span class="p">(</span><span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">)</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">StreamExportJsonEntityReport</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">result</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">item</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.fetch_next">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.fetch_next">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fetch_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">export_handle</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FetchNextRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">export_handle</span><span class="o">=</span><span class="n">export_handle</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FetchNext</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_interesting_entities_by_entity_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_interesting_entities_by_entity_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_interesting_entities_by_entity_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindInterestingEntitiesByEntityIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_id</span><span class="o">=</span><span class="n">entity_id</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindInterestingEntitiesByEntityId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_interesting_entities_by_record_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_interesting_entities_by_record_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_interesting_entities_by_record_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindInterestingEntitiesByRecordIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindInterestingEntitiesByRecordId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_network_by_entity_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_network_by_entity_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_network_by_entity_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">max_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">build_out_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">build_out_max_entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_NETWORK_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindNetworkByEntityIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_ids</span><span class="o">=</span><span class="n">entity_ids_json</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">),</span>
+                <span class="n">max_degrees</span><span class="o">=</span><span class="n">max_degrees</span><span class="p">,</span>
+                <span class="n">build_out_degrees</span><span class="o">=</span><span class="n">build_out_degrees</span><span class="p">,</span>
+                <span class="n">build_out_max_entities</span><span class="o">=</span><span class="n">build_out_max_entities</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindNetworkByEntityId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_network_by_record_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_network_by_record_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_network_by_record_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">max_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">build_out_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">build_out_max_entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_NETWORK_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindNetworkByRecordIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">record_keys</span><span class="o">=</span><span class="n">record_keys_json</span><span class="p">(</span><span class="n">record_keys</span><span class="p">),</span>
+                <span class="n">max_degrees</span><span class="o">=</span><span class="n">max_degrees</span><span class="p">,</span>
+                <span class="n">build_out_degrees</span><span class="o">=</span><span class="n">build_out_degrees</span><span class="p">,</span>
+                <span class="n">build_out_max_entities</span><span class="o">=</span><span class="n">build_out_max_entities</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindNetworkByRecordId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_path_by_entity_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_path_by_entity_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_path_by_entity_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">start_entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">end_entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">max_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="c1"># TODO Should accept both entity and record IDs in V4, test</span>
+        <span class="n">avoid_entity_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">required_data_sources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_PATH_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindPathByEntityIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">start_entity_id</span><span class="o">=</span><span class="n">start_entity_id</span><span class="p">,</span>
+                <span class="n">end_entity_id</span><span class="o">=</span><span class="n">end_entity_id</span><span class="p">,</span>
+                <span class="n">max_degrees</span><span class="o">=</span><span class="n">max_degrees</span><span class="p">,</span>
+                <span class="n">avoid_entity_ids</span><span class="o">=</span><span class="n">avoid_entity_ids_json</span><span class="p">(</span><span class="n">avoid_entity_ids</span><span class="p">),</span>
+                <span class="n">required_data_sources</span><span class="o">=</span><span class="n">required_data_sources_json</span><span class="p">(</span><span class="n">required_data_sources</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindPathByEntityId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.find_path_by_record_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.find_path_by_record_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_path_by_record_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">start_data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">end_data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">end_record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">max_degrees</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">avoid_record_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">required_data_sources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_FIND_PATH_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">FindPathByRecordIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">start_data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">start_data_source_code</span><span class="p">),</span>
+                <span class="n">start_record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">start_record_id</span><span class="p">),</span>
+                <span class="n">end_data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">end_data_source_code</span><span class="p">),</span>
+                <span class="n">end_record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">end_record_id</span><span class="p">),</span>
+                <span class="n">max_degrees</span><span class="o">=</span><span class="n">max_degrees</span><span class="p">,</span>
+                <span class="n">avoid_record_keys</span><span class="o">=</span><span class="n">avoid_record_keys_json</span><span class="p">(</span><span class="n">avoid_record_keys</span><span class="p">),</span>
+                <span class="n">required_data_sources</span><span class="o">=</span><span class="n">required_data_sources_json</span><span class="p">(</span><span class="n">required_data_sources</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">FindPathByRecordId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_active_config_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_active_config_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_active_config_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetActiveConfigIdRequest</span><span class="p">()</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetActiveConfigId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_entity_by_entity_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_entity_by_entity_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_entity_by_entity_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_ENTITY_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetEntityByEntityIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_id</span><span class="o">=</span><span class="n">entity_id</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetEntityByEntityId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_entity_by_record_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_entity_by_record_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_entity_by_record_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_ENTITY_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetEntityByRecordIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetEntityByRecordId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_record</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_RECORD_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetRecordRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_redo_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_redo_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_redo_record</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetRedoRecordRequest</span><span class="p">()</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetRedoRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_stats">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_stats">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetStatsRequest</span><span class="p">()</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetStats</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_virtual_entity_by_record_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_virtual_entity_by_record_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_virtual_entity_by_record_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetVirtualEntityByRecordIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">record_keys</span><span class="o">=</span><span class="n">record_keys_json</span><span class="p">(</span><span class="n">record_keys</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetVirtualEntityByRecordId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.how_entity_by_entity_id">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.how_entity_by_entity_id">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">how_entity_by_entity_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_HOW_ENTITY_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">HowEntityByEntityIdRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_id</span><span class="o">=</span><span class="n">entity_id</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">HowEntityByEntityId</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.get_record_preview">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.get_record_preview">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_record_preview</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record_definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_RECORD_PREVIEW_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">GetRecordPreviewRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">record_definition</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_definition</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetRecordPreview</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.prime_engine">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.prime_engine">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prime_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Null function in the sz-sdk-python-grpc implementation.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.process_redo_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.process_redo_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_redo_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redo_record</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ProcessRedoRecordRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">redo_record</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">redo_record</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ProcessRedoRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.reevaluate_entity">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.reevaluate_entity">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reevaluate_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_REEVALUATE_RECORD_DEFAULT_FLAGS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ReevaluateEntityRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_id</span><span class="o">=</span><span class="n">entity_id</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ReevaluateEntity</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.reevaluate_record">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.reevaluate_record">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reevaluate_record</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_REEVALUATE_RECORD_DEFAULT_FLAGS</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ReevaluateRecordRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">ReevaluateRecord</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.search_by_attributes">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.search_by_attributes">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_by_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS</span><span class="p">,</span>
+        <span class="n">search_profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">SearchByAttributesRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">attributes</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span>
+                <span class="n">search_profile</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">search_profile</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">SearchByAttributes</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.why_entities">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.why_entities">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">why_entities</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_id_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">entity_id_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_WHY_ENTITIES_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">WhyEntitiesRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">entity_id_1</span><span class="o">=</span><span class="n">entity_id_1</span><span class="p">,</span>
+                <span class="n">entity_id_2</span><span class="o">=</span><span class="n">entity_id_2</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">WhyEntities</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.why_record_in_entity">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.why_record_in_entity">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">why_record_in_entity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># TODO: Implement after V3 is published.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">WhyRecordInEntityRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code</span><span class="p">),</span>
+                <span class="n">record_id</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">WhyRecordInEntity</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.why_records">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.why_records">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">why_records</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code_1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id_1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data_source_code_2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">record_id_2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_WHY_RECORDS_DEFAULT_FLAGS</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">WhyRecordsRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">data_source_code_1</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code_1</span><span class="p">),</span>
+                <span class="n">record_id_1</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id_1</span><span class="p">),</span>
+                <span class="n">data_source_code_2</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">data_source_code_2</span><span class="p">),</span>
+                <span class="n">record_id_2</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">record_id_2</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">WhyRecords</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.why_search">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.why_search">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">why_search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SzEngineFlags</span><span class="o">.</span><span class="n">SZ_WHY_SEARCH_DEFAULT_FLAGS</span><span class="p">,</span>
+        <span class="n">search_profile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">WhySearchRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">attributes</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span>
+                <span class="n">entity_id</span><span class="o">=</span><span class="n">entity_id</span><span class="p">,</span>
+                <span class="n">search_profile</span><span class="o">=</span><span class="n">as_str</span><span class="p">(</span><span class="n">search_profile</span><span class="p">),</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">WhySearch</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># Non-public SzEngine methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Null function in the sz-sdk-python-grpc implementation.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SzEngineGrpc.initialize">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.initialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">instance_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">settings</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">config_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose_logging</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Null function in the sz-sdk-python-grpc implementation.&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">instance_name</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">settings</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">config_id</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">verbose_logging</span></div>
+
+
+<div class="viewcode-block" id="SzEngineGrpc.reinitialize">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szengine.SzEngineGrpc.reinitialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reinitialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szengine_pb2</span><span class="o">.</span><span class="n">ReinitializeRequest</span><span class="p">(</span><span class="n">config_id</span><span class="o">=</span><span class="n">config_id</span><span class="p">)</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">Reinitialize</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+</div>
+
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Helper functions</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">entity_ids_json</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">entity_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">entity_ids</span><span class="p">:</span>
+        <span class="n">entity_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;ENTITY_ID&quot;</span><span class="p">:</span> <span class="n">entity_id</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;ENTITIES&quot;</span><span class="p">:</span> <span class="n">entity_list</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">record_keys_json</span><span class="p">(</span><span class="n">record_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">record_key_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">record_key</span> <span class="ow">in</span> <span class="n">record_keys</span><span class="p">:</span>
+        <span class="n">record_key_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;DATA_SOURCE&quot;</span><span class="p">:</span> <span class="n">record_key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;RECORD_ID&quot;</span><span class="p">:</span> <span class="n">record_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;RECORDS&quot;</span><span class="p">:</span> <span class="n">record_key_list</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">avoid_entity_ids_json</span><span class="p">(</span><span class="n">avoid_entity_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">avoid_entity_ids</span><span class="p">:</span>
+        <span class="n">avoid_entity_id_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">avoid_entity_id</span> <span class="ow">in</span> <span class="n">avoid_entity_ids</span><span class="p">:</span>
+            <span class="n">avoid_entity_id_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;ENTITY_ID&quot;</span><span class="p">:</span> <span class="n">avoid_entity_id</span><span class="p">})</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;ENTITIES&quot;</span><span class="p">:</span> <span class="n">avoid_entity_id_list</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">avoid_record_keys_json</span><span class="p">(</span><span class="n">avoid_record_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">avoid_record_keys</span><span class="p">:</span>
+        <span class="n">avoid_record_keys_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">avoid_record_key</span> <span class="ow">in</span> <span class="n">avoid_record_keys</span><span class="p">:</span>
+            <span class="n">avoid_record_keys_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;DATA_SOURCE&quot;</span><span class="p">:</span> <span class="n">avoid_record_key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s2">&quot;RECORD_ID&quot;</span><span class="p">:</span> <span class="n">avoid_record_key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;RECORDS&quot;</span><span class="p">:</span> <span class="n">avoid_record_keys_list</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">required_data_sources_json</span><span class="p">(</span>
+    <span class="n">required_data_sources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">required_data_sources</span><span class="p">:</span>
+        <span class="n">required_data_sources_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">required_data_source</span> <span class="ow">in</span> <span class="n">required_data_sources</span><span class="p">:</span>
+            <span class="n">required_data_sources_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">required_data_source</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;DATA_SOURCES&quot;</span><span class="p">:</span> <span class="n">required_data_sources_list</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Senzing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

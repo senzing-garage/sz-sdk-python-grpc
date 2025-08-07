@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>senzing_grpc.szconfig &mdash; sz-sdk-python-grpc  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            sz-sdk-python-grpc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../senzing_grpc.html">senzing_grpc</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sz-sdk-python-grpc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">senzing_grpc.szconfig</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for senzing_grpc.szconfig</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">``senzing_grpc.szconfig.SzConfigGrpc`` is a `gRPC`_ implementation</span>
+<span class="sd">of the `senzing.szconfig.SzConfig`_ interface.</span>
+
+<span class="sd">.. _gRPC: https://grpc.io</span>
+<span class="sd">.. _senzing.szconfig.SzConfig: https://garage.senzing.com/sz-sdk-python/senzing.html#module-senzing.szconfig</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pylint: disable=E1101</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">grpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">senzing</span><span class="w"> </span><span class="kn">import</span> <span class="n">SzConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">senzing_grpc_protobuf</span><span class="w"> </span><span class="kn">import</span> <span class="n">szconfig_pb2</span><span class="p">,</span> <span class="n">szconfig_pb2_grpc</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.szhelpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">catch_sdk_exceptions</span><span class="p">,</span> <span class="n">new_exception</span>
+
+<span class="c1"># Metadata</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SzConfigGrpc&quot;</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>  <span class="c1"># See https://www.python.org/dev/peps/pep-0396/</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;2025-01-10&quot;</span>
+<span class="n">__updated__</span> <span class="o">=</span> <span class="s2">&quot;2025-01-16&quot;</span>
+
+<span class="n">SENZING_PRODUCT_ID</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;5050&quot;</span>  <span class="c1"># See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md</span>
+<span class="p">)</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># SzConfigGrpc class</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="SzConfigGrpc">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SzConfigGrpc</span><span class="p">(</span><span class="n">SzConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SzConfig module access library over gRPC.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># Python dunder/magic methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">grpc_channel</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Channel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        For return value of -&gt; None, see https://peps.python.org/pep-0484/#the-meaning-of-annotations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">grpc_channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="n">szconfig_pb2_grpc</span><span class="o">.</span><span class="n">SzConfigStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># TODO: Replace &quot;Any&quot; with &quot;Self&quot; once python 3.11 is lowest supported python version.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context Manager method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exc_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">exc_val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">exc_tb</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context Manager method.&quot;&quot;&quot;</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># SzConfig interface methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="SzConfigGrpc.register_data_source">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.register_data_source">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_data_source</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szconfig_pb2</span><span class="o">.</span><span class="n">RegisterDataSourceRequest</span><span class="p">(</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+                <span class="n">config_definition</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span><span class="p">,</span> <span class="n">data_source_code</span><span class="o">=</span><span class="n">data_source_code</span>
+            <span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">RegisterDataSource</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">config_definition</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">config_definition</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_definition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span> <span class="o">=</span> <span class="n">config_definition</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.unregister_data_source">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.unregister_data_source">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unregister_data_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szconfig_pb2</span><span class="o">.</span><span class="n">UnregisterDataSourceRequest</span><span class="p">(</span><span class="n">config_definition</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span><span class="p">,</span> <span class="n">data_source_code</span><span class="o">=</span><span class="n">data_source_code</span><span class="p">)</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">UnregisterDataSource</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">config_definition</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">config_definition</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">config_definition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span> <span class="o">=</span> <span class="n">config_definition</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.export">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.export">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.get_data_source_registry">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.get_data_source_registry">[docs]</a>
+    <span class="nd">@catch_sdk_exceptions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data_source_registry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">szconfig_pb2</span><span class="o">.</span><span class="n">GetDataSourceRegistryRequest</span><span class="p">(</span><span class="n">config_definition</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span><span class="p">)</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">GetDataSourceRegistry</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">new_exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1"># Non-public SzConfigCore methods</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Null function in the sz-sdk-python-grpc implementation.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SzConfigGrpc.import_config_definition">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.import_config_definition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_config_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the internal JSON document.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_definition (str): A Senzing configuration JSON document.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_definition</span> <span class="o">=</span> <span class="n">config_definition</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.import_template">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.import_template">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves a Senzing configuration from the default template.</span>
+<span class="sd">        The default template is the Senzing configuration JSON document file,</span>
+<span class="sd">        g2config.json, located in the PIPELINE.RESOURCEPATH path.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.initialize">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.initialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">instance_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">settings</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">verbose_logging</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Null function in the sz-sdk-python-grpc implementation.&quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">instance_name</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">settings</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">verbose_logging</span></div>
+
+
+<div class="viewcode-block" id="SzConfigGrpc.verify_config_definition">
+<a class="viewcode-back" href="../../senzing_grpc.html#senzing_grpc.szconfig.SzConfigGrpc.verify_config_definition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_config_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_definition</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine if configuration definition is valid.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_definition (str): A Senzing configuration JSON document.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">szconfig_pb2</span><span class="o">.</span><span class="n">VerifyConfigRequest</span><span class="p">(</span><span class="n">config_definition</span><span class="o">=</span><span class="n">config_definition</span><span class="p">)</span>  <span class="c1"># type: ignore[unused-ignore]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">VerifyConfig</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Senzing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
