@@ -68,6 +68,7 @@
         "GNRNP",
         "GPLAN",
         "grpcio",
+        "grpcurl",
         "hange",
         "htmlcov",
         "htmlhelp",
@@ -131,6 +132,7 @@
         "Senzing",
         "senzingsdk",
         "serializinghtml",
+        "servegrpc",
         "setuptools",
         "SFCALL",
         "SFUNC",
@@ -184,6 +186,7 @@
         ".venv/**",
         "**/__pycache__/**",
         "development-requirements.txt",
-        "src/senzing_grpc/pb2_grpc/**"
+        "src/senzing_grpc/pb2_grpc/**",
+        "venv/**"
     ]
 }
