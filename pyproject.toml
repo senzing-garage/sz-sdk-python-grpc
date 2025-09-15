@@ -1,8 +1,5 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
@@ -35,10 +32,7 @@ warn_unused_ignores = "false"
 
 [[tool.mypy.overrides]]
 module = "senzing_grpc.*"
-disable_error_code = [
-    "attr-defined",
-    "no-untyped-call"
-]
+disable_error_code = ["attr-defined", "no-untyped-call"]
 follow_imports = "skip"
 strict = "true"
 
@@ -51,9 +45,7 @@ module = "grpc.*"
 ignore_missing_imports = "true"
 
 [tool.pylint]
-load-plugins = [
-    "pylint_per_file_ignores",
-]
+load-plugins = ["pylint_per_file_ignores"]
 disable = [
     "duplicate-code",
     "line-too-long",
@@ -61,18 +53,11 @@ disable = [
     "missing-module-docstring",
     "too-many-arguments",
     "too-many-positional-arguments",
-    "too-many-public-methods"
+    "too-many-public-methods",
 ]
-ignore = [
-    "__init__.py",
-    "docs/source/conf.py"
-]
-notes = [
-    "FIXME"
-]
+ignore = ["__init__.py", "docs/source/conf.py"]
+notes = ["FIXME"]
 # NOTE - Ignore invalid-name only in examples for simplified code without pylint complaining variables in global scope
-#        aren't uppercase.
-# NOTE - Paths are regular expressions
-per-file-ignores = """
-    /examples/:invalid-name
-"""
+#        aren't uppercase. 
+# NOTE - Uses globs since version 2.0.0, previously was regular expressions
+per-file-ignores = ["examples/**:invalid-name"]

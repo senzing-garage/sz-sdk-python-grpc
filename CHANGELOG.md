@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.14] - 2025-09-15
+
+### Fixed in 0.5.14
+
+- Pylint failure with updated pylint-per-file-ignores
+
 ## [0.5.13] - 2025-07-23
 
-### Changed in 0.5.12
+### Changed in 0.5.13
 
 - Update dependencies
 
