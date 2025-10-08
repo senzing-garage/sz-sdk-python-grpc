@@ -10,14 +10,15 @@ on:
 env:
   PYTHONPATH: ${{ github.workspace }}/src
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   pytest-darwin:
     name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
     outputs:
       status: ${{ job.status }}
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -28,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
