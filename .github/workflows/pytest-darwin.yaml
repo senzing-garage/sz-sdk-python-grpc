@@ -10,14 +10,15 @@ on:
 env:
   PYTHONPATH: ${{ github.workspace }}/src
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   pytest-darwin:
     name: "pytest OS: ${{ matrix.os }}; Python ${{ matrix.python-version }}"
     outputs:
       status: ${{ job.status }}
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -28,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
@@ -85,13 +88,13 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
-    uses: senzing-factory/build-resources/.github/workflows/python-coverage-comment.yaml@v2
+    uses: senzing-factory/build-resources/.github/workflows/python-coverage-comment.yaml@v3
 
   slack-notification:
     needs: [pytest-darwin]
     if: ${{ always() && contains(fromJSON('["failure", "cancelled"]'), needs.pytest-darwin.outputs.status ) && github.event_name == 'schedule' }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-    uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v2
+    uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v3
     with:
       job-status: ${{ needs.pytest-darwin.outputs.status }}
