@@ -15,5 +15,5 @@ pytest-cov==7.0.0
 pytest-schema==0.1.2
 pytest==8.4.2
 twine==6.2.0
-virtualenv==20.34.0
+virtualenv==20.35.1
 wheel==0.45.1
