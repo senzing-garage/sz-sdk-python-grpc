@@ -32,7 +32,7 @@ jobs:
           python -m venv ./venv
           source ./venv/bin/activate
           echo "PATH=${PATH}" >> "${GITHUB_ENV}"
-          python -m pip install --group all .
+          python -m pip install .
 
       - name: Run pip-audit
         uses: pypa/gh-action-pip-audit@v1.1.0
