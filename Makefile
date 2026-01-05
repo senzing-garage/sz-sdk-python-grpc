@@ -67,24 +67,17 @@ venv: venv-osarch-specific
 
 
 .PHONY: dependencies-for-development
-dependencies-for-development: venv dependencies-for-development-osarch-specific
+dependencies-for-development: venv
 	$(activate-venv); \
 		python3 -m pip install --upgrade pip; \
-		python3 -m pip install --requirement development-requirements.txt
-
-
-.PHONY: dependencies-for-documentation
-dependencies-for-documentation: venv dependencies-for-documentation-osarch-specific
-	$(activate-venv); \
-		python3 -m pip install --upgrade pip; \
-		python3 -m pip install --requirement documentation-requirements.txt
+		python3 -m pip install --group all
 
 
 .PHONY: dependencies
 dependencies: venv
 	$(activate-venv); \
 		python3 -m pip install --upgrade pip; \
-		python3 -m pip install --requirement requirements.txt
+		python3 -m pip install -e .
 
 # -----------------------------------------------------------------------------
 # Setup
@@ -113,12 +106,15 @@ lint: pylint mypy bandit black flake8 isort
 # -----------------------------------------------------------------------------
 
 .PHONY: docker-build
-docker-build: docker-build-osarch-specific
+docker-build:
+	@docker build \
+		--tag $(DOCKER_IMAGE_NAME) \
+		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
+		.
 
 # -----------------------------------------------------------------------------
 # Run
 # -----------------------------------------------------------------------------
-
 
 # -----------------------------------------------------------------------------
 # Test

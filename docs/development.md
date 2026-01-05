@@ -21,7 +21,6 @@ These are "one-time tasks" which may already have been completed.
 Since the Senzing library is a prerequisite, it must be installed first.
 
 1. Verify Senzing C shared objects, configuration, and SDK header files are installed.
-
    1. `/opt/senzing/er/lib`
    1. `/opt/senzing/er/sdk/c`
    1. `/etc/opt/senzing`
@@ -107,27 +106,27 @@ Not applicable.
 1. Run a gRPC server.
    Either:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-server-side-tls test-server-side-tls
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-server-side-tls test-server-side-tls
+   ```
 
 ### Test Mutual TLS
 
 1. Run a gRPC server.
    Either:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-mutual-tls test-mutual-tls
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-mutual-tls test-mutual-tls
+   ```
 
    Or:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-mutual-tls test-mutual-tls-encrypted-key
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-mutual-tls test-mutual-tls-encrypted-key
+   ```
 
 ## Coverage
 

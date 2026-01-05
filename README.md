@@ -8,7 +8,7 @@ Although this GitHub repository may help you understand an approach to using Sen
 it's not considered to be "production ready" and is not considered to be part of the Senzing product.
 Heck, it may not even be appropriate for your application of Senzing!
 
-## :warning: WARNING: sz-sdk-python-grpc is still in development :warning: _
+## :warning: WARNING: sz-sdk-python-grpc is still in development :warning: \_
 
 At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
 Although it can be reviewed and commented on,
@@ -20,7 +20,7 @@ The Senzing `sz-sdk-python-grpc` package provides a [Python] Software Developmen
 adhering to the abstract classes of [sz-sdk-python]
 that communicates with a [Senzing gRPC server].
 
-[![Python 3.11 Badge]][Python 3.11]
+[![Python 3.13 Badge]][Python 3.13]
 [![PEP8 Badge]][PEP8]
 [![PyPI version Badge]][PyPi version]
 [![Downloads Badge]][Downloads]
@@ -51,31 +51,31 @@ and access it using the `senzing_grpc` Python package.
 
 1. Run a Senzing gRPC service using Docker.
 
-    ```console
-    docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
-    ```
+   ```console
+   docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
+   ```
 
 1. In a separate window, install the `senzing-grpc` Python package.
 
-    ```console
-    python3 -m pip install --upgrade senzing-grpc
-    ```
+   ```console
+   python3 -m pip install --upgrade senzing-grpc
+   ```
 
 1. Start an interactive Python session.
 
-    ```console
-    python3
-    ```
+   ```console
+   python3
+   ```
 
 1. Paste the following into the interactive Python session.
 
-    ```python
-    import grpc
-    from senzing_grpc import SzAbstractFactoryGrpc
-    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
-    sz_product = sz_abstract_factory.create_product()
-    print(sz_product.get_version())
-    ```
+   ```python
+   import grpc
+   from senzing_grpc import SzAbstractFactoryGrpc
+   sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+   sz_product = sz_abstract_factory.create_product()
+   print(sz_product.get_version())
+   ```
 
 More can be seen in [Examples].
 
@@ -85,7 +85,7 @@ More can be seen in [Examples].
 1. [Errors]
 1. [Examples]
 1. Related artifacts:
-    1. [DockerHub]
+   1. [DockerHub]
 1. [sz-sdk-python package reference]
 
 [Coverage badge]: https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.message&url=https%3A%2F%2Fraw.githubusercontent.com%2Fsenzing-garage%2Fsz-sdk-python%2Fpython-coverage-comment-action-data%2Fendpoint.json
@@ -102,8 +102,8 @@ More can be seen in [Examples].
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [PyPI version Badge]: https://badge.fury.io/py/senzing-grpc.svg
 [PyPi version]: https://badge.fury.io/py/senzing-grpc
-[Python 3.11 Badge]: https://img.shields.io/badge/python-3.11-blue.svg
-[Python 3.11]: https://www.python.org/downloads/release/python-3110/
+[Python 3.13 Badge]: https://img.shields.io/badge/python-3.13-blue.svg
+[Python 3.13]: https://www.python.org/downloads/release/python-3130/
 [Python]: https://www.python.org/
 [Senzing Garage]: https://github.com/senzing-garage
 [Senzing gRPC server]: https://github.com/senzing-garage/serve-grpc

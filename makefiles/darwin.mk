@@ -30,15 +30,7 @@ clean-osarch-specific:
 coverage-osarch-specific:
 	@$(activate-venv); pytest --cov=src --cov-report=xml $(shell git ls-files '*.py')
 	@$(activate-venv); coverage html
-	@open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
-
-
-.PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific:
-
-
-.PHONY: dependencies-for-documentation-osarch-specific
-dependencies-for-documentation-osarch-specific:
+	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
 .PHONY: documentation-osarch-specific
@@ -60,14 +52,6 @@ package-osarch-specific:
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
 	$(info No setup required.)
-
-
-.PHONY: test-osarch-specific
-test-osarch-specific:
-	$(info --- Unit tests -------------------------------------------------------)
-	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc
-	$(info --- Test examples ----------------------------------------------------)
-	@pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
 
 
 .PHONY: venv-osarch-specific
