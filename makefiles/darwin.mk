@@ -33,10 +33,6 @@ coverage-osarch-specific:
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
-.PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific:
-
-
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	@$(activate-venv); cd docs; rm -rf build; make html
@@ -56,14 +52,6 @@ package-osarch-specific:
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
 	$(info No setup required.)
-
-
-.PHONY: test-osarch-specific
-test-osarch-specific:
-	$(info --- Unit tests -------------------------------------------------------)
-	@pytest tests/ --verbose --capture=no --cov=src/senzing_grpc
-	$(info --- Test examples ----------------------------------------------------)
-	@pytest examples/ --verbose --capture=no --cov=src/senzing_grpc
 
 
 .PHONY: venv-osarch-specific

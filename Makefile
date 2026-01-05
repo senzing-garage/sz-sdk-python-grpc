@@ -67,7 +67,7 @@ venv: venv-osarch-specific
 
 
 .PHONY: dependencies-for-development
-dependencies-for-development: venv dependencies-for-development-osarch-specific
+dependencies-for-development: venv
 	$(activate-venv); \
 		python3 -m pip install --upgrade pip; \
 		python3 -m pip install --group all
@@ -106,7 +106,11 @@ lint: pylint mypy bandit black flake8 isort
 # -----------------------------------------------------------------------------
 
 .PHONY: docker-build
-docker-build: docker-build-osarch-specific
+docker-build:
+	@docker build \
+		--tag $(DOCKER_IMAGE_NAME) \
+		--tag $(DOCKER_IMAGE_NAME):$(BUILD_VERSION) \
+		.
 
 # -----------------------------------------------------------------------------
 # Run

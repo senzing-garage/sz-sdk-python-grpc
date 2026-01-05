@@ -31,16 +31,6 @@ coverage-osarch-specific:
 	@explorer $(MAKEFILE_DIRECTORY)/htmlcov/index.html
 
 
-.PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific:
-
-
-.PHONY: dependencies-osarch-specific
-dependencies-osarch-specific:
-	python3 -m pip install --upgrade pip
-	pip install psutil pytest pytest-cov pytest-schema
-
-
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	# @cd docs; rm -rf build; make html

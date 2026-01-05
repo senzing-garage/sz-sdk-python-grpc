@@ -33,10 +33,6 @@ coverage-osarch-specific:
 	@xdg-open $(MAKEFILE_DIRECTORY)/htmlcov/index.html 1>/dev/null 2>&1
 
 
-.PHONY: dependencies-for-development-osarch-specific
-dependencies-for-development-osarch-specific:
-
-
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	@$(activate-venv); cd docs; rm -rf build; make html
