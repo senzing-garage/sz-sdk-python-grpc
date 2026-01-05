@@ -8,7 +8,7 @@ Although this GitHub repository may help you understand an approach to using Sen
 it's not considered to be "production ready" and is not considered to be part of the Senzing product.
 Heck, it may not even be appropriate for your application of Senzing!
 
-## :warning: WARNING: sz-sdk-python-grpc is still in development :warning: _
+## :warning: WARNING: sz-sdk-python-grpc is still in development :warning: \_
 
 At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
 Although it can be reviewed and commented on,
@@ -51,31 +51,31 @@ and access it using the `senzing_grpc` Python package.
 
 1. Run a Senzing gRPC service using Docker.
 
-    ```console
-    docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
-    ```
+   ```console
+   docker run -it --name senzing-serve-grpc -p 8261:8261 --pull always --read-only --rm senzing/serve-grpc
+   ```
 
 1. In a separate window, install the `senzing-grpc` Python package.
 
-    ```console
-    python3 -m pip install --upgrade senzing-grpc
-    ```
+   ```console
+   python3 -m pip install --upgrade senzing-grpc
+   ```
 
 1. Start an interactive Python session.
 
-    ```console
-    python3
-    ```
+   ```console
+   python3
+   ```
 
 1. Paste the following into the interactive Python session.
 
-    ```python
-    import grpc
-    from senzing_grpc import SzAbstractFactoryGrpc
-    sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
-    sz_product = sz_abstract_factory.create_product()
-    print(sz_product.get_version())
-    ```
+   ```python
+   import grpc
+   from senzing_grpc import SzAbstractFactoryGrpc
+   sz_abstract_factory = SzAbstractFactoryGrpc(grpc_channel=grpc.insecure_channel("localhost:8261"))
+   sz_product = sz_abstract_factory.create_product()
+   print(sz_product.get_version())
+   ```
 
 More can be seen in [Examples].
 
@@ -85,7 +85,7 @@ More can be seen in [Examples].
 1. [Errors]
 1. [Examples]
 1. Related artifacts:
-    1. [DockerHub]
+   1. [DockerHub]
 1. [sz-sdk-python package reference]
 
 [Coverage badge]: https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.message&url=https%3A%2F%2Fraw.githubusercontent.com%2Fsenzing-garage%2Fsz-sdk-python%2Fpython-coverage-comment-action-data%2Fendpoint.json

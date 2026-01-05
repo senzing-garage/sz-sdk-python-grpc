@@ -106,27 +106,27 @@ Not applicable.
 1. Run a gRPC server.
    Either:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-server-side-tls test-server-side-tls
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-server-side-tls test-server-side-tls
+   ```
 
 ### Test Mutual TLS
 
 1. Run a gRPC server.
    Either:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-mutual-tls test-mutual-tls
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-mutual-tls test-mutual-tls
+   ```
 
    Or:
 
-    ```console
-    cd ${GIT_REPOSITORY_DIR}
-    make clean setup-mutual-tls test-mutual-tls-encrypted-key
-    ```
+   ```console
+   cd ${GIT_REPOSITORY_DIR}
+   make clean setup-mutual-tls test-mutual-tls-encrypted-key
+   ```
 
 ## Coverage
 

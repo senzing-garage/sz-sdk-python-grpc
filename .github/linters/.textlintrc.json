@@ -1,9 +1,7 @@
 {
-    "rules": {
-        "terminology": {
-            "terms": [
-                "README"
-            ]
-        }
+  "rules": {
+    "terminology": {
+      "terms": ["README"]
     }
+  }
 }

@@ -151,7 +151,7 @@ This project adheres to [Semantic Versioning].
 
 ### Changed in 0.4.0
 
-- Rename class names.  Example: from `SzAbstractFactory` to `SzAbstractFactoryGrpc`
+- Rename class names. Example: from `SzAbstractFactory` to `SzAbstractFactoryGrpc`
 
 ## [0.3.8] - 2024-12-04
 
