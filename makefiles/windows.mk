@@ -11,16 +11,16 @@
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	del /F /S /Q $(DIST_DIRECTORY)
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/.coverage
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/.mypy_cache
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/.pytest_cache
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/__pycache__
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.xml
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/dist
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/docs/build
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/htmlcov
-	del /F /S /Q $(TARGET_DIRECTORY)
+	@del /F /S /Q $(DIST_DIRECTORY)
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/.coverage
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/.mypy_cache
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/.pytest_cache
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/__pycache__
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.xml
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/dist
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/docs/build
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/htmlcov
+	@del /F /S /Q $(TARGET_DIRECTORY)
 
 
 .PHONY: coverage-osarch-specific
@@ -33,10 +33,6 @@ coverage-osarch-specific:
 
 .PHONY: dependencies-for-development-osarch-specific
 dependencies-for-development-osarch-specific:
-
-
-.PHONY: dependencies-for-documentation-osarch-specific
-dependencies-for-documentation-osarch-specific:
 
 
 .PHONY: dependencies-osarch-specific

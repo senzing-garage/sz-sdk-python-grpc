@@ -20,7 +20,7 @@ The Senzing `sz-sdk-python-grpc` package provides a [Python] Software Developmen
 adhering to the abstract classes of [sz-sdk-python]
 that communicates with a [Senzing gRPC server].
 
-[![Python 3.11 Badge]][Python 3.11]
+[![Python 3.13 Badge]][Python 3.13]
 [![PEP8 Badge]][PEP8]
 [![PyPI version Badge]][PyPi version]
 [![Downloads Badge]][Downloads]
@@ -102,8 +102,8 @@ More can be seen in [Examples].
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [PyPI version Badge]: https://badge.fury.io/py/senzing-grpc.svg
 [PyPi version]: https://badge.fury.io/py/senzing-grpc
-[Python 3.11 Badge]: https://img.shields.io/badge/python-3.11-blue.svg
-[Python 3.11]: https://www.python.org/downloads/release/python-3110/
+[Python 3.13 Badge]: https://img.shields.io/badge/python-3.13-blue.svg
+[Python 3.13]: https://www.python.org/downloads/release/python-3130/
 [Python]: https://www.python.org/
 [Senzing Garage]: https://github.com/senzing-garage
 [Senzing gRPC server]: https://github.com/senzing-garage/serve-grpc
