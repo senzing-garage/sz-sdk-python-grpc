@@ -86,7 +86,6 @@ lint = [
   "pylint-per-file-ignores==3.2.0; python_version > '3.11'",
   "pylint==3.3.9; python_version <= '3.11'",
   "pylint==4.0.4; python_version > '3.11'",
-  "pylint-per-file-ignores==3.1.0",
 ]
 test = [
   "pytest==8.4.2; python_version <= '3.11'",
@@ -151,6 +150,6 @@ disable = [
 ignore = ["__init__.py", "docs/source/conf.py"]
 notes = ["FIXME"]
 # NOTE - Ignore invalid-name only in examples for simplified code without pylint complaining variables in global scope
-#        aren't uppercase. 
+#        aren't uppercase.
 # NOTE - Uses globs since version 2.0.0, previously was regular expressions
 per-file-ignores = ["examples/**:invalid-name"]
