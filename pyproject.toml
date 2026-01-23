@@ -10,8 +10,8 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "grpcio >= 1.74.0",
-  "protobuf >= 6.31.1",
+  "grpcio >= 1.76.0",
+  "protobuf >= 6.33.4",
   "senzing >= 4.0.0,< 5.0.0",
   "senzing-grpc-protobuf >= 0.0.3",
 ]
@@ -50,8 +50,8 @@ development = [
   "pytest==8.4.2; python_version <= '3.11'",
   "pytest==9.0.2; python_version > '3.11'",
   "twine==6.2.0",
-  "virtualenv==20.35.4",
-  "wheel==0.46.1",
+  "virtualenv==20.36.1",
+  "wheel==0.45.1",
 ]
 documentation = [
   "autodocsumm",

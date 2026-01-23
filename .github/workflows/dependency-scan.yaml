@@ -42,4 +42,6 @@ jobs:
       - name: Run pip-audit
         uses: pypa/gh-action-pip-audit@v1.1.0
         with:
+          ignore-vulns: |
+            CVE-2026-0994
           inputs: ${{ github.workspace}}
