@@ -41,7 +41,7 @@ all = [
 development = [
   "build==1.6.1",
   "coverage==7.10.7; python_version <= '3.11'",
-  "coverage==7.16.1; python_version > '3.11'",
+  "coverage==7.16.2; python_version > '3.11'",
   "cryptography==50.0.1",
   "orjson==3.12.0",
   "psutil==7.2.2",
@@ -50,7 +50,7 @@ development = [
   "pytest==8.4.2; python_version <= '3.11'",
   "pytest==9.1.1; python_version > '3.11'",
   "twine==7.0.0",
-  "virtualenv==21.7.13",
+  "virtualenv==21.14.1",
   "wheel==0.48.0",
 ]
 documentation = [
@@ -78,20 +78,20 @@ lint = [
   "bandit==1.9.4; python_version > '3.11'",
   "black==25.11.0; python_version <= '3.11'",
   "black==26.5.1; python_version > '3.11'",
-  "flake8==7.3.0",
+  "flake8==7.4.1",
   "isort==6.1.0; python_version <= '3.11'",
-  "isort==9.0.1; python_version > '3.11'",
+  "isort==9.0.2; python_version > '3.11'",
   "mypy==2.3.1",
   "pylint-per-file-ignores==2.0.3; python_version <= '3.11'",
   "pylint-per-file-ignores==3.2.1; python_version > '3.11'",
   "pylint==3.3.9; python_version <= '3.11'",
-  "pylint==4.0.8; python_version > '3.11'",
+  "pylint==4.1.1; python_version > '3.11'",
 ]
 test = [
   "pytest==8.4.2; python_version <= '3.11'",
   "pytest==9.1.1; python_version > '3.11'",
   "coverage==7.10.7; python_version <= '3.11'",
-  "coverage==7.16.1; python_version > '3.11'",
+  "coverage==7.16.2; python_version > '3.11'",
 ]
 
 [tool.setuptools.packages.find]
